@@ -1,6 +1,6 @@
 # ComicRackCE: the path to a native macOS application
 
-> **Status:** Research complete. Scenario validated by the project owner on 2026-10-13.
+> **Status:** Research complete. Scenario validated by the project owner on 2026-10-13. Revised the same day: D6, script UI compatibility (§5.9).
 > **Audience:** (1) the project owner, to decide and track; (2) Claude agentic planning and implementation sessions, which start from this file.
 > **Scope:** feasibility, technology inventory, options with prior art, the chosen architecture, typical migration challenges, and an agent-ready phase plan.
 >
@@ -34,10 +34,11 @@
 | D3 | Guiding principle | **Change as little existing code as possible.** Put cross-platform concerns in dedicated layers (shims, a Platform Abstraction Layer, a new UI project) | Prefer adding files and projects over editing existing ones. Edits to existing files must be small, mechanical and reviewable, and should be upstreamable to `maforget/ComicRackCE`. |
 | D4 | macOS v1 feature scope | Reader, library, smart lists, metadata editing, CBZ/CBR/CB7/CBT/PDF/WebP/HEIF/AVIF/JXL/JPEG2000 **plus Python scripts/plugins** | Remote library sharing, Wi-Fi device sync, USB/MTP sync and DjVu are **deferred** (post-v1). |
 | D5 | Hardware and distribution | **Apple Silicon (arm64) only, macOS 14 Sonoma or later, Developer ID signed + notarized DMG** (a Homebrew cask is optional) | No Intel/universal binaries, no Mac App Store and no sandbox. Every bundled native library is arm64 only. |
+| D6 | Script compatibility (added 2026-10-13) | **Existing scripts, including those that build WinForms UI, must run on macOS unmodified.** Asking authors to rewrite scripts is not acceptable. | A dedicated **Script UI Compatibility Layer** (§5.9) provides the `System.Windows.Forms` and `System.Drawing` APIs to scripts on macOS, rendered with Avalonia. It is a v1 deliverable (phase P4). |
 
 Derived defaults (adopted unless the owner overrides them):
 - Runtime **.NET 10 (LTS, supported until Nov 2028)**, self-contained, `osx-arm64`. Not NativeAOT, because IronPython needs dynamic code generation (see §7.9).
-- UI toolkit **Avalonia 12.x** (MIT core). Paid "Accelerate" add-ons are not required.
+- UI toolkit **Avalonia 12.x**, the free, open-source (MIT) cross-platform UI framework, used to **write new UI code**. Do not confuse it with **Avalonia XPF**, a separate *paid* product from the same company that runs existing **WPF** apps on macOS unchanged. XPF does not apply here because ComicRack's UI is WinForms, not WPF. Paid "Accelerate" add-ons are not required either.
 - 2D imaging on macOS through **SkiaSharp** (already Avalonia's renderer).
 - Scripting stays on **IronPython 2.7.12** (supports `netstandard2.0`/`netcoreapp3.1`, so it runs on .NET 10). Existing Python 2 scripts keep working, and the IronPython 3.4 decision is deferred.
 
@@ -58,6 +59,7 @@ The coupling is **unevenly distributed**, which is what makes the chosen scenari
 | Native codecs and archivers (7z, PDFium, libwebp, libjxl, libheif, djvulibre) | ~20 PE binaries | Replaceable by arm64 dylibs or managed libraries behind a native-library resolver. |
 | OS services: shell, recycle bin, registry, NTFS alternate streams, WCF IPC, power, WMI, CredUI, WPD | ~45 files with P/Invoke | Moved behind a Platform Abstraction Layer (PAL) with Windows (existing code) and macOS implementations. |
 | UI: WinForms, 38 forms, ~25 user controls, custom owner-drawn controls, OpenGL reader | ~106k LOC (`ComicRack`, `cYo.Common.Windows`, `cYo.Common.Presentation`, `Display.Forms`) | **Rewritten for macOS in Avalonia** (new code). The Windows UI is untouched. |
+| Third-party Python scripts that build WinForms dialogs, panels and owner-drawn overlays | Outside this repo (community plugins) | **Run unmodified (D6)** through a script-only WinForms/System.Drawing compatibility layer, rendered with Avalonia (§5.9). It is a narrow, script-facing API layer, not a port of ComicRack's own UI. |
 
 **Recommended approach (validated):**
 1. Build "shadow" .NET 10 projects that **link the existing source files** (no file moves).
@@ -65,21 +67,23 @@ The coupling is **unevenly distributed**, which is what makes the chosen scenari
 3. Introduce a **PAL** for OS services, with today's Win32 code as the Windows implementation.
 4. Add a **headless CLI harness**, so agents can verify the core on macOS without a GUI.
 5. Build the **Avalonia macOS app** on top.
-6. Package as a notarized arm64 `.app`.
+6. Add the **Script UI Compatibility Layer**, so community scripts with WinForms UI run unmodified (§5.9).
+7. Package as a notarized arm64 `.app`.
 
 **Effort (order of magnitude, low confidence):**
 
 | Work | Estimate |
 |---|---|
-| Core + PAL + imaging shim + codecs + scripting | 25–40 % of total |
-| macOS Avalonia UI v1 | 45–60 % |
+| Core + PAL + imaging shim + codecs + scripting engine | 20–30 % of total |
+| Script UI Compatibility Layer (WinForms API for scripts) | 15–20 % |
+| macOS Avalonia UI v1 | 40–50 % |
 | Packaging, CI, signing, beta hardening | 10–15 % |
 
-In human-equivalent terms, 6–12 person-months of senior .NET work. With Claude agent sessions doing most implementation and a human reviewing and testing on a Mac, plan for about **12–20 weeks of calendar time** across about 60–100 well-scoped agent tasks. The bottleneck is human review and on-device testing, not code generation (see §9.6).
+In human-equivalent terms, 8–14 person-months of senior .NET work. With Claude agent sessions doing most implementation and a human reviewing and testing on a Mac, plan for about **15–24 weeks of calendar time** across about 85–140 well-scoped agent tasks. The bottleneck is human review and on-device testing, not code generation (see §9.6).
 
 **Why not the alternatives:**
 - **Wine/CrossOver:** zero code changes, but non-native, and it depends on Rosetta 2, which Apple largely retires in macOS 28 (~fall 2027).
-- **WinForms-compat runtime:** keeps the UI code but makes the project own a WinForms implementation on macOS. Highest technical risk, and it still looks like Windows.
+- **WinForms-compat runtime for the whole app:** keeps ComicRack's UI code but makes the project own a *complete* WinForms implementation on macOS, including Win32 message hacks. Highest technical risk, and it still looks like Windows. (A much smaller, script-facing WinForms layer *is* part of the plan, §5.9. Scripts use a narrow, well-behaved slice of WinForms, and community scripts are not ours to rewrite.)
 - **Native SwiftUI:** best fit and finish, but the most UI work and a macOS-only UI.
 
 Details in §4.
@@ -242,7 +246,7 @@ Scores are 1 (poor) to 5 (best). Effort and risk are inverted (5 = least).
 - Mono's managed WinForms ("MWF") sits on a pluggable `XplatUI` driver. A 64-bit **Cocoa driver** was built by Filip Navara (eM Client) in 2018, but it was never merged upstream and lives as a fork (per BizHawk developers, who evaluated it).
 - On .NET 10 the project would also need a System.Drawing replacement, e.g. the SkiaSharp-backed **GeneXus.Drawing.Common** (different namespace).
 - This is the "maximum reuse" dream, but the project would maintain a UI runtime larger than ComicRack itself, the result still looks like Windows, and the ~45 Win32-message hacks would still need work. Rejected.
-- Note: Avalonia **XPF** is a commercial *WPF*-compatibility layer and does **not** cover WinForms. ComicRack has no WPF UI, so XPF is not applicable.
+- Note on naming: **Avalonia** (recommended here) is the free MIT UI framework used to write *new* UI. **Avalonia XPF** is a separate *paid* product that runs an *existing WPF* app on macOS without a rewrite. It would be a shortcut only if ComicRack's UI were WPF. It is WinForms, so XPF is not applicable and not part of the plan.
 
 **D. Shared Core + Avalonia (chosen).**
 - Prior art:
@@ -290,7 +294,10 @@ Scores are 1 (poor) to 5 (best). Effort and risk are inverted (5 = least).
 │ + cYo.Common.Windows          │        │  Views / ViewModels / Reader (Skia)  │
 │ + cYo.Common.Presentation     │        │  macOS integration (menus, Dock,     │
 │ + Engine.Display.Forms        │        │  doc types, Trash, Finder)           │
-│   (UNCHANGED, Windows only)   │        └──────────────────┬───────────────────┘
+│   (UNCHANGED, Windows only)   │        │  + ComicRack.Mac.FormsBackend        │
+│                               │        │    (renders script WinForms on       │
+│ Python scripts use the REAL   │        │     Avalonia, see §5.9)              │
+│ WinForms here                 │        └──────────────────┬───────────────────┘
 └──────────────┬────────────────┘                           │
                │ project refs (as today)                    │ project refs
                ▼                                            ▼
@@ -301,9 +308,11 @@ Scores are 1 (poor) to 5 (best). Effort and risk are inverted (5 = least).
 │          minus excluded Windows-only files                                    │
 ├───────────────────────────────────────────────────────────────────────────────┤
 │ COMPAT SHIMS (net10 only, new assemblies)                                     │
-│  cYo.Compat.Drawing   System.Drawing.{Bitmap,Graphics,Imaging,...} on Skia    │
-│  cYo.Compat.WinForms  types-only: SortOrder, Keys, Padding, ContentAlignment, │
-│                       Application facade (ProductName/CompanyName/Version)    │
+│  cYo.Compat.Drawing  System.Drawing.{Bitmap,Graphics,Imaging,...} on Skia     │
+│                      (used by Core AND by scripts' Paint/overlay code)        │
+│  cYo.Compat.Forms    System.Windows.Forms API object model + layout engine    │
+│                      (no rendering; pluggable IFormsBackend). Core only uses  │
+│                      its enums/structs; scripts use the full control model    │
 ├───────────────────────────────────────────────────────────────────────────────┤
 │ PLATFORM ABSTRACTION LAYER (PAL)                                              │
 │  cYo.Platform (interfaces + static Platform.Current, net48;net10.0)           │
@@ -327,7 +336,7 @@ mac/
   ComicRack.Engine.Core/           # links ../../ComicRack.Engine/**/*.cs minus Controls/**, Display/**, IO/Network/**, Sync/Portable*, ...
   ComicRack.Plugins.Core/          # links ../../ComicRack.Plugins/**/*.cs minus Controls/**
   cYo.Compat.Drawing/              # NEW: System.Drawing shim on SkiaSharp
-  cYo.Compat.WinForms/             # NEW: types-only shim
+  cYo.Compat.Forms/                # NEW: WinForms API facade (enums for Core; controls for scripts), see §5.9
   cYo.Platform/                    # NEW: PAL interfaces (also referenced by net48 projects later)
   cYo.Platform.MacOS/              # NEW
   ComicRack.Cli/                   # NEW: headless harness (scan, open DB, decode, thumbnail, run script)
@@ -356,11 +365,14 @@ Rules:
 
 ### 5.3 Compat shims (dedicated layers that let current code compile as-is)
 
-**`cYo.Compat.WinForms` (types only, ~300 LOC).**
-- Defines, in namespace `System.Windows.Forms`, only the enums/structs the Core uses: `SortOrder`, `Keys`, `MouseButtons`, `Padding`, plus `System.Drawing.ContentAlignment` if it is not available in the base library for net10 (verify).
-- Adds a static `Application` facade exposing `ProductName`, `CompanyName`, `ProductVersion`, `StartupPath` and `ExecutablePath` from assembly attributes / the bundle.
+**`cYo.Compat.Forms` (the WinForms API facade; the Core uses only its types).**
+- One assembly, two consumers:
+  - The **Core** uses only the plain types: `SortOrder`, `Keys`, `MouseButtons`, `Padding`, `ContentAlignment` (if not in the base library for net10; verify), and a static `Application` facade exposing `ProductName`, `CompanyName`, `ProductVersion`, `StartupPath` and `ExecutablePath` from assembly attributes / the bundle.
+  - **Python scripts** use the full control model (`Form`, `Button`, `ListView`, …), described in §5.9.
 - **Enum names and values must match WinForms exactly.** `XmlSerializer` writes enum *names* into `Config.xml`/`ComicDb.xml`, so this preserves file compatibility.
-- Never put behaviour (controls, message loops) here. If a file needs real WinForms behaviour, it belongs in the UI layer and is excluded from Core.
+- The assembly holds the API object model, events and layout logic, but **no rendering and no dependency on Avalonia**. Rendering is behind an `IFormsBackend` interface implemented in the macOS app (`ComicRack.Mac.FormsBackend`). So the Core stays UI-toolkit-free, and the facade can be tested headless.
+- ComicRack's own WinForms UI files are still **excluded** from Core (D1). The facade exists for scripts, not to run `MainForm`.
+- Bootstrapping order: P1 needs only the types, which become the first slice of the facade (one source of truth). The control model grows in P4.
 
 **`cYo.Compat.Drawing` (System.Drawing on SkiaSharp, the largest new component of the core work).**
 - Goal: the ~100 Core files that use `Bitmap`/`Graphics`/`Imaging` compile **unchanged** against net10.
@@ -424,16 +436,12 @@ An **ImageIO-based decoder** (CoreGraphics `CGImageSourceCreateWithData`) is a s
 ### 5.7 Scripting on macOS (in v1 scope)
 
 - Use **IronPython 2.7.12** in the net10 build. It is the same Python 2 language, so existing scripts and smart-list expressions (`PythonCommand.CompileExpression`) keep their semantics, including integer division.
-- **Headless hooks work:** Books, Library, NewBooks, ParseComicPath, CreateBookList, NetSearch, Startup, Shutdown.
-- **UI hooks** are not available on macOS in v1 and are hidden with a log message:
-  - `ComicInfoUI`/`QuickOpenUI` return a WinForms `Control`.
-  - `DrawThumbnailOverlay` takes a `Graphics`.
-  - `ComicInfoHtml`/`QuickOpenHtml` rely on the IE `window.external` bridge.
-- **Scripts that `clr.AddReference('System.Windows.Forms')`** will fail at import on macOS. Plan:
-  1. Show a per-script compatibility status in the Scripts preferences: "Windows only — uses WinForms".
-  2. Post-v1, consider a tiny WinForms-API dialog facade (MessageBox, simple input forms) implemented with Avalonia. Many community scripts only need `MessageBox` and simple forms.
-- `IApplication` methods that return/accept `Bitmap` work through the Drawing shim. `MainWindow` (`IWin32Window`) becomes a stub handle.
-- `ComicRack.Plugins` contains WinForms controls (`Controls/HtmlComicPageControl.cs`, `UIComicPageControl.cs`). Exclude them from the net10 link set.
+- **All hooks are supported, including UI hooks (D6).**
+  - Headless hooks (Books, Library, NewBooks, ParseComicPath, CreateBookList, NetSearch, Startup, Shutdown, ConfigScript, …) need only the Core.
+  - Scripts that build dialogs with `System.Windows.Forms`, the `ComicInfoUI`/`QuickOpenUI` panels, and `DrawThumbnailOverlay` (GDI+ `Graphics`) run through the **Script UI Compatibility Layer** (§5.9).
+  - `ComicInfoHtml`/`QuickOpenHtml` run through a WebKit view with a `window.external` bridge (§5.9.8).
+- `IApplication` methods that return/accept `Bitmap` work through the Drawing shim. `MainWindow` (`IWin32Window`) returns a facade window handle, so `form.ShowDialog(ComicRack.MainWindow)` works.
+- `ComicRack.Plugins` contains WinForms host controls (`Controls/HtmlComicPageControl.cs`, `UIComicPageControl.cs`). Exclude them from the net10 link set. The macOS app provides its own hosts (§5.9.7).
 - Packages: `.crplugin` install (`ComicRack.Engine/PackageManager.cs`) is portable. Script folders map to `IAppPaths` (`Contents/Resources/Scripts` + `~/Library/Application Support/…/Scripts`).
 - The `ScriptingLibraries` setting points to a CPython 2.7 `Lib` on Windows. On macOS, bundle the IronPython 2.7.12 StdLib inside the app.
 - Hardened runtime: the app needs `com.apple.security.cs.allow-jit` (and probably `allow-unsigned-executable-memory`) for .NET JIT/DLR code generation. Test this under notarization early (spike S4).
@@ -444,6 +452,163 @@ An **ImageIO-based decoder** (CoreGraphics `CGImageSourceCreateWithData`) is a s
 - Absolute paths inside the DB (`C:\Comics\…`) will not resolve. Provide an **"Import library from Windows" path-remapping tool**: prefix map `C:\Comics\` → `/Volumes/Comics/`, normalize separators and Unicode, then re-link files by path and, as a fallback, by file size + hash (the Core already has missing-file/relink logic to reuse).
 - Never write macOS paths into a DB that is also opened by Windows, unless the owner opts into a shared-DB mode (out of scope for v1).
 - Keep `Config.xml` platform-specific (window layouts and keymaps differ). Share only the portable sections (smart lists, preferences) via export/import.
+
+### 5.9 Script UI Compatibility Layer (D6: scripts with WinForms UI run unmodified)
+
+#### 5.9.1 Why this is feasible when porting ComicRack's own UI to the same layer is not
+
+| | ComicRack's own UI (rejected option C) | Community scripts (this layer) |
+|---|---|---|
+| WinForms surface used | Everything, including ~45 Win32 message hacks, native control subclassing, OpenGL, uxtheme, layered windows | A narrow, "textbook" slice: forms, standard controls, Anchor/Dock layout, events, `MessageBox`, file dialogs, timers, simple `Paint` handlers |
+| Who can change the code | Us | Third-party authors, often inactive. **Must run unmodified (D6).** |
+| Fidelity needed | Pixel-level look of a whole app | Functional: the dialog appears, controls work, the values come back |
+| Ownership cost | A full WinForms runtime | A facade sized by what scripts actually call, measured with a scanner (§5.9.9) |
+
+The bundled samples confirm the shape:
+- `ComicRack/Output/Scripts/*.py` use `Form`, `Label`, `Button`, `TextBox`, `CheckBox`, `ComboBox`, `ListBox`, `NumericUpDown`, `SaveFileDialog`, `MessageBox`, `DialogResult`, `AnchorStyles`, `DockStyle`, `FormBorderStyle`, `Font`, `Color`, `Point`, `Size`.
+- They also subclass `Control` (`class UIControl(Control)` in `Sample.py`) and draw on a `Graphics` (`FadeReadThumbnails`).
+- Community plugins (Comic Vine Scraper CE, Data Manager, CVIssueCount, …) add `ListView`, `PictureBox`, `TabControl`, `ProgressBar`, background threads with `Invoke`, and `Timer`.
+
+#### 5.9.2 How a script finds "WinForms" on macOS
+
+A typical script does:
+
+```python
+import clr
+clr.AddReference('System.Windows.Forms')      # or AddReferenceByPartialName
+clr.AddReference('System.Drawing')
+from System.Windows.Forms import *
+from System.Drawing import *
+```
+
+On .NET 10 macOS there is no `System.Windows.Forms` assembly, and `System.Drawing.dll` is only a facade that forwards `Bitmap`/`Graphics` to `System.Drawing.Common`, which doesn't work there. The script host fixes this **without touching the script**:
+
+1. **Same namespaces and type names.**
+   - `cYo.Compat.Forms` declares its types in namespace `System.Windows.Forms`.
+   - `cYo.Compat.Drawing` declares its types in `System.Drawing`, `System.Drawing.Drawing2D`, `System.Drawing.Imaging` and `System.Drawing.Text`.
+   - IronPython's `from X import *` resolves *namespaces* across all loaded assemblies, so the type names are what matter.
+2. **Assembly identity mapping.** The plugin host (`PythonCommand.CreateEngine`, net10 build) pre-loads both facade assemblies into the script runtime (`ScriptRuntime.LoadAssembly`). It also registers an `AssemblyLoadContext.Default.Resolving` handler that maps these requested names to the facades:
+
+   | Requested | Resolved to |
+   |---|---|
+   | `System.Windows.Forms` (any version/token) | `cYo.Compat.Forms` |
+   | `System.Drawing.Common` | `cYo.Compat.Drawing` |
+   | `System.Design`, `Microsoft.VisualBasic.Forms` | optional stub assemblies |
+
+   `clr.AddReference('System.Windows.Forms')` therefore succeeds. The type forwarders inside the shared-framework `System.Drawing.dll` also land on the Skia-backed `Bitmap`/`Graphics`.
+
+   Alternative, chosen by spike S6: ship the facades with the literal assembly names `System.Windows.Forms.dll` / `System.Drawing.Common.dll` in the app folder (there is no framework copy on macOS to conflict with). Verify how the .NET binder treats the public-key-token mismatch; the `Resolving` handler is the fallback either way.
+3. **Same API shape, generated, not hand-typed.**
+   - The facade's public surface is **generated from the WinForms/System.Drawing reference assemblies** using an API-surface generator (GenAPI from dotnet/arcade, or a small Roslyn tool). It produces every public type and member signature, including `virtual`/`protected` modifiers, so Python subclasses that override `OnPaint`, `OnResize`, `ProcessCmdKey` etc. bind correctly.
+   - Members not implemented yet throw `NotSupportedException("System.Windows.Forms.X.Y is not yet supported on macOS (ComicRack script compatibility layer)")`. Script authors and users then see a clear message instead of an `AttributeError`.
+   - Implementation is then **prioritized by real usage** (§5.9.9).
+
+#### 5.9.3 Architecture: facade object model plus native peers
+
+```
+ Python script (unchanged)
+   │  Form(), Button(), .Click += handler, .ShowDialog(), e.Graphics.FillRectangle(...)
+   ▼
+ cYo.Compat.Forms  (namespace System.Windows.Forms, net10, no UI-toolkit dependency)
+   ├─ Facade object model: Control, Form, Button, …   ← all state lives here (Text, Bounds,
+   │                                                     Font, Colors, Items, Checked, …)
+   ├─ Events + WinForms event ordering (Load, Shown, Activated, Closing, Click, …)
+   ├─ Layout engine: Anchor/Dock, AutoSize, FlowLayoutPanel, TableLayoutPanel, AutoScale
+   │   (managed algorithms ported from dotnet/winforms, MIT)
+   ├─ Threading: Invoke/BeginInvoke/InvokeRequired, auto-marshalling, modal loop
+   └─ IFormsBackend  ◄──────────── interface (create peer, set prop, show, run frame…)
+                                      │
+ ComicRack.Mac.FormsBackend  (Avalonia, macOS app only)
+   ├─ Peers: Form→Window, Button→Button, TextBox→TextBox, ListView→DataGrid/ListBox, …
+   ├─ Container peers are Canvas-based: absolute child positions come from the facade layout
+   ├─ Owner-draw: a Paint-capable peer surface gives Skia → cYo.Compat.Drawing.Graphics
+   └─ Native dialogs: MessageBox→NSAlert-style dialog, Open/Save/Folder→NSOpenPanel/NSSavePanel
+                                      │
+ cYo.Compat.Drawing (System.Drawing on SkiaSharp)  ←  shared with the Core (§5.3)
+```
+
+Key design rules:
+- **State lives in the facade, not in the peer.** A facade control can be created and configured on any thread before a peer exists, the way scripts do it. Peers are created lazily on the UI thread when the form is shown, and are destroyed on `Dispose`/close. This also makes the whole layer **testable headless**: run with a null backend, or with Avalonia's headless platform in CI on Linux.
+- **WinForms layout is computed by the facade**, using the same managed algorithms WinForms uses (`DefaultLayout` for Anchor/Dock, `FlowLayout`, `TableLayout`, `AutoScaleMode.Font` scaling), ported from the MIT-licensed dotnet/winforms sources. Avalonia only places peers at the computed rectangles inside a `Canvas`. Scripts that position controls with absolute `Location`/`Size` and `Anchor` therefore lay out as their authors designed them, independent of Avalonia's layout system.
+- **Look and feel:** peers are real Avalonia controls with the macOS theme, so dialogs look like Mac dialogs, not Windows ones, while keeping the authored geometry.
+- **Coordinates and DPI:** WinForms pixels map 1:1 to Avalonia device-independent pixels (96 DPI logical); Retina scaling is automatic. `AutoScaleMode.Font`/`Dpi` factors are computed against a 96-DPI baseline, so scripts' hard-coded sizes stay valid.
+- **Fonts:** `Microsoft Sans Serif`, `Segoe UI`, `Tahoma` and `Arial` map to the macOS system font (SF) at the same point size. Because text metrics differ, the facade applies **"grow-to-fit" for `AutoSize` labels/buttons** and logs (does not fail) when text overflows a fixed size.
+
+#### 5.9.4 Behaviours that must be emulated exactly (these are what make scripts "just work")
+
+| Behaviour | WinForms semantics scripts rely on | Emulation |
+|---|---|---|
+| **Modal `ShowDialog()`** | Blocks the calling code until the form closes, then returns a `DialogResult`. Code after `ShowDialog()` reads the controls' values. | **Nested dispatcher frame**: show the peer window as modal (owner = ComicRack main window, or a sheet), then run `Dispatcher.UIThread.PushFrame(frame)` until the form closes (Avalonia 11+ `DispatcherFrame`; confirm in spike S6). `AcceptButton`/`CancelButton`, `DialogResult` on buttons, Enter/Esc and `FormClosing` cancel are all handled in the facade. |
+| `MessageBox.Show` (all overloads) | Blocking, returns `DialogResult` | Same nested-frame technique with a native-looking alert (buttons/icons mapped: OK, OKCancel, YesNo, YesNoCancel, RetryCancel). |
+| **Cross-thread access** | ComicRack sets `Control.CheckForIllegalCrossThreadCalls = false` (`Program.cs:1147`), so many scripts update controls from worker threads **without** `Invoke` | Facade property setters called off the UI thread are **auto-marshalled** with `Dispatcher.UIThread.Post` (getters read facade state directly, so they are safe). Explicit `Invoke`/`BeginInvoke`/`InvokeRequired` map to the dispatcher. Scripts must never touch Avalonia directly. |
+| `ShowDialog()` called from a background thread | Works on Windows, because it creates its own message loop on that thread | Facade detects the non-UI thread, `Invoke`s the modal show onto the UI thread and blocks the calling thread until it closes. Same observable result. |
+| `Application.DoEvents()` | Pumps messages, used in progress loops | `Dispatcher.UIThread.RunJobs()` when on the UI thread, otherwise a no-op. |
+| `System.Windows.Forms.Timer` | Ticks on the UI thread | `DispatcherTimer`. |
+| `Form.Show()` (modeless) | Window stays open, script returns | Normal Avalonia window. The facade keeps a reference so it isn't garbage-collected. |
+| `Handle`, `IWin32Window` | Some scripts pass `Handle` around or use it as an owner | A synthetic, stable `IntPtr` per facade window, mapped back to the peer. Any P/Invoke with it is unsupported (§5.9.6). |
+| Keyboard | Scripts test `Keys.Control`, `e.KeyCode`, `ModifierKeys` | ⌘ is reported as `Keys.Control` (and Ctrl as well), so script logic written for Windows keeps working. Menu shortcut display uses ⌘ glyphs. |
+| Event order | `Load` → `Shown` → `Activated`; `FormClosing` → `FormClosed`; `TextChanged`/`SelectedIndexChanged`/`CheckedChanged` raised on programmatic changes too | Raised by the facade from facade state, not from peer callbacks, so the order matches WinForms even where Avalonia's order differs. A conformance test suite (§5.9.10) records the Windows event traces. |
+
+#### 5.9.5 Coverage tiers (initial targets; re-ranked by the usage scanner)
+
+| Tier | Contents | Target |
+|---|---|---|
+| **A: must (v1)** | `Form`, `Control`, `UserControl`, `Panel`, `GroupBox`, `Label`, `LinkLabel`, `Button`, `CheckBox`, `RadioButton`, `TextBox` (single and multi-line, `PasswordChar`, `ReadOnly`), `ComboBox` (DropDown/DropDownList), `ListBox`, `CheckedListBox`, `NumericUpDown`, `PictureBox` (Image, SizeMode), `ProgressBar`, `TabControl`/`TabPage`, `SplitContainer`, `FlowLayoutPanel`, `TableLayoutPanel`, `ToolTip`, `Timer`, `ContextMenuStrip`/`ToolStripMenuItem`, `MessageBox`, `OpenFileDialog`/`SaveFileDialog`/`FolderBrowserDialog`, `DateTimePicker`, `TrackBar`, Anchor/Dock/AutoSize/AutoScale, Paint/owner-draw on `Control`/`Panel`/`PictureBox`, Clipboard, Cursors (`WaitCursor`) | All bundled samples plus the top community plugins run |
+| **B: should (v1 if the scanner shows usage)** | `ListView` (Details/List/LargeIcon with `ImageList`, columns, sorting, check boxes), `TreeView`, `MenuStrip`, `StatusStrip`, `ToolStrip`, `DataGridView` (unbound/bound basic columns), `RichTextBox` (plain text plus simple formatting), `ColorDialog`, `FontDialog`, `WebBrowser` (navigate URL / `DocumentText` only, via WebKit), `HScrollBar`/`VScrollBar`, `MaskedTextBox`, `PropertyGrid` (read-only basic) | Long-tail community plugins |
+| **C: unsupported (clear error, documented)** | P/Invoke to `user32`/`gdi32`/`kernel32` via `ctypes` or `DllImport`, `WndProc`/`DefWndProc` overrides and `Message` handling, `NativeWindow`, Win32 `Handle`-based tricks, WPF (`PresentationFramework`, XAML), MSHTML DOM access through `WebBrowser.Document`, COM automation of Windows apps (Excel, IE) | Reported by the compatibility scanner before the user runs the script |
+
+#### 5.9.6 What still cannot run, and how users are told
+
+- Tier C APIs: the scanner (§5.9.9) flags them at install time and in the Scripts preferences ("Uses Windows-only API `user32.SendMessage` at line 120; this script cannot run on macOS"). At runtime they throw a single, readable error.
+- Windows file paths hard-coded in scripts (`C:\…`, `%APPDATA%`): `os.environ['APPDATA']` is mapped to the macOS app-data folder for scripts. Literal drive paths are flagged by the scanner as warnings.
+- **Escape hatch for authors (optional, never required):** `ComicRack.Platform` (`"Windows"`/`"macOS"`) exposed to scripts, so authors *can* add Mac-specific tweaks. Nothing depends on it.
+- **Compatibility patches without editing the original:** a `Scripts/.compat/<plugin>.py` overlay, loaded after the original module, can monkey-patch one function for a popular plugin whose author is inactive. It is maintained in this repo and versioned against the plugin's hash. This is the last resort, used only for Tier C cases worth saving.
+
+#### 5.9.7 ComicRack-specific UI hooks
+
+| Hook | Contract (unchanged for scripts) | macOS host |
+|---|---|---|
+| `ComicInfoUI` | Function returns a `Control` that implements `ShowInfo(books)` | `ScriptPanelHost` (Avalonia control) shows the facade control's peer tree as a tab in the Info inspector and calls `ShowInfo` on selection change (same contract as `ComicRack/ScriptUtility.cs` `CreatePagesUI`). |
+| `QuickOpenUI` | Same | Same host, in the Quick Open area. |
+| `DrawThumbnailOverlay` | `(book, graphics, bounds, flags)`, called after a thumbnail is drawn | The macOS browser grid renders each thumbnail into an `SKCanvas`. It wraps that canvas in a `cYo.Compat.Drawing.Graphics` (clip = cell bounds) and calls the hook. Overlay results are cached with the thumbnail and invalidated on book change, because Python per-cell calls are slow (budget: < 1 ms per visible cell, measured). |
+| `ConfigScript` | Usually shows a WinForms settings dialog | Works through the modal emulation. |
+| `IPluginEnvironment.Theme` (`ToolStripRenderer`) | A few scripts style toolbars with it | Returns a facade renderer object whose colours come from the macOS theme. Drawing calls go through the Drawing shim. |
+
+#### 5.9.8 HTML panels (`ComicInfoHtml`, `QuickOpenHtml`, `WebBrowser`)
+
+- Rendering: WKWebView embedded with Avalonia's `NativeControlHost` (a small ObjC-interop wrapper; or an existing Avalonia WebView package; evaluate licences, since some Avalonia WebView options are commercial).
+- Strings starting with `!` are URLs and are navigated directly (as today).
+- The `window.external` bridge (used by `Sample.py`: `window.external.ComicRack.OpenBooks.OpenFile(...)`) is emulated by an injected user script:
+  - It defines `window.external` as a JavaScript Proxy that forwards method calls to the host via `webkit.messageHandlers.comicrack.postMessage({path, args})`.
+  - The host resolves the path against the same `ScriptProvider` object model (`ComicRack.Plugins/Controls/HtmlComicPageControl.cs`) and invokes it.
+- Limitation: WebKit messaging is asynchronous. **Method calls work** (the common case). **Synchronous property reads** (`var x = window.external.Config`) are served from a snapshot injected at page load. Writes are forwarded asynchronously. The scanner flags HTML that reads properties synchronously.
+
+#### 5.9.9 Usage-driven scope: the script compatibility scanner
+
+The facade is sized by data, not guesswork. Build `ComicRack.Cli script-scan`:
+1. Collect a **corpus** of community scripts and `.crplugin` packages: bundled samples, FrederikBaerentsen/ComicRack_Scripts, Comic Vine Scraper CE, Data Manager, CVIssueCount, the AmazonScrapper loader, forum archives. Keep the corpus **out of the repo** unless licences allow; store only the scan results.
+2. Parse each `.py` with the IronPython parser (AST, so it understands Python 2 syntax). Resolve `from System.Windows.Forms import *` names, attribute chains on known types, `clr.AddReference*` calls and `ctypes`/`DllImport` use.
+3. Also scan bundled **.NET assemblies** inside plugins (`clr.AddReferenceToFileAndPath`): read their member references with `System.Reflection.Metadata`. Plugins such as maforget's AmazonScrapper are C# assemblies compiled against .NET Framework WinForms. They load on .NET 10 and bind to the facade *if* the referenced member signatures exist, which is why the generated full-signature surface (§5.9.2) matters.
+4. Output a ranked table `type.member → #scripts using it`. That ranking is the **implementation backlog** for P4. Commit the table to `mac/scripting/compat-usage.md`.
+5. The same scanner powers the end-user compatibility report (§5.9.6).
+
+#### 5.9.10 How fidelity is verified (agent-friendly)
+
+- **Control-tree snapshots:** a small helper script runs a plugin's dialog to its `Shown` event and dumps the control tree (type, name, bounds, text, visible/enabled, items). It does this on **Windows with real WinForms** (CI job on `windows-latest`, net48) and on **macOS/Linux with the facade** (Avalonia headless). Agents diff the JSON: bounds within ±2 px after font-metric normalization, identical structure and values.
+- **Event-trace conformance:** a scripted interaction (set text, click, select item, close) records the event sequence in both environments. The sequences must match.
+- **Paint snapshots:** `Paint` handlers and `DrawThumbnailOverlay` render to bitmaps; compare perceptually against GDI+ (same harness as P3).
+- **Smoke run of the corpus:** run each corpus script's hooks headless with a fake library. Fail on `NotSupportedException` from Tier A/B members.
+- **Human acceptance on a Mac:** the top 10 plugins by usage, checklist per plugin.
+
+#### 5.9.11 Effort and ownership
+
+- Size: the facade object model + layout + threading + backend peers for Tier A is a substantial component, but it is bounded and mostly mechanical once the generated API surface and the conformance harness exist. **Estimate: 25–40 agent tasks, ~5–8 weeks calendar**, partly in parallel with P5 (it shares the Avalonia app shell).
+- Prior art to reuse, not reinvent:
+  - dotnet/winforms (MIT): layout engines, control state logic, event ordering.
+  - Mono's managed WinForms "MWF" (MIT): a complete managed implementation over a backend driver interface. Useful as a reference for peer-less control logic.
+  - GenAPI: surface generation.
+  - Avalonia headless: tests.
+- Long-term ownership: this layer is maintained by this fork. Its scope only grows when the scanner shows real scripts need more. It is never used by the Windows build, where scripts keep using real WinForms.
 
 ---
 
@@ -460,7 +625,7 @@ An **ImageIO-based decoder** (CoreGraphics `CGImageSourceCreateWithData`) is a s
 | Metadata editing (single + multiple books), ComicInfo.xml write-back | ✅ ComicBook, providers, `ComicInfo` writers | Info dialog/inspector; 7zz or managed writer |
 | Formats CBZ/CBR(RAR5)/CB7/CBT/PDF/WebP/HEIF/AVIF/JXL/J2K | ✅ providers | Native libs + resolver (§5.5) |
 | Export/convert (CBZ, PDF, image formats) | ✅ `ComicExporter`, storage providers | Export sheet UI; sharpPDF via Drawing shim (or PdfSharpCore if it fails) |
-| Python scripts/plugins (headless hooks) | ✅ Plugins via IronPython 2.7.12 | Scripts menu, preferences pane, `.crplugin` install via drag-drop/Finder |
+| Python scripts/plugins: **all hooks, including WinForms dialogs, UI panels, thumbnail overlays and HTML panels (D6)** | ✅ Plugins via IronPython 2.7.12 | Script UI Compatibility Layer (§5.9), Scripts menu, preferences pane with per-script compatibility report, `.crplugin` install via drag-drop/Finder |
 | Preferences (subset), localization (19 languages via TR XML) | ✅ TR | Preferences window. New TR XML files only for the new macOS views. |
 | Backup manager | ✅ Core backup | Small UI |
 
@@ -481,8 +646,8 @@ An **ImageIO-based decoder** (CoreGraphics `CGImageSourceCreateWithData`) is a s
 ### 6.3 Deferred (post-v1 backlog, in suggested order)
 
 1. **Wi-Fi device sync** with ComicRack Android/iOS apps (`Engine/Sync/WirelessSyncProvider.cs`: portable sockets, UDP multicast 224.34.123.90:7615, TCP 7614/7620+). It needs the macOS **Local Network privacy** prompt (`NSLocalNetworkUsageDescription`, Bonjour/multicast entitlement `com.apple.developer.networking.multicast`, which must be requested from Apple).
-2. **Script UI facade** (MessageBox/simple forms) and HTML panels via a WebView (WKWebView through Avalonia's NativeWebView or a WebView package, with a new JS bridge).
-3. **DjVu** via djvulibre.
+2. **DjVu** via djvulibre.
+3. **Script UI compatibility Tier B long tail** (§5.9.5), where the scanner shows low usage.
 4. **Library sharing:** WCF NetTcp with `SecurityMode.Message` is **not supported** by CoreWCF or the .NET WCF client. So macOS↔Windows sharing needs a **new protocol** (HTTP+JSON or gRPC over TLS) implemented on **both** sides, or a CoreWCF Transport-security endpoint added to the Windows server. Owner decision required (§10).
 5. **Removable-drive sync** (`/Volumes`).
 6. **USB/MTP sync** (libmtp; low value, high cost; Android phones in MTP mode don't mount on macOS).
@@ -592,6 +757,10 @@ There are **zero automated tests**, and the code is decompiled (names are someti
 | R8 | Performance regressions (large libraries of 100k+ books, SMB) | M | M | Benchmarks in CLI harness (scan, load DB, filter); virtualization | P2/P5 |
 | R9 | Legal/provenance challenge increases with Mac distribution | L | H | Keep the README stance; no App Store; GPL compliance (source link in About) | Owner |
 | R10 | Agent-produced code that compiles but is subtly wrong (decompiled code, few comments) | M | H | Characterization tests as gates; Opus reviews of Sonnet diffs; human on-device acceptance checklist per phase | all |
+| R11 | Script UI facade coverage is never "complete"; long-tail plugins hit unimplemented members | H | M | Usage scanner drives the backlog (§5.9.9); generated full API surface gives clear `NotSupportedException` messages; compatibility report before running; `.compat` overlays for important inactive plugins | P4 |
+| R12 | Blocking `ShowDialog`/`MessageBox` semantics (nested dispatcher frames) misbehave on macOS (re-entrancy, sheets, app deactivation) | M | H | Spike S6 first; conformance tests for nested modals, modal-from-background-thread and closing during a nested frame | P0/P4 |
+| R13 | Scripts relying on unmarshalled cross-thread control access crash or race on macOS | M | H | Auto-marshalling of facade setters; facade state is thread-safe; stress tests with corpus plugins that use worker threads | P4 |
+| R14 | Layout differences (fonts/metrics) make dialogs clip or overlap | M | M | Layout computed by ported WinForms algorithms; AutoSize grow-to-fit; control-tree snapshot diffs vs Windows | P4 |
 
 ---
 
@@ -626,7 +795,8 @@ Parallelism: use separate git worktrees/branches per task. Phases P2/P3/P4 can r
 6. Never introduce BinaryFormatter, `Thread.Abort`, CodeDom or private reflection on the net10 path.
 7. Never commit secrets (Apple signing). Use CI secrets.
 8. No model identifiers or session links in code, comments or docs.
-9. Keep this document current: when a decision or a fact here changes, update the relevant section in the same PR.
+9. The script compatibility facades (`cYo.Compat.Forms`, `cYo.Compat.Drawing`) are **net10/macOS only**. They must never be referenced by the net48 build, where scripts keep using real WinForms/GDI+. Never change a hook signature or plugin-facing type to make the facade easier; the facade adapts to the scripts (D6).
+10. Keep this document current: when a decision or a fact here changes, update the relevant section in the same PR.
 
 ### 9.3 Phases
 
@@ -642,11 +812,17 @@ Each phase lists **goal → tasks → exit criteria**. IDs are stable so plannin
   - **S3:** ImageIO decode (via `CGImageSource` P/Invoke) vs bundled dylibs for WebP/AVIF/HEIF/JXL on an M-series Mac.
   - **S4:** IronPython 2.7.12 on .NET 10 osx-arm64 inside a hardened-runtime, notarized hello-world `.app`: run `Sample.py` headless hooks.
   - **S5:** Avalonia 12 virtualized grid with 100k items + thumbnails; reader Skia control at 60 fps on a 4K page.
+  - **S6:** Script UI layer feasibility:
+    - `clr.AddReference('System.Windows.Forms')` resolving to a generated facade (identity mapping, §5.9.2)
+    - a Python subclass of `Control` overriding `OnPaint`
+    - blocking `ShowDialog()` via a nested Avalonia dispatcher frame, including from a background thread
+    - `Sample.py` + `Autonumber.py` dialogs shown on a Mac
+    - Output: go/no-go and the identity-mapping choice.
 - **Exit:** CI green; S1–S5 reports merged; baseline tests green on net48.
 
 #### P1: Core compiles on .NET 10 (Sonnet-heavy, Opus review)
 - **P1.1** Shadow projects with link sets + exclusion lists (§5.2): `cYo.Common.Core`, `ComicRack.Engine.Core`, `ComicRack.Plugins.Core`.
-- **P1.2** `cYo.Compat.WinForms` types-only shim; link `ItemViewConfig`, `ItemViewColumnInfo`, `ItemViewMode` (and dependents) into Core.
+- **P1.2** `cYo.Compat.Forms`, first slice (types only: enums/structs + `Application` facade); link `ItemViewConfig`, `ItemViewColumnInfo`, `ItemViewMode` (and dependents) into Core. Generate the slice from the reference assemblies so it later grows into the full facade (§5.9.2).
 - **P1.3** API-usage inventory of System.Drawing in the link set (Roslyn-based or compiler-error-based), then implement `cYo.Compat.Drawing` (or adopt the S2 winner) member by member.
 - **P1.4** Minimal edits:
   - `#if` around BinaryFormatter (`DiskCache.cs`)
@@ -670,11 +846,28 @@ Each phase lists **goal → tasks → exit criteria**. IDs are stable so plannin
 - **P3.3** Memory and cache tuning for Retina (2× thumbnails).
 - **Exit:** visual diffs below threshold; page-decode p95 within budget.
 
-#### P4: Scripting on macOS
-- **P4.1** IronPython 2.7.12 for net10 in `ComicRack.Plugins.Core`; bundle the StdLib.
-- **P4.2** Hook filtering (hide UI hooks), per-script compatibility detection (static scan for `System.Windows.Forms` imports).
-- **P4.3** `.crplugin` install flow; fix the `CommitInstallPackage` `SafeDelete` bare-filename bug (upstreamable).
-- **Exit:** bundled sample scripts' headless hooks run on macOS; smart-list Python expressions give identical results to net48 on the fixture DB.
+#### P4: Scripting on macOS, including the Script UI Compatibility Layer (§5.9)
+- **P4.1** IronPython 2.7.12 for net10 in `ComicRack.Plugins.Core`; bundle the StdLib; `.crplugin` install flow; fix the `CommitInstallPackage` `SafeDelete` bare-filename bug (upstreamable).
+- **P4.2** Script compatibility scanner (`ComicRack.Cli script-scan`) + corpus collection, producing the ranked `mac/scripting/compat-usage.md` that drives P4.4–P4.6.
+- **P4.3** Generate the full `System.Windows.Forms` and `System.Drawing` public surface into `cYo.Compat.Forms`/`cYo.Compat.Drawing` as stubs that throw `NotSupportedException`. Add the assembly-identity mapping in the net10 plugin host.
+- **P4.4** Facade core:
+  - control/form object model and event ordering
+  - layout engines ported from dotnet/winforms
+  - threading (auto-marshal, `Invoke`)
+  - modal loop (`ShowDialog`, `MessageBox`)
+  - `IFormsBackend` interface plus a null/headless backend
+- **P4.5** `ComicRack.Mac.FormsBackend`: Avalonia peers for Tier A controls, native file dialogs, owner-draw surface → `Graphics`. One task per 2–4 controls, ordered by the usage ranking.
+- **P4.6** ComicRack hook hosts: `ComicInfoUI`/`QuickOpenUI` panel host, `DrawThumbnailOverlay` in the browser grid, HTML panels (WKWebView + `window.external` bridge), `IPluginEnvironment.MainWindow`/`Theme`.
+- **P4.7** Conformance harness:
+  - control-tree snapshot + event-trace recorder on Windows (net48, real WinForms) and macOS/Linux (facade, Avalonia headless)
+  - CI diff
+  - corpus smoke run
+- **P4.8** Tier B controls by usage rank; user-facing compatibility report in Scripts preferences.
+- **Exit:**
+  - All bundled sample scripts run unmodified on macOS, including the `Sample.py` UI panel, thumbnail overlay and HTML panel, `Autonumber.py`/`NewComics.py` dialogs, and `SaveFileDialog`.
+  - The top-10 community plugins by usage pass the owner's on-Mac checklist.
+  - Smart-list Python expressions give identical results to net48 on the fixture DB.
+  - Control-tree and event-trace diffs are within tolerance for the corpus dialogs.
 
 #### P5: Avalonia macOS app v1 (largest phase; split per screen)
 - **P5.0** App shell:
@@ -709,8 +902,9 @@ Crash/log collection, SMB/large-library testing, TCC/permissions UX, performance
 
 ```
 P0 ──► P1 ──┬─► P2 ──┬─► P3
-            │        ├─► P4
-            │        └─► P5.0 ─► P5.1..P5.7 (parallel per screen)
+            │        ├─► P4.1–P4.4 (headless; can start right after P1)
+            │        └─► P5.0 ─┬─► P5.1..P5.7 (parallel per screen)
+            │                  └─► P4.5–P4.8 (needs the Avalonia shell)
             └────────────────────────────────► P6 (can start after P5.0)
 P5 + P6 ──► P7 ──► v1 release
 ```
@@ -741,11 +935,11 @@ Prompt seed for a planning session:
 | P1 | 10–20 | 2–3 wks | Drawing shim size (S1/S2) |
 | P2 | 10–15 | 2–3 wks | Hidden coupling, native builds |
 | P3 | 4–8 | 1–2 wks | Fidelity thresholds |
-| P4 | 4–6 | 1 wk | IronPython under hardened runtime |
+| P4 (incl. Script UI layer) | 30–45 | 5–8 wks (parallel with P5) | Facade coverage long tail, modal-loop semantics (S6) |
 | P5 | 20–35 | 5–8 wks | UI polish, reader control |
 | P6 | 5–8 | 1–2 wks | Notarization of all natives |
 | P7 | 5–10 | 2–3 wks | Real-world libraries |
-| **Total** | **~65–115** | **~12–20 wks** (P2–P4 overlap) | |
+| **Total** | **~90–155** | **~15–24 wks** (P2–P5 overlap) | |
 
 Human time is dominated by: decisions (§10), PR review of edits to existing files, and on-Mac acceptance testing (budget ~1–2 h per P5 screen task).
 
@@ -764,6 +958,9 @@ Human time is dominated by: decisions (§10), PR review of edits to existing fil
 | Q7 | Should the Avalonia UI eventually also replace the WinForms UI on Windows? | No (out of scope); keep the option open | post-v1 |
 | Q8 | Branding/bundle id (`org.comicrackce.ComicRack`?), app name on macOS, icon | "ComicRack CE", id chosen by owner | P6.1 |
 | Q9 | Minimum macOS: 14 (D5) — raise to 15 if Avalonia/ImageIO features need it? | 14 | P6 |
+| Q10 | Script corpus: which community plugins form the "top-10 must work" acceptance list, and may their code be stored (privately) for CI smoke tests? | Owner provides the list; scan results only in the repo | P4.2 |
+| Q11 | `.compat` overlay patches for inactive plugins: acceptable, and who maintains them? | Acceptable as a last resort, maintained in this fork | P4.8 |
+| Q12 | HTML panel bridge: build a small WKWebView wrapper, or adopt a WebView package (check licence)? | Small in-house wrapper | P4.6 |
 
 ---
 
@@ -785,7 +982,7 @@ Human time is dominated by: decisions (§10), PR review of edits to existing fil
 | NTFS ADS | `ComicRack.Engine/IO/Provider/NtfsInfoStorage.cs`, `cYo.Common/Win32/AlternateDataStreamFile.cs` |
 | Renderer seam | `cYo.Common.Presentation/{IBitmapRenderer,IHardwareRenderer,IControlRenderer,BitmapGdiRenderer}.cs`, `Tao/ControlOpenGlRenderer.cs`, `ComicRack.Engine.Display.Forms/ImageDisplayControl.cs:1830-1882` |
 | Persisted UI config in model | `cYo.Common.Windows/Forms/{ItemViewConfig,ItemViewColumnInfo,ItemViewMode}.cs`, `ComicRack.Engine/Database/{StacksConfig,DisplayListConfig}.cs`, `Metadata/ComicBook/ComicBookMetadata.cs` |
-| Scripting | `ComicRack.Plugins/{PythonCommand,PluginEngine,PluginEnvironment,IPluginEnvironment}.cs`, `Automation/*`, `ComicRack/ScriptUtility.cs`, `ComicRack.Engine/PackageManager.cs`, `ComicRack/Output/Scripts/*` |
+| Scripting | `ComicRack.Plugins/{PythonCommand,PluginEngine,PluginEnvironment,IPluginEnvironment,Command}.cs`, `Automation/*`, `ComicRack/ScriptUtility.cs` (UI hook hosting: `CreatePagesUI`, `CreatePagesHtml`), `ComicRack/MainForm.cs:793` (`DrawThumbnailOverlay`), `ComicRack.Plugins/Controls/{HtmlComicPageControl,UIComicPageControl}.cs` (Windows hosts, `window.external`), `ComicRack.Engine/PackageManager.cs`, `ComicRack/Output/Scripts/*` (samples: `Sample.py` covers every UI hook type) |
 | Networking (deferred) | `ComicRack.Engine/IO/Network/*`, `cYo.Common/Net/Broadcaster.cs`, `cYo.Common/Runtime/SingleInstance.cs` |
 | Sync (deferred) | `ComicRack.Engine/Sync/*`, `cYo.Common/Win32/PortableDevices/*` |
 | Thread.Abort sites | `cYo.Common/Threading/{ThreadUtility.cs:247,BackgroundRunner.cs:77}`, `ComicRack.Engine/ComicScanner.cs:97`, UI: `AutomaticProgressDialog.cs:88`, `RemoteConnectionView.cs:249` |
@@ -833,6 +1030,7 @@ _(Empty. Append S1–S5 write-ups here: date, question, method, result, decision
 - Rosetta 2 timeline: [MacRumors: macOS 26.4 Rosetta warnings](https://www.macrumors.com/2026/02/16/macos-tahoe-26-4-rosetta-2-warnings/), [heise: Intel software will no longer run](https://heise.de/-10460014), [macerkopf: macOS 27 last with full Rosetta 2](https://www.macerkopf.de/2026/06/10/macos27-golden-gate-letzte-version/), [Gigazine: WWDC25 announcement](https://wbgsv0a.gigazine.net/gsc_news/en/20250611-apple-macos-tahoe-26-intel-mac-support)
 - Libraries: [GeneXus.Drawing.Common (System.Drawing on SkiaSharp)](https://www.nuget.org/packages/GeneXus.Drawing.Common/), [bblanchon.PDFium.macOS](https://www.nuget.org/packages/bblanchon.PDFium.macOS), [IronPython 2.7.12 (netstandard2.0/netcoreapp3.1)](https://www-1.nuget.org/packages/IronPython/2.7.12), [IronPython 3.4.2](https://www.nuget.org/packages/IronPython/latest), [CoreWCF 1.0 announcement](https://devblogs.microsoft.com/dotnet/corewcf-v1-released/), [Eto.Platform.macOS](https://www.nuget.org/packages/Eto.Platform.macOS), [Modern.Forms](https://github.com/jsuarezruiz/modern.forms), [ModernFormsNext](https://www.nuget.org/packages/ModernFormsNext)
 - Apple image formats: [WWDC23 session 10122 (HEIC/AVIF/JPEG XL in Safari 17)](https://developer.apple.com/videos/play/wwdc2023/10122), [MacGeneration on JPEG XL support since macOS Sonoma](https://www.macg.co/ailleurs/2026/01/chrome-va-reprendre-en-charge-le-jpeg-xl-apres-quelques-annees-de-pause-306157)
+- Script ecosystem (§5.9): [maforget/ComicRack_AmazonScrapper (.NET-assembly plugin with a one-line Python loader)](https://github.com/maforget/ComicRack_AmazonScrapper), [FrederikBaerentsen ComicRack_Scripts / CVIssueCount](https://gitea.baerentsen.space/FrederikBaerentsen/ComicRack_Scripts/releases/tag/CVIssueCount.v3.0), [ComicRack scripts documentation site](https://comicrack.baerentsen.space/Introduction/), [dotnet/winforms (MIT; layout engines and control logic to port)](https://github.com/dotnet/winforms), [WPF `Dispatcher.PushFrame` (the nested-frame model Avalonia's dispatcher mirrors)](https://learn.microsoft.com/ru-ru/dotnet/api/system.windows.threading.dispatcher.pushframe)
 - Domain alternatives: [AlternativeTo: ComicRack alternatives](https://alternativeto.net/software/comicrack/), [YACReader alternatives](https://alternativeto.net/software/yacreader), [How-To Geek: comic readers for Windows/Mac/Linux](https://www.howtogeek.com/321394/the-best-comic-book-readers-for-windows-mac-and-linux/)
 
 > Facts marked "verify" in the text, and every version number above, should be re-checked by the session that depends on them. Ecosystem details (Avalonia Metal default, ImageIO format coverage per macOS version, package contents) move quickly.
