@@ -243,6 +243,8 @@ Every task runs on **Sonnet**. **Effort** is the level to set for that session (
 
 **G0:** the owner reads `census.md` and `drawing-route.md`, decides Q1, and approves or rejects each "Needs edit" item.
 
+**G0 outcome (owner, 2026-10-17):** census accepted; no "Needs edit" items. Q1: custom shim in the literal `System.Drawing` namespaces; GeneXus is not adopted. Licence follow-up (Apache-2.0 vs GPL) is non-blocking.
+
 ### M1: Core-lite runs on macOS
 
 #### M1.1 `cYo.Compat.Forms`, types-only slice
