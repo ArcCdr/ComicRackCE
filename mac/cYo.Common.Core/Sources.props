@@ -1,0 +1,16 @@
+<Project>
+  <!-- Sources and packages of cYo.Common.Core. Imported by its own project, and by downstream shadow
+       projects in merged census mode (CensusMerged=true), so that errors in Common do not hide errors
+       in the projects that depend on it. -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common\**\*.cs"
+             Exclude="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\PortableDevices\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Reflection\CodeDomDuckTypeGenerator.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\obj\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\bin\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Properties\AssemblyInfo.cs"
+             LinkBase="Common" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Same as cYo.Common.csproj, minus System.Management -->
+    <PackageReference Include="DynamicExpresso.Core" Version="2.19.3" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.10" />
+  </ItemGroup>
+</Project>

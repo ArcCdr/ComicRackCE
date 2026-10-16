@@ -1,0 +1,23 @@
+<Project>
+  <!-- Sources and packages of ComicRack.Engine.Core (see cYo.Common.Core/Sources.props). -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\**\*.cs"
+             Exclude="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Controls\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\ComicDisplay.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\GestureEventArgs.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Drawing\Thumb*Renderer.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Network\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\obj\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\bin\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Properties\AssemblyInfo.cs"
+             LinkBase="Engine" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="sharpPDF">
+      <HintPath>$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\DLL\sharpPDF.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Same as ComicRack.Engine.csproj, minus bblanchon.PDFium.Win32 -->
+    <PackageReference Include="CSJ2K" Version="3.0.0" />
+    <PackageReference Include="LibHeifSharp" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Bcl.Numerics" Version="10.0.10" />
+    <PackageReference Include="MySqlConnector" Version="2.6.1" />
+    <PackageReference Include="PDFiumSharpV2" Version="1.1.4" />
+    <PackageReference Include="SharpCompress" Version="0.50.4" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+</Project>

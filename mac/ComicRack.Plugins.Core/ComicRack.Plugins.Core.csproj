@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Shadow.props" />
+  <PropertyGroup>
+    <RootNamespace>cYo.Projects.ComicRack.Plugins</RootNamespace>
+    <AssemblyName>ComicRack.Plugins.Core</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ComicRack.Plugins\**\*.cs"
+             Exclude="..\..\ComicRack.Plugins\Controls\**;..\..\ComicRack.Plugins\obj\**;..\..\ComicRack.Plugins\bin\**"
+             LinkBase="Plugins" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Same as ComicRack.Plugins.csproj, with IronPython 2.7.12 instead of 2.7.4 -->
+    <PackageReference Include="IronPython" Version="2.7.12" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(CensusMerged)' != 'true'">
+    <ProjectReference Include="..\ComicRack.Engine.Core\ComicRack.Engine.Core.csproj" />
+    <ProjectReference Include="..\cYo.Common.Core\cYo.Common.Core.csproj" />
+  </ItemGroup>
+  <Import Project="..\ComicRack.Engine.Core\Sources.props" Condition="'$(CensusMerged)' == 'true'" />
+  <Import Project="..\cYo.Common.Core\Sources.props" Condition="'$(CensusMerged)' == 'true'" />
+</Project>

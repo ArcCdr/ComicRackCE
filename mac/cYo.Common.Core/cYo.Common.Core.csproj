@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Shadow.props" />
+  <PropertyGroup>
+    <RootNamespace>cYo.Common</RootNamespace>
+    <AssemblyName>cYo.Common.Core</AssemblyName>
+  </PropertyGroup>
+  <Import Project="Sources.props" />
+  <ItemGroup>
+    <Compile Include="..\..\cYo.Common\Properties\AssemblyInfo.cs" LinkBase="Common" />
+  </ItemGroup>
+</Project>

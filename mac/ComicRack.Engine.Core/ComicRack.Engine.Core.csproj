@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Shadow.props" />
+  <PropertyGroup>
+    <RootNamespace>cYo.Projects.ComicRack.Engine</RootNamespace>
+    <AssemblyName>ComicRack.Engine.Core</AssemblyName>
+  </PropertyGroup>
+  <Import Project="Sources.props" />
+  <ItemGroup>
+    <Compile Include="..\..\ComicRack.Engine\Properties\AssemblyInfo.cs" LinkBase="Engine" />
+  </ItemGroup>
+  <!-- cYo.Common.Windows and cYo.Common.Presentation are deliberately not referenced yet (M1.1 / M1.3). -->
+  <ItemGroup Condition="'$(CensusMerged)' != 'true'">
+    <ProjectReference Include="..\cYo.Common.Core\cYo.Common.Core.csproj" />
+  </ItemGroup>
+  <Import Project="..\cYo.Common.Core\Sources.props" Condition="'$(CensusMerged)' == 'true'" />
+</Project>
