@@ -6,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -100,8 +103,13 @@ namespace Census
 
 			bool haveFull = results.All(r => r.FullErrors >= 0);
 			var diags = haveFull ? fullDiags : cscDiags;
-			string md = Render(pass, repoDir, results, diags, cscDiags.Count, haveFull, other);
+			var buckets = LoadBuckets(macDir);
+			string md = Render(pass, repoDir, results, diags, cscDiags.Count, haveFull, other, buckets);
 			File.WriteAllText(outFile, md);
+			// Raw list of every diagnostic (git-ignored artifacts folder), for working through the errors.
+			File.WriteAllLines(Path.Combine(logDir, $"diagnostics.{pass}.txt"), diags
+				.OrderBy(d => d.File, StringComparer.Ordinal).ThenBy(d => d.Line)
+				.Select(d => $"{(d.File.StartsWith(repoDir + "/", StringComparison.Ordinal) ? d.File[(repoDir.Length + 1)..] : d.File)}({d.Line},{d.Col}): {d.Code}: {d.Message}"));
 			Console.WriteLine($"[{pass}] msbuild/csc (declaration phase) unique errors: {cscDiags.Count}");
 			Console.WriteLine($"[{pass}] TOTAL unique errors (full Roslyn diagnostics): {diags.Count}; other (non-compiler) errors: {other.Count}");
 			Console.WriteLine($"Wrote {outFile}");
@@ -272,7 +280,87 @@ namespace Census
 			return "other";
 		}
 
-		private static string Render(string pass, string repoDir, List<BuildResult> results, HashSet<Diag> diags, int cscCount, bool full, HashSet<string> other)
+		// Which API family a diagnostic is about. The type-name sets come from the reference assemblies that pass A resolves.
+		private sealed class Buckets
+		{
+			public HashSet<string> Drawing = new();
+			public HashSet<string> Forms = new();
+
+			public static readonly string[] Names =
+			{
+				"System.Drawing", "System.Windows.Forms", "cYo.Common.Windows / Presentation", "WCF / System.Web.Services", "Win32 and security APIs (SystemEvents, permissions)", "other",
+			};
+
+			public string Of(Diag d)
+			{
+				string sym = Symbol(d);
+				string head = sym.Split('.', ' ')[0];
+				string text = sym + " " + d.Message;
+				if (text.Contains("System.Drawing", StringComparison.Ordinal) || Drawing.Contains(head))
+					return Names[0];
+				if (text.Contains("System.Windows.Forms", StringComparison.Ordinal) || text.Contains("IDataObject", StringComparison.Ordinal) || Forms.Contains(head))
+					return Names[1];
+				if (text.Contains("cYo.Common.Windows", StringComparison.Ordinal) || text.Contains("cYo.Common.Presentation", StringComparison.Ordinal))
+					return Names[2];
+				if (text.Contains("ServiceModel", StringComparison.Ordinal) || text.Contains("System.Web.Services", StringComparison.Ordinal) || text.Contains("ServiceContract", StringComparison.Ordinal))
+					return Names[3];
+				if (text.Contains("Microsoft.Win32", StringComparison.Ordinal) || text.Contains("System.Security.Permissions", StringComparison.Ordinal)
+					|| head is "SystemEvents" or "UserPreferenceCategory" or "UIPermissionWindow")
+					return Names[4];
+				return Names[5];
+			}
+		}
+
+		private static Buckets LoadBuckets(string macDir)
+		{
+			var b = new Buckets();
+			try
+			{
+				var psi = new ProcessStartInfo("dotnet") { WorkingDirectory = macDir, RedirectStandardOutput = true, RedirectStandardError = true };
+				foreach (var a in new[]
+				{
+					"msbuild", "-restore", "ComicRack.Plugins.Core/ComicRack.Plugins.Core.csproj", "-p:CensusPass=A",
+					"-t:ResolveReferences;FindReferenceAssembliesForReferences", "-getItem:ReferencePathWithRefAssemblies", "-nologo",
+				})
+					psi.ArgumentList.Add(a);
+				using var p = Process.Start(psi)!;
+				var errTask = p.StandardError.ReadToEndAsync();
+				string stdout = p.StandardOutput.ReadToEnd();
+				p.WaitForExit();
+				errTask.Wait();
+				if (p.ExitCode != 0)
+					throw new InvalidOperationException("msbuild item query failed: " + stdout.Trim());
+				int start = stdout.StartsWith("{", StringComparison.Ordinal) ? 0 : stdout.IndexOf("\n{", StringComparison.Ordinal) + 1;
+				using var doc = JsonDocument.Parse(stdout[start..]);
+				foreach (var e in doc.RootElement.GetProperty("Items").GetProperty("ReferencePathWithRefAssemblies").EnumerateArray())
+				{
+					string path = e.GetProperty("FullPath").GetString();
+					var set = Path.GetFileNameWithoutExtension(path) switch
+					{
+						"System.Drawing.Common" or "System.Drawing.Primitives" or "System.Drawing" => b.Drawing,
+						"System.Windows.Forms" or "System.Windows.Forms.Primitives" => b.Forms,
+						_ => null,
+					};
+					if (set == null)
+						continue;
+					using var pe = new PEReader(File.OpenRead(path));
+					var md = pe.GetMetadataReader();
+					foreach (var th in md.TypeDefinitions)
+					{
+						var td = md.GetTypeDefinition(th);
+						if ((td.Attributes & TypeAttributes.VisibilityMask) == TypeAttributes.Public)
+							set.Add(md.GetString(td.Name));
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.Error.WriteLine("Buckets: reference assemblies not available, using name matching only: " + ex.Message);
+			}
+			return b;
+		}
+
+		private static string Render(string pass, string repoDir, List<BuildResult> results, HashSet<Diag> diags, int cscCount, bool full, HashSet<string> other, Buckets buckets)
 		{
 			string Rel(string f) => f.StartsWith(repoDir + "/", StringComparison.Ordinal) ? f[(repoDir.Length + 1)..] : f;
 
@@ -320,6 +408,19 @@ namespace Census
 			sb.AppendLine("|---|---|---|");
 			foreach (var g in diags.GroupBy(d => Area(Rel(d.File))).OrderByDescending(g => g.Count()))
 				sb.AppendLine($"| {g.Key} | {g.Count()} | {g.Select(d => d.File).Distinct().Count()} |");
+			sb.AppendLine();
+
+			sb.AppendLine("### Errors per bucket");
+			sb.AppendLine();
+			sb.AppendLine("By the API family the diagnostic is about (type names are matched against the System.Drawing and System.Windows.Forms reference assemblies of the .NET 10 Windows Desktop pack).");
+			sb.AppendLine();
+			sb.AppendLine("| Bucket | Errors | Files |");
+			sb.AppendLine("|---|---|---|");
+			foreach (var name in Buckets.Names)
+			{
+				var g = diags.Where(d => buckets.Of(d) == name).ToList();
+				sb.AppendLine($"| {name} | {g.Count} | {g.Select(d => d.File).Distinct().Count()} |");
+			}
 			sb.AppendLine();
 
 			sb.AppendLine("### Errors per code");

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ApiInventory</RootNamespace>
+    <AssemblyName>api-inventory</AssemblyName>
+  </PropertyGroup>
+</Project>

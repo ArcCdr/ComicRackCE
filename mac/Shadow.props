@@ -12,6 +12,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <DefineConstants>$(DefineConstants);CENSUS_PASS_A</DefineConstants>
+    <!-- WinForms designer-serialization analyzer (new in the .NET 10 SDK): not a compile gap, only noise for linked sources -->
+    <NoWarn>$(NoWarn);WFO1000</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(CensusPass)' == 'B'">
     <TargetFramework>net10.0</TargetFramework>
