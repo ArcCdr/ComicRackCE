@@ -107,6 +107,16 @@ A double-clickable, ad-hoc-signed `ComicRack CE (MVP).app` for Apple Silicon tha
   - **P/Invoke:** 108 declarations in 16 native modules, 134 call sites. Declarations per module: `jxl.dll` 23, `kernel32` 26, `shell32` 16, `user32` 12, `libwebp` 14, `uxtheme` 5, `credui` 3, `gdi32` 5, `libheif` 1, `dwmapi`, `ole32`, `shlwapi`. Only `jxl`, `libwebp` and `libheif` are codec natives; the rest is shell/UI, which the PAL replaces (not needed for the MVP).
 - **Tools:** `mac/tools/census` now also prints an "Errors per bucket" table and dumps every diagnostic to `mac/artifacts/census/diagnostics.<pass>.txt`. Neither it nor `mac/tools/api-inventory` is in the solution yet.
 
+**Facts from M0.4 (2026-10-17; details in `mac/reports/drawing-route.md`)**
+- **GeneXus.Drawing.Common 2.2.3** (latest stable, published 2025-09-11) is **Apache-2.0, not MIT** (the plan text in this file and in `MACOS_NATIVE_PATH.md` §5.3 says MIT). `netstandard2.0`; depends on `SkiaSharp` 2.88.8. Its types live in `GeneXus.Drawing.*`, including its own `Color`/`Point`/`Size`/`Rectangle` structs, which are **different types** from the BCL `System.Drawing.*` ones and have no conversion to them.
+- **Coverage of the Core's 47 `System.Drawing.Common` types and 126 members:** 35 types present (74.5 %); 83 members exact (65.9 %); 94 source-compatible (74.6 %); 90 not stubs (71.4 %); 72.4 % of the 714 call sites. All 17 present enums match GDI+ in names and values. **Missing:** `BitmapData`, `ColorMatrix`, `ImageAttributes`, `Encoder`, `EncoderParameter(s)`, `ImageCodecInfo`, `ContentAlignment`, `IDeviceContext`, `SystemBrushes/Pens/Fonts`; `ImageFormat` is an enum there.
+- **Six checks on the Mac: 2 pass, 4 fail** (same with SkiaSharp 3.119.4). Pass: JPEG decode from a stream; zero-copy `SKBitmap` through the public explicit operator `(SKBitmap)bitmap`. Fail: `LockBits` throws `NotImplementedException` (and returns `object`); `InterpolationMode` is ignored (output identical to nearest neighbour); no `ImageAttributes`/`ColorMatrix`; no `Encoder*`/`ImageCodecInfo` (JPEG quality works only through its own `Save(Stream, ImageFormat, int)`).
+- GeneXus stores pixels as **`Rgba8888` premultiplied**, not BGRA. `Image.FromStream` reports `Format24bppRgb` for a JPEG while storing RGBA.
+- **Recommendation: custom shim** (the default rule). Size: 47 types (18 enum, 24 class, 4 static class, 1 interface), 19 ctors, 63 methods, 42 properties, 2 fields; about 55 members need real behaviour in the MVP.
+- **`Avalonia.Skia` 12.1.4 (latest stable Avalonia 12) depends on `SkiaSharp` 3.119.4** (nuspec). `cYo.Compat.Drawing` (M1.2a) and the app (M2.0a) must resolve to the same SkiaSharp version; SkiaSharp 4.153.1 is also on NuGet, so pin explicitly.
+- Spike projects: `mac/spikes/S2-coverage/` (reflection coverage tool) and `mac/spikes/S2-genexus/` (xUnit checks). Neither is in the solution. `dotnet test mac/spikes/S2-genexus` exits non-zero by design (4 failed checks are results). `-p:SkiaOverride=<version>` runs the checks against another SkiaSharp.
+- `System.Drawing.Primitives` types need nothing in the shim: .NET 10 provides them.
+
 ## 4. Rules for every task
 
 1. **Zero edits to existing files.** Do not edit files in the 7 original project folders. Use exclusion lists plus `Replacements/` files, `NoWarn` and runtime fallbacks instead. If an edit looks unavoidable: **STOP and report.** Do not make it. The owner decides, and any approved edit is logged in `mac/EDITS.md`.
@@ -212,7 +222,7 @@ Every task runs on **Sonnet**. **Effort** is the level to set for that session (
   - The §4 rule 1 check prints nothing.
 
 #### M0.4 Spike S2: Drawing route data
-- **Status:** todo · **Effort:** high
+- **Status:** done 2026-10-17 · **Effort:** high
 - **Goal:** produce the data for decision Q1. The owner decides at G0.
 - **Do:**
   1. Create the throwaway project `mac/spikes/S2-genexus/`. Reference `GeneXus.Drawing.Common` (latest stable; record the version and licence).
@@ -525,6 +535,11 @@ _(Sessions append items here instead of doing them. Format: `- [task that found 
 - [M0.3b] The `Replacements/` files that mirror WinForms-facing originals (`RendererImage.cs`, `GestureEventArgs.cs`, `ThemeTypes.cs`) produce 13 pass B errors that vanish with M1.1/M1.2a. Check them off in M1.3.
 - [M0.3b] Add `mac/tools/api-inventory` to the solution together with `mac/tools/census` (M1.3), and consider running `api-inventory` in CI (M1.7) as a guard that the Drawing shim keeps covering the inventory.
 - [M0.3b] M0.4 should read `mac/artifacts/api-inventory/inventory.json` (regenerate with `dotnet run --project mac/tools/api-inventory`), not parse the markdown. Each member has `type`, `kind`, `name`, `sig` (display signature, parameter types by simple name), `isStatic`, `accessors`, `calls` and `files`. The signature has no namespaces, so overload matching in M0.4 should use the simple type names.
+- [M0.4] Licence follow-ups for G0: GeneXus is Apache-2.0, not MIT. Correct `MACOS_NATIVE_PATH.md` (§5.3 says "MIT") and the M0.4 task text when the owner decides Q1, and log the S2 result in `MACOS_NATIVE_PATH.md` §11.4. The FSF considers Apache-2.0 incompatible with GPLv2-only; check whether the repository is "GPLv2 only" or "or later" before any third-party source is copied (not needed if the custom shim is written from scratch).
+- [M0.4] Reuse `mac/spikes/S2-coverage` as an accept check for M1.2a: point it at `cYo.Compat.Drawing` instead of GeneXus (the loader and the name mapping need a small change: namespace `System.Drawing` on both sides) and require 100 % type and member coverage of `inventory.json`. If kept, move it to `mac/tools/` and add it to the solution with the other tools (M1.3).
+- [M0.4] M1.2b/M1.2c must implement what GeneXus lacks, in this order of weight: `BitmapData` + `LockBits`/`UnlockBits` (BGRA, 24 bpp convert on lock), `ColorMatrix` + `ImageAttributes`, `Encoder`/`EncoderParameter(s)`/`ImageCodecInfo.GetImageEncoders()`, and `ImageFormat` as a class with `Guid`. Apply `InterpolationMode` for real (GeneXus ignores it). M1.2b's tests should include the check-3 pattern (1-pixel checkerboard 4:1 gives mid grey).
+- [M0.4] The scripts question (does `from System.Drawing import Bitmap` resolve to the shim, and does a script that does `clr.AddReference('System.Drawing')` load it?) was reasoned, not tested. Add one case to S4 (IronPython spike) once the shim assembly exists. The shim assembly name must then not clash with the framework's `System.Drawing.Common`/`System.Drawing` reference names that `clr.AddReference` resolves.
+- [M0.4] Skia version pin: choose one SkiaSharp version for the shim and the Avalonia app (Avalonia.Skia 12.1.4 uses 3.119.4). Decide in M1.2a and record it in `mac/Directory.Build.props` or a shared `.props` file so both agree.
 
 ## 10. How to run a task
 
