@@ -34,3 +34,14 @@ dotnet run --project mac/tools/api-inventory     # writes mac/reports/api-invent
 ```
 
 `api-inventory` builds pass A clean and lists the System.Drawing, System.Windows.Forms and P/Invoke members the Core uses. Pass A and B share `obj/` (the restore result is per pass): `dotnet build` restores by itself, but a bare `dotnet msbuild` query needs `-restore` after the other pass ran.
+
+## Compat shims and tests (M1.1)
+
+`mac/cYo.Compat.Forms` is the types-only stand-in for the `System.Windows.Forms` slice that the Core uses. The shadow projects reference it in pass B only. It is part of the solution together with its tests:
+
+```bash
+dotnet build mac/ComicRack.Mac.slnx
+dotnet test mac/tests/Compat.Forms.Tests
+```
+
+The tests compare every enum (names, values, `[Flags]`) and every other type's kind and member signatures with the `System.Windows.Forms` reference assembly of the `Microsoft.WindowsDesktop.App.Ref` pack. That pack is downloaded by a pass A build, so run one first on a fresh machine.

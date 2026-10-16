@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Types-only stand-in for the slice of System.Windows.Forms that the Core uses (M1.1). net10/macOS only:
+       the shadow projects reference it in pass B; the net48 Windows build never sees it. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>System.Windows.Forms</RootNamespace>
+    <AssemblyName>cYo.Compat.Forms</AssemblyName>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+</Project>
