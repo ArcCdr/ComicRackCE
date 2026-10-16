@@ -1,10 +1,10 @@
 # ComicRackCE: the path to a native macOS application
 
-> **Status:** Research complete. Scenario validated by the project owner on 2026-10-13. Revised the same day: D6, script UI compatibility (§5.9).
+> **Status:** Research complete. Scenario validated by the project owner on 2026-10-13. Revised the same day: D6, script UI compatibility (§5.9). Revised 2026-10-16: D7, the MVP-first execution order (`mac/plans/mvp-track.md`), with every task run on Sonnet (§9).
 > **Audience:** (1) the project owner, to decide and track; (2) Claude agentic planning and implementation sessions, which start from this file.
 > **Scope:** feasibility, technology inventory, options with prior art, the chosen architecture, typical migration challenges, and an agent-ready phase plan.
 >
-> Agents: read [§0 Validated decisions](#0-validated-decisions-binding-for-all-sessions) and [§9 Guardrails](#9-agentic-execution-plan) before planning anything. File references use `path:line` and were checked against commit `7fd9fd3` (`master`, Oct 2026). Line numbers drift, so re-locate code by symbol name.
+> Agents: read [§0 Validated decisions](#0-validated-decisions-binding-for-all-sessions) and [§9 Guardrails](#9-agentic-execution-plan) before planning anything. Current tasks live in `mac/plans/mvp-track.md`. File references use `path:line` and were checked against commit `7fd9fd3` (`master`, Oct 2026). Line numbers drift, so re-locate code by symbol name.
 
 ---
 
@@ -35,6 +35,7 @@
 | D4 | macOS v1 feature scope | Reader, library, smart lists, metadata editing, CBZ/CBR/CB7/CBT/PDF/WebP/HEIF/AVIF/JXL/JPEG2000 **plus Python scripts/plugins** | Remote library sharing, Wi-Fi device sync, USB/MTP sync and DjVu are **deferred** (post-v1). |
 | D5 | Hardware and distribution | **Apple Silicon (arm64) only, macOS 14 Sonoma or later, Developer ID signed + notarized DMG** (a Homebrew cask is optional) | No Intel/universal binaries, no Mac App Store and no sandbox. Every bundled native library is arm64 only. |
 | D6 | Script compatibility (added 2026-10-13) | **Existing scripts, including those that build WinForms UI, must run on macOS unmodified.** Asking authors to rewrite scripts is not acceptable. | A dedicated **Script UI Compatibility Layer** (§5.9) provides the `System.Windows.Forms` and `System.Drawing` APIs to scripts on macOS, rendered with Avalonia. It is a v1 deliverable (phase P4). |
+| D7 | Execution order and agent tier (added 2026-10-16) | **MVP-first vertical slice** (`mac/plans/mvp-track.md`, milestones M0–M2, gates G0–G2) runs before the §9.3 phases. **Every task runs on Sonnet**, at the effort level stated per task | A launchable `.app` (library, grid, reader) comes first, so performance and UX are judged before the full plan is committed. During the track, files in the 7 original project folders are not edited (checked mechanically), so P0's net48 characterization tests run in parallel and gate the first approved edit. Tasks are sized and specified for Sonnet (§9.1). |
 
 Derived defaults (adopted unless the owner overrides them):
 - Runtime **.NET 10 (LTS, supported until Nov 2028)**, self-contained, `osx-arm64`. Not NativeAOT, because IronPython needs dynamic code generation (see §7.9).
@@ -756,7 +757,7 @@ There are **zero automated tests**, and the code is decompiled (names are someti
 | R7 | UI scope creep (users expect Windows parity) | H | M | Strict v1 list (§6); public roadmap of deferred items | Owner |
 | R8 | Performance regressions (large libraries of 100k+ books, SMB) | M | M | Benchmarks in CLI harness (scan, load DB, filter); virtualization | P2/P5 |
 | R9 | Legal/provenance challenge increases with Mac distribution | L | H | Keep the README stance; no App Store; GPL compliance (source link in About) | Owner |
-| R10 | Agent-produced code that compiles but is subtly wrong (decompiled code, few comments) | M | H | Characterization tests as gates; Opus reviews of Sonnet diffs; human on-device acceptance checklist per phase | all |
+| R10 | Agent-produced code that compiles but is subtly wrong (decompiled code, few comments) | M | H | Characterization tests as gates; tightly specified Sonnet tasks with STOP conditions; fresh-session Sonnet reviews (`/code-review high`); human on-device acceptance checklist per phase | all |
 | R11 | Script UI facade coverage is never "complete"; long-tail plugins hit unimplemented members | H | M | Usage scanner drives the backlog (§5.9.9); generated full API surface gives clear `NotSupportedException` messages; compatibility report before running; `.compat` overlays for important inactive plugins | P4 |
 | R12 | Blocking `ShowDialog`/`MessageBox` semantics (nested dispatcher frames) misbehave on macOS (re-entrancy, sheets, app deactivation) | M | H | Spike S6 first; conformance tests for nested modals, modal-from-background-thread and closing during a nested frame | P0/P4 |
 | R13 | Scripts relying on unmarshalled cross-thread control access crash or race on macOS | M | H | Auto-marshalling of facade setters; facade state is thread-safe; stress tests with corpus plugins that use worker threads | P4 |
@@ -770,18 +771,22 @@ This section is written for **Claude planning sessions** (to expand into task-le
 
 ### 9.1 Roles and model usage
 
-| Role | Model tier | Use for |
+Revised 2026-10-16 (D7): every implementation and review task runs on **Sonnet**. Work that the earlier version gave to an Opus "Architect" (shim API design, threading, reader design, spikes) is now done by **specifying the task tightly** instead. Each task has exact files, commands as accept checks, fixed decision rules, explicit STOP conditions that hand judgment calls to the owner, and a rule to split rather than retry after two failed attempts (`mac/plans/mvp-track.md` §4).
+
+| Role | Who | Use for |
 |---|---|---|
-| **Architect/Planner** | Claude Opus | Expanding a phase into tasks; spikes with uncertain outcomes; designing PAL interfaces and the Drawing shim API; reviewing every PR touching existing (upstream) files; diagnosing cross-platform bugs; threading/concurrency work; reader-control design |
-| **Implementer** | Claude Sonnet | Well-specified tasks: link-set setup, compile-error triage batches, shim members, PAL implementations, Avalonia views from a spec, tests, CI YAML, packaging scripts, TR XML |
-| **Reviewer** | Claude Opus (or a 2nd Sonnet pass for mechanical diffs) | Adversarial review against the guardrails below + the test gate |
-| **Human (owner)** | — | Decisions in §10; on-Mac acceptance testing (agents run on Linux cloud containers and cannot click through a macOS GUI); signing credentials; upstream relations |
+| **Planner** | A planning session | Expanding a phase into Sonnet-sized tasks in the `mvp-track.md` format, with an effort level per task (`medium` for mechanical work, `high` by default, `xhigh` for subtle semantics) |
+| **Implementer** | Sonnet, one session per task | Every task, launched with `--model sonnet --effort <level>` (`mvp-track.md` §10) |
+| **Reviewer** | Sonnet, a fresh session, effort `high` | `/code-review high` on the task branch, plus the mechanical no-edit check (`mvp-track.md` §4 rule 1) |
+| **Human (owner)** | — | Gate decisions (G0–G2) and §10 questions; STOP findings; approving any edit to existing files; on-Mac acceptance testing; signing credentials; upstream relations |
+
+Sessions run on the owner's Mac (Apple M4), so they can build, benchmark and launch the app there. The owner still judges UX.
 
 Parallelism: use separate git worktrees/branches per task. Phases P2/P3/P4 can run in parallel after P1. P5 views can be split per screen.
 
 ### 9.2 Guardrails (every session must follow)
 
-1. **Never change behaviour of the net48 Windows build.** Every PR must build `ComicRack.sln` for net48 (Windows CI) and pass the characterization tests on net48.
+1. **Never change behaviour of the net48 Windows build.** Every PR must build `ComicRack.sln` for net48 (Windows CI) and pass the characterization tests on net48. During the MVP track (D7), PRs edit no file in the original project folders. The mechanical check in `mvp-track.md` §4 rule 1 enforces this, so the net48 gate becomes mandatory from the first approved edit.
 2. **Prefer adding over editing.** Edits to files under the original 7 project folders must be minimal, mechanical, justified in the PR description and logged in `mac/EDITS.md`.
 3. Allowed edit patterns in existing files:
    - `#if NETFRAMEWORK`/`#if !NETFRAMEWORK` guards
@@ -801,6 +806,17 @@ Parallelism: use separate git worktrees/branches per task. Phases P2/P3/P4 can r
 ### 9.3 Phases
 
 Each phase lists **goal → tasks → exit criteria**. IDs are stable so planning sessions can expand them (e.g. `P1.3a`, `P1.3b`).
+
+**Execution order (D7).** The MVP track in `mac/plans/mvp-track.md` runs first. It delivers slices of these phases:
+
+| MVP track | Phase slices delivered |
+|---|---|
+| M0 | P0.1, spikes S1 + S2 (S1 as a two-pass census with an exact API inventory) |
+| M1 | P1.1–P1.5 (types-only Forms slice, Drawing MVP subset, replacements), P2.3 (PDFium only), P2.4 (CLI subset), P3 benchmarks (subset) |
+| M2 | P5.0–P5.3 (shell, open/scan, grid, reader), P6.1 (ad-hoc-signed bundle only) |
+| Parallel | S4 after M1.3; S6 after M2.0a; S3 after G1; P0.2/P0.3 any time |
+
+After gate G2, the remaining work of each phase is re-planned as Sonnet-sized tasks in the same format, starting from what the track built.
 
 #### P0: Baseline, spikes and safety net (Architect-heavy)
 - **P0.1** Add `mac/` skeleton, `mac/Directory.Build.props` (net10.0), `mac/EDITS.md`, and a Linux + macOS CI workflow that only builds `mac/**` (it must not touch the Windows workflows).
@@ -900,6 +916,8 @@ Crash/log collection, SMB/large-library testing, TCC/permissions UX, performance
 
 ### 9.4 Dependency graph
 
+MVP track first (D7): `M0 ─G0─► M1 ─G1─► M2 ─G2─►` the remaining work below, re-planned. Within the phases:
+
 ```
 P0 ──► P1 ──┬─► P2 ──┬─► P3
             │        ├─► P4.1–P4.4 (headless; can start right after P1)
@@ -914,7 +932,7 @@ P5 + P6 ──► P7 ──► v1 release
 ```markdown
 ### <ID> <Title>
 - Phase / depends on: <P#> / <IDs>
-- Model tier: Opus | Sonnet
+- Model / effort: Sonnet / low | medium | high | xhigh
 - Goal (one sentence):
 - Files to add: ...
 - Existing files to edit (must justify each; log in mac/EDITS.md): ...
@@ -925,7 +943,7 @@ P5 + P6 ──► P7 ──► v1 release
 
 Prompt seed for a planning session:
 
-> "Read `MACOS_NATIVE_PATH.md` §0, §5 and §9. Expand phase `<P#>` into 5–15 tasks using the §9.5 template. Respect §9.2 guardrails. For each task, list the exact files (verify they exist in the repo), the build/test gates and the model tier. Flag any task that requires editing existing files, and propose the least-invasive pattern."
+> "Read `MACOS_NATIVE_PATH.md` §0, §5 and §9. Expand phase `<P#>` into 5–15 tasks using the §9.5 template. Respect §9.2 guardrails. For each task, list the exact files (verify they exist in the repo), the build/test gates and the effort level. Every task runs on Sonnet, so size and specify it accordingly (`mac/plans/mvp-track.md` §4). Flag any task that requires editing existing files, and propose the least-invasive pattern."
 
 ### 9.6 Sizing (low confidence; refine after P0 spikes)
 
@@ -943,6 +961,8 @@ Prompt seed for a planning session:
 
 Human time is dominated by: decisions (§10), PR review of edits to existing files, and on-Mac acceptance testing (budget ~1–2 h per P5 screen task).
 
+These figures predate D7. Re-estimate them at gate G2 from the MVP track's actual task counts.
+
 ---
 
 ## 10. Open questions for later decisions
@@ -956,7 +976,7 @@ Human time is dominated by: decisions (§10), PR review of edits to existing fil
 | Q5 | IronPython 3.4 migration (breaks Python 2 scripts) — ever? | Stay on 2.7.12 | post-v1 |
 | Q6 | Upstream strategy: propose the PAL/shadow approach to `maforget/ComicRackCE` early, or keep it in this fork until v1? | Upstream small, neutral fixes (BinaryFormatter `#if`, path joins, the plugin bug) early; the rest after v1 | P1 |
 | Q7 | Should the Avalonia UI eventually also replace the WinForms UI on Windows? | No (out of scope); keep the option open | post-v1 |
-| Q8 | Branding/bundle id (`org.comicrackce.ComicRack`?), app name on macOS, icon | "ComicRack CE", id chosen by owner | P6.1 |
+| Q8 | Branding/bundle id (`org.comicrackce.ComicRack`?), app name on macOS, icon | "ComicRack CE", id chosen by owner. MVP builds use `ComicRack CE (MVP)` with their own data folders (owner, 2026-10-16) | P6.1 |
 | Q9 | Minimum macOS: 14 (D5) — raise to 15 if Avalonia/ImageIO features need it? | 14 | P6 |
 | Q10 | Script corpus: which community plugins form the "top-10 must work" acceptance list, and may their code be stored (privately) for CI smoke tests? | Owner provides the list; scan results only in the repo | P4.2 |
 | Q11 | `.compat` overlay patches for inactive plugins: acceptable, and who maintains them? | Acceptable as a last resort, maintained in this fork | P4.8 |
