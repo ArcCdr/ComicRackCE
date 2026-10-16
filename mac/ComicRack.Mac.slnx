@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/shims/">
+    <Project Path="cYo.Compat.Drawing/cYo.Compat.Drawing.csproj" />
     <Project Path="cYo.Compat.Forms/cYo.Compat.Forms.csproj" />
   </Folder>
   <Folder Name="/tests/">

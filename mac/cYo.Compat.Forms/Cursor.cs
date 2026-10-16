@@ -18,7 +18,10 @@ namespace System.Windows.Forms
 
 		public Size Size => throw new NotSupportedException("System.Windows.Forms.Cursor.Size is not yet supported on macOS");
 
-		// Cursor.Draw(Graphics, Rectangle) is added by M1.2a, when System.Drawing.Graphics exists (see mvp-track.md section 9).
+		public void Draw(Graphics g, Rectangle targetRect)
+		{
+			throw new NotSupportedException("System.Windows.Forms.Cursor.Draw is not yet supported on macOS");
+		}
 
 		public void Dispose()
 		{
