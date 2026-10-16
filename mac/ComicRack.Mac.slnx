@@ -1,2 +1,8 @@
 <Solution>
+  <Folder Name="/shims/">
+    <Project Path="cYo.Compat.Forms/cYo.Compat.Forms.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Compat.Forms.Tests/Compat.Forms.Tests.csproj" />
+  </Folder>
 </Solution>

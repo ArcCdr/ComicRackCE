@@ -1,6 +1,7 @@
 // Replacements for types of cYo.Common.Windows (the WinForms helper library) that Engine files still reference.
-// They keep the full type names. M1.1 links the real ItemViewConfig, ItemViewColumnInfo and ItemViewMode and
-// then deletes the ItemViewConfig stub here.
+// They keep the full type names. ItemViewConfig, ItemViewColumnInfo, ItemViewMode, ItemViewGroupsStatus and
+// GroupHeaderInformation are the real files (linked in Sources.props since M1.1). IViewableItem and IColumn stay
+// reduced stubs, because the real ones reference the ItemView control.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,54 +12,29 @@ using cYo.Common.Text;
 
 namespace cYo.Common.Windows.Forms
 {
-	// Real type: cYo.Common.Windows/Forms/ItemViewConfig.cs. It is serialized inside DisplayListConfig and
-	// StacksConfig (ComicDb.xml). The stub has only the members whose types need no WinForms (the ones Engine
-	// reads); the other elements are ignored on load until M1.1 links the real file.
-	[Serializable]
-	public class ItemViewConfig
-	{
-		[XmlAttribute]
-		[DefaultValue(false)]
-		public bool Grouping
-		{
-			get;
-			set;
-		}
-
-		[XmlAttribute]
-		[DefaultValue(null)]
-		public string SortKey
-		{
-			get;
-			set;
-		}
-
-		[XmlAttribute]
-		[DefaultValue(null)]
-		public string GrouperId
-		{
-			get;
-			set;
-		}
-
-		[XmlAttribute]
-		[DefaultValue(null)]
-		public string StackerId
-		{
-			get;
-			set;
-		}
-	}
-
 	// Real type: cYo.Common.Windows/Forms/IViewableItem.cs. Engine only uses it as a generic argument.
 	public interface IViewableItem
 	{
 	}
 
-	// Real type: cYo.Common.Windows/Forms/IColumn.cs, reduced to what ComicBookMetadataManager reads.
+	// Real type: cYo.Common.Windows/Forms/IColumn.cs (with IBaseViewItem), reduced to what the Core reads: the members
+	// that ComicBookMetadataManager and ItemViewColumnInfo use, with the real signatures. The real interface needs
+	// ItemView, Graphics and HeaderState (a WinForms control and drawing); nothing in the Core implements it.
 	public interface IColumn
 	{
 		int Id
+		{
+			get;
+			set;
+		}
+
+		int FormatId
+		{
+			get;
+			set;
+		}
+
+		string Text
 		{
 			get;
 		}
@@ -68,14 +44,40 @@ namespace cYo.Common.Windows.Forms
 			get;
 		}
 
+		object Tag
+		{
+			get;
+			set;
+		}
+
+		bool Visible
+		{
+			get;
+			set;
+		}
+
+		int Width
+		{
+			get;
+			set;
+		}
+
+		DateTime LastTimeVisible
+		{
+			get;
+			set;
+		}
+
 		IComparer<IViewableItem> ColumnSorter
 		{
 			get;
+			set;
 		}
 
 		IGrouper<IViewableItem> ColumnGrouper
 		{
 			get;
+			set;
 		}
 	}
 

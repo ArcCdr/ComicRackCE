@@ -4,6 +4,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\**\*.cs"
              Exclude="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Controls\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\ComicDisplay.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\GestureEventArgs.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Drawing\Thumb*Renderer.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Network\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\NetworkManager.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Sync\DeviceSyncFactory.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Sync\PortableDeviceSyncProvider.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Database\Storage\ComicStorageMsSql.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Drawing\ViewItemRenderer.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\obj\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\bin\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Properties\AssemblyInfo.cs"
              LinkBase="Engine" />
+    <!-- Real view-config types of cYo.Common.Windows (serialized inside DisplayListConfig and StacksConfig in ComicDb.xml).
+         None of them needs a control: they replace the M0.3b ItemViewConfig stub (M1.1). -->
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewConfig.cs" Link="CommonWindows\ItemViewConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewColumnInfo.cs" Link="CommonWindows\ItemViewColumnInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewMode.cs" Link="CommonWindows\ItemViewMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewGroupsStatus.cs" Link="CommonWindows\ItemViewGroupsStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\GroupHeaderInformation.cs" Link="CommonWindows\GroupHeaderInformation.cs" />
     <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" />
   </ItemGroup>

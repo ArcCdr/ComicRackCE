@@ -19,6 +19,11 @@
     <TargetFramework>net10.0</TargetFramework>
     <DefineConstants>$(DefineConstants);CENSUS_PASS_B</DefineConstants>
   </PropertyGroup>
+  <!-- Pass B has no System.Windows.Forms: the types-only stand-in provides the slice that the Core uses (M1.1).
+       Pass A uses the real WinForms (net10.0-windows), so it must not see the stand-in. -->
+  <ItemGroup Condition="'$(CensusPass)' == 'B'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)cYo.Compat.Forms\cYo.Compat.Forms.csproj" />
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
