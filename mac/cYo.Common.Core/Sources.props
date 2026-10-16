@@ -4,8 +4,10 @@
        in the projects that depend on it. -->
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common\**\*.cs"
-             Exclude="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\PortableDevices\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Reflection\CodeDomDuckTypeGenerator.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\obj\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\bin\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Properties\AssemblyInfo.cs"
+             Exclude="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\PortableDevices\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Reflection\CodeDomDuckTypeGenerator.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\MemoryInfo.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\Runtime\SingleInstance.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\Runtime\ISingleInstance.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\obj\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\bin\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Properties\AssemblyInfo.cs"
              LinkBase="Common" />
+    <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
+    <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- Same as cYo.Common.csproj, minus System.Management -->

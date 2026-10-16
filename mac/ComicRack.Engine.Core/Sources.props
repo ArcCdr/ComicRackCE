@@ -2,8 +2,10 @@
   <!-- Sources and packages of ComicRack.Engine.Core (see cYo.Common.Core/Sources.props). -->
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\**\*.cs"
-             Exclude="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Controls\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\ComicDisplay.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\GestureEventArgs.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Drawing\Thumb*Renderer.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Network\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\obj\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\bin\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Properties\AssemblyInfo.cs"
+             Exclude="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Controls\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\ComicDisplay.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Display\GestureEventArgs.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Drawing\Thumb*Renderer.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Network\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\NetworkManager.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Sync\DeviceSyncFactory.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Sync\PortableDeviceSyncProvider.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Database\Storage\ComicStorageMsSql.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Drawing\ViewItemRenderer.cs;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\obj\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\bin\**;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Properties\AssemblyInfo.cs"
              LinkBase="Engine" />
+    <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
+    <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="sharpPDF">

@@ -6,8 +6,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\ComicRack.Plugins\**\*.cs"
-             Exclude="..\..\ComicRack.Plugins\Controls\**;..\..\ComicRack.Plugins\obj\**;..\..\ComicRack.Plugins\bin\**"
+             Exclude="..\..\ComicRack.Plugins\Controls\**;..\..\ComicRack.Plugins\Theme\ThemePlugin.cs;..\..\ComicRack.Plugins\obj\**;..\..\ComicRack.Plugins\bin\**"
              LinkBase="Plugins" />
+    <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
+    <Compile Include="Replacements\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- Same as ComicRack.Plugins.csproj, with IronPython 2.7.12 instead of 2.7.4 -->
