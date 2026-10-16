@@ -118,7 +118,7 @@ Every task runs on **Sonnet**. **Effort** is the level to set for that session (
   - `dotnet --list-sdks` must show `10.0.x`.
 
 #### M0.2 `mac/` skeleton
-- **Status:** todo · **Effort:** medium
+- **Status:** done 2026-10-17 · **Effort:** medium
 - **Add:**
   - `mac/Directory.Build.props`:
     - Properties: `TargetFramework net10.0`, `LangVersion 14`, `Nullable disable`, `ImplicitUsings disable`, `AllowUnsafeBlocks true`, `DefineConstants $(DefineConstants);MACOS`.
