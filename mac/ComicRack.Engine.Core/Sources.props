@@ -12,7 +12,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewGroupsStatus.cs" Link="CommonWindows\ItemViewGroupsStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\GroupHeaderInformation.cs" Link="CommonWindows\GroupHeaderInformation.cs" />
     <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
-    <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" Exclude="$(MSBuildThisFileDirectory)Replacements\PassB\**" />
+  </ItemGroup>
+  <!-- Pass B only: pass A compiles the original (it is the basis of the API inventory), pass B cannot (sharpPDF binds to the framework System.Drawing). -->
+  <ItemGroup Condition="'$(CensusPass)' == 'B'">
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Provider\Writers\PdfStorageProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="sharpPDF">

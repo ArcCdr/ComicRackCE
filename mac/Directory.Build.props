@@ -8,5 +8,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
     <NoWarn>$(NoWarn);SYSLIB0011;SYSLIB0006;SYSLIB0014;CA1416</NoWarn>
+    <!-- One SkiaSharp version for the whole mac/ tree: the Drawing shim and the Avalonia app (Avalonia.Skia 12.1.4 depends on 3.119.4)
+         must resolve to the same one. SkiaSharp 4.x exists on NuGet but is not what Avalonia 12 uses, so keep this pinned. -->
+    <SkiaSharpVersion>3.119.4</SkiaSharpVersion>
   </PropertyGroup>
 </Project>

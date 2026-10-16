@@ -8,4 +8,8 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- Cursor.Draw(Graphics, Rectangle) needs System.Drawing.Graphics (M1.2a). -->
+    <ProjectReference Include="..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
+  </ItemGroup>
 </Project>

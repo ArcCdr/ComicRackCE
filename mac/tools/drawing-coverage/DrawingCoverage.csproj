@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Checks cYo.Compat.Drawing (and the framework's System.Drawing.Primitives) against mac/artifacts/api-inventory/inventory.json.
+       Adapted from the M0.4 spike mac/spikes/S2-coverage, which did the same against GeneXus.Drawing.Common.
+       Not part of ComicRack.Mac.slnx yet (M1.3 adds the tools). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>drawing-coverage</AssemblyName>
+    <RootNamespace>DrawingCoverage</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CA1416;NU1510</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Only the stand-in, never System.Drawing.Common: both declare System.Drawing.Bitmap. The real reference assembly is read with MetadataLoadContext. -->
+    <ProjectReference Include="..\..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.0" />
+  </ItemGroup>
+</Project>

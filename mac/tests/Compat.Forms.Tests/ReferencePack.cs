@@ -36,7 +36,8 @@ namespace Compat.Forms.Tests
 			string refDir = Path.GetDirectoryName(formsRef);
 			var paths = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll")
 				.Concat(Directory.GetFiles(refDir, "*.dll").Where(f => !File.Exists(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), Path.GetFileName(f)))))
-				.Append(shimPath);
+				.Append(shimPath)
+				.Concat(Directory.GetFiles(Path.GetDirectoryName(shimPath), "cYo.Compat.Drawing.dll")); // Cursor.Draw(Graphics, Rectangle) names the Drawing stand-in
 			var context = new MetadataLoadContext(new PathAssemblyResolver(paths), "System.Private.CoreLib");
 			reference = context.LoadFromAssemblyPath(formsRef);
 			shim = context.LoadFromAssemblyPath(shimPath);

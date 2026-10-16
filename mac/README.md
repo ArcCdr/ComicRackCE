@@ -45,3 +45,11 @@ dotnet test mac/tests/Compat.Forms.Tests
 ```
 
 The tests compare every enum (names, values, `[Flags]`) and every other type's kind and member signatures with the `System.Windows.Forms` reference assembly of the `Microsoft.WindowsDesktop.App.Ref` pack. That pack is downloaded by a pass A build, so run one first on a fresh machine.
+
+## Drawing stand-in (M1.2a)
+
+`mac/cYo.Compat.Drawing` declares the `System.Drawing.Common` types and members the Core uses (namespaces `System.Drawing`, `.Drawing2D`, `.Imaging`, `.Text`), one file per type in `Types/`. The bodies throw `NotSupportedException` until M1.2b and M1.2c. The shadow projects reference it in pass B only. The SkiaSharp version for the whole tree is `SkiaSharpVersion` in `mac/Directory.Build.props`. To check the coverage against the API inventory (needs a pass A build first, for the reference pack):
+
+```bash
+dotnet run --project mac/tools/drawing-coverage
+```
