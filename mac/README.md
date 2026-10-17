@@ -1,6 +1,14 @@
 # ComicRack CE for macOS (work in progress)
 
-Plans: `mac/plans/mvp-track.md` and `MACOS_NATIVE_PATH.md`.
+Plans and procedures:
+
+- `mac/plans/full-port.md`: the master plan for the rest of the port (status, decisions, rules, checkpoints, every task). Start here.
+- `mac/plans/RUNBOOK.md`: how an orchestrating session runs the plan unattended; the resume prompts.
+- `mac/plans/OWNER-ACTIONS.md`: everything the owner is asked to do or decide.
+- `mac/UPSTREAM-SYNC.md`: how to merge `upstream/master` into `macos` and check the Mac build afterwards.
+- `MACOS_NATIVE_PATH.md` (repository root): decisions, architecture, scope. `mac/plans/mvp-track.md`: the record of the MVP (M0 to M2.6) and its facts.
+
+Fast gate (every change): `mac/tools/verify.sh` (disk guard, no file outside `mac/` changed, build, fast tests; `--full` adds the slow tests). One branch, `macos`; work commits directly on it.
 
 ## Prerequisites
 

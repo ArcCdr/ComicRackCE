@@ -153,7 +153,9 @@ namespace ComicRack.Mac.Tests.Browser
 			}
 		}
 
+		// About 75 s: excluded from the fast gate (mac/tools/verify.sh), run by the full gate.
 		[FixtureFact("BD", "ComicDb.xml")]
+		[Trait("Category", "Slow")]
 		public async Task A_full_scroll_over_the_fixture_library_stays_under_the_cache_bound()
 		{
 			using (new RealLibraryGuard())

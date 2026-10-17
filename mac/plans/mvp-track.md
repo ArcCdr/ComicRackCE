@@ -1,5 +1,7 @@
 # macOS MVP track: from feasibility to a launchable app
 
+> **Superseded (2026-10-17) for conventions and remaining work by `mac/plans/full-port.md`** (one branch `macos`, unattended runbook; §4 and §10 below no longer apply; every open item of §9 is mapped in full-port.md §8). This file stays the record of M0 to M2.6.
+>
 > **Status:** Adopted by the owner on 2026-10-16 (decision D7 in `MACOS_NATIVE_PATH.md`).
 > **Relation to `MACOS_NATIVE_PATH.md`:** This file adds a vertical-slice track in front of §9.3. It does not change the §0 decisions or the §9.2 guardrails. Read §0 and §9.2 of that file before starting any task here.
 > **Execution model:** Every task is sized and specified for a **Sonnet** session at a stated effort level. This replaces the Opus "Architect" and "Reviewer" roles of §9.1 for this track. How to run a task: §10.

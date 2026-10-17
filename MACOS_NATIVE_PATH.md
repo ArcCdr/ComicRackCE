@@ -1,10 +1,10 @@
 # ComicRackCE: the path to a native macOS application
 
-> **Status:** Research complete. Scenario validated by the project owner on 2026-10-13. Revised the same day: D6, script UI compatibility (§5.9). Revised 2026-10-16: D7, the MVP-first execution order (`mac/plans/mvp-track.md`), with every task run on Sonnet (§9).
+> **Status:** Research complete. Scenario validated by the project owner on 2026-10-13. Revised the same day: D6, script UI compatibility (§5.9). Revised 2026-10-16: D7, the MVP-first execution order (`mac/plans/mvp-track.md`), with every task run on Sonnet (§9). Revised 2026-10-17: MVP verified by the owner; D8, the full port runs from `mac/plans/full-port.md` on one branch `macos`, unattended (`mac/plans/RUNBOOK.md`).
 > **Audience:** (1) the project owner, to decide and track; (2) Claude agentic planning and implementation sessions, which start from this file.
 > **Scope:** feasibility, technology inventory, options with prior art, the chosen architecture, typical migration challenges, and an agent-ready phase plan.
 >
-> Agents: read [§0 Validated decisions](#0-validated-decisions-binding-for-all-sessions) and [§9 Guardrails](#9-agentic-execution-plan) before planning anything. Current tasks live in `mac/plans/mvp-track.md`. File references use `path:line` and were checked against commit `7fd9fd3` (`master`, Oct 2026). Line numbers drift, so re-locate code by symbol name.
+> Agents: read [§0 Validated decisions](#0-validated-decisions-binding-for-all-sessions) and [§9 Guardrails](#9-agentic-execution-plan) before planning anything. Current tasks live in `mac/plans/full-port.md` (`mac/plans/mvp-track.md` is the record of the MVP, M0 to M2.6). File references use `path:line` and were checked against commit `7fd9fd3` (`master`, Oct 2026). Line numbers drift, so re-locate code by symbol name.
 
 ---
 
@@ -36,6 +36,7 @@
 | D5 | Hardware and distribution | **Apple Silicon (arm64) only, macOS 14 Sonoma or later, Developer ID signed + notarized DMG** (a Homebrew cask is optional) | No Intel/universal binaries, no Mac App Store and no sandbox. Every bundled native library is arm64 only. |
 | D6 | Script compatibility (added 2026-10-13) | **Existing scripts, including those that build WinForms UI, must run on macOS unmodified.** Asking authors to rewrite scripts is not acceptable. | A dedicated **Script UI Compatibility Layer** (§5.9) provides the `System.Windows.Forms` and `System.Drawing` APIs to scripts on macOS, rendered with Avalonia. It is a v1 deliverable (phase P4). |
 | D7 | Execution order and agent tier (added 2026-10-16) | **MVP-first vertical slice** (`mac/plans/mvp-track.md`, milestones M0–M2, gates G0–G2) runs before the §9.3 phases. **Every task runs on Sonnet**, at the effort level stated per task | A launchable `.app` (library, grid, reader) comes first, so performance and UX are judged before the full plan is committed. During the track, files in the 7 original project folders are not edited (checked mechanically), so P0's net48 characterization tests run in parallel and gate the first approved edit. Tasks are sized and specified for Sonnet (§9.1). |
+| D8 | Full-port execution (added 2026-10-17) | **One long-lived branch `macos`, tasks commit directly on it; zero edits to original files for the whole port; unattended orchestration with a few owner checkpoints; the owner merges upstream regularly** | Original code is changed only through pass B replacements tracked in `mac/replacements.json`, so upstream merges cannot conflict and the net48 build cannot change. `mac/plans/full-port.md` (plan, checkpoints), `mac/plans/RUNBOOK.md` (execution), `mac/UPSTREAM-SYNC.md` (merge procedure). |
 
 Derived defaults (adopted unless the owner overrides them):
 - Runtime **.NET 10 (LTS, supported until Nov 2028)**, self-contained, `osx-arm64`. Not NativeAOT, because IronPython needs dynamic code generation (see §7.9).

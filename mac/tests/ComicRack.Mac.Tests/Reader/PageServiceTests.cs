@@ -157,7 +157,11 @@ namespace ComicRack.Mac.Tests.Reader
 
 			decoder.Open();
 			WaitUntil(() => service.GetStats().CachedCount == 2, "the new window decoded");
-			Assert.Equal(new[] { 0, 1, 10, 11 }, decoder.Order);
+			// 10 and 11 start in parallel (concurrency 2), so their recorded order is not deterministic.
+			int[] order = decoder.Order.ToArray();
+			Assert.Equal(4, order.Length);
+			Assert.Equal(new[] { 0, 1 }, order.Take(2).OrderBy(p => p));
+			Assert.Equal(new[] { 10, 11 }, order.Skip(2).OrderBy(p => p));
 			stats = service.GetStats();
 			Assert.Equal(2, stats.DecodesCancelled);
 			Assert.Equal(2, stats.DecodesCompleted);
