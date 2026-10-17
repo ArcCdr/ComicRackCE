@@ -58,6 +58,10 @@ namespace ComicRack.Cli
 		private const string Usage = @"crcli commands:
   fixtures make <dir> [--books N] [--pages M] [--formats cbz[,cb7,cbr]] [--seed S]
       Generate N books (default 10) of M pages (default 12), 2-6 MP, JPEG/PNG/WebP mix.
+  fixtures pdf <file.pdf> [--pages N=3]
+      Write a small vector PDF (A5 portrait pages with panels and the page number) to test the PDF reader
+  fixtures cb7 <in.cbz> <out.cb7>
+      Repack a CBZ as a 7z archive (SharpCompress writer; needs no 7zz)
   fixtures from-db <ComicDb.xml> --root <dir> [--pages N] [--max-books N] [--strip <prefix>]
       Copy the DB to mac/fixtures/ComicDb.xml and write a stand-in CBZ per book below <dir>
       (pages scaled to fit 800 px, aspect from the DB, JPEG quality 70). Default --pages 1.

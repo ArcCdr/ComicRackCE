@@ -146,6 +146,8 @@ namespace ComicRack.Mac.Host
 		/// <summary>The static configuration that StartNew applies before the services exist.</summary>
 		private void ConfigureCore()
 		{
+			NativeLibraryResolver.Install();
+
 			// Program.cs:742-743. The smart lists of a real database contain script based matchers, so the types must be known to load it.
 			if (!matchersRegistered)
 			{

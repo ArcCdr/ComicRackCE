@@ -70,6 +70,37 @@ namespace ComicRack.Cli.Tests
 		}
 
 		[Fact]
+		public void Page_renders_a_pdf_page_through_pdfium()
+		{
+			string pdf = Path.Combine(temp, "t.pdf");
+			Assert.Equal(0, Program.Run(new[] { "fixtures", "pdf", pdf, "--pages", "3" }, new StringWriter(), new StringWriter()));
+			string png = Path.Combine(temp, "pdf2.png");
+			var r = Crcli("page", pdf, "--page", "2", "--out", png);
+			Assert.True(r.code == 0, r.output + r.error);
+			Assert.Contains("pages in book: 3", r.output);
+			using (var image = (Bitmap)Image.FromFile(png))
+			{
+				Assert.Equal(1920, image.Width);
+				Assert.Equal(2720, image.Height);
+				// the page is white with a coloured frame: a corner pixel is white, the frame is not
+				Assert.Equal(Color.FromArgb(255, 255, 255, 255).ToArgb(), image.GetPixel(5, 5).ToArgb());
+				Assert.NotEqual(Color.FromArgb(255, 255, 255, 255).ToArgb(), image.GetPixel(130, 400).ToArgb());
+			}
+		}
+
+		[Fact]
+		public void Page_reads_a_cb7_written_by_SharpCompress()
+		{
+			string dir = Fixtures("small", books: 1, pages: 4);
+			string cbz = Directory.GetFiles(dir, "*.cbz").Single();
+			string cb7 = Path.Combine(temp, "t.cb7");
+			Assert.Equal(0, Program.Run(new[] { "fixtures", "cb7", cbz, cb7 }, new StringWriter(), new StringWriter()));
+			var r = Crcli("page", cb7, "--page", "3", "--out", Path.Combine(temp, "c7.png"));
+			Assert.True(r.code == 0, r.output + r.error);
+			Assert.Contains("pages in book: 4", r.output);
+		}
+
+		[Fact]
 		public void Page_beyond_the_last_page_fails_without_writing()
 		{
 			string book = Directory.GetFiles(Fixtures("small", 1, 3), "*.cbz").Single();
