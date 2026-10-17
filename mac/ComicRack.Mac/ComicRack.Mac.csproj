@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The Avalonia app of the macOS MVP (M2.0a): window, native menu, MacHost lifetime. Library, grid and reader come in M2.1 to M2.3. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>ComicRack.Mac</AssemblyName>
+    <RootNamespace>ComicRack.Mac</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <!-- Avalonia 12 is the latest stable on NuGet (12.1.4, 2026-10-17). Avalonia.Skia 12.1.4 depends on SkiaSharp 3.119.4, the version pinned in mac/Directory.Build.props. -->
+    <AvaloniaVersion>12.1.4</AvaloniaVersion>
+    <!-- Only the macOS native assets are copied (SkiaSharp would otherwise bring about 275 MB of Windows DLLs). M2.0b publishes with the same runtime identifier. -->
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- SystemPaths builds <ApplicationData>/<company>/<product> from the entry assembly (see "Facts from M1.5a"): no company, product = the MVP data folder. -->
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <Product>ComicRack CE (MVP)</Product>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Native" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.HarfBuzz" Version="$(AvaloniaVersion)" />
+    <!-- Only for the headless option (smoke runs when no display is available: locked screen, CI). -->
+    <PackageReference Include="Avalonia.Headless" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <!-- Never a version of its own: the shim (cYo.Compat.Drawing) and Avalonia must use the same Skia. -->
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="$(SkiaSharpVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
+  </ItemGroup>
+</Project>
