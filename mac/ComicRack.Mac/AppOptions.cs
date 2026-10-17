@@ -24,6 +24,13 @@ namespace ComicRack.Mac
 
 		public TimeSpan SmokeDuration { get; private set; } = TimeSpan.FromSeconds(3);
 
+		/// <summary>
+		/// <c>--read-book FILE</c>: opens FILE in a reader window as soon as the library engine is up (the book is not added to the
+		/// library, so nothing is recorded). With <c>--smoke-test</c> the run exits with 1 if the first page could not be shown, so it
+		/// is also a check of the page path (archive provider, pdfium, Skia decode) for a bundle on a machine without a display.
+		/// </summary>
+		public string ReadBook { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -57,6 +64,14 @@ namespace ComicRack.Mac
 				else if (arg == "--headless")
 				{
 					options.Headless = true;
+				}
+				else if (arg == "--read-book" && i + 1 < args.Length)
+				{
+					options.ReadBook = Path.GetFullPath(args[++i]);
+				}
+				else if (arg.StartsWith("--read-book=", StringComparison.Ordinal))
+				{
+					options.ReadBook = Path.GetFullPath(arg.Substring("--read-book=".Length));
 				}
 				else if (arg == "--data-dir" && i + 1 < args.Length)
 				{

@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ComicRack.Mac.ViewModels"
+        xmlns:views="using:ComicRack.Mac.Views"
+        x:Class="ComicRack.Mac.Views.ReaderWindow"
+        x:DataType="vm:ReaderViewModel"
+        Title="{Binding Title}"
+        Width="900" Height="1000" MinWidth="360" MinHeight="300"
+        Background="#1E1E1E"
+        RequestedThemeVariant="Dark"
+        WindowStartupLocation="CenterScreen">
+  <DockPanel>
+    <!-- Page number and fit mode. Hidden in full screen (M2.3b). -->
+    <Border Name="StatusStrip" DockPanel.Dock="Bottom" Padding="12,4" Background="#262626">
+      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16">
+        <TextBlock Name="TitleLabel" Grid.Column="0" Text="{Binding Title}" Foreground="#B0B0B0" FontSize="12" TextTrimming="CharacterEllipsis" />
+        <TextBlock Name="FitLabel" Grid.Column="1" Text="{Binding FitText}" Foreground="#909090" FontSize="12" />
+        <TextBlock Name="PageLabel" Grid.Column="2" Text="{Binding PageText}" Foreground="#E0E0E0" FontSize="12" FontWeight="SemiBold" />
+      </Grid>
+    </Border>
+    <Grid>
+      <views:ReaderView Name="PageView" />
+      <!-- Opening, Loading page N, or why a page could not be shown. -->
+      <Border Name="NoticeBox" IsVisible="{Binding HasNotice}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="16,8" CornerRadius="8"
+              Background="#CC000000" MaxWidth="560">
+        <TextBlock Name="NoticeLabel" Text="{Binding Notice}" Foreground="#F0F0F0" TextWrapping="Wrap" TextAlignment="Center" />
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>
