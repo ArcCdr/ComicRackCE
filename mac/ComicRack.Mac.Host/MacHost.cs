@@ -9,6 +9,7 @@ using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.Database;
 using cYo.Projects.ComicRack.Engine.IO.Cache;
 using cYo.Projects.ComicRack.Engine.Sync;
+using ComicRack.Mac.Host.Library;
 using cYo.Projects.ComicRack.Plugins;
 
 namespace ComicRack.Mac.Host
@@ -28,6 +29,7 @@ namespace ComicRack.Mac.Host
 		private static bool matchersRegistered;
 
 		private readonly bool readOnly;
+		private int booksAtFinalSave = -1;
 		private bool disposed;
 
 		public MacPaths Paths { get; }
@@ -175,6 +177,63 @@ namespace ComicRack.Mac.Host
 		}
 
 		/// <summary>
+		/// Writes the database to <see cref="DatabaseFile"/> now and checks the file. <c>DatabaseManager.Save</c> swallows its
+		/// exceptions, so the file is the only evidence: it must have been modified by this call and (with
+		/// <paramref name="countBooks"/>) hold as many books as the library had. Do not call it while a scan adds books.
+		/// </summary>
+		public SaveVerification SaveDatabase(bool countBooks = true)
+		{
+			if (disposed)
+			{
+				throw new ObjectDisposedException(nameof(MacHost));
+			}
+			if (readOnly)
+			{
+				return new SaveVerification { File = DatabaseFile, Ok = true, Skipped = true };
+			}
+			DateTime startedUtc = DateTime.UtcNow;
+			int books = DatabaseManager.Database.Books.Count;
+			DatabaseManager.Save();
+			SaveVerification v = SaveVerification.Check(DatabaseFile, startedUtc, countBooks ? books : -1);
+			if (v.Ok)
+			{
+				Log?.Info(v.ToString());
+			}
+			else
+			{
+				Log?.Error(v.ToString());
+			}
+			return v;
+		}
+
+		/// <summary>
+		/// <see cref="Dispose"/> (which saves the database, unless read only) and then checks the file as <see cref="SaveDatabase"/> does.
+		/// Used at quit: the result tells the caller whether the library really reached the disk. The expected number of books is the one at the moment the queues have stopped (a scan that was running adds books until then).
+		/// </summary>
+		public SaveVerification DisposeAndVerify(bool countBooks = true)
+		{
+			if (disposed)
+			{
+				return new SaveVerification { File = DatabaseFile, Ok = true, Skipped = true };
+			}
+			DateTime startedUtc = DateTime.UtcNow;
+			Exception closeError = null;
+			try
+			{
+				Dispose();
+			}
+			catch (Exception ex)
+			{
+				closeError = ex;
+			}
+			SaveVerification v = readOnly
+				? new SaveVerification { File = DatabaseFile, Ok = true, Skipped = true }
+				: SaveVerification.Check(DatabaseFile, startedUtc, countBooks ? booksAtFinalSave : -1);
+			v.CloseError = closeError;
+			return v;
+		}
+
+		/// <summary>
 		/// Stops the queues, saves the database (unless read only) and releases everything. Every step runs even if an earlier one
 		/// fails; the failures are logged and thrown together afterwards. Calling it again does nothing.
 		/// </summary>
@@ -209,6 +268,14 @@ namespace ComicRack.Mac.Host
 			// Program.cs CleanUp (:1043): QueueManager, ImagePool, DatabaseManager (which saves). The CacheManager has nothing to dispose.
 			Step(errors, "QueueManager", QueueManager);
 			Step(errors, "ImagePool", CacheManager?.ImagePool);
+			// The queues (a running scan) have stopped, so this is the number of books the final save writes.
+			try
+			{
+				booksAtFinalSave = DatabaseManager?.Database.Books.Count ?? -1;
+			}
+			catch (Exception)
+			{
+			}
 			Step(errors, "DatabaseManager", DatabaseManager);
 
 			AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;

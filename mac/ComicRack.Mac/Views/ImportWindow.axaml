@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ComicRack.Mac.ViewModels"
+        x:Class="ComicRack.Mac.Views.ImportWindow"
+        x:DataType="vm:ImportViewModel"
+        Title="Import Windows Library"
+        Width="640" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner">
+  <StackPanel Margin="20" Spacing="10">
+    <TextBlock Text="Copy a library from a Windows ComicRack" FontSize="16" FontWeight="SemiBold" />
+    <TextBlock TextWrapping="Wrap" Opacity="0.7"
+               Text="The database is copied into this app's own data folder and the copy is opened. The original file is never changed. A library that is open now is kept as a backup file next to it." />
+
+    <TextBlock Text="Database file (ComicDb.xml)" Margin="0,8,0,0" />
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+      <TextBox Name="DatabaseBox" Grid.Column="0" Text="{Binding DatabasePath}" PlaceholderText="/path/to/ComicDb.xml" />
+      <Button Name="BrowseButton" Grid.Column="1" Content="Choose..." />
+    </Grid>
+
+    <TextBlock Text="Path mappings (one per line: Windows prefix = folder on this Mac)" Margin="0,8,0,0" />
+    <TextBox Name="MappingsBox" Text="{Binding MappingsText}" AcceptsReturn="True" Height="96" TextWrapping="NoWrap"
+             PlaceholderText="S:\media\BD\=/Users/you/Comics/BD/" />
+    <TextBlock Text="The first part of every book path that matches is replaced. Without a mapping the books keep their Windows paths and cannot be opened." TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
+
+    <TextBlock Name="ErrorLabel" Text="{Binding ErrorText}" Foreground="#D13438" TextWrapping="Wrap" />
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0">
+      <Button Name="CancelButton" Content="Cancel" />
+      <Button Name="ImportButton" Content="Import" Classes="accent" IsDefault="True" />
+    </StackPanel>
+  </StackPanel>
+</Window>
