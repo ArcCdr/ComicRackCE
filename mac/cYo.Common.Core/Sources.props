@@ -13,6 +13,7 @@
   <ItemGroup Condition="'$(CensusPass)' == 'B'">
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Drawing\ExtendedColors\KnownColorTableEx.cs" />
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\UserCredentialsDialog.cs" />
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\FileSystemEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -66,6 +66,20 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
+		public void Folders_under_a_root_keep_the_Core_out_of_the_users_Application_Support_folder()
+		{
+			Assert.True(MacPaths.Under("/tmp/x").SystemPathsUseLocal);
+			Assert.False(MacPaths.ForCurrentUser().SystemPathsUseLocal);
+			using (var temp = new TempFolder())
+			using (var host = MacHost.Open(new MacHostOptions { Paths = temp.Paths }))
+			{
+				string support = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				Assert.False(host.SystemPaths.ApplicationDataPath.StartsWith(support, StringComparison.Ordinal), host.SystemPaths.ApplicationDataPath);
+				Assert.Equal(Path.Combine(cYo.Projects.ComicRack.Engine.SystemPaths.ApplicationPath, "Data"), host.SystemPaths.ApplicationDataPath);
+			}
+		}
+
+		[Fact]
 		public void A_second_host_cannot_be_opened_while_one_is_open()
 		{
 			using (var temp = new TempFolder())
