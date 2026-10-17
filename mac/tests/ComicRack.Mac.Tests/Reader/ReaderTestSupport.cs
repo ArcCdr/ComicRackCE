@@ -33,6 +33,9 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public Func<int, (int Width, int Height)> Size { get; set; } = page => (100, 150);
 
+		/// <summary>If true each page shows its number (and its size) in large letters on its colour, for frames a person looks at.</summary>
+		public bool DrawNumbers { get; set; }
+
 		public TimeSpan Delay { get; set; }
 
 		public Func<int, Exception> FailWith { get; set; }
@@ -105,6 +108,21 @@ namespace ComicRack.Mac.Tests.Reader
 			lock (sync)
 			{
 				heldPages.Remove(page);
+			}
+		}
+
+		private static void DrawLabel(SKBitmap bitmap, int page)
+		{
+			using (var canvas = new SKCanvas(bitmap))
+			using (var paint = new SKPaint { IsAntialias = true, Color = SKColors.White })
+			using (var font = new SKFont(SKTypeface.FromFamilyName("Helvetica", SKFontStyle.Bold), Math.Min(bitmap.Width, bitmap.Height) * 0.45f))
+			using (var small = new SKFont(SKTypeface.FromFamilyName("Helvetica"), Math.Min(bitmap.Width, bitmap.Height) * 0.06f))
+			using (var edge = new SKPaint { Color = SKColors.Black, Style = SKPaintStyle.Stroke, StrokeWidth = Math.Max(2, bitmap.Width / 150f) })
+			{
+				canvas.DrawText((page + 1).ToString(), bitmap.Width / 2f, bitmap.Height / 2f + font.Size * 0.35f, SKTextAlign.Center, font, paint);
+				canvas.DrawText(bitmap.Width + " x " + bitmap.Height, bitmap.Width / 2f, bitmap.Height * 0.85f, SKTextAlign.Center, small, paint);
+				float inset = edge.StrokeWidth;
+				canvas.DrawRect(inset / 2, inset / 2, bitmap.Width - inset, bitmap.Height - inset, edge);
 			}
 		}
 
@@ -195,6 +213,10 @@ namespace ComicRack.Mac.Tests.Reader
 				(int w, int h) = Size(page);
 				var bitmap = new SKBitmap(new SKImageInfo(w, h, SKColorType.Bgra8888, SKAlphaType.Opaque));
 				bitmap.Erase(ColorFor(page));
+				if (DrawNumbers)
+				{
+					DrawLabel(bitmap, page);
+				}
 				PixelBlock block = PixelBlock.FromBitmap(bitmap);
 				lock (sync)
 				{
@@ -243,6 +265,25 @@ namespace ComicRack.Mac.Tests.Reader
 		public List<int> Reported { get; } = new List<int>();
 
 		public int EndReached { get; private set; }
+
+		/// <summary>What the layout is told about the pages (default: the first page is the front cover).</summary>
+		public Func<int, PageTraits> Traits { get; set; }
+
+		/// <summary>What the book says about its reading direction (null: nothing).</summary>
+		public bool? RightToLeft { get; set; }
+
+		/// <summary>The furthest pages reported for spreads.</summary>
+		public List<int> Furthest { get; } = new List<int>();
+
+		public PageTraits GetPageTraits(int page) => Traits != null ? Traits(page) : PageTraits.Default(page);
+
+		public void ReportFurthest(int page)
+		{
+			lock (Furthest)
+			{
+				Furthest.Add(page);
+			}
+		}
 
 		public int LastReported => Reported.Count == 0 ? -1 : Reported[Reported.Count - 1];
 

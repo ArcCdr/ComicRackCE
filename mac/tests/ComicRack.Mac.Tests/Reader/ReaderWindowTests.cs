@@ -160,6 +160,12 @@ namespace ComicRack.Mac.Tests.Reader
 				case Key.D3: return PhysicalKey.Digit3;
 				case Key.D5: return PhysicalKey.Digit5;
 				case Key.W: return PhysicalKey.W;
+				case Key.F: return PhysicalKey.F;
+				case Key.R: return PhysicalKey.R;
+				case Key.D0: return PhysicalKey.Digit0;
+				case Key.D1: return PhysicalKey.Digit1;
+				case Key.OemPlus: return PhysicalKey.Equal;
+				case Key.OemMinus: return PhysicalKey.Minus;
 				default: return PhysicalKey.None;
 			}
 		}

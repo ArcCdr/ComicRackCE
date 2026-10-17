@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using ComicRack.Mac.Reader;
@@ -7,6 +8,15 @@ using Xunit;
 
 namespace ComicRack.Mac.Tests.Reader
 {
+	public static class SingleLayoutTestExtensions
+	{
+		/// <summary>The arrangement of a position-independent layout without zoom and without horizontal scroll (the M2.3a form).</summary>
+		public static PageArrangement Arrange(this IPageLayout layout, Size viewport, IReadOnlyList<Size> sizes, ImageFitMode fit, double scrollY)
+		{
+			return layout.Arrange(viewport, 0, sizes, fit, 1.0, new Vector(0, scrollY));
+		}
+	}
+
 	public class PageLayoutTests
 	{
 		private static readonly IPageLayout Layout = SinglePageLayout.Instance;
@@ -115,15 +125,20 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public void Fit_height_fills_the_height_but_never_becomes_wider_than_the_window()
+		public void Fit_height_fills_the_height_and_a_wider_page_is_panned_sideways()
 		{
 			PageArrangement a = Layout.Arrange(new Size(1000, 800), new[] { new Size(1200, 1800) }, ImageFitMode.FitHeight, 0);
 			Assert.Equal(800, a.Pages[0].Height, 6);
 			Assert.True(a.Pages[0].Width < 1000);
-			// a very wide page would overflow sideways: it is held to the window width instead (nothing is cropped)
-			a = Layout.Arrange(new Size(1000, 800), new[] { new Size(3000, 1000) }, ImageFitMode.FitHeight, 0);
-			Assert.Equal(1000, a.Pages[0].Width, 6);
-			Assert.True(a.Pages[0].Height < 800);
+			Assert.Equal(0, a.MaxScrollX);
+			// a very wide page overflows the window: it keeps the full height and scrolls sideways
+			a = Layout.Arrange(new Size(1000, 800), 0, new[] { new Size(3000, 1000) }, ImageFitMode.FitHeight, 1.0, new Vector(250, 0));
+			Assert.Equal(800, a.Pages[0].Height, 6);
+			Assert.Equal(2400, a.Pages[0].Width, 6);
+			Assert.Equal(1400, a.MaxScrollX, 6);
+			Assert.Equal(250, a.ScrollX, 6);
+			Assert.Equal(-250, a.Pages[0].X, 6);
+			Assert.Equal(0, a.MaxScroll);
 		}
 
 		[Fact]

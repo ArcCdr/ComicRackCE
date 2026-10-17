@@ -15,7 +15,9 @@ namespace ComicRack.Mac.Views
 	/// when the scene, the scroll position, the fit mode or the size changes (Avalonia keeps the recorded frame otherwise); the pixels
 	/// are drawn by the render thread through <see cref="ReaderDrawOperation"/>, one <c>DrawImageRect</c> per page.
 	/// The view takes no reference of its own: the draw operation holds the pictures for as long as a frame needs them.
-	/// Wheel and trackpad events go to <see cref="ReaderViewModel.HandleWheel"/>.
+	/// Wheel and trackpad events go to <see cref="ReaderViewModel.HandleWheel"/>; a drag pans a page that is larger than the area
+	/// (the content follows the pointer); a pinch on the trackpad (the macOS magnify gesture) or on a touch screen zooms about the
+	/// pointer.
 	/// </summary>
 	public sealed class ReaderView : Control
 	{
@@ -23,11 +25,17 @@ namespace ComicRack.Mac.Views
 		public static readonly IBrush PaperBrush = new SolidColorBrush(Color.FromRgb(0x1E, 0x1E, 0x1E));
 
 		private ReaderViewModel model;
+		private bool dragging;
+		private Point lastPointer;
 
 		public ReaderView()
 		{
 			Focusable = true;
 			ClipToBounds = true;
+			AddHandler(PointerTouchPadGestureMagnifyEvent, OnMagnify);
+			GestureRecognizers.Add(new PinchGestureRecognizer());
+			AddHandler(PinchEvent, OnPinch);
+			AddHandler(PinchEndedEvent, (sender, e) => lastPinchScale = 1.0);
 		}
 
 		protected override void OnDataContextChanged(EventArgs e)
@@ -64,6 +72,9 @@ namespace ComicRack.Mac.Views
 			{
 				case nameof(ReaderViewModel.Scene):
 				case nameof(ReaderViewModel.ScrollY):
+				case nameof(ReaderViewModel.ScrollX):
+				case nameof(ReaderViewModel.Zoom):
+				case nameof(ReaderViewModel.RightToLeft):
 				case nameof(ReaderViewModel.Fit):
 				case nameof(ReaderViewModel.ViewportSize):
 					InvalidateVisual();
@@ -95,7 +106,7 @@ namespace ComicRack.Mac.Views
 			{
 				return;
 			}
-			PageArrangement arrangement = m.Layout.Arrange(area.Size, scene.Sizes(), m.Fit, m.ScrollY);
+			PageArrangement arrangement = m.ArrangeFor(area.Size);
 			var images = new CoverImage[scene.Pages.Count];
 			for (int i = 0; i < images.Length; i++)
 			{
@@ -108,6 +119,77 @@ namespace ComicRack.Mac.Views
 		{
 			base.OnPointerPressed(e);
 			Focus();
+			if (model != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && model.CanPan)
+			{
+				dragging = true;
+				lastPointer = e.GetPosition(this);
+				Cursor = new Cursor(StandardCursorType.SizeAll);
+				e.Pointer.Capture(this);
+				e.Handled = true;
+			}
+		}
+
+		protected override void OnPointerMoved(PointerEventArgs e)
+		{
+			base.OnPointerMoved(e);
+			if (dragging && model != null)
+			{
+				Point now = e.GetPosition(this);
+				model.PanBy(lastPointer - now); // the content follows the pointer
+				lastPointer = now;
+				e.Handled = true;
+			}
+		}
+
+		protected override void OnPointerReleased(PointerReleasedEventArgs e)
+		{
+			base.OnPointerReleased(e);
+			EndDrag(e.Pointer);
+		}
+
+		protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+		{
+			base.OnPointerCaptureLost(e);
+			dragging = false;
+			Cursor = null;
+		}
+
+		private void EndDrag(IPointer pointer)
+		{
+			if (dragging)
+			{
+				dragging = false;
+				Cursor = null;
+				if (ReferenceEquals(pointer?.Captured, this))
+				{
+					pointer.Capture(null);
+				}
+			}
+		}
+
+		// The macOS pinch: Delta.X is the change of magnification of this event (0.1 = 10 % larger).
+		private void OnMagnify(object sender, PointerDeltaEventArgs e)
+		{
+			if (model != null)
+			{
+				model.ZoomBy(1.0 + e.Delta.X, e.GetPosition(this));
+				e.Handled = true;
+			}
+		}
+
+		// A pinch on a touch screen: Scale is the total scale since the gesture began, so each event applies the change from the last.
+		private double lastPinchScale = 1.0;
+
+		private void OnPinch(object sender, PinchEventArgs e)
+		{
+			if (model == null)
+			{
+				return;
+			}
+			double step = e.Scale / (lastPinchScale > 0 ? lastPinchScale : 1.0);
+			lastPinchScale = e.Scale;
+			model.ZoomBy(step, e.ScaleOrigin);
+			e.Handled = true;
 		}
 
 		protected override void OnPointerWheelChanged(PointerWheelEventArgs e)

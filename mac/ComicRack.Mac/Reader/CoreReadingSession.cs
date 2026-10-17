@@ -163,6 +163,48 @@ namespace ComicRack.Mac.Reader
 			}
 		}
 
+		public PageTraits GetPageTraits(int page)
+		{
+			try
+			{
+				ComicPageInfo info = book.GetPage(page);
+				return new PageTraits(info.IsSingleRightPageType, info.IsSinglePageType, info.PagePosition, info.ImageWidth, info.ImageHeight);
+			}
+			catch (Exception)
+			{
+				return PageTraits.Default(page);
+			}
+		}
+
+		/// <summary>The manga setting of the book as <c>ComicBook.CreateNavigator</c> turns it into the navigator's flag: only "Yes and right to left" reads from the right.</summary>
+		public bool? RightToLeft
+		{
+			get
+			{
+				switch (navigator?.RightToLeftReading ?? YesNo.Unknown)
+				{
+					case YesNo.Yes:
+						return true;
+					case YesNo.No:
+						return false;
+					default:
+						return null;
+				}
+			}
+		}
+
+		public void ReportFurthest(int page)
+		{
+			if (navigator == null || disposed || !ComicBookNavigator.TrackCurrentPage)
+			{
+				return;
+			}
+			if (page > book.LastPageRead && page < pageCount)
+			{
+				book.LastPageRead = page;
+			}
+		}
+
 		/// <summary>
 		/// A book of one page cannot be marked as read by reaching its last page (<c>ReadPercentage</c> is 0 while <c>LastPageRead</c> is
 		/// 0). The Core's own <c>Navigate</c> sets the current page one past the end in that case; so does this.

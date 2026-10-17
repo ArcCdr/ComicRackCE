@@ -172,6 +172,13 @@ namespace ComicRack.Mac.Reader
 			disposeWait = options.DisposeWait;
 		}
 
+		/// <summary>
+		/// Called with the page number and the size of every page that was decoded, from the decoding thread, before the page can be
+		/// found in the cache (also for pages that turn out not to be needed). The reader uses it to learn which pages are wide before
+		/// it decides how pages pair up. Set it before the first request.
+		/// </summary>
+		public Action<int, int, int> Decoded { get; set; }
+
 		public bool IsDisposed
 		{
 			get
@@ -434,6 +441,7 @@ namespace ComicRack.Mac.Reader
 				{
 					bytes = block.ByteCount;
 					image = new CoverImage(block.CreateImage());
+					NotifyDecoded(job.Page, image);
 				}
 				catch (Exception ex)
 				{
@@ -648,6 +656,22 @@ namespace ComicRack.Mac.Reader
 			foreach (Entry entry in entries)
 			{
 				entry.Image.Release();
+			}
+		}
+
+		private void NotifyDecoded(int page, CoverImage image)
+		{
+			Action<int, int, int> callback = Decoded;
+			if (callback == null)
+			{
+				return;
+			}
+			try
+			{
+				callback(page, image.Width, image.Height);
+			}
+			catch (Exception)
+			{
 			}
 		}
 

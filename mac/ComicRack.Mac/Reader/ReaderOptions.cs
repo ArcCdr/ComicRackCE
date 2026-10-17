@@ -10,8 +10,20 @@ namespace ComicRack.Mac.Reader
 		/// <summary>The page cache and prefetcher.</summary>
 		public PageServiceOptions Pages { get; set; } = new PageServiceOptions();
 
-		/// <summary>The layout: single page in M2.3a.</summary>
-		public IPageLayout Layout { get; set; } = SinglePageLayout.Instance;
+		/// <summary>The page layout a reader starts with: Single, Double (two pages) or DoubleAdaptive. Continuous is not supported and counts as Single.</summary>
+		public PageLayoutMode Mode { get; set; } = PageLayoutMode.Single;
+
+		/// <summary>Reading direction to start with when the book does not say (its manga setting is unknown). The book's own setting wins.</summary>
+		public bool RightToLeft { get; set; }
+
+		/// <summary>The smallest zoom: the fit itself.</summary>
+		public double ZoomMin { get; set; } = 1.0;
+
+		/// <summary>The largest zoom, relative to the fit.</summary>
+		public double ZoomMax { get; set; } = 8.0;
+
+		/// <summary>The factor of one Cmd+= or Cmd+- press.</summary>
+		public double ZoomStep { get; set; } = 1.25;
 
 		/// <summary>The fit mode a reader starts with.</summary>
 		public ImageFitMode Fit { get; set; } = ImageFitMode.Fit;
