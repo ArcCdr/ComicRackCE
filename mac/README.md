@@ -99,3 +99,23 @@ Example (real window, needs an unlocked screen): `dotnet run --project mac/Comic
 - **Save on quit:** `HostService.Dispose` closes the host (which saves) and then checks the file (`SaveVerification`: it exists, was modified after the save started, is complete XML, and holds the expected number of books). The Core's own save swallows every error, so a failed save is only visible this way; it is logged as an error and shown after a scan.
 - The dialogs sit behind `ILibraryDialogs` (picker, import dialog, message), so view models and tests do not need a window.
 - Tests (no real window; Avalonia headless platform with the Skia renderer): `dotnet test mac/tests/ComicRack.Mac.Tests`. Tests that need `mac/fixtures/BD`, `BD-reader` or `ComicDb.xml` are skipped when those are missing. Set `CRMAC_FRAMES_DIR=<folder>` to save the rendered window frames as PNG. All tests use private data folders under the temp folder and fail if the real `~/Library/.../ComicRack CE (MVP)` folders change.
+
+### Thumbnail service (M2.2a)
+
+`mac/ComicRack.Mac/Thumbnails/ThumbnailService` gives the grid its covers as `SkiaSharp.SKImage`s. Not wired into the window yet (M2.2b does that).
+
+```csharp
+// once the host is open (dispose the service BEFORE the host; Dispose waits a few seconds for running decodes)
+var thumbnails = new ThumbnailService(host.CacheManager);
+SKImage image = await thumbnails.Request(book, sizePx: 300, token);          // placeholder picture if the file is missing
+ThumbnailResult r = await thumbnails.RequestResult(book, 300, token);        // r.IsPlaceholder, r.Error
+if (thumbnails.TryGetCached(book, 300, out ThumbnailResult hit)) { ... }     // synchronous, never starts a decode
+```
+
+- **Sizes:** a request names a height in pixels and is served at the next step of the Core's chain (512, 384, 288, 216, 162, 121, ...; never above 512, the height the Core stores). The cache holds one image per book and step.
+- **Order and limits:** at most 4 decodes at once; waiting requests are a stack (the newest is decoded first, a repeated request moves up); a request cancelled while waiting never decodes; concurrent requests for the same cover share one decode and a caller that cancels only detaches itself.
+- **Threads:** the task completes on the UI thread (through `UiDispatch`), except a memory cache hit, which is already completed when it returns.
+- **Image ownership (the rule for cells):** each caller gets its **own** `SKImage` over pixels that are shared and reference counted (`PixelBlock`, no copy). Dispose it when the cell is recycled or the picture replaced; if you forget, the garbage collector frees it. The cache evicting an entry (256 MB bound by default) never invalidates an image that is still being drawn. Do not call `Dispose` on an image you did not get from a request.
+- **Failures** (missing volume, damaged archive) never fault the task: the result is a grey tile with a cross, remembered for 30 seconds so a grid of missing books does not retry on every scroll. The first 20 are written to the log (`INFO`), the rest are only counted (`GetStats().Failures`).
+- **Pixels:** `CoreThumbnailDecoder` asks the Core's `ImagePool` for the cover (memory cache, disk cache, and only then the book file) and decodes the stored JPEG with Skia straight into the pixels the image keeps (opaque BGRA, reduced with a mipmapped filter when the step is below 512). It does not wrap the Core's decoded `ThumbnailImage.Bitmap`, which the Core replaces, releases after 15 s and disposes on eviction.
+- Tests: `dotnet test mac/tests/ComicRack.Mac.Tests --filter FullyQualifiedName~Thumbnails` (a fake decoder and a pumped fake UI thread for the rules; the fixture books in `mac/fixtures/BD` for the real decoder, skipped without them).
