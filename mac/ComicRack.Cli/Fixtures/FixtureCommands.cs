@@ -320,13 +320,23 @@ namespace ComicRack.Cli.Fixtures
 	{
 		private readonly List<string> positional = new List<string>();
 		private readonly Dictionary<string, string> named = new Dictionary<string, string>();
+		private readonly HashSet<string> flags = new HashSet<string>();
+
+		/// <summary>Options that take no value (`--app-folders`); every other `--name` takes the next argument.</summary>
+		private static readonly HashSet<string> FlagNames = new HashSet<string> { "app-folders" };
+
+		public bool Flag(string name) => flags.Contains(name);
 
 		public static Options Parse(string[] args)
 		{
 			var o = new Options();
 			for (int i = 0; i < args.Length; i++)
 			{
-				if (args[i].StartsWith("--"))
+				if (args[i].StartsWith("--") && FlagNames.Contains(args[i].Substring(2)))
+				{
+					o.flags.Add(args[i].Substring(2));
+				}
+				else if (args[i].StartsWith("--"))
 				{
 					if (i + 1 >= args.Length)
 					{

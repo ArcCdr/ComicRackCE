@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- crcli: command line tool of the macOS build. M1.6 adds the `fixtures` commands; M1.5b/M1.5c add the Core commands on the host.
-       Fixture generation needs only Skia and SharpZipLib, so the project does not reference the Core yet. -->
+  <!-- crcli: command line tool of the macOS build. M1.6 added the `fixtures` commands (Skia and SharpZipLib only); M1.5b adds the Core commands (`db`, `scan`, `page`, `thumb`) on ComicRack.Mac.Host. -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>crcli</AssemblyName>
@@ -18,5 +17,8 @@
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="$(SkiaSharpVersion)" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <InternalsVisibleTo Include="ComicRack.Cli.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
   </ItemGroup>
 </Project>

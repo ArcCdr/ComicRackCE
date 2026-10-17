@@ -25,8 +25,17 @@ namespace ComicRack.Mac.Host
 
 		public string LogFile => Path.Combine(LogFolder, "ComicRack.log");
 
-		public MacPaths(string dataFolder, string cacheFolder, string logFolder)
+		/// <summary>
+		/// False (the app): SystemPaths creates its own empty &lt;ApplicationData&gt;/&lt;company&gt;/&lt;product&gt; folder from the entry assembly.
+		/// True (<see cref="Under"/>: tests, tools, portable use): SystemPaths is built with useLocal, so its own folders are
+		/// &lt;folder of the executable&gt;/Data and nothing is created in the user's Application Support folder. Setting HOME does not
+		/// work for this (.NET reads the home folder once).
+		/// </summary>
+		public bool SystemPathsUseLocal { get; }
+
+		public MacPaths(string dataFolder, string cacheFolder, string logFolder, bool systemPathsUseLocal = false)
 		{
+			SystemPathsUseLocal = systemPathsUseLocal;
 			DataFolder = Full(dataFolder, nameof(dataFolder));
 			CacheFolder = Full(cacheFolder, nameof(cacheFolder));
 			LogFolder = Full(logFolder, nameof(logFolder));
@@ -51,7 +60,7 @@ namespace ComicRack.Mac.Host
 		/// <summary>Data, cache and logs as sub folders of <paramref name="root"/> (tests, portable use).</summary>
 		public static MacPaths Under(string root)
 		{
-			return new MacPaths(Path.Combine(root, "Data"), Path.Combine(root, "Cache"), Path.Combine(root, "Logs"));
+			return new MacPaths(Path.Combine(root, "Data"), Path.Combine(root, "Cache"), Path.Combine(root, "Logs"), systemPathsUseLocal: true);
 		}
 
 		public void CreateFolders()
@@ -64,11 +73,11 @@ namespace ComicRack.Mac.Host
 		/// <summary>
 		/// The Core's own path object. The database and cache folders are passed explicitly, as ComicRack/Program.cs does with
 		/// the command line switches /db and /cp. The other folders of <see cref="SystemPaths"/> (ApplicationDataPath, scripts)
-		/// still come from Environment.SpecialFolder; the Core creates them when it builds the object.
+		/// still come from Environment.SpecialFolder (or the executable's Data folder, see <see cref="SystemPathsUseLocal"/>); the Core creates them when it builds the object.
 		/// </summary>
 		public SystemPaths CreateSystemPaths()
 		{
-			return new SystemPaths(useLocal: false, alternateConfig: null, databasePath: DataFolder, cachePath: CacheFolder);
+			return new SystemPaths(useLocal: SystemPathsUseLocal, alternateConfig: null, databasePath: DataFolder, cachePath: CacheFolder);
 		}
 
 		private static string Full(string path, string name)

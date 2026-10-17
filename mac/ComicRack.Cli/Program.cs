@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ComicRack.Cli.Core;
 using ComicRack.Cli.Fixtures;
 
 namespace ComicRack.Cli
@@ -28,6 +29,14 @@ namespace ComicRack.Cli
 				{
 				case "fixtures":
 					return FixtureCommands.Run(rest.ToArray(), output, error, FixtureEnvironment.Default());
+				case "db":
+					return CoreCommands.Db(rest.ToArray(), output, error);
+				case "scan":
+					return CoreCommands.Scan(rest.ToArray(), output, error);
+				case "page":
+					return CoreCommands.Page(rest.ToArray(), output, error);
+				case "thumb":
+					return CoreCommands.Thumb(rest.ToArray(), output, error);
 				default:
 					error.WriteLine("Unknown command: " + args[0]);
 					error.WriteLine(Usage);
@@ -52,6 +61,16 @@ namespace ComicRack.Cli
   fixtures from-db <ComicDb.xml> --root <dir> [--pages N] [--max-books N] [--strip <prefix>]
       Copy the DB to mac/fixtures/ComicDb.xml and write a stand-in CBZ per book below <dir>
       (pages scaled to fit 800 px, aspect from the DB, JPEG quality 70). Default --pages 1.
+  db stats <ComicDb.xml> [--remap ""S:\media\BD\=/abs/path/""]
+      Load time, book count, memory. The database is opened read only. The remap is applied in memory to books and watch folders.
+  scan <folder> --db <out.xml>
+      Scan a folder into a new database; timing per book.
+  page <book> --page N --out p.png
+      Decode page N (1-based) through the book provider and the ImagePool; write a PNG.
+  thumb <book> --out t.jpg [--page N]
+      Thumbnail (front cover, or page N) through the Core cache; run twice to show the disk cache.
+Options of db/scan/page/thumb: --data-dir <dir> (or CRCLI_DATA_DIR) keeps data, cache and logs there; --app-folders uses
+~/Library/.../ComicRack CE (MVP). Default: a temporary folder that is deleted at the end.
 Everything under mac/fixtures is limited to 1.5 GB; the commands estimate first and refuse to exceed it.";
 	}
 
