@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Tests of the System.Drawing stand-in (cYo.Compat.Drawing): images and pixels (M1.2b). The Graphics subset (M1.2c) adds its tests here. -->
+  <!-- Tests of the System.Drawing stand-in (cYo.Compat.Drawing): images and pixels (M1.2b), the Graphics subset (M1.2c). -->
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

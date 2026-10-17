@@ -34,6 +34,16 @@ namespace Compat.Drawing.Tests
 			return bitmap;
 		}
 
+		public static Bitmap Solid(int w, int h, Color color, PixelFormat format = PixelFormat.Format32bppArgb)
+		{
+			Bitmap bitmap = new Bitmap(w, h, format);
+			using (Graphics g = Graphics.FromImage(bitmap))
+			{
+				g.Clear(color);
+			}
+			return bitmap;
+		}
+
 		/// <summary>Reproducible noise: JPEG and PNG sizes react strongly to the quality.</summary>
 		public static Bitmap NoiseBitmap(int w, int h, PixelFormat format = PixelFormat.Format24bppRgb, int seed = 7)
 		{
