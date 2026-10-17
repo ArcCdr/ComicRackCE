@@ -99,6 +99,11 @@ All in `Replacements/` folders next to each shadow project (`mac/<project>/Repla
 - **Not needed after all** (the plan listed them as expected): `NetworkManager`, `DeviceSyncFactory` and `SingleInstance` were already excluded or replaced in M0.3b.
 - `mac/tools/api-inventory` output changed only slightly: `RendererImage` is the real file now (3 more `Bitmap` uses).
 
+## Added by M1.5a
+
+- **Pass B only replacement:** `ComicRack.Engine.Core/Replacements/PassB/CacheManager.cs` replaces `ComicRack.Engine/CacheManager.cs` (removed from the pass B compile in `Sources.props`). The copy is identical except for one line: `ImagePool = new MacImagePool(...)`. Reason: `ImagePool` is created inside the `CacheManager` constructor, and `ImagePool.CreateErrorPage()` calls `Graphics.DrawString` with `SystemFonts.MenuFont`, which the Drawing shim does not support. `Replacements/PassB/MacImagePool.cs` overrides `CreateErrorPage()` to return `Resources.ErrorPage` without text. `ComicRack.Mac.Host.Tests` has a hash test of the original and a test that the copy differs only by that line.
+- **New project:** `mac/ComicRack.Mac.Host` (composition root, references the three pass B shadow projects) and `mac/tests/ComicRack.Mac.Host.Tests`, both in `ComicRack.Mac.slnx`. Pass B file counts: 317 / 876 / 893 (Common / Engine / Plugins, merged).
+
 ## Other changes to the shadow build
 
 - `Shadow.props`: pass A suppresses `WFO1000` (the WinForms designer-serialization analyzer introduced with the .NET 10 SDK; it flags about 16 properties in linked sources and is not a compile gap).

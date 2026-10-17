@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Composition root of the macOS build, shared by the CLI (crcli) and the Avalonia app: paths, settings, logging and the
+       DatabaseManager -> CacheManager -> QueueManager chain of ComicRack/Program.cs StartNew (M1.5a).
+       It references the pass B shadow projects (the default pass); it is not built for pass A. -->
+  <PropertyGroup>
+    <RootNamespace>ComicRack.Mac.Host</RootNamespace>
+    <AssemblyName>ComicRack.Mac.Host</AssemblyName>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cYo.Common.Core\cYo.Common.Core.csproj" />
+    <ProjectReference Include="..\ComicRack.Engine.Core\ComicRack.Engine.Core.csproj" />
+    <ProjectReference Include="..\ComicRack.Plugins.Core\ComicRack.Plugins.Core.csproj" />
+  </ItemGroup>
+</Project>
