@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using cYo.Projects.ComicRack.Engine.Display;
@@ -14,7 +15,7 @@ namespace ComicRack.Mac
 	/// </summary>
 	public static class ReaderMenu
 	{
-		public static NativeMenu Build(ReaderViewModel vm)
+		public static NativeMenu Build(ReaderViewModel vm, PerfOverlayController perf = null)
 		{
 			return new NativeMenu
 			{
@@ -38,6 +39,7 @@ namespace ComicRack.Mac
 					DirectionItem(vm),
 					new NativeMenuItemSeparator(),
 					FullScreenItem(vm),
+					MainMenu.PerfItem(perf),
 				}),
 				Submenu("Go", new NativeMenu
 				{

@@ -62,7 +62,7 @@
       </Grid>
     </Border>
 
-    <Grid>
+    <Grid Name="ContentArea">
       <views:BookGridView Name="BookGrid" DataContext="{Binding Browser}" />
 
       <!-- What an empty list says: scripts needed, no books, or a failure. -->

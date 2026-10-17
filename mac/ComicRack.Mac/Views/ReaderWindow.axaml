@@ -19,7 +19,7 @@
         <TextBlock Name="PageLabel" Grid.Column="3" Text="{Binding PageText}" Foreground="#E0E0E0" FontSize="12" FontWeight="SemiBold" />
       </Grid>
     </Border>
-    <Grid>
+    <Grid Name="ContentArea">
       <views:ReaderView Name="PageView" />
       <!-- Opening, Loading page N, or why a page could not be shown. -->
       <Border Name="NoticeBox" IsVisible="{Binding HasNotice}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="16,8" CornerRadius="8"

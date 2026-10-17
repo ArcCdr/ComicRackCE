@@ -8,6 +8,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using cYo.Projects.ComicRack.Engine;
+using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.Reader;
 using ComicRack.Mac.Services;
 using ComicRack.Mac.ViewModels;
@@ -21,6 +22,7 @@ namespace ComicRack.Mac
 		private HostService hostService;
 		private MainViewModel viewModel;
 		private ReaderManager readers;
+		private PerfOverlayController perf;
 
 		public App()
 		{
@@ -44,11 +46,20 @@ namespace ComicRack.Mac
 
 				hostService = new HostService(options);
 				var window = new MainWindow();
-				readers = new ReaderManager(hostService);
+				perf = new PerfOverlayController(new PerfSources(), new AvaloniaPerfTicker(), StopwatchClock.Now, AppLog.Info);
+				readers = new ReaderManager(hostService, perf);
+				perf.Sources.DecodeMilliseconds = readers.LastDecodeMilliseconds;
+				perf.Sources.CachedTurnMilliseconds = readers.LastCachedTurnMilliseconds;
+				perf.Sources.Thumbnails = () =>
+				{
+					var stats = hostService.Thumbnails?.GetStats();
+					return stats == null ? null : ((int, int)?)(stats.Queued, stats.InFlight);
+				};
+				window.AttachPerfOverlay(perf);
 				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers);
 				window.DataContext = viewModel;
 				NativeMenu.SetMenu(this, MainMenu.BuildAppMenu(viewModel));
-				NativeMenu.SetMenu(window, MainMenu.BuildMenuBar(viewModel));
+				NativeMenu.SetMenu(window, MainMenu.BuildMenuBar(viewModel, perf));
 				hostService.Opened += (sender, e) => viewModel.OnHostOpened();
 				desktop.MainWindow = window;
 				desktop.ShutdownRequested += (sender, e) => AppLog.Info("Shutdown requested (Cmd+Q or the last window closed).");
@@ -128,6 +139,7 @@ namespace ComicRack.Mac
 
 		private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
 		{
+			perf?.Hide();
 			AppLog.Info("Exit requested, code " + e.ApplicationExitCode + ".");
 			// The readers go first: each records its page in the library, which is saved when the host closes.
 			viewModel?.CloseReaders();
