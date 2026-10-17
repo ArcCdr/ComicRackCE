@@ -117,9 +117,9 @@ namespace ComicRack.Mac.Tests.Browser
 	/// <summary>The 14,706-book fixture library imported into a private data folder, with the app wiring of <see cref="Launch"/>.</summary>
 	public static class FixtureLibrary
 	{
-		public static async Task<Launch> Open14k(TempDir temp)
+		public static async Task<Launch> Open14k(TempDir temp, Func<HostService, IReaderLauncher> readers = null)
 		{
-			Launch launch = await Launch.Start(temp.Combine("app"));
+			Launch launch = await Launch.Start(temp.Combine("app"), readers);
 			var request = new ImportRequest(Fixtures.ComicDb, new[] { new PathRemapRule(@"S:\media\BD\", Fixtures.BD + "/") });
 			await launch.ViewModel.ImportLibraryAsync(request);
 			await WaitForGrid(launch.ViewModel, 14706);

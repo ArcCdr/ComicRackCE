@@ -91,7 +91,8 @@ namespace ComicRack.Mac.Tests.Browser
 				{
 					int errorsBefore = Services.AppLog.ErrorCount;
 					var import = Stopwatch.StartNew();
-					using (Launch launch = await FixtureLibrary.Open14k(temp))
+					var launcher = new Reader.FakeLauncher();
+					using (Launch launch = await FixtureLibrary.Open14k(temp, svc => launcher))
 					{
 						output.WriteLine($"import and grid ready: {import.ElapsedMilliseconds} ms; catalog build {launch.ViewModel.Browser.LastCatalogMilliseconds:0} ms; first query {launch.ViewModel.Browser.LastQueryMilliseconds:0} ms");
 						var vm = launch.ViewModel;
@@ -136,11 +137,13 @@ namespace ComicRack.Mac.Tests.Browser
 						await WaitForCovers(grid, window);
 						Save(window, "main-10-fixture-size-300");
 
-						// Enter on a selected book reports that the reader is not there yet (M2.3a).
+						// Enter on a selected book asks the reader launcher to open it (M2.3a).
 						grid.Focus();
 						window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
 						window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
-						Assert.Contains("reader", vm.StatusText);
+						Assert.Single(launcher.Opened);
+						Assert.Equal(vm.Browser.SelectedItem.Book, launcher.Opened[0]);
+						Assert.Contains("Reading", vm.StatusText);
 						output.WriteLine("status after Enter: " + vm.StatusText);
 
 						window.Close();

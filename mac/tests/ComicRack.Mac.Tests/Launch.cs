@@ -23,7 +23,7 @@ namespace ComicRack.Mac.Tests
 		public bool Quit_Done { get; private set; }
 
 		/// <summary>Starts the host on <paramref name="dataDirectory"/> (the same folder again = a relaunch) and waits for it to open.</summary>
-		public static async Task<Launch> Start(string dataDirectory)
+		public static async Task<Launch> Start(string dataDirectory, Func<HostService, IReaderLauncher> readers = null)
 		{
 			var launch = new Launch { DataDirectory = dataDirectory };
 			AppOptions options = AppOptions.Parse(new[] { "--data-dir", dataDirectory });
@@ -32,7 +32,7 @@ namespace ComicRack.Mac.Tests
 				throw new InvalidOperationException("A test launch must always have its own data folder.");
 			}
 			launch.Service = new HostService(options);
-			launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs);
+			launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs, readers?.Invoke(launch.Service));
 			launch.Service.Opened += (sender, e) => launch.ViewModel.OnHostOpened();
 			launch.Service.Start();
 			await launch.Service.Ready;
@@ -47,6 +47,7 @@ namespace ComicRack.Mac.Tests
 		/// <summary>Cmd+Q: cancel a running operation, close the host (which saves) and check the saved file. Returns the check.</summary>
 		public SaveVerification Quit()
 		{
+			ViewModel.CloseReaders(); // App.OnExit closes the readers first: each records its page in the library that is saved next
 			ViewModel.CancelRunningOperation();
 			Service.Dispose();
 			Quit_Done = true;

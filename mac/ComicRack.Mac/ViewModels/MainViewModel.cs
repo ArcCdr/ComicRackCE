@@ -24,13 +24,15 @@ namespace ComicRack.Mac.ViewModels
 		private readonly IShell shell;
 		private readonly HostService hostService;
 		private readonly ILibraryDialogs dialogs;
+		private readonly IReaderLauncher readers;
 		private CancellationTokenSource operation;
 
-		public MainViewModel(IShell shell, HostService hostService, ILibraryDialogs dialogs)
+		public MainViewModel(IShell shell, HostService hostService, ILibraryDialogs dialogs, IReaderLauncher readers = null)
 		{
 			this.shell = shell;
 			this.hostService = hostService;
 			this.dialogs = dialogs;
+			this.readers = readers;
 			StatusText = "Starting the library engine...";
 			BookCountText = "Starting the library engine...";
 			Browser.OpenBookRequested += OnOpenBookRequested;
@@ -38,17 +40,37 @@ namespace ComicRack.Mac.ViewModels
 			hostService.Closing += (sender, e) => Browser.Thumbnails = null; // the cover service is about to be disposed (import)
 		}
 
+		/// <summary>The reader windows of this app (null when the view model was made without a launcher).</summary>
+		public IReaderLauncher Readers => readers;
+
 		/// <summary>The book grid: list, search, sort, thumbnail size, selection.</summary>
 		public BrowserViewModel Browser { get; } = new BrowserViewModel();
 
 		/// <summary>The tree of lists (M2.2c). The selected row decides which books the grid shows.</summary>
 		public SidebarViewModel Sidebar { get; } = new SidebarViewModel();
 
-		// Double click or Enter on a book. The reader window comes with M2.3a; until then the request is only reported.
+		// Double click or Enter on a book: opens it in a reader window (M2.3a).
 		private void OnOpenBookRequested(object sender, BookItem item)
 		{
 			AppLog.Info("Open book requested: " + item.Book?.FilePath);
-			StatusText = $"Opening \"{item.Title}\" needs the reader (M2.3a), which is not available yet.";
+			if (item.Book == null || readers == null)
+			{
+				StatusText = $"\"{item.Title}\" cannot be opened here.";
+				return;
+			}
+			if (!item.Book.IsLinked || !File.Exists(item.Book.FilePath))
+			{
+				StatusText = $"\"{item.Title}\" cannot be opened: the file is missing ({item.Book.FilePath}).";
+				return;
+			}
+			readers.Open(item.Book);
+			StatusText = $"Reading \"{item.Title}\".";
+		}
+
+		/// <summary>Closes the reader windows (each records its page). Called before the library is replaced and when the app quits.</summary>
+		public void CloseReaders()
+		{
+			readers?.CloseAll();
 		}
 
 		/// <summary>
@@ -340,6 +362,8 @@ namespace ComicRack.Mac.ViewModels
 				await ReportProblem("Import", "The library engine was not started.");
 				return null;
 			}
+			// A reader uses the open library's page cache and records its page in the library: close it first, while the library is still open.
+			CloseReaders();
 			CancellationToken token = BeginProgress("Importing " + Path.GetFileName(request.DatabasePath) + "...");
 			AppLog.Info("Import of " + request.DatabasePath + " started.");
 			ImportResult result;
