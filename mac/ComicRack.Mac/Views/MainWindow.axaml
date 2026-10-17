@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ComicRack.Mac.ViewModels"
+        xmlns:views="using:ComicRack.Mac.Views"
         x:Class="ComicRack.Mac.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="ComicRack CE (MVP)"
@@ -14,12 +15,38 @@
         <TextBlock Grid.Column="1" Text="{Binding HostText}" Opacity="0.7" Margin="12,0,0,0" />
       </Grid>
     </Border>
-    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8" MaxWidth="720">
-      <TextBlock Text="{Binding AppName}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />
-      <TextBlock Name="BookCountLabel" Text="{Binding BookCountText}" Opacity="0.7" HorizontalAlignment="Center" TextWrapping="Wrap" />
+
+    <!-- Search, sort and thumbnail size (M2.2b). -->
+    <Border DockPanel.Dock="Top" Padding="12,8" BorderThickness="0,0,0,1"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="16">
+        <TextBox Name="SearchBox" Grid.Column="0" Width="280" VerticalAlignment="Center" PlaceholderText="Search title or series"
+                 Text="{Binding Browser.SearchText}" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <TextBlock Text="Sort" Opacity="0.7" VerticalAlignment="Center" />
+          <ComboBox Name="SortBox" Width="130" ItemsSource="{Binding Browser.SortChoices}" SelectedIndex="{Binding Browser.SortIndex}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <TextBlock Text="Size" Opacity="0.7" VerticalAlignment="Center" />
+          <Slider Name="SizeSlider" Width="160" Minimum="80" Maximum="360" Value="{Binding Browser.ThumbnailSize}" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Name="SummaryLabel" Grid.Column="3" Text="{Binding Browser.SummaryText}" Opacity="0.7"
+                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+
+    <Grid>
+      <views:BookGridView Name="BookGrid" DataContext="{Binding Browser}" />
+
+      <StackPanel Name="EmptyState" IsVisible="{Binding ShowEmptyMessage}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8" MaxWidth="720">
+        <TextBlock Text="{Binding AppName}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Name="BookCountLabel" Text="{Binding BookCountText}" Opacity="0.7" HorizontalAlignment="Center" TextWrapping="Wrap" />
+      </StackPanel>
 
       <!-- Progress of Open Folder / Import: a count, the current file, Cancel. -->
-      <Border Name="ProgressPanel" IsVisible="{Binding IsProgressVisible}" Margin="0,24,0,0" Padding="16" CornerRadius="8" Width="560"
+      <Border Name="ProgressPanel" IsVisible="{Binding IsProgressVisible}" Padding="16" CornerRadius="8" Width="560"
+              VerticalAlignment="Center" HorizontalAlignment="Center"
+              Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
               BorderThickness="1" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
         <StackPanel Spacing="8">
           <TextBlock Name="ProgressTitleLabel" Text="{Binding ProgressTitle}" FontWeight="SemiBold" />
@@ -29,6 +56,6 @@
           <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelOperationCommand}" HorizontalAlignment="Right" />
         </StackPanel>
       </Border>
-    </StackPanel>
+    </Grid>
   </DockPanel>
 </Window>
