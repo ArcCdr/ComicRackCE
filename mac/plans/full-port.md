@@ -225,6 +225,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **Wave D, reader, preferences, export, codecs:** P3.4, P3.5a, P3.5b, P3.6, P5.22a, P5.22b, P5.23a, P5.23b, P5.23c, P5.23d, P5.23e, P2.3a, P2.3b, P2.3c, P2.5, P5.24a, P5.24b, P5.25, P5.26, P5.27a, P5.27b, P5.28a, P5.28b, P5.29, P5.30, P5.31, P3.7, P3.8.
 - **Wave E, Script UI layer** (runs only if P4.2 is GO, else C3): P4.7, P4.8, P4.9a, P4.9b, P4.9c, P4.9d, P4.9e, P4.9f, P4.9g, P4.10a, P4.10b, P4.10c, P4.10d, P4.10e, P4.10f, P4.10g, P4.11a, P4.11b, P4.11c, P4.11d, P4.11e, P4.12a, P4.12b, P4.13a, P4.13b, P4.13c, P4.14, P4.15 → **C4**; P4.16 (optional).
 - **Wave F, packaging and hardening:** P6.1, P6.5, P6.2, P6.3, P6.4, P6.6, P7.1, P7.2, P7.3, P7.4, P7.5, P7.6, P7.7, P5.23f (optional), P6.7 (needs **C5**), P7.8 → **C6**.
+- **Front of the list now:** R1 (flaky fast gate).
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`R<n>`) go to the **front** of the list.
 
 ---
@@ -234,6 +235,13 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort** (session effort level, Sonnet tier for all implementation) · **Unattended** (`yes`, or `partial: <owner part> -> Cn`) · **Status**; **Goal**; **Add**; **Edit** (files under `mac/`; originals: none unless stated); **Out of scope**; **Accept** (commands; `verify.sh` = `mac/tools/verify.sh`); **Rollback** (default §2.9 unless stated). Paths are relative to the repository root.
 
 ### P0 Safety net and tooling
+
+#### R1 Make the fast gate deterministic (flaky tests)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: `mac/tools/verify.sh` passes reliably (10 consecutive runs). Found by P0.2: run 1 had 12 failures in `ComicRack.Mac.Tests` (ReaderFlowTests "A MacHost is already open", CoreThumbnailDecoderTests), run 2 had 2 failures in `Compat.Drawing.Tests` (DisposeTests finalizer / live-image counters), run 3 passed.
+- Do: find the causes (process-wide static state: only one MacHost may be open; xunit parallelism across test classes and projects; GC-dependent assertions sharing global counters) and fix them in tests/test infrastructure under `mac/` only: xunit collections or `[assembly: CollectionBehavior(DisableTestParallelization = true)]` where static state is shared, serialize the projects in verify.sh if they share the global state, make GC-counter assertions robust (retry with GC.Collect/WaitForPendingFinalizers loops, local counters). No weakening of what the tests check.
+- Out of scope: product code changes unless a real race is found (then fix it in `mac/` product code and say so).
+- Accept: `for i in 1 2 3 4 5 6 7 8 9 10; do mac/tools/verify.sh || break; done` all PASS (record durations; keep the fast gate under ~3 minutes if possible).
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
