@@ -37,7 +37,7 @@ namespace ComicRack.Mac
 				}),
 				Submenu("View", new NativeMenu
 				{
-					Item("Show Sidebar", vm.ToggleSidebarCommand, Key.S, KeyModifiers.Meta | KeyModifiers.Control),
+					SidebarItem(vm),
 					Item("Enter Full Screen", vm.ToggleFullScreenCommand, Key.F, KeyModifiers.Meta | KeyModifiers.Control),
 				}),
 				Submenu("Window", new NativeMenu
@@ -50,6 +50,22 @@ namespace ComicRack.Mac
 					Item("ComicRack CE Help", vm.ShowHelpCommand, Key.OemQuestion, KeyModifiers.Meta | KeyModifiers.Shift),
 				}),
 			};
+		}
+
+		// View > Show Sidebar: a check mark that follows the sidebar's visibility.
+		private static NativeMenuItem SidebarItem(MainViewModel vm)
+		{
+			NativeMenuItem item = Item("Show Sidebar", vm.ToggleSidebarCommand, Key.S, KeyModifiers.Meta | KeyModifiers.Control);
+			item.ToggleType = MenuItemToggleType.CheckBox;
+			item.IsChecked = vm.Sidebar.IsVisible;
+			vm.Sidebar.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(SidebarViewModel.IsVisible))
+				{
+					item.IsChecked = vm.Sidebar.IsVisible;
+				}
+			};
+			return item;
 		}
 
 		private static NativeMenuItem Item(string header, IRelayCommand command, Key key = Key.None, KeyModifiers modifiers = KeyModifiers.Meta)

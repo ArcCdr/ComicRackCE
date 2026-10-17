@@ -16,6 +16,33 @@
       </Grid>
     </Border>
 
+    <!-- Lists, folders and smart lists of the library (M2.2c). View > Show Sidebar toggles it. -->
+    <Border Name="SidebarPanel" DockPanel.Dock="Left" Width="250" IsVisible="{Binding Sidebar.IsVisible}"
+            BorderThickness="0,0,1,0" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+      <TreeView Name="SidebarTree" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Sidebar.Roots}" SelectedItem="{Binding Sidebar.SelectedNode, Mode=TwoWay}"
+                Padding="4,6">
+        <TreeView.Styles>
+          <Style Selector="TreeViewItem" x:DataType="vm:SidebarNode">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+          </Style>
+        </TreeView.Styles>
+        <TreeView.ItemTemplate>
+          <TreeDataTemplate x:DataType="vm:SidebarNode" ItemsSource="{Binding Children}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,2">
+              <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                <Border IsVisible="{Binding HasBadge}" HorizontalAlignment="Left" Margin="0,2,0,0" Padding="6,1" CornerRadius="8"
+                        BorderThickness="1" BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}">
+                  <TextBlock Text="{Binding Badge}" FontSize="10" Opacity="0.8" />
+                </Border>
+              </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding CountText}" Opacity="0.6" FontSize="12" VerticalAlignment="Center" />
+            </Grid>
+          </TreeDataTemplate>
+        </TreeView.ItemTemplate>
+      </TreeView>
+    </Border>
+
     <!-- Search, sort and thumbnail size (M2.2b). -->
     <Border DockPanel.Dock="Top" Padding="12,8" BorderThickness="0,0,0,1"
             BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
@@ -37,6 +64,10 @@
 
     <Grid>
       <views:BookGridView Name="BookGrid" DataContext="{Binding Browser}" />
+
+      <!-- What an empty list says: scripts needed, no books, or a failure. -->
+      <TextBlock Name="ListNotice" Text="{Binding Sidebar.Notice}" IsVisible="{Binding Sidebar.HasNotice}" TextWrapping="Wrap"
+                 MaxWidth="480" TextAlignment="Center" Opacity="0.7" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
       <StackPanel Name="EmptyState" IsVisible="{Binding ShowEmptyMessage}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8" MaxWidth="720">
         <TextBlock Text="{Binding AppName}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />

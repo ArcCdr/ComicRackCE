@@ -20,5 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ComicRack.Mac\ComicRack.Mac.csproj" />
+    <!-- M2.2c: the sidebar counts are compared with the output of `crcli smartlist`, run in process (Program.Run). -->
+    <ProjectReference Include="..\..\ComicRack.Cli\ComicRack.Cli.csproj" />
   </ItemGroup>
 </Project>

@@ -34,11 +34,15 @@ namespace ComicRack.Mac.ViewModels
 			StatusText = "Starting the library engine...";
 			BookCountText = "Starting the library engine...";
 			Browser.OpenBookRequested += OnOpenBookRequested;
+			Sidebar.SelectionChanged += (sender, e) => _ = ShowSelectedListAsync();
 			hostService.Closing += (sender, e) => Browser.Thumbnails = null; // the cover service is about to be disposed (import)
 		}
 
 		/// <summary>The book grid: list, search, sort, thumbnail size, selection.</summary>
 		public BrowserViewModel Browser { get; } = new BrowserViewModel();
+
+		/// <summary>The tree of lists (M2.2c). The selected row decides which books the grid shows.</summary>
+		public SidebarViewModel Sidebar { get; } = new SidebarViewModel();
 
 		// Double click or Enter on a book. The reader window comes with M2.3a; until then the request is only reported.
 		private void OnOpenBookRequested(object sender, BookItem item)
@@ -47,16 +51,47 @@ namespace ComicRack.Mac.ViewModels
 			StatusText = $"Opening \"{item.Title}\" needs the reader (M2.3a), which is not available yet.";
 		}
 
-		/// <summary>Shows the books of the open library in the grid (a snapshot built on a worker thread); an empty grid if there is no library.</summary>
+		/// <summary>
+		/// Shows the books of the selected list in the grid (a snapshot built on a worker thread; the library when nothing else is
+		/// selected); an empty grid and tree if there is no library. The tree is rebuilt first, so a scan or an import shows up in it.
+		/// </summary>
 		private void ReloadBrowser()
 		{
 			var host = hostService.Host;
 			if (host == null)
 			{
+				Sidebar.Clear();
 				Browser.Clear();
 				return;
 			}
-			_ = Browser.LoadAsync(ct => BookCatalog.FromBooks(host.DatabaseManager.Database.Books, ct));
+			_ = ReloadBrowserAsync(host);
+		}
+
+		private async Task ReloadBrowserAsync(ComicRack.Mac.Host.MacHost host)
+		{
+			try
+			{
+				await Sidebar.ReloadAsync(host);
+				await ShowSelectedListAsync(resetScroll: false);
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("The sidebar could not be loaded.", ex);
+			}
+		}
+
+		// Loads the books of the selected row into the grid, on a worker thread.
+		private async Task ShowSelectedListAsync(bool resetScroll = true)
+		{
+			SidebarNode node = Sidebar.SelectedNode;
+			string notice = null;
+			Sidebar.Notice = null;
+			Task load = Browser.LoadAsync(Sidebar.LoaderFor(node, text => notice = text), resetScroll);
+			await load;
+			if (Sidebar.SelectedNode == node)
+			{
+				Sidebar.Notice = notice;
+			}
 		}
 
 		public string AppName => "ComicRack CE (MVP)";
@@ -385,7 +420,7 @@ namespace ComicRack.Mac.ViewModels
 		// View
 
 		[RelayCommand]
-		private void ToggleSidebar() => NotYet("Show Sidebar", "M2.2c");
+		private void ToggleSidebar() => Sidebar.IsVisible = !Sidebar.IsVisible;
 
 		[RelayCommand]
 		private void ToggleFullScreen() => shell.ToggleFullScreen();
