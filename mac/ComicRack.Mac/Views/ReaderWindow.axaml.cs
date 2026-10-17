@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using ComicRack.Mac.ViewModels;
@@ -28,6 +30,7 @@ namespace ComicRack.Mac.Views
 			this.ownsModel = ownsModel;
 			DataContext = model;
 			model.CloseRequested += OnCloseRequested;
+			model.PropertyChanged += OnModelChanged;
 			NativeMenu.SetMenu(this, ReaderMenu.Build(model));
 			Opened += (sender, e) => ReadingArea.Focus();
 		}
@@ -39,6 +42,32 @@ namespace ComicRack.Mac.Views
 		private void OnCloseRequested(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		// Native full screen: the window follows the view model, and the view model follows the window (the green button, or macOS itself).
+		private void OnModelChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof(ReaderViewModel.IsFullScreen))
+			{
+				WindowState wanted = model.IsFullScreen ? WindowState.FullScreen : WindowState.Normal;
+				if (WindowState != wanted && (model.IsFullScreen || WindowState == WindowState.FullScreen))
+				{
+					WindowState = wanted;
+				}
+			}
+		}
+
+		protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+		{
+			base.OnPropertyChanged(change);
+			if (change.Property == WindowStateProperty && model != null)
+			{
+				bool full = WindowState == WindowState.FullScreen;
+				if (model.IsFullScreen != full)
+				{
+					model.IsFullScreen = full;
+				}
+			}
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -55,6 +84,7 @@ namespace ComicRack.Mac.Views
 			if (model != null)
 			{
 				model.CloseRequested -= OnCloseRequested;
+				model.PropertyChanged -= OnModelChanged;
 				if (ownsModel)
 				{
 					model.Dispose();

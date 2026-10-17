@@ -27,6 +27,17 @@ namespace ComicRack.Mac
 					FitItem(vm, "Best Fit", vm.FitBestCommand, Key.D2, ImageFitMode.Fit),
 					FitItem(vm, "Fit Width", vm.FitWidthCommand, Key.D3, ImageFitMode.FitWidth),
 					FitItem(vm, "Fit Height", vm.FitHeightCommand, Key.D5, ImageFitMode.FitHeight),
+					new NativeMenuItemSeparator(),
+					Item("Zoom In", vm.ZoomInCommand, Key.OemPlus),
+					Item("Zoom Out", vm.ZoomOutCommand, Key.OemMinus),
+					Item("Actual Fit", vm.ZoomResetCommand, Key.D0),
+					new NativeMenuItemSeparator(),
+					LayoutItem(vm, "One Page", vm.SingleLayoutCommand, Key.D1, PageLayoutMode.Single),
+					LayoutItem(vm, "Two Pages", vm.TwoPageLayoutCommand, Key.D2, PageLayoutMode.Double),
+					LayoutItem(vm, "Two Pages (Adaptive)", vm.AdaptiveTwoPageLayoutCommand, Key.D3, PageLayoutMode.DoubleAdaptive),
+					DirectionItem(vm),
+					new NativeMenuItemSeparator(),
+					FullScreenItem(vm),
 				}),
 				Submenu("Go", new NativeMenu
 				{
@@ -36,6 +47,53 @@ namespace ComicRack.Mac
 					Item("Last Page", vm.LastPageCommand),
 				}),
 			};
+		}
+
+		// A radio-style item whose check mark follows the page layout (Option+Cmd+digit).
+		private static NativeMenuItem LayoutItem(ReaderViewModel vm, string header, IRelayCommand command, Key key, PageLayoutMode mode)
+		{
+			NativeMenuItem item = Item(header, command);
+			item.Gesture = new KeyGesture(key, KeyModifiers.Meta | KeyModifiers.Alt);
+			item.ToggleType = MenuItemToggleType.Radio;
+			item.IsChecked = vm.LayoutMode == mode;
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(ReaderViewModel.LayoutMode))
+				{
+					item.IsChecked = vm.LayoutMode == mode;
+				}
+			};
+			return item;
+		}
+
+		private static NativeMenuItem DirectionItem(ReaderViewModel vm)
+		{
+			NativeMenuItem item = Item("Read Right to Left", vm.ToggleRightToLeftCommand);
+			item.Gesture = new KeyGesture(Key.R, KeyModifiers.Meta | KeyModifiers.Alt);
+			item.ToggleType = MenuItemToggleType.CheckBox;
+			item.IsChecked = vm.RightToLeft;
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(ReaderViewModel.RightToLeft))
+				{
+					item.IsChecked = vm.RightToLeft;
+				}
+			};
+			return item;
+		}
+
+		private static NativeMenuItem FullScreenItem(ReaderViewModel vm)
+		{
+			NativeMenuItem item = Item(vm.IsFullScreen ? "Exit Full Screen" : "Enter Full Screen", vm.ToggleFullScreenCommand);
+			item.Gesture = new KeyGesture(Key.F, KeyModifiers.Meta | KeyModifiers.Control);
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(ReaderViewModel.IsFullScreen))
+				{
+					item.Header = vm.IsFullScreen ? "Exit Full Screen" : "Enter Full Screen";
+				}
+			};
+			return item;
 		}
 
 		// A radio-style item whose check mark follows the fit mode.

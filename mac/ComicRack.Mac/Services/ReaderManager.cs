@@ -32,6 +32,7 @@ namespace ComicRack.Mac.Services
 		private readonly HostService hostService;
 		private readonly Dictionary<ComicBook, ReaderWindow> windows = new Dictionary<ComicBook, ReaderWindow>();
 		private ImageFitMode fit = ImageFitMode.Fit;
+		private PageLayoutMode layoutMode = PageLayoutMode.Single;
 
 		public ReaderManager(HostService hostService)
 		{
@@ -61,8 +62,9 @@ namespace ComicRack.Mac.Services
 				return;
 			}
 			var session = new CoreReadingSession(book, host.ImagePool);
-			var model = new ReaderViewModel(session, new ReaderOptions { Fit = fit });
+			var model = new ReaderViewModel(session, new ReaderOptions { Fit = fit, Mode = layoutMode });
 			model.FitChanged += (sender, e) => fit = model.Fit;
+			model.LayoutChanged += (sender, e) => layoutMode = model.LayoutMode;
 			var window = new ReaderWindow(model);
 			windows[book] = window;
 			window.Closed += (sender, e) =>

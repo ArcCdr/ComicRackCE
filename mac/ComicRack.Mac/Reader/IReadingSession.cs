@@ -30,5 +30,19 @@ namespace ComicRack.Mac.Reader
 
 		/// <summary>The reader was asked to go past the last page.</summary>
 		void ReportEndReached();
+
+		/// <summary>What the layout needs to know about a page (types, position, size if the Core has it). Valid once the book is open.</summary>
+		PageTraits GetPageTraits(int page) => PageTraits.Default(page);
+
+		/// <summary>Whether the book asks to be read from right to left (the Core's manga setting), or null if it does not say.</summary>
+		bool? RightToLeft => null;
+
+		/// <summary>
+		/// A spread showed up to <paramref name="page"/> (0-based): the furthest page read moves there if it is further, as the WinForms
+		/// display does for the second page of a spread (the current page stays the first).
+		/// </summary>
+		void ReportFurthest(int page)
+		{
+		}
 	}
 }
