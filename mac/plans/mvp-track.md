@@ -372,6 +372,11 @@ A double-clickable, ad-hoc-signed `ComicRack CE (MVP).app` for Apple Silicon tha
 - **Not verified (owner):** the native menu shortcut Option+Cmd+P and the check mark on a real menu bar, the frame rate on Metal with a real display (and ProMotion), the overlay in full screen.
 - **Disk:** free space 5.0 GB at the start; `bin/obj` of `mac/` deleted at the end.
 
+**Facts from M2.6 (2026-10-17)**
+- **Deliverables.** `mac/plans/mvp-acceptance.md` (9 sections: setup, launch/menu/Dock/bundle id, import and scan local/SMB, TCC prompts, grid/sidebar/search with Activity Monitor memory, reader page turns/gestures/full screen, overlay, persistence, UX questions, G2 summary; each row has exact steps, an expectation, a Value column and a Verdict column) and `mac/MVP-QUICKSTART.md` (launch with right-click Open, import with the fixture DB and the `S:\media\BD\=<repo>/mac/fixtures/BD/` mapping, data/cache/log folders, scan, shortcut tables, limitations, rebuild). Every owner-check item of the "Not verified" lists of M2.0a, M2.0b, M2.1, M2.2b, M2.2c, M2.3a, M2.3b and M2.4 is a row of the acceptance pack.
+- **Bundle rebuilt** with `mac/tools/make-app.sh` (166 MB, exit 0, about 3 minutes): `codesign --verify --deep --strict` passes, flags `adhoc,runtime`; from inside the bundle `Contents/MacOS/ComicRack.Mac --smoke-test=2 --headless --data-dir <tmp>` exits 0 (also with `--read-book mac/fixtures/small/<first>.cbz`); no `ComicRack.Mac` or other stray folder appeared in `~/Library/Application Support`. No source file changed in this task.
+- **Disk:** free 5 GB at the start, STOP threshold (3 GB) not reached; `bin/obj` of `mac/` deleted at the end, the `.app` kept.
+
 ## 4. Rules for every task
 
 1. **Zero edits to existing files.** Do not edit files in the 7 original project folders. Use exclusion lists plus `Replacements/` files, `NoWarn` and runtime fallbacks instead. If an edit looks unavoidable: **STOP and report.** Do not make it. The owner decides, and any approved edit is logged in `mac/EDITS.md`.
@@ -739,7 +744,7 @@ Every task runs on **Sonnet**. **Effort** is the level to set for that session (
 - **Do:** fix the issues from the owner's first launch notes, limited to a list the owner provides in the task. No new features.
 
 #### M2.6 Acceptance pack
-- **Status:** todo · **Effort:** low
+- **Status:** done 2026-10-17 (checklist `mac/plans/mvp-acceptance.md`, owner hand-over `mac/MVP-QUICKSTART.md`, bundle rebuilt and verified; the owner completes the checklist for G2, see "Facts from M2.6") · **Effort:** low
 - **Do:** write `mac/plans/mvp-acceptance.md`, a checklist covering:
   - launch time
   - scan of N books, local and SMB
@@ -773,6 +778,8 @@ G1 → M2.0a → M2.0b | M2.1 → M2.2a → M2.2b | M2.2c
 ```
 
 ## 9. Discovered work
+
+**MVP state (2026-10-17).** M0, M1 (except the deferred items), M2.0a to M2.4 and M2.6 are done and merged into `mac/mvp`. The signed bundle `mac/artifacts/ComicRack CE (MVP).app` is built; `mac/MVP-QUICKSTART.md` tells the owner how to use it and `mac/plans/mvp-acceptance.md` is the owner's checklist (it folds in every "needs an unlocked screen / real hardware" item below). **Deliberately deferred:** M1.5c (`crcli db synth`), M1.7 (CI), M1.8 (Release benchmarks), M2.5 (polish, driven by the owner's notes from the checklist), and the gates G1 and G2 (G2 = the owner completes the acceptance pack). Everything the app does was verified headlessly (tests, PNG frames, bundle smoke run); no real window, Metal, trackpad or native menu has been seen yet.
 
 _(Sessions append items here instead of doing them. Format: `- [task that found it] description`.)_
 
@@ -921,6 +928,10 @@ _(Sessions append items here instead of doing them. Format: `- [task that found 
 - [M2.4] **Unverified on a real screen** (see "Facts from M2.4"): Option+Cmd+P from the real menu bar in both windows, the check mark, FPS on Metal (60 or 120), the numbers while scrolling the 14,706-book grid and during a fast page-turn run (use them to decide the `ReaderOptions.Ahead` question of M2.3b and the cache sizes of M2.2b).
 - [M2.4] The overlay is not persisted (it starts hidden at every launch) and its FPS is the rate of a frame loop that the overlay itself keeps running; a "passive" FPS that does not force frames (counting the frames Avalonia renders anyway) would need a hook into the compositor, not available in Avalonia 12 without internals. Per-window numbers other than FPS are shared (the front reader, one thumbnail service).
 
+- [M2.6] The quickstart says `xattr -d com.apple.quarantine` is not needed for a locally built bundle; this follows from macOS rules (a bundle made by `make-app.sh` is never downloaded) and was not tried on a quarantined copy. If the owner copies the app to another Mac via download or AirDrop, right-click Open or `xattr -dr com.apple.quarantine <app>` is needed.
+- [M2.6] The acceptance pack asks for an SMB scan and a real CBR; neither the SMB scan speed (network `FileSystemEnumerable`, `DriveChecker` not used) nor a CBR has been tried. TCC prompts for `~/Documents`, `~/Downloads`, removable and network volumes are expected for a non-sandboxed ad-hoc app but were never observed.
+- [M2.6] The acceptance pack's numbers (launch time, memory, FPS, page turn on Metal) are the input for the two open decisions of earlier items: the cover-cache default (M2.2b, 256 MB vs 128 MB) and `ReaderOptions.Ahead` for spreads (M2.3b). Take them from the filled-in pack at G2/M2.5.
+- [M2.6] Possible follow-up for M2.5: a "Report a problem" menu item that opens the log folder, since the acceptance pack asks the owner to send logs by hand.
 
 ## 10. How to run a task
 
