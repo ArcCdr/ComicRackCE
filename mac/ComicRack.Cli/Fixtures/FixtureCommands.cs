@@ -26,6 +26,10 @@ namespace ComicRack.Cli.Fixtures
 				return Make(opts, output, env);
 			case "from-db":
 				return FromDb(opts, output, env);
+			case "cb7":
+				return Cb7(opts, output);
+			case "pdf":
+				return Pdf(opts, output);
 			default:
 				throw new UsageException("fixtures: unknown command " + args[0]);
 			}
@@ -44,6 +48,46 @@ namespace ComicRack.Cli.Fixtures
 			}
 			var wanted = ResolveFormats(formats, env, output);
 			return Generate(BookPlanner.ForMake(dir, books, pages, seed), wanted, env, output, copyDb: null);
+		}
+
+		/// <summary>`fixtures pdf <file.pdf> [--pages N]`: a small vector PDF (Skia) to test the PDF reader (M1.4).</summary>
+		private static int Pdf(Options o, TextWriter output)
+		{
+			string file = Path.GetFullPath(o.Positional(0, "fixtures pdf <file.pdf>"));
+			int pages = o.Int("pages", 3);
+			if (pages < 1 || pages > 100)
+			{
+				throw new UsageException("--pages must be between 1 and 100.");
+			}
+			Directory.CreateDirectory(Path.GetDirectoryName(file));
+			PdfWriter.Write(file, pages);
+			output.WriteLine("Wrote " + file + " (" + pages + " pages, " + new FileInfo(file).Length + " bytes)");
+			return 0;
+		}
+
+		/// <summary>`fixtures cb7 <in.cbz> <out.cb7>`: repacks a CBZ as a real 7z archive with SharpCompress (no 7zz needed, M1.4).</summary>
+		private static int Cb7(Options o, TextWriter output)
+		{
+			string input = Path.GetFullPath(o.Positional(0, "fixtures cb7 <in.cbz> <out.cb7>"));
+			string target = Path.GetFullPath(o.Positional(1, "fixtures cb7 <in.cbz> <out.cb7>"));
+			Directory.CreateDirectory(Path.GetDirectoryName(target));
+			using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(input))
+			using (var stream = File.Create(target))
+			using (var writer = SharpCompress.Writers.WriterFactory.OpenWriter(stream, SharpCompress.Common.ArchiveType.SevenZip, new SharpCompress.Writers.SevenZip.SevenZipWriterOptions()))
+			{
+				foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry entry in zip)
+				{
+					if (entry.IsFile)
+					{
+						using (var data = zip.GetInputStream(entry))
+						{
+							writer.Write(entry.Name, data, entry.DateTime);
+						}
+					}
+				}
+			}
+			output.WriteLine("Wrote " + target + " (" + new FileInfo(target).Length + " bytes)");
+			return 0;
 		}
 
 		private static int FromDb(Options o, TextWriter output, FixtureEnvironment env)

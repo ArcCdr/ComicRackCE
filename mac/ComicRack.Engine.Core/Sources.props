@@ -23,6 +23,8 @@
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Provider\Writers\PdfStorageProvider.cs" />
     <!-- CacheManager creates the ImagePool inside its constructor; the replacement creates a MacImagePool (error page without text, M1.5a). -->
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\CacheManager.cs" />
+    <!-- PDFiumSharpV2 throws PlatformNotSupportedException on arm64: the replacement calls libpdfium directly (M1.4). -->
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Provider\Readers\Pdf\PdfiumReaderEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
     <!-- Resources.Designer.cs reads ResXFileRef bitmaps of the framework's System.Drawing.Bitmap: replaced by Replacements\PassB\Resources.cs,
          which decodes the raw files below through the Drawing shim. -->
@@ -36,7 +38,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <!-- Same as ComicRack.Engine.csproj, minus bblanchon.PDFium.Win32 -->
+    <!-- Same as ComicRack.Engine.csproj, with bblanchon.PDFium.macOS (same version) instead of bblanchon.PDFium.Win32 (M1.4) -->
+    <PackageReference Include="bblanchon.PDFium.macOS" Version="153.0.7999" />
     <PackageReference Include="CSJ2K" Version="3.0.0" />
     <PackageReference Include="LibHeifSharp" Version="3.2.0" />
     <PackageReference Include="Microsoft.Bcl.Numerics" Version="10.0.10" />
