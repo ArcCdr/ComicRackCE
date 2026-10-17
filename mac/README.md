@@ -13,6 +13,8 @@ Plans: `mac/plans/mvp-track.md` and `MACOS_NATIVE_PATH.md`.
 dotnet build mac/ComicRack.Mac.slnx
 ```
 
+App bundle (M2.0b): `mac/tools/make-app.sh` builds the ad-hoc signed `mac/artifacts/ComicRack CE (MVP).app` (self-contained, about 165 MB; replaces the previous one).
+
 Files in the original project folders are not edited. `mac/EDITS.md` logs any approved exception.
 
 ## Compile census (M0.3a)
