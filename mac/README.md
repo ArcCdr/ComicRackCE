@@ -17,7 +17,7 @@ Files in the original project folders are not edited. `mac/EDITS.md` logs any ap
 
 ## Compile census (M0.3a)
 
-The shadow projects (`cYo.Common.Core`, `ComicRack.Engine.Core`, `ComicRack.Plugins.Core`) link the original sources and are **expected to fail** to compile until M1.3. They are not part of the solution. To measure the errors:
+The shadow projects (`cYo.Common.Core`, `ComicRack.Engine.Core`, `ComicRack.Plugins.Core`) link the original sources. Since M1.3 both passes build with 0 errors and the shadow projects are part of the solution (pass B, the default). The census tool measures the errors of each pass (both report 0 now):
 
 ```bash
 dotnet run --project mac/tools/census -- --pass A   # net10.0-windows, WinForms still resolves
@@ -56,3 +56,7 @@ dotnet run --project mac/tools/drawing-coverage
 ```
 
 The tests include a drift guard, like the one for the Forms shim: every public type must keep the kind and the member signatures of the `System.Drawing.Common` reference assembly.
+
+## Shadow projects in the solution (M1.3)
+
+`dotnet build mac/ComicRack.Mac.slnx` builds the three shadow projects in pass B (`net10.0`, the real target) together with the shims, the tests and the three tools (`api-inventory`, `census`, `drawing-coverage`). Pass B differs from pass A only by `Replacements/PassB/` files (`KnownColorTableEx`, `UserCredentialsDialog`, `Resources`, `PdfStorageProvider`) and by the shim references. Pass A (`-p:CensusPass=A`) stays the basis of `api-inventory`; do not run a pass A and a pass B build at the same time (they share `obj/`).

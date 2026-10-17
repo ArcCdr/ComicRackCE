@@ -11,6 +11,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewMode.cs" Link="CommonWindows\ItemViewMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\ItemViewGroupsStatus.cs" Link="CommonWindows\ItemViewGroupsStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Windows\Forms\GroupHeaderInformation.cs" Link="CommonWindows\GroupHeaderInformation.cs" />
+    <!-- Real renderer image types of cYo.Common.Presentation (MemoryOptimizedImage derives from RendererImage); they use only Bitmap and
+         cYo.Common.ComponentModel. They replace the M0.3b RendererImage stub (M1.3). -->
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Presentation\RendererImage.cs" Link="Presentation\RendererImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\..\cYo.Common.Presentation\RendererGdiImage.cs" Link="Presentation\RendererGdiImage.cs" />
     <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" Exclude="$(MSBuildThisFileDirectory)Replacements\PassB\**" />
   </ItemGroup>
@@ -18,6 +22,11 @@
   <ItemGroup Condition="'$(CensusPass)' == 'B'">
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Provider\Writers\PdfStorageProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
+    <!-- Resources.Designer.cs reads ResXFileRef bitmaps of the framework's System.Drawing.Bitmap: replaced by Replacements\PassB\Resources.cs,
+         which decodes the raw files below through the Drawing shim. -->
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Properties\Resources.Designer.cs" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Resources\*.png;$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\Resources\*.jpg"
+                      LogicalName="ComicRack.Engine.Resources.%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="sharpPDF">

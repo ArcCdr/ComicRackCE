@@ -7,7 +7,13 @@
              Exclude="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\PortableDevices\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Reflection\CodeDomDuckTypeGenerator.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\MemoryInfo.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\Runtime\SingleInstance.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\Runtime\ISingleInstance.cs;$(MSBuildThisFileDirectory)..\..\cYo.Common\obj\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\bin\**;$(MSBuildThisFileDirectory)..\..\cYo.Common\Properties\AssemblyInfo.cs"
              LinkBase="Common" />
     <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
-    <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Replacements\**\*.cs" Exclude="$(MSBuildThisFileDirectory)Replacements\PassB\**" />
+  </ItemGroup>
+  <!-- Pass B only: pass A compiles the originals (they are the basis of the API inventory and build against the real WinForms). -->
+  <ItemGroup Condition="'$(CensusPass)' == 'B'">
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Drawing\ExtendedColors\KnownColorTableEx.cs" />
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\UserCredentialsDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- Same as cYo.Common.csproj, minus System.Management -->

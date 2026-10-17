@@ -12,7 +12,7 @@ namespace System.IdentityModel.Tokens
 namespace cYo.Common.Presentation.Ceco
 {
 	// ComicRack.Engine/IO/Provider/XmlInfo/XmlInfoProviderFactory.cs imports it without using it.
-	// Removed when M1.3 links the Ceco sources (if needed).
+	// The Ceco sources are not linked (nothing uses a Ceco type), so only the namespace exists.
 	internal static class NamespaceMarker
 	{
 	}
