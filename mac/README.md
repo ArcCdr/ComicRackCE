@@ -48,8 +48,11 @@ The tests compare every enum (names, values, `[Flags]`) and every other type's k
 
 ## Drawing stand-in (M1.2a)
 
-`mac/cYo.Compat.Drawing` declares the `System.Drawing.Common` types and members the Core uses (namespaces `System.Drawing`, `.Drawing2D`, `.Imaging`, `.Text`), one file per type in `Types/`. The bodies throw `NotSupportedException` until M1.2b and M1.2c. The shadow projects reference it in pass B only. The SkiaSharp version for the whole tree is `SkiaSharpVersion` in `mac/Directory.Build.props`. To check the coverage against the API inventory (needs a pass A build first, for the reference pack):
+`mac/cYo.Compat.Drawing` declares the `System.Drawing.Common` types and members the Core uses (namespaces `System.Drawing`, `.Drawing2D`, `.Imaging`, `.Text`), one file per type in `Types/`. Images and pixels work since M1.2b: `Image`/`Bitmap` are backed by one `SKBitmap`, with `LockBits`/`UnlockBits`, decoding through Skia, `Save` as JPEG or PNG, and `cYo.Compat.Drawing.SkiaInterop.GetSKBitmap(Bitmap)` for the UI. The bodies of `Graphics`, `ImageAttributes`, `Font` and the rest still throw `NotSupportedException` until M1.2c. The shadow projects reference it in pass B only. The SkiaSharp version for the whole tree is `SkiaSharpVersion` in `mac/Directory.Build.props`. To test it and to check the coverage against the API inventory (both need a pass A build first, for the reference pack):
 
 ```bash
+dotnet test mac/tests/Compat.Drawing.Tests
 dotnet run --project mac/tools/drawing-coverage
 ```
+
+The tests include a drift guard, like the one for the Forms shim: every public type must keep the kind and the member signatures of the `System.Drawing.Common` reference assembly.

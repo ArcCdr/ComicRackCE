@@ -382,7 +382,7 @@ Rules:
   - `Graphics` (`FromImage`; `DrawImage` overloads incl. `ImageAttributes`/`ColorMatrix`; `FillRectangle`; `DrawRectangle`/`DrawLine`; `DrawString`/`MeasureString` with `StringFormat`; `Clip`; `Transform`/`Matrix`; `InterpolationMode`/`SmoothingMode`/`CompositingMode`; `GraphicsPath` basics)
   - `ImageFormat`, `ImageCodecInfo`/`EncoderParameters` (JPEG quality)
   - `Brush`/`SolidBrush`/`LinearGradientBrush`, `Pen`, `Font`/`FontFamily` (mapped to system fonts), `Region` basics
-- Backed by `SKBitmap` (BGRA8888 premultiplied, matching GDI+ `Format32bppPArgb` semantics; document the `Format32bppArgb` differences), `SKCanvas`, `SKPaint` and `SKColorFilter` (for `ColorMatrix`).
+- Backed by `SKBitmap` (always BGRA8888; the alpha type follows the pixel format: `Format32bppArgb` not premultiplied, `Format32bppPArgb` premultiplied, `Format32bppRgb` and `Format24bppRgb` opaque, with `Format24bppRgb` converted to and from a 3-byte buffer on `LockBits`/`UnlockBits`; M1.2b), `SKCanvas`, `SKPaint` and `SKColorFilter` (for `ColorMatrix`).
 - Must **not** be referenced by the net48 build. net48 keeps real GDI+.
 - Fidelity is verified by perceptual-diff tests (P3) that run the same operations on net48/Windows and net10/macOS.
 - Considered alternative: adopt **GeneXus.Drawing.Common** (SkiaSharp-backed System.Drawing API, MIT) with namespace aliasing (`global using` aliases). Evaluate it in spike S2 before writing from scratch.

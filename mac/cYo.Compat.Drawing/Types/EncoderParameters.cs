@@ -1,4 +1,4 @@
-// M1.2a surface skeleton. Signatures follow the System.Drawing.Common reference assembly; members the Core uses, bodies filled in by M1.2b/M1.2c.
+// M1.2b: real behaviour.
 using System;
 
 namespace System.Drawing.Imaging
@@ -7,13 +7,10 @@ namespace System.Drawing.Imaging
 	{
 		public EncoderParameters(int count)
 		{
-			throw new NotSupportedException("System.Drawing.Imaging.EncoderParameters.ctor is not yet supported on macOS");
+			Param = new EncoderParameter[count];
 		}
 
-		public EncoderParameter[] Param
-		{
-			get => throw new NotSupportedException("System.Drawing.Imaging.EncoderParameters.Param is not yet supported on macOS");
-		}
+		public EncoderParameter[] Param { get; set; }
 
 		public void Dispose()
 		{
@@ -23,6 +20,14 @@ namespace System.Drawing.Imaging
 
 		private void Dispose(bool disposing)
 		{
+			// As in GDI+, disposing the collection disposes its parameters.
+			if (disposing && Param != null)
+			{
+				foreach (EncoderParameter parameter in Param)
+				{
+					parameter?.Dispose();
+				}
+			}
 		}
 	}
 }
