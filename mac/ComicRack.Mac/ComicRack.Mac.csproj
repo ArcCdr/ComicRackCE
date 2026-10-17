@@ -23,6 +23,8 @@
     <!-- Only for the headless option (smoke runs when no display is available: locked screen, CI). -->
     <PackageReference Include="Avalonia.Headless" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <!-- ItemsRepeater and UniformGridLayout are not in the Avalonia 12 core assemblies; this is the official package (12.0.0 is its latest version and needs Avalonia 12.0.0 or later). -->
+    <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="12.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <!-- Never a version of its own: the shim (cYo.Compat.Drawing) and Avalonia must use the same Skia. -->
     <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
+using ComicRack.Mac.Thumbnails;
 
 namespace ComicRack.Mac.Services
 {
@@ -34,6 +35,13 @@ namespace ComicRack.Mac.Services
 		/// <summary>The folders of the host (data, cache, logs); set by <see cref="Start"/>.</summary>
 		public MacPaths Paths { get; private set; }
 
+		/// <summary>
+		/// The cover service of the open host, or null while there is no host. It is bound to the host's <c>CacheManager</c>, so it is
+		/// created after every open (also after an import) and disposed <b>before</b> the host is closed: a cell that still asks the old
+		/// one gets <see cref="ObjectDisposedException"/> or a cancelled task and must cope with both (<c>BookCell</c> does).
+		/// </summary>
+		public ThumbnailService Thumbnails { get; private set; }
+
 		/// <summary>Why the host did not open, or null.</summary>
 		public Exception Failure { get; private set; }
 
@@ -42,6 +50,9 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>Raised on the UI thread when the host opened or failed to open (also after an import).</summary>
 		public event EventHandler Opened;
+
+		/// <summary>Raised on the UI thread (posted) when the host is about to be closed for an import: stop using <see cref="Thumbnails"/>.</summary>
+		public event EventHandler Closing;
 
 		/// <summary>Completes when the host opened or failed (it never faults; check <see cref="Failure"/>).</summary>
 		public Task Ready { get; private set; } = Task.CompletedTask;
@@ -69,7 +80,9 @@ namespace ComicRack.Mac.Services
 		{
 			try
 			{
-				Host = await task.ConfigureAwait(false);
+				MacHost opened = await task.ConfigureAwait(false);
+				Thumbnails = new ThumbnailService(opened.CacheManager);
+				Host = opened;
 				AppLog.Attach(Host.Log);
 				AppLog.Info("Host opened by the app.");
 			}
@@ -222,9 +235,29 @@ namespace ComicRack.Mac.Services
 				return null;
 			}
 			AppLog.Detach();
-			SaveVerification v = await Task.Run(() => host.DisposeAndVerify()).ConfigureAwait(false);
+			UiDispatch.Post(() => Closing?.Invoke(this, EventArgs.Empty));
+			SaveVerification v = await Task.Run(() =>
+			{
+				DisposeThumbnails();
+				return host.DisposeAndVerify();
+			}).ConfigureAwait(false);
 			LastSave = v;
 			return v;
+		}
+
+		/// <summary>Stops the cover service (cancels queued and running decodes, waits for the ones that cannot be interrupted). Must precede the close of the host.</summary>
+		private void DisposeThumbnails()
+		{
+			ThumbnailService service = Thumbnails;
+			Thumbnails = null;
+			try
+			{
+				service?.Dispose();
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("Stopping the cover service failed.", ex);
+			}
 		}
 
 		private static void TryDelete(string file)
@@ -258,6 +291,7 @@ namespace ComicRack.Mac.Services
 				MacHost host = Host;
 				Host = null;
 				AppLog.Detach();
+				DisposeThumbnails();
 				if (host != null)
 				{
 					SaveVerification v = host.DisposeAndVerify();

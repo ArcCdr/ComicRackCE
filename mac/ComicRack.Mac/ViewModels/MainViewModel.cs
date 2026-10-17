@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ComicRack.Mac.Browser;
 using ComicRack.Mac.Host.Library;
 using ComicRack.Mac.Services;
 
@@ -32,6 +33,30 @@ namespace ComicRack.Mac.ViewModels
 			this.dialogs = dialogs;
 			StatusText = "Starting the library engine...";
 			BookCountText = "Starting the library engine...";
+			Browser.OpenBookRequested += OnOpenBookRequested;
+			hostService.Closing += (sender, e) => Browser.Thumbnails = null; // the cover service is about to be disposed (import)
+		}
+
+		/// <summary>The book grid: list, search, sort, thumbnail size, selection.</summary>
+		public BrowserViewModel Browser { get; } = new BrowserViewModel();
+
+		// Double click or Enter on a book. The reader window comes with M2.3a; until then the request is only reported.
+		private void OnOpenBookRequested(object sender, BookItem item)
+		{
+			AppLog.Info("Open book requested: " + item.Book?.FilePath);
+			StatusText = $"Opening \"{item.Title}\" needs the reader (M2.3a), which is not available yet.";
+		}
+
+		/// <summary>Shows the books of the open library in the grid (a snapshot built on a worker thread); an empty grid if there is no library.</summary>
+		private void ReloadBrowser()
+		{
+			var host = hostService.Host;
+			if (host == null)
+			{
+				Browser.Clear();
+				return;
+			}
+			_ = Browser.LoadAsync(ct => BookCatalog.FromBooks(host.DatabaseManager.Database.Books, ct));
 		}
 
 		public string AppName => "ComicRack CE (MVP)";
@@ -48,7 +73,11 @@ namespace ComicRack.Mac.ViewModels
 
 		/// <summary>Books in the library, or -1 while there is no open library engine.</summary>
 		[ObservableProperty]
+		[NotifyPropertyChangedFor(nameof(ShowEmptyMessage))]
 		public partial int BookCount { get; set; } = -1;
+
+		/// <summary>True while there is no book to show: the window then shows the title and the book count message instead of the grid.</summary>
+		public bool ShowEmptyMessage => BookCount <= 0;
 
 		/// <summary>True from the start of Open Folder / Import until it ends, including while its dialog is open. Disables both commands.</summary>
 		[ObservableProperty]
@@ -85,10 +114,14 @@ namespace ComicRack.Mac.ViewModels
 				StatusText = "The library engine did not start: " + (hostService.Failure?.Message ?? "unknown error") + " (see the log)";
 				BookCount = -1;
 				BookCountText = "The library engine did not start.";
+				Browser.Thumbnails = null;
+				ReloadBrowser();
 				return;
 			}
 			HostText = host.IsNewDatabase ? "New empty library" : "Library opened";
 			SetBookCount(host.DatabaseManager.Database.Books.Count);
+			Browser.Thumbnails = hostService.Thumbnails;
+			ReloadBrowser();
 			StatusText = $"Library engine ready. {BookCount} books. Data: {host.Paths.DataFolder}";
 		}
 
@@ -240,6 +273,7 @@ namespace ComicRack.Mac.ViewModels
 			CanCancel = false;
 			SaveVerification saved = await SaveAfterOperation();
 			SetBookCount(result.BooksTotal);
+			ReloadBrowser();
 			string what = result.Outcome == ScanOutcome.Cancelled ? "Scan cancelled" : "Scan finished";
 			StatusText = $"{what}: {result.FilesSeen:N0} files looked at, {result.BooksAdded:N0} books added, {result.BooksTotal:N0} in the library ({result.Elapsed.TotalSeconds:0.0} s).";
 			AppLog.Info(StatusText);
