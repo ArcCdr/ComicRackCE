@@ -14,9 +14,21 @@
         <TextBlock Grid.Column="1" Text="{Binding HostText}" Opacity="0.7" Margin="12,0,0,0" />
       </Grid>
     </Border>
-    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8" MaxWidth="720">
       <TextBlock Text="{Binding AppName}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />
-      <TextBlock Text="File &#x203A; Open Folder&#x2026; (&#x2318;O) will open a library." Opacity="0.7" HorizontalAlignment="Center" />
+      <TextBlock Name="BookCountLabel" Text="{Binding BookCountText}" Opacity="0.7" HorizontalAlignment="Center" TextWrapping="Wrap" />
+
+      <!-- Progress of Open Folder / Import: a count, the current file, Cancel. -->
+      <Border Name="ProgressPanel" IsVisible="{Binding IsProgressVisible}" Margin="0,24,0,0" Padding="16" CornerRadius="8" Width="560"
+              BorderThickness="1" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+        <StackPanel Spacing="8">
+          <TextBlock Name="ProgressTitleLabel" Text="{Binding ProgressTitle}" FontWeight="SemiBold" />
+          <ProgressBar IsIndeterminate="True" />
+          <TextBlock Name="ProgressCountLabel" Text="{Binding ProgressCountText}" />
+          <TextBlock Name="ProgressFileLabel" Text="{Binding ProgressFileText}" Opacity="0.7" FontSize="12" TextTrimming="PrefixCharacterEllipsis" />
+          <Button Name="CancelButton" Content="Cancel" Command="{Binding CancelOperationCommand}" HorizontalAlignment="Right" />
+        </StackPanel>
+      </Border>
     </StackPanel>
   </DockPanel>
 </Window>

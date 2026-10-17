@@ -15,6 +15,7 @@ namespace ComicRack.Mac
 	{
 		private AppOptions options = new AppOptions();
 		private HostService hostService;
+		private MainViewModel viewModel;
 
 		public App()
 		{
@@ -38,7 +39,7 @@ namespace ComicRack.Mac
 
 				hostService = new HostService(options);
 				var window = new MainWindow();
-				var viewModel = new MainViewModel(new WindowShell(window), hostService);
+				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window));
 				window.DataContext = viewModel;
 				NativeMenu.SetMenu(this, MainMenu.BuildAppMenu(viewModel));
 				NativeMenu.SetMenu(window, MainMenu.BuildMenuBar(viewModel));
@@ -65,6 +66,8 @@ namespace ComicRack.Mac
 		private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
 		{
 			AppLog.Info("Exit requested, code " + e.ApplicationExitCode + ".");
+			// A running scan stops at its next file; the host then closes and saves the library (and the save is checked).
+			viewModel?.CancelRunningOperation();
 			hostService?.Dispose();
 		}
 
