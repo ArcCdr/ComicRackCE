@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ComicRack.Mac.ViewModels"
+        x:Class="ComicRack.Mac.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="ComicRack CE (MVP)"
+        Width="1100" Height="720" MinWidth="640" MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Padding="12,6" BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="{Binding StatusText}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Grid.Column="1" Text="{Binding HostText}" Opacity="0.7" Margin="12,0,0,0" />
+      </Grid>
+    </Border>
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+      <TextBlock Text="{Binding AppName}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />
+      <TextBlock Text="File &#x203A; Open Folder&#x2026; (&#x2318;O) will open a library." Opacity="0.7" HorizontalAlignment="Center" />
+    </StackPanel>
+  </DockPanel>
+</Window>

@@ -5,6 +5,9 @@
     <Project Path="ComicRack.Plugins.Core/ComicRack.Plugins.Core.csproj" />
     <Project Path="ComicRack.Mac.Host/ComicRack.Mac.Host.csproj" />
   </Folder>
+  <Folder Name="/app/">
+    <Project Path="ComicRack.Mac/ComicRack.Mac.csproj" />
+  </Folder>
   <Folder Name="/cli/">
     <Project Path="ComicRack.Cli/ComicRack.Cli.csproj" />
   </Folder>

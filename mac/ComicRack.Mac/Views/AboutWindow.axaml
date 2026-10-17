@@ -1,0 +1,13 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ComicRack.Mac.Views.AboutWindow"
+        Title="About ComicRack CE (MVP)"
+        Width="360" Height="200" CanResize="False"
+        WindowStartupLocation="CenterOwner">
+  <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6">
+    <TextBlock Text="ComicRack CE (MVP)" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+    <TextBlock x:Name="VersionText" Opacity="0.7" HorizontalAlignment="Center" />
+    <TextBlock Text="macOS preview of ComicRack Community Edition" Opacity="0.7" HorizontalAlignment="Center" />
+    <Button Content="OK" HorizontalAlignment="Center" Margin="0,12,0,0" Click="OnOk" />
+  </StackPanel>
+</Window>

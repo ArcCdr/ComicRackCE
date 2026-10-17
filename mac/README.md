@@ -60,3 +60,31 @@ The tests include a drift guard, like the one for the Forms shim: every public t
 ## Shadow projects in the solution (M1.3)
 
 `dotnet build mac/ComicRack.Mac.slnx` builds the three shadow projects in pass B (`net10.0`, the real target) together with the shims, the tests and the three tools (`api-inventory`, `census`, `drawing-coverage`). Pass B differs from pass A only by `Replacements/PassB/` files (`KnownColorTableEx`, `UserCredentialsDialog`, `Resources`, `PdfStorageProvider`) and by the shim references. Pass A (`-p:CensusPass=A`) stays the basis of `api-inventory`; do not run a pass A and a pass B build at the same time (they share `obj/`).
+
+## The app (M2.0a)
+
+`mac/ComicRack.Mac` is the Avalonia 12.1.4 app (window, native menu bar, `MacHost` opened at launch and disposed at exit). It keeps its data in `~/Library/Application Support/ComicRack CE (MVP)` (caches in `~/Library/Caches/...`, log in `~/Library/Logs/...`).
+
+```bash
+dotnet run --project mac/ComicRack.Mac
+```
+
+Quit with Cmd+Q (exit code 0).
+
+### Smoke test (for scripted self-checks)
+
+```bash
+dotnet run --project mac/ComicRack.Mac -- --smoke-test[=SECONDS] [--headless] [--data-dir DIR]
+```
+
+- `--smoke-test[=N]` opens the window, waits until the host has opened, stays up N seconds (default 3), closes the host and exits. Exit code **0** if the host opened and no error was logged, **1** otherwise (host failed, or an exception reached the UI-thread handler).
+- `--data-dir DIR` (or the environment variable `COMICRACK_MAC_DATA_DIR`) puts data, cache and logs under `DIR/{Data,Cache,Logs}`; the log is `DIR/Logs/ComicRack.log`. A smoke test **without** it uses a new temporary folder that is deleted at the end, so it never touches the real MVP folders. Always use one of the two in scripted runs.
+- `--headless` uses Avalonia's headless platform: no window server, no native menu, no drawing. It runs the same code (window, view model, host open and close, log) and needs no usable display. Use it where the screen is locked or asleep (Avalonia.Native then stops with "could not start the RenderTimer", error -6661; the app prints a hint and exits with code 4) and in CI. It does not prove that the native menu or the real window render.
+- Exit codes: 0 ok, 1 smoke test failed, 2 bad arguments, 4 no usable display.
+
+Example (real window, needs an unlocked screen): `dotnet run --project mac/ComicRack.Mac -- --smoke-test=5 --data-dir "$TMPDIR/crmac"; echo $?`
+
+### Rules for app code
+
+- Every subscription to a Core event goes through `UiDispatch` (`UiDispatch.Wrap(handler)` or `UiDispatch.Post` inside the handler). Review checklist item for every M2 task.
+- Log through `AppLog` (it writes to the host log once the host is open).
