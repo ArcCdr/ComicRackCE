@@ -242,7 +242,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: `mac/tools/verify.sh` exits 0 on the current tree (done: 781 tests, about 1 minute); a non-ignored probe file under `ComicRack/` makes rule 1 FAIL (done); `--bogus` exits 2 (done).
 
 #### P0.2 Plan and licence hygiene
-- Depends: none · Effort: low · Unattended: yes · Status: todo
+- Depends: none · Effort: low · Unattended: yes · **Status: done 2026-10-17**
 - Goal: make the reference document consistent with what the MVP learned.
 - Edit: `MACOS_NATIVE_PATH.md` only: §5.3 "GeneXus.Drawing.Common ... (MIT)" to Apache-2.0 and "not adopted (G0)"; §11.4 spike log: S1 (census totals from `mac/reports/census.md`), S2 (from `mac/reports/drawing-route.md`), one line each with date and decision; §9.1/§9.2 references to `mvp-track.md` §4 point to `full-port.md` §2; record in §2.5 whether `LICENSE.txt` and the README say "version 2 only" or "or later" (read only).
 - Out of scope: any other file.
@@ -1173,6 +1173,7 @@ Items are listed in the order of `mvp-track.md` §9; "closed" means a later MVP 
 
 _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] description`. The orchestrator turns items into tasks when they block v1, else they wait for post-v1.)_
 
+- [P0.2] verify.sh was flaky in two of three runs on an unchanged code tree (docs-only change): run 1 had 12 failures in ComicRack.Mac.Tests (ReaderFlowTests "A MacHost is already open", CoreThumbnailDecoderTests), run 2 had 2 failures in Compat.Drawing.Tests (DisposeTests finalizer and live-image counters, which look process-global and sensitive to parallel test classes); run 3 passed. Make these tests isolated or serialized.
 ---
 
 ## 10. Estimates (low confidence)

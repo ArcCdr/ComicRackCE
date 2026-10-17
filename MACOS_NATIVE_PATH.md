@@ -165,6 +165,7 @@ Native search path: `ComicRack/Program.cs:1146` calls `NativeLibraryHelper.Regis
   - djvulibre: GPL-2
   - SkiaSharp and Avalonia: MIT
   - IronPython: Apache-2.0
+- Version wording (checked 2026-10-17, read only): `LICENSE.txt` is the unmodified GPL version 2 text. It contains "any later version" only inside the generic "How to Apply These Terms" template, not as a grant for this program. `README.md` does not mention a licence, and no source file carries a licence header. So the repository states neither "version 2 only" nor "or later"; treat it as plain GPLv2 and ask the upstream maintainer before relying on "or later".
 
 ---
 
@@ -386,7 +387,7 @@ Rules:
 - Backed by `SKBitmap` (always BGRA8888; the alpha type follows the pixel format: `Format32bppArgb` not premultiplied, `Format32bppPArgb` premultiplied, `Format32bppRgb` and `Format24bppRgb` opaque, with `Format24bppRgb` converted to and from a 3-byte buffer on `LockBits`/`UnlockBits`; M1.2b), `SKCanvas`, `SKPaint` and `SKColorFilter` (for `ColorMatrix`).
 - Must **not** be referenced by the net48 build. net48 keeps real GDI+.
 - Fidelity is verified by perceptual-diff tests (P3) that run the same operations on net48/Windows and net10/macOS.
-- Considered alternative: adopt **GeneXus.Drawing.Common** (SkiaSharp-backed System.Drawing API, MIT) with namespace aliasing (`global using` aliases). Evaluate it in spike S2 before writing from scratch.
+- Considered alternative: adopt **GeneXus.Drawing.Common** (SkiaSharp-backed System.Drawing API, Apache-2.0) with namespace aliasing (`global using` aliases). Not adopted (G0): spike S2 measured 72 to 75 % coverage and found that aliasing cannot work for scripts (`mac/reports/drawing-route.md`); the custom shim is built instead.
 - Rejected alternative: explicit refactor of all Core files to an `IImage` abstraction. It is cleaner, but it touches ~100 files that upstream also changes, so it causes heavy merge friction. It can be done incrementally post-v1.
 
 ### 5.4 Platform Abstraction Layer (PAL)
@@ -772,13 +773,13 @@ This section is written for **Claude planning sessions** (to expand into task-le
 
 ### 9.1 Roles and model usage
 
-Revised 2026-10-16 (D7): every implementation and review task runs on **Sonnet**. Work that the earlier version gave to an Opus "Architect" (shim API design, threading, reader design, spikes) is now done by **specifying the task tightly** instead. Each task has exact files, commands as accept checks, fixed decision rules, explicit STOP conditions that hand judgment calls to the owner, and a rule to split rather than retry after two failed attempts (`mac/plans/mvp-track.md` §4).
+Revised 2026-10-16 (D7): every implementation and review task runs on **Sonnet**. Work that the earlier version gave to an Opus "Architect" (shim API design, threading, reader design, spikes) is now done by **specifying the task tightly** instead. Each task has exact files, commands as accept checks, fixed decision rules, explicit STOP conditions that hand judgment calls to the owner, and a rule to split rather than retry after two failed attempts (`mac/plans/full-port.md` §2).
 
 | Role | Who | Use for |
 |---|---|---|
 | **Planner** | A planning session | Expanding a phase into Sonnet-sized tasks in the `mvp-track.md` format, with an effort level per task (`medium` for mechanical work, `high` by default, `xhigh` for subtle semantics) |
 | **Implementer** | Sonnet, one session per task | Every task, launched with `--model sonnet --effort <level>` (`mvp-track.md` §10) |
-| **Reviewer** | Sonnet, a fresh session, effort `high` | `/code-review high` on the task branch, plus the mechanical no-edit check (`mvp-track.md` §4 rule 1) |
+| **Reviewer** | Sonnet, a fresh session, effort `high` | `/code-review high` on the task branch, plus the mechanical no-edit check (`full-port.md` §2.2) |
 | **Human (owner)** | — | Gate decisions (G0–G2) and §10 questions; STOP findings; approving any edit to existing files; on-Mac acceptance testing; signing credentials; upstream relations |
 
 Sessions run on the owner's Mac (Apple M4), so they can build, benchmark and launch the app there. The owner still judges UX.
@@ -787,7 +788,7 @@ Parallelism: use separate git worktrees/branches per task. Phases P2/P3/P4 can r
 
 ### 9.2 Guardrails (every session must follow)
 
-1. **Never change behaviour of the net48 Windows build.** Every PR must build `ComicRack.sln` for net48 (Windows CI) and pass the characterization tests on net48. During the MVP track (D7), PRs edit no file in the original project folders. The mechanical check in `mvp-track.md` §4 rule 1 enforces this, so the net48 gate becomes mandatory from the first approved edit.
+1. **Never change behaviour of the net48 Windows build.** Every PR must build `ComicRack.sln` for net48 (Windows CI) and pass the characterization tests on net48. During the MVP track (D7), PRs edit no file in the original project folders. The mechanical check in `full-port.md` §2.2 enforces this, so the net48 gate becomes mandatory from the first approved edit.
 2. **Prefer adding over editing.** Edits to files under the original 7 project folders must be minimal, mechanical, justified in the PR description and logged in `mac/EDITS.md`.
 3. Allowed edit patterns in existing files:
    - `#if NETFRAMEWORK`/`#if !NETFRAMEWORK` guards
@@ -944,7 +945,7 @@ P5 + P6 ──► P7 ──► v1 release
 
 Prompt seed for a planning session:
 
-> "Read `MACOS_NATIVE_PATH.md` §0, §5 and §9. Expand phase `<P#>` into 5–15 tasks using the §9.5 template. Respect §9.2 guardrails. For each task, list the exact files (verify they exist in the repo), the build/test gates and the effort level. Every task runs on Sonnet, so size and specify it accordingly (`mac/plans/mvp-track.md` §4). Flag any task that requires editing existing files, and propose the least-invasive pattern."
+> "Read `MACOS_NATIVE_PATH.md` §0, §5 and §9. Expand phase `<P#>` into 5–15 tasks using the §9.5 template. Respect §9.2 guardrails. For each task, list the exact files (verify they exist in the repo), the build/test gates and the effort level. Every task runs on Sonnet, so size and specify it accordingly (`mac/plans/full-port.md` §2). Flag any task that requires editing existing files, and propose the least-invasive pattern."
 
 ### 9.6 Sizing (low confidence; refine after P0 spikes)
 
@@ -1039,7 +1040,9 @@ dotnet publish mac/ComicRack.Mac -c Release -r osx-arm64 --self-contained -p:Pub
 ```
 
 ### 11.4 Spike results log
-_(Empty. Append S1–S5 write-ups here: date, question, method, result, decision.)_
+- **S1** (2026-10-17, M0.3a/M0.3b, `mac/reports/census.md`): can the Core compile on net10? Pass A (`net10.0-windows` + WinForms) 134 errors, then 0 after exclusions and `Replacements/`; pass B (`net10.0`) 1319 errors, then 0 after M1.3 (`dotnet build` of the three shadow projects succeeds, no original file edited). Decision: GO, shadow-project technique.
+- **S2** (2026-10-17, M0.4, `mac/reports/drawing-route.md`): `GeneXus.Drawing.Common` 2.2.3 (Apache-2.0) covers 72 to 75 % of the used System.Drawing surface (threshold 90 %), 4 of 6 checks fail, aliasing cannot serve scripts. Decision: not adopted (G0); custom `cYo.Compat.Drawing` on SkiaSharp.
+- **S3 to S5:** not yet written up.
 
 ### 11.5 Sources (prior art and ecosystem facts)
 
