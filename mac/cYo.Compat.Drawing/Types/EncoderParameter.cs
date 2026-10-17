@@ -1,4 +1,4 @@
-// M1.2a surface skeleton. Signatures follow the System.Drawing.Common reference assembly; members the Core uses, bodies filled in by M1.2b/M1.2c.
+// M1.2b: real behaviour for the (Encoder, long) constructor the Core uses; the other GDI+ overloads are not declared.
 using System;
 
 namespace System.Drawing.Imaging
@@ -7,8 +7,15 @@ namespace System.Drawing.Imaging
 	{
 		public EncoderParameter(Encoder encoder, long value)
 		{
-			throw new NotSupportedException("System.Drawing.Imaging.EncoderParameter.ctor is not yet supported on macOS");
+			Encoder = encoder;
+			Value = value;
 		}
+
+		public Encoder Encoder { get; set; }
+
+		public int NumberOfValues => 1;
+
+		internal long Value { get; }
 
 		public void Dispose()
 		{
