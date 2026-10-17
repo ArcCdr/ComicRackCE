@@ -37,6 +37,8 @@ namespace ComicRack.Cli
 					return CoreCommands.Page(rest.ToArray(), output, error);
 				case "thumb":
 					return CoreCommands.Thumb(rest.ToArray(), output, error);
+				case "smartlist":
+					return SmartListCommand.Run(rest.ToArray(), output, error);
 				default:
 					error.WriteLine("Unknown command: " + args[0]);
 					error.WriteLine(Usage);
@@ -73,7 +75,11 @@ namespace ComicRack.Cli
       Decode page N (1-based) through the book provider and the ImagePool; write a PNG.
   thumb <book> --out t.jpg [--page N]
       Thumbnail (front cover, or page N) through the Core cache; run twice to show the disk cache.
-Options of db/scan/page/thumb: --data-dir <dir> (or CRCLI_DATA_DIR) keeps data, cache and logs there; --app-folders uses
+  smartlist <ComicDb.xml> (--list ""<name>"" | --all) [--remap ""from=to""] [--cached]
+      Evaluate a list of the database with the Core (the same code the app's sidebar uses) and print its book count.
+      --all prints every list as a tab separated table. By default each list is computed from its matchers; --cached trusts the query cache stored in the file. Lists with a script
+      matcher are reported as ""requires scripts"" with count 0. The database is opened read only.
+Options of db/scan/page/thumb/smartlist: --data-dir <dir> (or CRCLI_DATA_DIR) keeps data, cache and logs there; --app-folders uses
 ~/Library/.../ComicRack CE (MVP). Default: a temporary folder that is deleted at the end.
 Everything under mac/fixtures is limited to 1.5 GB; the commands estimate first and refuse to exceed it.";
 	}

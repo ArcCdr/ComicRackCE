@@ -119,7 +119,7 @@ namespace ComicRack.Mac.ViewModels
 		partial void OnSortIndexChanged(int value) => StartQuery(debounce: false, resetScroll: true);
 
 		/// <summary>Builds the catalog from the Core's books on a worker thread and shows it. A newer load supersedes an older one.</summary>
-		public Task LoadAsync(Func<CancellationToken, BookCatalog> build)
+		public Task LoadAsync(Func<CancellationToken, BookCatalog> build, bool resetScroll = false)
 		{
 			if (build == null)
 			{
@@ -131,10 +131,10 @@ namespace ComicRack.Mac.ViewModels
 			{
 				SummaryText = "Loading...";
 			}
-			return LoadCore(build, mine);
+			return LoadCore(build, mine, resetScroll);
 		}
 
-		private async Task LoadCore(Func<CancellationToken, BookCatalog> build, int mine)
+		private async Task LoadCore(Func<CancellationToken, BookCatalog> build, int mine, bool resetScroll)
 		{
 			try
 			{
@@ -162,11 +162,11 @@ namespace ComicRack.Mac.ViewModels
 		}
 
 		/// <summary>Shows a catalog that is ready (the query runs on a worker thread). The selection is kept if the book is still listed.</summary>
-		public void SetCatalog(BookCatalog value)
+		public void SetCatalog(BookCatalog value, bool resetScroll = false)
 		{
 			catalog = value ?? BookCatalog.Empty;
 			OnPropertyChanged(nameof(TotalCount));
-			StartQuery(debounce: false, resetScroll: false);
+			StartQuery(debounce: false, resetScroll: resetScroll);
 		}
 
 		/// <summary>Empties the list, e.g. while the library is closed.</summary>
