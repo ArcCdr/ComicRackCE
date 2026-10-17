@@ -1,4 +1,4 @@
 artifacts/
-fixtures/
+/fixtures/
 bin/
 obj/

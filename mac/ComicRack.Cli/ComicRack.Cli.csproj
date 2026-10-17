@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- crcli: command line tool of the macOS build. M1.6 adds the `fixtures` commands; M1.5b/M1.5c add the Core commands on the host.
+       Fixture generation needs only Skia and SharpZipLib, so the project does not reference the Core yet. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>crcli</AssemblyName>
+    <RootNamespace>ComicRack.Cli</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <!-- SkiaSharp depends on the native assets of every platform; without a runtime identifier about 275 MB of Windows DLLs land in bin/. -->
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- SystemPaths builds <ApplicationData>/<company>/<product> from the entry assembly (see "Facts from M1.5a"): no company, product = the MVP data folder. -->
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <Product>ComicRack CE (MVP)</Product>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <InternalsVisibleTo Include="ComicRack.Cli.Tests" />
+  </ItemGroup>
+</Project>

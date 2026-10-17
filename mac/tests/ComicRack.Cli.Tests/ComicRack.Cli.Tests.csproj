@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Tests of crcli (M1.6): the generated fixtures are read back through the Core's own provider, via the host. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>ComicRack.Cli.Tests</RootNamespace>
+    <!-- SkiaSharp depends on the native assets of every platform; without a runtime identifier all of them (about 275 MB of Windows DLLs) are copied to bin/. -->
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ComicRack.Cli\ComicRack.Cli.csproj" />
+    <ProjectReference Include="..\..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
+  </ItemGroup>
+</Project>
