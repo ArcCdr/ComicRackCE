@@ -16,7 +16,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Independent_bitmaps_can_be_used_from_many_threads()
 		{
-			int before = Image.LiveStorageCount;
+			int before = LiveSettled();
 			byte[] jpeg = SkiaJpeg(300, 200);
 			Parallel.For(0, 64, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
 			{

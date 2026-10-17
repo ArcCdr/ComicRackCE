@@ -19,7 +19,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Dispose_releases_the_storage_once_and_can_be_repeated()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			Bitmap b = new Bitmap(10, 10);
 			Assert.Equal(before + 1, Live);
 			b.Dispose();
@@ -32,7 +32,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Using_blocks_release_the_storage()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			using (Bitmap b = new Bitmap(10, 10))
 			using (Image image = Image.FromStream(ToStream(SkiaPngOpaque())))
 			{
@@ -63,7 +63,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Every_way_to_make_an_image_balances_with_Dispose()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			for (int i = 0; i < 200; i++)
 			{
 				SKBitmap[] storages;
@@ -92,7 +92,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void RotateFlip_releases_the_old_storage()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			using (Bitmap b = new Bitmap(30, 20))
 			{
 				SKBitmap old = SkiaInterop.GetSKBitmap(b);
@@ -107,7 +107,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Failed_decodes_and_failed_constructors_leave_nothing_behind()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			Assert.ThrowsAny<Exception>(() => Image.FromStream(ToStream(new byte[] { 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 })));
 			Assert.ThrowsAny<Exception>(() => Image.FromStream(new MemoryStream()));
 			Assert.ThrowsAny<Exception>(() => new Bitmap(0, 0));
@@ -137,7 +137,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Images_that_are_never_disposed_are_released_by_the_finalizer()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			CreateAndForget(20);
 			Assert.True(Live >= before + 40 || Live == before, "the images were either still alive or already collected");
 			for (int i = 0; i < 5 && Live != before; i++)
@@ -151,7 +151,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Disposing_a_bitmap_with_an_outstanding_lock_does_not_crash_and_the_late_unlock_fails_cleanly()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			Bitmap b = new Bitmap(4, 4, PixelFormat.Format24bppRgb);
 			BitmapData data = b.LockBits(new Rectangle(0, 0, 4, 4), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 			b.Dispose();

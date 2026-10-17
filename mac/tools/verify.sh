@@ -87,7 +87,9 @@ fi
 if [ "$TEST" = 1 ]; then
 	t0=$(now)
 	if [ "$FULL" = 1 ]; then FILTER='Category!=E2E'; KIND='fast+slow'; else FILTER='Category!=Slow&Category!=E2E'; KIND='fast'; fi
-	dotnet test mac/ComicRack.Mac.slnx -c "$CONFIG" --no-build --filter "$FILTER" --logger trx --results-directory "$LOGS" \
+	# -m:1 runs the test projects one after the other: they are timing-sensitive (UI gaps, queue throughput) and a second project
+	# burning CPU in parallel made them fail now and then. Inside a project tests are serialized by its AssemblyInfo.cs.
+	dotnet test mac/ComicRack.Mac.slnx -c "$CONFIG" --no-build -m:1 --filter "$FILTER" --logger trx --results-directory "$LOGS" \
 		--blame-hang-timeout 15m >"$LOGS/test.log" 2>&1
 	rc=$?
 	lines=$(grep -E '^(Passed|Failed)!' "$LOGS/test.log" | sed -E 's/ - Failed:/ failed:/; s/, Duration:/ in/')

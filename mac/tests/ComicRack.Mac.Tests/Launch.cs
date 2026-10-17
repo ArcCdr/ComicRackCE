@@ -31,17 +31,32 @@ namespace ComicRack.Mac.Tests
 			{
 				throw new InvalidOperationException("A test launch must always have its own data folder.");
 			}
-			launch.Service = new HostService(options);
-			launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs, readers?.Invoke(launch.Service));
-			launch.Service.Opened += (sender, e) => launch.ViewModel.OnHostOpened();
-			launch.Service.Start();
-			await launch.Service.Ready;
-			launch.ViewModel.OnHostOpened();
-			if (launch.Service.Host == null)
+			try
 			{
-				throw new InvalidOperationException("The host did not open: " + launch.Service.Failure);
+				launch.Service = new HostService(options);
+				launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs, readers?.Invoke(launch.Service));
+				launch.Service.Opened += (sender, e) => launch.ViewModel.OnHostOpened();
+				launch.Service.Start();
+				await launch.Service.Ready;
+				launch.ViewModel.OnHostOpened();
+				if (launch.Service.Host == null)
+				{
+					throw new InvalidOperationException("The host did not open: " + launch.Service.Failure);
+				}
+				return launch;
 			}
-			return launch;
+			catch (Exception)
+			{
+				// A failed start must not leave the process-wide host open for the next test.
+				try
+				{
+					launch.Service?.Dispose();
+				}
+				catch (Exception)
+				{
+				}
+				throw;
+			}
 		}
 
 		/// <summary>Cmd+Q: cancel a running operation, close the host (which saves) and check the saved file. Returns the check.</summary>

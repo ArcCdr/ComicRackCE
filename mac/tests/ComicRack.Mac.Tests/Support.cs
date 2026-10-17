@@ -16,18 +16,41 @@ namespace ComicRack.Mac.Tests
 	{
 		private static readonly Lazy<HeadlessUnitTestSession> session = new Lazy<HeadlessUnitTestSession>(() => HeadlessUnitTestSession.StartNew(typeof(TestApp)));
 
-		public static Task<T> Run<T>(Func<Task<T>> work)
+		/// <summary>
+		/// The session gives every job a fresh application (isolation per test): before the job it resets the Avalonia dispatcher
+		/// and sets the application up on the session thread, and the first thread that touches Dispatcher.UIThread after the
+		/// reset becomes its owner. A thread that an earlier test left running (a worker posting to the UI thread) can win that
+		/// race by a few milliseconds, and the setup then fails with "a different thread owns it" before the job has started.
+		/// That failure has no effect on the job, so the job is simply offered again.
+		/// </summary>
+		public static async Task<T> Run<T>(Func<Task<T>> work)
 		{
-			return session.Value.Dispatch(work, CancellationToken.None);
+			for (int attempt = 1; ; attempt++)
+			{
+				bool started = false;
+				try
+				{
+					Func<Task<T>> job = () =>
+					{
+						started = true;
+						return work();
+					};
+					return await session.Value.Dispatch(job, CancellationToken.None);
+				}
+				catch (InvalidOperationException ex) when (!started && attempt < 10 && ex.Message.Contains("different thread owns"))
+				{
+					await Task.Delay(25);
+				}
+			}
 		}
 
 		public static Task Run(Func<Task> work)
 		{
-			return session.Value.Dispatch(async () =>
+			return Run(async () =>
 			{
 				await work();
 				return 0;
-			}, CancellationToken.None);
+			});
 		}
 	}
 

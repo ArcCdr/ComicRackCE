@@ -77,7 +77,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Graphics_does_not_own_the_bitmap_and_the_bitmap_does_not_need_the_graphics()
 		{
-			int before = Live;
+			int before = LiveSettled();
 			Bitmap bitmap = new Bitmap(8, 8);
 			Graphics g = Graphics.FromImage(bitmap);
 			Assert.Equal(before + 1, Live);

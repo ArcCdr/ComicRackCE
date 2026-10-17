@@ -40,14 +40,23 @@ namespace ComicRack.Mac.Tests.Thumbnails
 			public Env(long maxBytes = 64L * 1024 * 1024, int concurrency = 4)
 			{
 				Host = MacHost.Open(new MacHostOptions { Paths = MacPaths.Under(temp.Combine("app")), DatabaseReadOnly = true });
-				Service = new ThumbnailService(new ThumbnailServiceOptions
+				try
 				{
-					Decoder = new CoreThumbnailDecoder(Host.CacheManager),
-					Post = Ui.Post,
-					MaxCacheBytes = maxBytes,
-					MaxConcurrency = concurrency,
-					Log = message => { lock (Log) { Log.Add(message); } },
-				});
+					Service = new ThumbnailService(new ThumbnailServiceOptions
+					{
+						Decoder = new CoreThumbnailDecoder(Host.CacheManager),
+						Post = Ui.Post,
+						MaxCacheBytes = maxBytes,
+						MaxConcurrency = concurrency,
+						Log = message => { lock (Log) { Log.Add(message); } },
+					});
+				}
+				catch (Exception)
+				{
+					Host.Dispose();
+					temp.Dispose();
+					throw;
+				}
 			}
 
 			public string Temp(string name) => temp.Combine(name);
@@ -73,14 +82,21 @@ namespace ComicRack.Mac.Tests.Thumbnails
 
 			public void Dispose()
 			{
-				Service.Dispose(); // first: the decoder must not read from a host that is closing
-				Ui.Pump();
-				foreach (SKImage image in images)
+				try
 				{
-					image.Dispose();
+					Service.Dispose(); // first: the decoder must not read from a host that is closing
+					Ui.Pump();
+					foreach (SKImage image in images)
+					{
+						image.Dispose();
+					}
 				}
-				Host.Dispose();
-				temp.Dispose();
+				finally
+				{
+					// whatever failed above, the host must close: the Core allows one per process
+					Host.Dispose();
+					temp.Dispose();
+				}
 			}
 		}
 

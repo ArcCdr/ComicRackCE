@@ -17,6 +17,28 @@ namespace Compat.Drawing.Tests
 			PixelFormat.Format24bppRgb,
 		};
 
+		/// <summary>
+		/// The number of live image storages once the finalizer thread has caught up with the garbage of earlier tests. Tests that assert
+		/// exact counts take their baseline here: an image that an earlier test left undisposed is finalized (and the counter drops) on
+		/// the finalizer thread at any moment, which would shift a baseline taken without this.
+		/// </summary>
+		public static int LiveSettled()
+		{
+			int last = -1;
+			for (int round = 0; round < 20; round++)
+			{
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				int now = Image.LiveStorageCount;
+				if (now == last)
+				{
+					return now;
+				}
+				last = now;
+			}
+			return last;
+		}
+
 		/// <summary>A smooth gradient (red grows to the right, green downwards, blue fixed), so that lossy codecs stay close.</summary>
 		public static Color Gradient(int x, int y, int w, int h) => Color.FromArgb(255, x * 255 / Math.Max(1, w - 1), y * 255 / Math.Max(1, h - 1), 128);
 

@@ -444,6 +444,9 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.False(vm.HasNotice);
 					Assert.Equal(4, vm.Scene.Position);
 
+					// Moving to page 5 put page 4 (the one behind) back into the window, so a prefetch of the page that fails may still be
+					// running. A visit that joins a running decode gets that decode's result, so the repair waits for the service to be idle.
+					await WaitFor(() => vm.Pages.GetStats().InFlight == 0 && vm.Pages.GetStats().Queued == 0, "the prefetch of the broken page is over");
 					broken = false;
 					await vm.GoToAsync(3);
 					Assert.NotNull(vm.Scene);

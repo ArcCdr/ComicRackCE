@@ -550,7 +550,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void Bitmap_from_an_image_checks_its_arguments_and_leaks_nothing_when_it_fails()
 		{
-			int before = Image.LiveStorageCount;
+			int before = LiveSettled();
 			using (Bitmap source = new Bitmap(4, 4))
 			{
 				Assert.Throws<ArgumentNullException>(() => new Bitmap(null, 4, 4));
@@ -567,7 +567,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void A_Bitmap_made_from_an_image_releases_its_storage_on_Dispose()
 		{
-			int before = Image.LiveStorageCount;
+			int before = LiveSettled();
 			Bitmap source = new Bitmap(4, 4);
 			Bitmap scaled = new Bitmap(source, 8, 8);
 			Assert.Equal(before + 2, Image.LiveStorageCount);
@@ -579,7 +579,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void A_failed_or_finished_DrawImage_leaves_no_storage_behind()
 		{
-			int before = Image.LiveStorageCount;
+			int before = LiveSettled();
 			using (Bitmap bitmap = new Bitmap(8, 8))
 			{
 				using (Graphics g = Graphics.FromImage(bitmap))
