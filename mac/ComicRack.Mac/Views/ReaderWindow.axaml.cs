@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.ViewModels;
 
 namespace ComicRack.Mac.Views
@@ -17,13 +18,14 @@ namespace ComicRack.Mac.Views
 	{
 		private readonly ReaderViewModel model;
 		private readonly bool ownsModel;
+		private readonly PerfOverlayController perf;
 
 		public ReaderWindow()
 		{
 			InitializeComponent();
 		}
 
-		public ReaderWindow(ReaderViewModel model, bool ownsModel = false)
+		public ReaderWindow(ReaderViewModel model, bool ownsModel = false, PerfOverlayController perf = null)
 		{
 			InitializeComponent();
 			this.model = model;
@@ -31,7 +33,12 @@ namespace ComicRack.Mac.Views
 			DataContext = model;
 			model.CloseRequested += OnCloseRequested;
 			model.PropertyChanged += OnModelChanged;
-			NativeMenu.SetMenu(this, ReaderMenu.Build(model));
+			this.perf = perf;
+			if (perf != null)
+			{
+				this.FindControl<Grid>("ContentArea").Children.Add(new PerfOverlay(perf, StopwatchClock.Now));
+			}
+			NativeMenu.SetMenu(this, ReaderMenu.Build(model, perf));
 			Opened += (sender, e) => ReadingArea.Focus();
 		}
 
@@ -73,6 +80,12 @@ namespace ComicRack.Mac.Views
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
+			if (!e.Handled && perf != null && e.Key == Key.P && e.KeyModifiers == (KeyModifiers.Meta | KeyModifiers.Alt))
+			{
+				perf.Toggle();
+				e.Handled = true;
+				return;
+			}
 			if (!e.Handled && model != null && model.HandleKey(e.Key, e.KeyModifiers))
 			{
 				e.Handled = true;

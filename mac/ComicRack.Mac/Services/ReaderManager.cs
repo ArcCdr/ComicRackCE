@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.Display;
+using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.Reader;
 using ComicRack.Mac.ViewModels;
 using ComicRack.Mac.Views;
@@ -34,9 +35,42 @@ namespace ComicRack.Mac.Services
 		private ImageFitMode fit = ImageFitMode.Fit;
 		private PageLayoutMode layoutMode = PageLayoutMode.Single;
 
-		public ReaderManager(HostService hostService)
+		private readonly PerfOverlayController perf;
+		private ReaderWindow recent;
+
+		public ReaderManager(HostService hostService, PerfOverlayController perf = null)
 		{
 			this.hostService = hostService ?? throw new ArgumentNullException(nameof(hostService));
+			this.perf = perf;
+		}
+
+		/// <summary>The reader the overlay reports on: the active reader window, else the one used last. Null if none is open.</summary>
+		public ReaderViewModel FrontReader
+		{
+			get
+			{
+				ReaderWindow active = windows.Values.FirstOrDefault(w => w.IsActive);
+				if (active != null)
+				{
+					return active.Model;
+				}
+				return recent != null && windows.ContainsValue(recent) ? recent.Model : windows.Values.LastOrDefault()?.Model;
+			}
+		}
+
+		/// <summary>The decode time of the last page the front reader decoded, or null.</summary>
+		public double? LastDecodeMilliseconds()
+		{
+			double ms = FrontReader?.Pages?.GetStats().LastDecodeMilliseconds ?? 0;
+			return ms > 0 ? ms : (double?)null;
+		}
+
+		/// <summary>The total time of the last page turn of the front reader that needed no decoding, or null.</summary>
+		public double? LastCachedTurnMilliseconds()
+		{
+			PageTurnRecord[] records = FrontReader?.Meter.Records;
+			PageTurnRecord last = records?.LastOrDefault(r => r.Cached);
+			return last?.TotalMilliseconds;
 		}
 
 		public int OpenCount => windows.Count;
@@ -65,7 +99,9 @@ namespace ComicRack.Mac.Services
 			var model = new ReaderViewModel(session, new ReaderOptions { Fit = fit, Mode = layoutMode });
 			model.FitChanged += (sender, e) => fit = model.Fit;
 			model.LayoutChanged += (sender, e) => layoutMode = model.LayoutMode;
-			var window = new ReaderWindow(model);
+			var window = new ReaderWindow(model, false, perf);
+			window.Activated += (sender, e) => recent = window;
+			recent = window;
 			windows[book] = window;
 			window.Closed += (sender, e) =>
 			{

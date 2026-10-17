@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 
@@ -26,7 +27,7 @@ namespace ComicRack.Mac
 		}
 
 		/// <summary>The menu bar: File, View, Window, Help.</summary>
-		public static NativeMenu BuildMenuBar(MainViewModel vm)
+		public static NativeMenu BuildMenuBar(MainViewModel vm, PerfOverlayController perf = null)
 		{
 			return new NativeMenu
 			{
@@ -39,6 +40,7 @@ namespace ComicRack.Mac
 				{
 					SidebarItem(vm),
 					Item("Enter Full Screen", vm.ToggleFullScreenCommand, Key.F, KeyModifiers.Meta | KeyModifiers.Control),
+					PerfItem(perf),
 				}),
 				Submenu("Window", new NativeMenu
 				{
@@ -50,6 +52,26 @@ namespace ComicRack.Mac
 					Item("ComicRack CE Help", vm.ShowHelpCommand, Key.OemQuestion, KeyModifiers.Meta | KeyModifiers.Shift),
 				}),
 			};
+		}
+
+		/// <summary>View > Show Performance Overlay (Option+Cmd+P), a check mark that follows the overlay. Null when there is no overlay.</summary>
+		public static NativeMenuItem PerfItem(PerfOverlayController perf)
+		{
+			if (perf == null)
+			{
+				return new NativeMenuItem("Show Performance Overlay") { IsEnabled = false };
+			}
+			NativeMenuItem item = Item("Show Performance Overlay", perf.ToggleCommand, Key.P, KeyModifiers.Meta | KeyModifiers.Alt);
+			item.ToggleType = MenuItemToggleType.CheckBox;
+			item.IsChecked = perf.IsVisible;
+			perf.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(PerfOverlayController.IsVisible))
+				{
+					item.IsChecked = perf.IsVisible;
+				}
+			};
+			return item;
 		}
 
 		// View > Show Sidebar: a check mark that follows the sidebar's visibility.
