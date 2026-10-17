@@ -3,6 +3,7 @@
     <Project Path="cYo.Common.Core/cYo.Common.Core.csproj" />
     <Project Path="ComicRack.Engine.Core/ComicRack.Engine.Core.csproj" />
     <Project Path="ComicRack.Plugins.Core/ComicRack.Plugins.Core.csproj" />
+    <Project Path="ComicRack.Mac.Host/ComicRack.Mac.Host.csproj" />
   </Folder>
   <Folder Name="/shims/">
     <Project Path="cYo.Compat.Drawing/cYo.Compat.Drawing.csproj" />
@@ -11,6 +12,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Compat.Drawing.Tests/Compat.Drawing.Tests.csproj" />
     <Project Path="tests/Compat.Forms.Tests/Compat.Forms.Tests.csproj" />
+    <Project Path="tests/ComicRack.Mac.Host.Tests/ComicRack.Mac.Host.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/api-inventory/ApiInventory.csproj" />
