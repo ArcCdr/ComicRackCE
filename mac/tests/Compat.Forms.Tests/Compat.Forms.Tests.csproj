@@ -3,6 +3,10 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Compat.Forms.Tests</RootNamespace>
+    <!-- SkiaSharp (through cYo.Compat.Drawing) depends on the native assets of every platform; without a runtime identifier all of them
+         (about 275 MB of Windows DLLs) are copied to bin/. -->
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

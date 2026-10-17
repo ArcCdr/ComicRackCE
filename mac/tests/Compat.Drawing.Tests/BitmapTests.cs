@@ -51,15 +51,6 @@ namespace Compat.Drawing.Tests
 			}
 		}
 
-		[Fact]
-		public void Constructor_that_scales_an_image_waits_for_the_graphics_subset()
-		{
-			using (Bitmap source = new Bitmap(4, 4))
-			{
-				Assert.Throws<NotSupportedException>(() => new Bitmap(source, 2, 2));
-			}
-		}
-
 		[Theory]
 		[InlineData(PixelFormat.Format32bppArgb)]
 		[InlineData(PixelFormat.Format32bppPArgb)]

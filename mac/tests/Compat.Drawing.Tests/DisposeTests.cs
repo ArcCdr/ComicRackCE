@@ -117,7 +117,7 @@ namespace Compat.Drawing.Tests
 				Assert.ThrowsAny<Exception>(() => source.Clone(new Rectangle(0, 0, 9, 9), PixelFormat.Format32bppArgb));
 				Assert.ThrowsAny<Exception>(() => source.Clone(new Rectangle(0, 0, 2, 2), PixelFormat.Format8bppIndexed));
 				Assert.ThrowsAny<Exception>(() => source.Save(new MemoryStream(), ImageFormat.Tiff));
-				Assert.ThrowsAny<Exception>(() => new Bitmap(source, 2, 2));
+				Assert.ThrowsAny<Exception>(() => new Bitmap(source, 0, 2));
 			}
 			Assert.Equal(before, Live);
 		}

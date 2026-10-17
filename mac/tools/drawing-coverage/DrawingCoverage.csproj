@@ -8,6 +8,9 @@
     <RootNamespace>DrawingCoverage</RootNamespace>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CA1416;NU1510</NoWarn>
+    <!-- SkiaSharp depends on the native assets of every platform; without a runtime identifier all of them (about 275 MB of Windows DLLs) are copied to bin/. -->
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
   <ItemGroup>
     <!-- Only the stand-in, never System.Drawing.Common: both declare System.Drawing.Bitmap. The real reference assembly is read with MetadataLoadContext. -->

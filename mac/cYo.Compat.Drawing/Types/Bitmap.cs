@@ -32,10 +32,30 @@ namespace System.Drawing
 		{
 		}
 
+		/// <summary>
+		/// A new Format32bppArgb bitmap with <paramref name="original"/> scaled into it, as in .NET: cleared to transparent, then drawn with the default
+		/// Graphics settings (bilinear interpolation, so a large reduction aliases; use Graphics with HighQualityBicubic for a better one).
+		/// </summary>
 		public Bitmap(Image original, int width, int height)
+			: this(width, height, PixelFormat.Format32bppArgb)
 		{
-			// Needs DrawImage, so it comes with the Graphics subset (M1.2c).
-			throw new NotSupportedException("System.Drawing.Bitmap.ctor(Image, int, int) is not yet supported on macOS");
+			try
+			{
+				if (original == null)
+				{
+					throw new ArgumentNullException(nameof(original));
+				}
+				using (Graphics graphics = Graphics.FromImage(this))
+				{
+					graphics.Clear(Color.Transparent);
+					graphics.DrawImage(original, 0, 0, width, height);
+				}
+			}
+			catch
+			{
+				Dispose();
+				throw;
+			}
 		}
 
 		/// <summary>Wraps a decoded bitmap (ownership passes to the new image).</summary>

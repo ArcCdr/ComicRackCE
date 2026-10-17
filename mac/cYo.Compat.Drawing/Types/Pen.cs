@@ -1,13 +1,34 @@
-// M1.2a surface skeleton. Signatures follow the System.Drawing.Common reference assembly; members the Core uses, bodies filled in by M1.2b/M1.2c.
+// M1.2c: a colour and a width only. The Core creates a Pen in SystemPensEx; nothing draws with one yet (no DrawLine and the like are declared).
 using System;
 
 namespace System.Drawing
 {
 	public sealed class Pen : MarshalByRefObject, ICloneable, IDisposable
 	{
+		private Color color;
+		private float width;
+
 		public Pen(Color color)
+			: this(color, 1f)
 		{
-			throw new NotSupportedException("System.Drawing.Pen.ctor is not yet supported on macOS");
+		}
+
+		public Pen(Color color, float width)
+		{
+			this.color = color;
+			this.width = width;
+		}
+
+		public Color Color
+		{
+			get => color;
+			set => color = value;
+		}
+
+		public float Width
+		{
+			get => width;
+			set => width = value;
 		}
 
 		public void Dispose()
@@ -20,6 +41,6 @@ namespace System.Drawing
 		{
 		}
 
-		public object Clone() => throw new NotSupportedException("System.Drawing.Pen.Clone is not yet supported on macOS");
+		public object Clone() => new Pen(color, width);
 	}
 }

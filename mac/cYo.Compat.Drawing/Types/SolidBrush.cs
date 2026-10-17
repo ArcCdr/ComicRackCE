@@ -1,15 +1,38 @@
-// M1.2a surface skeleton. Signatures follow the System.Drawing.Common reference assembly; members the Core uses, bodies filled in by M1.2b/M1.2c.
+// M1.2c: real behaviour. Signatures follow the System.Drawing.Common reference assembly.
 using System;
 
 namespace System.Drawing
 {
 	public sealed class SolidBrush : Brush
 	{
+		private Color color;
+		private readonly bool immutable;
+
 		public SolidBrush(Color color)
 		{
-			throw new NotSupportedException("System.Drawing.SolidBrush.ctor is not yet supported on macOS");
+			this.color = color;
 		}
 
-		public override object Clone() => throw new NotSupportedException("System.Drawing.SolidBrush.Clone is not yet supported on macOS");
+		/// <summary>A read-only brush such as Brushes.Black: the colour cannot change and Dispose does nothing.</summary>
+		internal SolidBrush(Color color, bool immutable)
+		{
+			this.color = color;
+			this.immutable = immutable;
+		}
+
+		public Color Color
+		{
+			get => color;
+			set
+			{
+				if (immutable)
+				{
+					throw new ArgumentException("Setting a read-only property is not allowed.");
+				}
+				color = value;
+			}
+		}
+
+		public override object Clone() => new SolidBrush(color);
 	}
 }
