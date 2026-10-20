@@ -333,6 +333,12 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Out of scope: product code changes unless a real race is found (then fix it in `mac/` product code and say so).
 - Accept: `for i in 1 2 3 4 5 6 7 8 9 10; do mac/tools/verify.sh || break; done` all PASS (record durations; keep the fast gate under ~3 minutes if possible).
 
+#### R2 Fix the remaining flaky UI tests
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: no flaky test in the fast gate or `--full`. Known: `WindowTests.Pressing_Cancel_in_the_window_cancels_the_running_scan` (progress-panel check races with a 200-book scan that finishes early; make the scan deterministic, e.g. a fake or a large/slow scan source, or gate it with a controllable scanner), `ReaderWindowTests.The_arrow_keys_space_home_and_end_turn_the_pages_and_the_frame_follows` (failed once in `--full`, `Dispose` assertion expected 2, actual 1; find the race), plus anything the repeated runs reveal.
+- Do: run `mac/tools/verify.sh --full` 15 times, collect failures, fix the causes in tests/test infrastructure (or product code if a real race), never weaken assertions. Add the rule "no timing-dependent assertions without a controllable clock/gate" to full-port.md §2 if not present.
+- Accept: 15 consecutive `mac/tools/verify.sh --full` runs PASS.
+
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
 - Goal: one command that every task and the orchestrator run: disk guard, rule 1, build, fast tests, concise summary.
