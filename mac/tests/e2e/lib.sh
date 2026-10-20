@@ -141,6 +141,11 @@ screen_frames() {
 	osascript -l JavaScript -e 'ObjC.import("AppKit"); var s=$.NSScreen.screens; var main=s.objectAtIndex(0).frame.size.height; var o=[]; for (var i=0;i<s.count;i++){var f=s.objectAtIndex(i).frame; o.push([f.origin.x, main-(f.origin.y+f.size.height), f.size.width, f.size.height].join(" "));} o.join("\n")' 2>/dev/null
 }
 
+# Screens as "x y w h scale" lines in top-left global points; scale is the backing scale factor (2 on a Retina display, 1 on others).
+screen_scales() {
+	osascript -l JavaScript -e 'ObjC.import("AppKit"); var s=$.NSScreen.screens; var main=s.objectAtIndex(0).frame.size.height; var o=[]; for (var i=0;i<s.count;i++){var sc=s.objectAtIndex(i); var f=sc.frame; o.push([f.origin.x, main-(f.origin.y+f.size.height), f.size.width, f.size.height, sc.backingScaleFactor].join(" "));} o.join("\n")' 2>/dev/null
+}
+
 # menu_line <Menu> <item name>: the menu-items line of one item (name, shortcut, mark, enabled), or nothing.
 menu_line() {
 	"$UI" menu-items "$1" 2>/dev/null | awk -F'\t' -v n="$2" '$1 == n { print; exit }'

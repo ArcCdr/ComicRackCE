@@ -76,6 +76,7 @@ Binding rules (full-port.md section 2 has the details):
 - Never touch ~/Library/Application Support|Caches|Logs/ComicRack*, /Users/vince/dev/ComicRackAPI or the owner's folders; use temporary --data-dir folders and copies.
 - Real-window checks only through mac/tools/ui-drive and mac/tools/e2e.sh (they refuse to type into other apps). Exit code 4 means the screen is locked: record the check as SKIPPED, do not fake it.
 - Tests must be deterministic; new SkiaSharp-using test projects set RuntimeIdentifier osx-arm64 and SelfContained false.
+- Every new custom-drawn control or draw operation adds a 1x/2x test with the HiDPI harness (mac/tests/ComicRack.Mac.Tests/HiDpi, Category=HiDpi; full-port.md section 2.5).
 - No model identifiers or session links in code, comments or docs.
 - If the acceptance still fails after two serious attempts: stop, write a split proposal into full-port.md section 9, report RESULT: failed.
 

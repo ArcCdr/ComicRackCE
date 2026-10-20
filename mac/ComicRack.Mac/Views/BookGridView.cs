@@ -118,6 +118,38 @@ namespace ComicRack.Mac.Views
 			}
 		}
 
+		private TopLevel scaleSource;
+
+		protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+		{
+			base.OnAttachedToVisualTree(e);
+			scaleSource = TopLevel.GetTopLevel(this);
+			if (scaleSource != null)
+			{
+				scaleSource.ScalingChanged += OnScalingChanged;
+			}
+		}
+
+		protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+		{
+			if (scaleSource != null)
+			{
+				scaleSource.ScalingChanged -= OnScalingChanged;
+				scaleSource = null;
+			}
+			base.OnDetachedFromVisualTree(e);
+		}
+
+		// The window moved to a display with another scale (a Retina display and a 1x one): the covers are asked for in device pixels, so the
+		// cached step may change; a cell asks again only if it does (and keeps its picture until the new one arrives).
+		private void OnScalingChanged(object sender, EventArgs e)
+		{
+			foreach (BookCell cell in BoundCells())
+			{
+				cell.RefreshThumbnail(force: false);
+			}
+		}
+
 		protected override void OnDataContextChanged(EventArgs e)
 		{
 			base.OnDataContextChanged(e);
