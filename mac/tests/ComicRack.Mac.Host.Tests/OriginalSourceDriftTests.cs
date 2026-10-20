@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Xunit;
@@ -8,12 +9,18 @@ namespace ComicRack.Mac.Host.Tests
 {
 	/// <summary>
 	/// The pass B CacheManager (mac/ComicRack.Engine.Core/Replacements/PassB/CacheManager.cs) is a copy of the original with one
-	/// line changed. If the original changes, this fails: port the change to the copy, then record the new hash here.
+	/// line changed. If the original changes, this fails: run mac/tools/replacement-sync.sh ComicRack.Engine/CacheManager.cs (it merges the change into the copy and records the new hash in mac/replacements.json).
 	/// </summary>
 	public class OriginalSourceDriftTests
 	{
-		// SHA-256 of ComicRack.Engine/CacheManager.cs without a byte order mark and with LF line endings
-		private const string CacheManagerHash = "ceeb0ad49cf94086f68c5a611996c9f240a5eb500130a1fbbbdcf58a053014e8";
+		// SHA-256 of ComicRack.Engine/CacheManager.cs without a byte order mark and with LF line endings, recorded in mac/replacements.json
+		// (ReplacementManifestTests checks every entry; this test keeps the CacheManager message and the line-exact test below next to each other).
+		private static string CacheManagerHash()
+		{
+			ManifestEntry entry = ReplacementManifest.Load(ReplacementManifest.ManifestPath(RepoRoot(), allowOverride: false))
+				.Single(e => e.Original == "ComicRack.Engine/CacheManager.cs");
+			return entry.Sha256;
+		}
 
 		private static string RepoRoot()
 		{
@@ -39,7 +46,7 @@ namespace ComicRack.Mac.Host.Tests
 		[Fact]
 		public void The_original_CacheManager_is_unchanged()
 		{
-			Assert.Equal(CacheManagerHash, Hash(Normalize(Path.Combine(RepoRoot(), "ComicRack.Engine", "CacheManager.cs"))));
+			Assert.Equal(CacheManagerHash(), Hash(Normalize(Path.Combine(RepoRoot(), "ComicRack.Engine", "CacheManager.cs"))));
 		}
 
 		[Fact]

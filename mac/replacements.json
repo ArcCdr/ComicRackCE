@@ -1,0 +1,325 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "pattern": "cYo.Common/Win32/PortableDevices/**",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "828cdbd8859bfab7715be256c5ca932d9843eb2cefe09bea43ed433e6e819384",
+      "reason": "Windows portable device (MTP/WPD) access; device sync is deferred (D4)"
+    },
+    {
+      "original": "cYo.Common/Reflection/CodeDomDuckTypeGenerator.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/CodeDomDuckTypeGenerator.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "45bb6ca4c53933c2f3d33640d48cc46e5a7a99994b8afc631fec011a34c168f1",
+      "reason": "CodeDom is not used on the net10 path (guardrail 6); creating duck types throws NotSupportedException"
+    },
+    {
+      "original": "cYo.Common/Win32/MemoryInfo.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "c03bf758da308f66da682169fca32ccca4bc5cad7e62c697b0d53102afc91f95",
+      "reason": "needs System.Management (WMI); nothing in Common, Engine or Plugins calls it"
+    },
+    {
+      "original": "cYo.Common/Runtime/SingleInstance.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "8c1f0698ece8062bf779a6f5155068c7d3bed9c1540e6e03f24f4634299643a2",
+      "reason": "WCF named-pipe host (System.ServiceModel is not in .NET 10); the Mac host needs its own single-instance mechanism"
+    },
+    {
+      "original": "cYo.Common/Runtime/ISingleInstance.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "1ee3335c9b54f5e79160a1f8b6285f3095d9b8ba1bcfd30bad478b39cd9ae597",
+      "reason": "counterpart of SingleInstance.cs"
+    },
+    {
+      "original": "cYo.Common/Properties/AssemblyInfo.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "e4cebb55d8314bc6b1edea1b6142d25be74b09ea4db7985501700334a5a96725",
+      "reason": "the shadow project has GenerateAssemblyInfo off and owns its assembly attributes"
+    },
+    {
+      "original": "cYo.Common/Drawing/ExtendedColors/KnownColorTableEx.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/KnownColorTableEx.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "b4c22ccb9182d11ee163f38de4ac6c6610a9a0a0089b0534aa21921d2ffe14ba",
+      "reason": "reads private System.Drawing members by reflection and subscribes to SystemEvents (M1.3)"
+    },
+    {
+      "original": "cYo.Common/Win32/UserCredentialsDialog.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/UserCredentialsDialog.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "cd96e56d3ad71641f403fae68e07a55d3cc2abffb3b72ba474a3e355f8bee371",
+      "reason": "wraps credui.dll and demands a UIPermission (M1.3)"
+    },
+    {
+      "original": "cYo.Common/Win32/FileSystemEnumerable.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/FileSystemEnumerable.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "bb2162b81f8522d2da1fb972b95d5334d3887ecc4954777f81b3f0d237862ded",
+      "reason": "lists folders with kernel32 FindFirstFile/FindNextFile; the replacement uses System.IO"
+    },
+    {
+      "replacement": "mac/cYo.Common.Core/Replacements/SystemWebServicesProtocols.cs",
+      "kind": "stub",
+      "pass": "both",
+      "reason": "namespace marker: cYo.Common/Net/HttpAccess.cs imports System.Web.Services.Protocols (unused), which does not exist on .NET 10"
+    },
+    {
+      "pattern": "ComicRack.Engine/Controls/**",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "66d295d96ea6d14376c4e1374b4c24516a48c55ac5c158d5119fcefe0f37e25d",
+      "reason": "WinForms controls"
+    },
+    {
+      "original": "ComicRack.Engine/Display/ComicDisplay.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "7f4e62764a99d1140776a5fa94f56c08584b96331b1844f799710c1ef044a4c4",
+      "reason": "WinForms reader control"
+    },
+    {
+      "original": "ComicRack.Engine/Display/GestureEventArgs.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/GestureEventArgs.cs",
+      "kind": "patched-copy",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "ebb9886dc5cb34fcf66a63c5d5570fb694a95aa2e6232bfc60c01a727e951405",
+      "maxChangedLines": 2,
+      "reason": "IComicDisplay exposes it in events that scripts subscribe to; the copy only adds a comment"
+    },
+    {
+      "pattern": "ComicRack.Engine/Drawing/Thumb*Renderer.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "791a4f3ae5ce117ac660a70db7c3ddf1e50b1f9f884a9690a18e95b5ab0c2c66",
+      "reason": "WinForms theme resources"
+    },
+    {
+      "pattern": "ComicRack.Engine/IO/Network/**",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "bd0c6fffd051d7576ffc64264d1f7b700e470c8efcc73b348c440909ea46a909",
+      "reason": "remote library sharing is deferred (D4)"
+    },
+    {
+      "original": "ComicRack.Engine/IO/Network/ComicLibraryServerConfig.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/ComicLibraryServerConfig.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "85979b179438c686f889ce1c43c856dd9f95fbb1c626107048c13fd86a5d0791",
+      "reason": "ISharesSettings exposes a list of these"
+    },
+    {
+      "original": "ComicRack.Engine/NetworkManager.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "fcc7f6d7a39a33bf7e21cfae2458dd5c0ad724bdfbff2b4fd7cae421b709268f",
+      "reason": "remote library sharing and discovery (D4)"
+    },
+    {
+      "original": "ComicRack.Engine/Sync/DeviceSyncFactory.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/DeviceSyncFactory.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "97ef0d1e67a7bf7807a3398f63beb8b711d88a906f1a69d0cbdcfb5311b6e0bd",
+      "reason": "enumerates Windows portable devices; no device is ever discovered on the Mac"
+    },
+    {
+      "original": "ComicRack.Engine/Sync/PortableDeviceSyncProvider.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "a2047093e67cd1068d93e51bf530aa5d471d52d9314ab71b8391ecb59e333304",
+      "reason": "MTP/WPD device sync, Windows only (D4)"
+    },
+    {
+      "original": "ComicRack.Engine/Database/Storage/ComicStorageMsSql.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/ComicStorageMsSql.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "b8fc780822bb098e0bbda3b0df88346cf3a5c625df715817efb52a88d9a382a2",
+      "reason": "System.Data.SqlClient is not part of .NET 10; SQL Server storage is not in the macOS scope"
+    },
+    {
+      "original": "ComicRack.Engine/Drawing/ViewItemRenderer.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "3660a2146e206121de6f010ec59b24fadc7ca29461dd493bcf227fe4ddff8f8c",
+      "reason": "base class is the excluded ThumbRenderer"
+    },
+    {
+      "original": "ComicRack.Engine/Properties/AssemblyInfo.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "32f277d5dd58217241a25781aa2dd1d50f6e2c86ba5796d7e7ed95a23e458579",
+      "reason": "the shadow project has GenerateAssemblyInfo off and owns its assembly attributes"
+    },
+    {
+      "original": "ComicRack.Engine/IO/Provider/Writers/PdfStorageProvider.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/PassB/PdfStorageProvider.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "9ce11a0aab9e1f34fbb8484f2d658fe3b94a8825a919408e95e54328680d3bc1",
+      "reason": "sharpPDF binds to the framework System.Drawing types (M1.2a)"
+    },
+    {
+      "original": "ComicRack.Engine/CacheManager.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/PassB/CacheManager.cs",
+      "kind": "patched-copy",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "ceeb0ad49cf94086f68c5a611996c9f240a5eb500130a1fbbbdcf58a053014e8",
+      "maxChangedLines": 2,
+      "companions": [
+        "mac/ComicRack.Engine.Core/Replacements/PassB/MacImagePool.cs"
+      ],
+      "reason": "MacImagePool instead of ImagePool (M1.5a)"
+    },
+    {
+      "original": "ComicRack.Engine/IO/Provider/Readers/Pdf/PdfiumReaderEngine.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/PassB/PdfiumReaderEngine.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "63a4be7d9602a6e999e29c42f85c4855ecdee46fd7c926b6edaf9b6b6e83081a",
+      "reason": "PDFiumSharpV2 throws PlatformNotSupportedException on arm64; calls libpdfium directly (M1.4)"
+    },
+    {
+      "original": "ComicRack.Engine/Properties/Resources.Designer.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/PassB/Resources.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "13f373b667b32fccfbadb29a6803ef9dd902574307ee5b7d7025a68053441798",
+      "reason": "ResXFileRef bitmaps bind to the framework System.Drawing.Bitmap"
+    },
+    {
+      "original": "cYo.Common.Windows/Forms/IViewableItem.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/CommonWindowsTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "4d5cd010393cd4af32bd44362b3f66a6d79379c257fab24a9e9318974b4117c4",
+      "reason": "reduced: the real interface references the ItemView control"
+    },
+    {
+      "original": "cYo.Common.Windows/Forms/IColumn.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/CommonWindowsTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "b6ce23754d13d48c7b8c88de01dbc95a80619b343cd241e5e05c09cdeb417ae6",
+      "reason": "reduced: the real interface references the ItemView control"
+    },
+    {
+      "original": "cYo.Common.Windows/Forms/AutomaticProgressDialog.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/CommonWindowsTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "c17b1b65160996a1da36c8b21c6dcd5cf3ceae7516176cad396de1150ff17e58",
+      "reason": "the progress dialog stand-in runs the work inline without UI"
+    },
+    {
+      "original": "cYo.Common.Windows/LocalizeUtility.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/CommonWindowsTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "a7090f8307cc4cce873ab9cb267fceb727c5b08c7b4cee1aa9882a572a067706",
+      "reason": "only the LocalizeEnum helper that ComicPageInfo and the XML serializers use"
+    },
+    {
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/CommunicationException.cs",
+      "kind": "stub",
+      "pass": "both",
+      "reason": "System.ServiceModel.CommunicationException (WCF is not part of .NET 10); thrown by Sync/WirelessSyncProvider.cs"
+    },
+    {
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/BitmapImageCreator.cs",
+      "kind": "stub",
+      "pass": "both",
+      "reason": "CSJ2K 3.0.0 ships BitmapImageCreator only in its .NET Framework build; Jpeg2000Image needs it"
+    },
+    {
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/NamespaceMarkers.cs",
+      "kind": "stub",
+      "pass": "both",
+      "reason": "namespace markers for unused imports in VirtualTagsCollection.cs and XmlInfoProviderFactory.cs"
+    },
+    {
+      "pattern": "ComicRack.Plugins/Controls/**",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "71764b3a0552c22f9460025db0b24a4b1a924b09215d0cc7d0470ce1ef441a0b",
+      "reason": "WinForms controls"
+    },
+    {
+      "original": "ComicRack.Plugins/Theme/ThemePlugin.cs",
+      "kind": "excluded",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "82d8b4f7f5e6509c89d40e4e300a0ae1e49cf77c0f273e5f7d19f7b37b6e41a8",
+      "reason": "WinForms ToolStripRenderer/Control theming; only the IThemePlugin interface is used"
+    },
+    {
+      "original": "cYo.Common.Windows/Forms/Theme/Themes.cs",
+      "replacement": "mac/ComicRack.Plugins.Core/Replacements/ThemeTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "e07c4f240ae80d1633a144114a6007cfa35946efb0d2f6b7362b90fb961a4d8b",
+      "reason": "IPluginEnvironment.Theme, IThemePlugin and Command.GetThemedImage use it"
+    },
+    {
+      "original": "cYo.Common.Windows/Forms/Theme/UIComponent.cs",
+      "replacement": "mac/ComicRack.Plugins.Core/Replacements/ThemeTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "b70df994453c0fe8b0233ab0f51b961131cd92c90683fc46b2fbd5240fa54c68",
+      "reason": "IPluginEnvironment.Theme, IThemePlugin and Command.GetThemedImage use it"
+    },
+    {
+      "original": "cYo.Common.Windows/Forms/Theme/ITheme.cs",
+      "replacement": "mac/ComicRack.Plugins.Core/Replacements/ThemeTypes.cs",
+      "kind": "stub",
+      "pass": "both",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "74b9b0908f902b6d42481c6d2c064bb204844c13a1df1f4661936d681a2c942f",
+      "reason": "IPluginEnvironment.Theme, IThemePlugin and Command.GetThemedImage use it"
+    }
+  ]
+}
