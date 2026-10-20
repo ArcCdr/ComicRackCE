@@ -905,7 +905,7 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 Every P5 task: view-model tests on the headless platform (frames saved when `CRMAC_FRAMES_DIR` is set), at least one e2e case under `mac/tests/e2e/cases/`, and the parity and chrome policy of §2.11: a view spec in `mac/specs/views/` for every original view it touches (read from the named files, never edited), labels through the original TR keys (P2.6), colours, fonts, metrics and icons from the P5.T1, P5.T2 and P5.T4 foundation, the ledger rows of its `Parity:` line updated in the same commit, shots in light and dark and a contact sheet of the changed views (path in the report). "Exactly as the original" in a Goal means: same items, order, labels, defaults, enable rules and shortcuts as the ledger says.
 
 #### P5.0 Owner MVP notes intake (M2.5)
-- Depends: none · Effort: low · Unattended: yes · Status: todo
+- Depends: none · Effort: low · Unattended: yes · Status: skipped (no notes) 2026-10-20
 - Goal: if `mac/plans/mvp-acceptance.md` has Verdicts or `OWNER-ACTIONS.md` has MVP notes (C1 d), turn each "Issue"/"Fail" into a task `P5.0.<n>` in §7 and §6 (front of wave B); else mark `skipped (no notes)`. A note that asks for a non-original look or behaviour is checked against R9 first: if it conflicts, it becomes a question in the C2 block instead of a task.
 - Accept: §7 updated or the skip recorded; `verify.sh`.
 
