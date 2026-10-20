@@ -1,0 +1,31 @@
+# list	kind	count	members (sha256 of the sorted ids, first 8 digits)
+Library	Library	200	ef78cdb1
+Smart Lists	Folder	187	d0b1962b
+  Alpha series	Smart	30	6c25bea1
+  Apex publisher	Smart	68	f0b2d6f5
+  Years 2005 to 2010	Smart	46	8e1f872b
+  Long books	Smart	65	c63c6d44
+  Black and white	Smart	84	93074180
+  Manga right to left	Smart	16	94ab9191
+  Added after July 2019	Smart	10	bf57d146
+  In progress	Smart	58	07d84938
+  Horror or fantasy	Smart	74	2b29293f
+  Writers Ann or Bo	Smart	106	7362b1ad
+More Lists	Folder	197	b0d5b1fe
+  Only duplicates	Smart	16	8d5ff9de
+  Group beta or force	Smart	56	cddb1b7d
+  Not rated	Smart	181	b1ec07e9
+  Alpha on 2003 or later	Smart	8	088954c8
+  Apex without Alpha	Smart	38	600a8ada
+  Tag favorite	Smart	22	68ed564e
+  Language ja or fr	Smart	64	0dc9182f
+  Series complete	Smart	76	631b6f2b
+  Nested	Folder	95	0698cafb
+    Series with 20 or more books	Smart	76	cd67276f
+    Rated 4 or more, or manga	Smart	14	3f3a4b97
+    First ten by series	Smart	10	bd299c84
+    Five random	Smart	5	9da92aa4
+Alpha and Apex	Folder	30	6c25bea1
+  Alpha (in intersection)	Smart	30	6c25bea1
+  Apex (in intersection)	Smart	68	f0b2d6f5
+Picks	Fixed	12	30e4a89c

@@ -1,0 +1,20 @@
+# books: 14706
+# list	kind	count	members (sha256 of the sorted ids, first 8 digits)
+Library	Library	14706	af18bf44
+Smart Lists	Folder	14706	af18bf44
+  Non-numeric numbers (to check)	Smart	1291	15e3f640
+  To Tag (OS,...)	Smart	14510	5239dc51
+  Alternate numbering (to fix)	Smart	0	e3b0c442
+  Scraping issues (to fix)	Smart	8	d7b7c49a
+  Missing (to fix)	Smart	0	e3b0c442	requires scripts
+  Duplicates (to fix)	Smart	14705	f1f00307
+  Basic info (to export)	Smart	14706	af18bf44
+  One-Shots	Smart	917	4d759753
+  Completed series	Smart	6977	e566e853
+  Next issues to read	Smart	0	e3b0c442	requires scripts
+  Reading device	Fixed	176	26c06f65
+  Never Read	Smart	14192	5abc43e1
+  Reading	Smart	0	e3b0c442
+  Read	Smart	514	4fbf2876
+  Finished series	Smart	4142	284f9846
+  Files to update	Smart	0	e3b0c442

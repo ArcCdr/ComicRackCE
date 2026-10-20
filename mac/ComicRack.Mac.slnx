@@ -19,6 +19,7 @@
     <Project Path="tests/Compat.Drawing.Tests/Compat.Drawing.Tests.csproj" />
     <Project Path="tests/Compat.Forms.Tests/Compat.Forms.Tests.csproj" />
     <Project Path="tests/ComicRack.Mac.Host.Tests/ComicRack.Mac.Host.Tests.csproj" />
+    <Project Path="tests/ComicRack.Characterization/ComicRack.Characterization.csproj" />
     <Project Path="tests/ComicRack.Cli.Tests/ComicRack.Cli.Tests.csproj" />
     <Project Path="tests/ComicRack.Mac.Tests/ComicRack.Mac.Tests.csproj" />
     <Project Path="tests/Upstream.Tests/Upstream.Tests.csproj" />

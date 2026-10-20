@@ -1,0 +1,5778 @@
+<ComicDatabase Id="0c0a0000-0000-0000-0000-000000000001" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Books>
+		<Book File="/library/Alpha Force/Alpha Force #01 (2001).cbz" Id="0c0a0001-0000-0000-0000-000000000000">
+			<Title>Alpha Force chapter 1</Title>
+			<Series>Alpha Force</Series>
+			<Number>1</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>20</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-01-01T00:00:00</Added>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10000000</FileSize>
+			<FileModifiedTime>2018-12-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #02 (2001).cbz" Id="0c0a0001-0000-0000-0000-000000000001">
+			<Title>Alpha Force chapter 2</Title>
+			<Series>Alpha Force</Series>
+			<Number>2</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>25</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-02T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10012345</FileSize>
+			<FileModifiedTime>2018-12-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #03 (2001).cbz" Id="0c0a0001-0000-0000-0000-000000000002">
+			<Title>Alpha Force chapter 3</Title>
+			<Series>Alpha Force</Series>
+			<Number>3</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>30</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-03T00:00:00</Added>
+			<Opened>2020-01-03T00:00:00</Opened>
+			<LastPageRead>10</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10024690</FileSize>
+			<FileModifiedTime>2018-12-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #04 (2001).cbz" Id="0c0a0001-0000-0000-0000-000000000003">
+			<Title>Alpha Force chapter 4</Title>
+			<Series>Alpha Force</Series>
+			<Number>4</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>35</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-04T00:00:00</Added>
+			<Opened>2020-01-04T00:00:00</Opened>
+			<LastPageRead>17</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10037035</FileSize>
+			<FileModifiedTime>2018-12-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #05 (2001).cbz" Id="0c0a0001-0000-0000-0000-000000000004">
+			<Title>Alpha Force chapter 5</Title>
+			<Series>Alpha Force</Series>
+			<Number>5</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>40</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-05T00:00:00</Added>
+			<Opened>2020-01-05T00:00:00</Opened>
+			<LastPageRead>39</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10049380</FileSize>
+			<FileModifiedTime>2018-12-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #06 (2001).cbz" Id="0c0a0001-0000-0000-0000-000000000005">
+			<Title>Alpha Force chapter 6</Title>
+			<Series>Alpha Force</Series>
+			<Number>6</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>45</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-06T00:00:00</Added>
+			<Rating>2.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10061725</FileSize>
+			<FileModifiedTime>2018-12-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #07 (2002).cbz" Id="0c0a0001-0000-0000-0000-000000000006">
+			<Title>Alpha Force chapter 7</Title>
+			<Series>Alpha Force</Series>
+			<Number>7</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2002</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>50</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-07T00:00:00</Added>
+			<Opened>2020-01-07T00:00:00</Opened>
+			<LastPageRead>48</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10074070</FileSize>
+			<FileModifiedTime>2018-12-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #08 (2002).cbz" Id="0c0a0001-0000-0000-0000-000000000007">
+			<Title>Alpha Force chapter 8</Title>
+			<Series>Alpha Force</Series>
+			<Number>8</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2002</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>55</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-08T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10086415</FileSize>
+			<FileModifiedTime>2018-12-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #09 (2002).cbz" Id="0c0a0001-0000-0000-0000-000000000008">
+			<Title>Alpha Force chapter 9</Title>
+			<Series>Alpha Force</Series>
+			<Number>9</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2002</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>60</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-09T00:00:00</Added>
+			<Rating>4</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10098760</FileSize>
+			<FileModifiedTime>2018-12-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #10 (2002).cbz" Id="0c0a0001-0000-0000-0000-000000000009">
+			<Title>Alpha Force chapter 10</Title>
+			<Series>Alpha Force</Series>
+			<Number>10</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2002</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>65</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-10T00:00:00</Added>
+			<Opened>2020-01-10T00:00:00</Opened>
+			<LastPageRead>21</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10111105</FileSize>
+			<FileModifiedTime>2018-12-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #11 (2002).cbz" Id="0c0a0001-0000-0000-0000-00000000000a">
+			<Title>Alpha Force chapter 11</Title>
+			<Series>Alpha Force</Series>
+			<Number>11</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2002</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>70</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-01-11T00:00:00</Added>
+			<Opened>2020-01-11T00:00:00</Opened>
+			<LastPageRead>35</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10123450</FileSize>
+			<FileModifiedTime>2018-12-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #12 (2002).cbz" Id="0c0a0001-0000-0000-0000-00000000000b">
+			<Title>Alpha Force chapter 12</Title>
+			<Series>Alpha Force</Series>
+			<Number>12</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2002</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>75</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-12T00:00:00</Added>
+			<Opened>2020-01-12T00:00:00</Opened>
+			<LastPageRead>74</LastPageRead>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10135795</FileSize>
+			<FileModifiedTime>2018-12-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #13 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000000c">
+			<Title>Alpha Force chapter 13</Title>
+			<Series>Alpha Force</Series>
+			<Number>13</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>20</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-13T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10148140</FileSize>
+			<FileModifiedTime>2018-12-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-13T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #14 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000000d">
+			<Title>Alpha Force chapter 14</Title>
+			<Series>Alpha Force</Series>
+			<Number>14</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>25</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-14T00:00:00</Added>
+			<Opened>2020-01-14T00:00:00</Opened>
+			<LastPageRead>23</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10160485</FileSize>
+			<FileModifiedTime>2018-12-15T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-14T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #15 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000000e">
+			<Title>Alpha Force chapter 15</Title>
+			<Series>Alpha Force</Series>
+			<Number>15</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>30</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-15T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10172830</FileSize>
+			<FileModifiedTime>2018-12-16T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-15T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #16 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000000f">
+			<Title>Alpha Force chapter 16</Title>
+			<Series>Alpha Force</Series>
+			<Number>16</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>35</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-16T00:00:00</Added>
+			<Rating>2</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10185175</FileSize>
+			<FileModifiedTime>2018-12-17T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-16T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #17 (2003).cbz" Id="0c0a0001-0000-0000-0000-000000000010">
+			<Title>Alpha Force chapter 17</Title>
+			<Series>Alpha Force</Series>
+			<Number>17</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>5</Month>
+			<Day>21</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>40</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-17T00:00:00</Added>
+			<Opened>2020-01-17T00:00:00</Opened>
+			<LastPageRead>13</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10197520</FileSize>
+			<FileModifiedTime>2018-12-18T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-17T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #18 (2003).cbz" Id="0c0a0001-0000-0000-0000-000000000011">
+			<Title>Alpha Force chapter 18</Title>
+			<Series>Alpha Force</Series>
+			<Number>18</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>6</Month>
+			<Day>24</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>45</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-18T00:00:00</Added>
+			<Opened>2020-01-18T00:00:00</Opened>
+			<LastPageRead>22</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10209865</FileSize>
+			<FileModifiedTime>2018-12-19T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-18T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #19 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000012">
+			<Title>Alpha Force chapter 19</Title>
+			<Series>Alpha Force</Series>
+			<Number>19</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>7</Month>
+			<Day>27</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>50</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-19T00:00:00</Added>
+			<Opened>2020-01-19T00:00:00</Opened>
+			<LastPageRead>49</LastPageRead>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10222210</FileSize>
+			<FileModifiedTime>2018-12-20T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-19T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #20 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000013">
+			<Title>Alpha Force chapter 20</Title>
+			<Series>Alpha Force</Series>
+			<Number>20</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>8</Month>
+			<Day>2</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>55</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-20T00:00:00</Added>
+			<Rating>4</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10234555</FileSize>
+			<FileModifiedTime>2018-12-21T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-20T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #21 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000014">
+			<Title>Alpha Force chapter 21</Title>
+			<Series>Alpha Force</Series>
+			<Number>21</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>9</Month>
+			<Day>5</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>60</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue, favorite</Tags>
+			<Pages />
+			<Added>2019-01-21T00:00:00</Added>
+			<Opened>2020-01-21T00:00:00</Opened>
+			<LastPageRead>58</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10246900</FileSize>
+			<FileModifiedTime>2018-12-22T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-21T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #22 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000015">
+			<Title>Alpha Force chapter 22</Title>
+			<Series>Alpha Force</Series>
+			<Number>22</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>10</Month>
+			<Day>8</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>65</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-22T00:00:00</Added>
+			<Rating>5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10259245</FileSize>
+			<FileModifiedTime>2018-12-23T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-22T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #23 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000016">
+			<Title>Alpha Force chapter 23</Title>
+			<Series>Alpha Force</Series>
+			<Number>23</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>11</Month>
+			<Day>11</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>70</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-23T00:00:00</Added>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10271590</FileSize>
+			<FileModifiedTime>2018-12-24T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-23T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #24 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000017">
+			<Title>Alpha Force chapter 24</Title>
+			<Series>Alpha Force</Series>
+			<Number>24</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>12</Month>
+			<Day>14</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>75</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-24T00:00:00</Added>
+			<Opened>2020-01-24T00:00:00</Opened>
+			<LastPageRead>25</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10283935</FileSize>
+			<FileModifiedTime>2018-12-25T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-24T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #25 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000018">
+			<Title>Alpha Force chapter 25</Title>
+			<Series>Alpha Force</Series>
+			<Number>25</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>1</Month>
+			<Day>17</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>20</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-25T00:00:00</Added>
+			<Opened>2020-01-25T00:00:00</Opened>
+			<LastPageRead>10</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10296280</FileSize>
+			<FileModifiedTime>2018-12-26T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-25T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Alpha Force/Alpha Force #26 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000019">
+			<Title>Alpha Force chapter 26</Title>
+			<Series>Alpha Force</Series>
+			<Number>26</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>2</Month>
+			<Day>20</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>25</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-26T00:00:00</Added>
+			<Opened>2020-01-26T00:00:00</Opened>
+			<LastPageRead>24</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10308625</FileSize>
+			<FileModifiedTime>2018-12-27T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-26T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #01 (1998).cbz" Id="0c0a0001-0000-0000-0000-00000000001a">
+			<Title>Beta Blades chapter 1</Title>
+			<Series>Beta Blades</Series>
+			<Number>1</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1998</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>27</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-27T00:00:00</Added>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10320970</FileSize>
+			<FileModifiedTime>2018-12-28T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-27T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #02 (1998).cbz" Id="0c0a0001-0000-0000-0000-00000000001b">
+			<Title>Beta Blades chapter 2</Title>
+			<Series>Beta Blades</Series>
+			<Number>2</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1998</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>32</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-28T00:00:00</Added>
+			<Opened>2020-01-28T00:00:00</Opened>
+			<LastPageRead>10</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10333315</FileSize>
+			<FileModifiedTime>2018-12-29T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-28T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #03 (1998).cbz" Id="0c0a0001-0000-0000-0000-00000000001c">
+			<Title>Beta Blades chapter 3</Title>
+			<Series>Beta Blades</Series>
+			<Number>3</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1998</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>37</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-29T00:00:00</Added>
+			<Opened>2020-01-29T00:00:00</Opened>
+			<LastPageRead>18</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10345660</FileSize>
+			<FileModifiedTime>2018-12-30T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-29T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #04 (1998).cbz" Id="0c0a0001-0000-0000-0000-00000000001d">
+			<Title>Beta Blades chapter 4</Title>
+			<Series>Beta Blades</Series>
+			<Number>4</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1998</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>42</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-30T00:00:00</Added>
+			<Opened>2020-01-30T00:00:00</Opened>
+			<LastPageRead>41</LastPageRead>
+			<Rating>3.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10358005</FileSize>
+			<FileModifiedTime>2018-12-31T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-30T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #05 (1998).cbz" Id="0c0a0001-0000-0000-0000-00000000001e">
+			<Title>Beta Blades chapter 5</Title>
+			<Series>Beta Blades</Series>
+			<Number>5</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1998</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>47</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-01-31T00:00:00</Added>
+			<Rating>4</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10370350</FileSize>
+			<FileModifiedTime>2019-01-01T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-31T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #06 (1998).cbz" Id="0c0a0001-0000-0000-0000-00000000001f">
+			<Title>Beta Blades chapter 6</Title>
+			<Series>Beta Blades</Series>
+			<Number>6</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1998</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>52</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-01T00:00:00</Added>
+			<Opened>2020-02-01T00:00:00</Opened>
+			<LastPageRead>50</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10382695</FileSize>
+			<FileModifiedTime>2019-01-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #07 (1999).cbz" Id="0c0a0001-0000-0000-0000-000000000020">
+			<Title>Beta Blades chapter 7</Title>
+			<Series>Beta Blades</Series>
+			<Number>7</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1999</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>57</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-02T00:00:00</Added>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10395040</FileSize>
+			<FileModifiedTime>2019-01-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #08 (1999).cbz" Id="0c0a0001-0000-0000-0000-000000000021">
+			<Title>Beta Blades chapter 8</Title>
+			<Series>Beta Blades</Series>
+			<Number>8</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1999</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>62</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-03T00:00:00</Added>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10407385</FileSize>
+			<FileModifiedTime>2019-01-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #09 (1999).cbz" Id="0c0a0001-0000-0000-0000-000000000022">
+			<Title>Beta Blades chapter 9</Title>
+			<Series>Beta Blades</Series>
+			<Number>9</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1999</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>67</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-04T00:00:00</Added>
+			<Opened>2020-02-04T00:00:00</Opened>
+			<LastPageRead>22</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10419730</FileSize>
+			<FileModifiedTime>2019-01-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #10 (1999).cbz" Id="0c0a0001-0000-0000-0000-000000000023">
+			<Title>Beta Blades chapter 10</Title>
+			<Series>Beta Blades</Series>
+			<Number>10</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1999</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>72</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-05T00:00:00</Added>
+			<Opened>2020-02-05T00:00:00</Opened>
+			<LastPageRead>36</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10432075</FileSize>
+			<FileModifiedTime>2019-01-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #11 (1999).cbz" Id="0c0a0001-0000-0000-0000-000000000024">
+			<Title>Beta Blades chapter 11</Title>
+			<Series>Beta Blades</Series>
+			<Number>11</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1999</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>77</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-06T00:00:00</Added>
+			<Opened>2020-02-06T00:00:00</Opened>
+			<LastPageRead>76</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10444420</FileSize>
+			<FileModifiedTime>2019-01-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #12 (1999).cbz" Id="0c0a0001-0000-0000-0000-000000000025">
+			<Title>Beta Blades chapter 12</Title>
+			<Series>Beta Blades</Series>
+			<Number>12</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>1999</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>22</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-07T00:00:00</Added>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10456765</FileSize>
+			<FileModifiedTime>2019-01-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #13 (2000).cbz" Id="0c0a0001-0000-0000-0000-000000000026">
+			<Title>Beta Blades chapter 13</Title>
+			<Series>Beta Blades</Series>
+			<Number>13</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>27</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-08T00:00:00</Added>
+			<Opened>2020-02-08T00:00:00</Opened>
+			<LastPageRead>25</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10469110</FileSize>
+			<FileModifiedTime>2019-01-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #14 (2000).cbz" Id="0c0a0001-0000-0000-0000-000000000027">
+			<Title>Beta Blades chapter 14</Title>
+			<Series>Beta Blades</Series>
+			<Number>14</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>32</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-09T00:00:00</Added>
+			<Rating>3</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10481455</FileSize>
+			<FileModifiedTime>2019-01-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #15 (2000).cbz" Id="0c0a0001-0000-0000-0000-000000000028">
+			<Title>Beta Blades chapter 15</Title>
+			<Series>Beta Blades</Series>
+			<Number>15</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>37</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-02-10T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10493800</FileSize>
+			<FileModifiedTime>2019-01-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #16 (2000).cbz" Id="0c0a0001-0000-0000-0000-000000000029">
+			<Title>Beta Blades chapter 16</Title>
+			<Series>Beta Blades</Series>
+			<Number>16</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>42</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-11T00:00:00</Added>
+			<Opened>2020-02-11T00:00:00</Opened>
+			<LastPageRead>14</LastPageRead>
+			<Rating>4</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10506145</FileSize>
+			<FileModifiedTime>2019-01-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #17 (2000).cbz" Id="0c0a0001-0000-0000-0000-00000000002a">
+			<Title>Beta Blades chapter 17</Title>
+			<Series>Beta Blades</Series>
+			<Number>17</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>5</Month>
+			<Day>21</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>47</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-12T00:00:00</Added>
+			<Opened>2020-02-12T00:00:00</Opened>
+			<LastPageRead>23</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10518490</FileSize>
+			<FileModifiedTime>2019-01-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #18 (2000).cbz" Id="0c0a0001-0000-0000-0000-00000000002b">
+			<Title>Beta Blades chapter 18</Title>
+			<Series>Beta Blades</Series>
+			<Number>18</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>6</Month>
+			<Day>24</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>52</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-13T00:00:00</Added>
+			<Opened>2020-02-13T00:00:00</Opened>
+			<LastPageRead>51</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10530835</FileSize>
+			<FileModifiedTime>2019-01-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-13T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #19 (2001).cbz" Id="0c0a0001-0000-0000-0000-00000000002c">
+			<Title>Beta Blades chapter 19</Title>
+			<Series>Beta Blades</Series>
+			<Number>19</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>7</Month>
+			<Day>27</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>57</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-14T00:00:00</Added>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10543180</FileSize>
+			<FileModifiedTime>2019-01-15T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-14T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #20 (2001).cbz" Id="0c0a0001-0000-0000-0000-00000000002d">
+			<Title>Beta Blades chapter 20</Title>
+			<Series>Beta Blades</Series>
+			<Number>20</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>8</Month>
+			<Day>2</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>62</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-15T00:00:00</Added>
+			<Opened>2020-02-15T00:00:00</Opened>
+			<LastPageRead>60</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10555525</FileSize>
+			<FileModifiedTime>2019-01-16T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-15T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #21 (2001).cbz" Id="0c0a0001-0000-0000-0000-00000000002e">
+			<Title>Beta Blades chapter 21</Title>
+			<Series>Beta Blades</Series>
+			<Number>21</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>9</Month>
+			<Day>5</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>67</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-16T00:00:00</Added>
+			<Rating>1</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10567870</FileSize>
+			<FileModifiedTime>2019-01-17T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-16T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Beta Blades/Beta Blades #22 (2001).cbz" Id="0c0a0001-0000-0000-0000-00000000002f">
+			<Title>Beta Blades chapter 22</Title>
+			<Series>Beta Blades</Series>
+			<Number>22</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>10</Month>
+			<Day>8</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>72</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-17T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10580215</FileSize>
+			<FileModifiedTime>2019-01-18T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-17T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #01 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000030">
+			<Title>Gamma Ray chapter 1</Title>
+			<Series>Gamma Ray</Series>
+			<Number>1</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>34</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-18T00:00:00</Added>
+			<Opened>2020-02-18T00:00:00</Opened>
+			<LastPageRead>11</LastPageRead>
+			<Rating>2</Rating>
+			<FileSize>10592560</FileSize>
+			<FileModifiedTime>2019-01-19T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-18T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #02 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000031">
+			<Title>Gamma Ray chapter 2</Title>
+			<Series>Gamma Ray</Series>
+			<Number>2</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>39</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-19T00:00:00</Added>
+			<Opened>2020-02-19T00:00:00</Opened>
+			<LastPageRead>19</LastPageRead>
+			<Rating>2.5</Rating>
+			<FileSize>10604905</FileSize>
+			<FileModifiedTime>2019-01-20T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-19T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #03 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000032">
+			<Title>Gamma Ray chapter 3</Title>
+			<Series>Gamma Ray</Series>
+			<Number>3</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>44</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue, favorite</Tags>
+			<Pages />
+			<Added>2019-02-20T00:00:00</Added>
+			<Opened>2020-02-20T00:00:00</Opened>
+			<LastPageRead>43</LastPageRead>
+			<Rating>3</Rating>
+			<FileSize>10617250</FileSize>
+			<FileModifiedTime>2019-01-21T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-20T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #04 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000033">
+			<Title>Gamma Ray chapter 4</Title>
+			<Series>Gamma Ray</Series>
+			<Number>4</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>49</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-21T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<FileSize>10629595</FileSize>
+			<FileModifiedTime>2019-01-22T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-21T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #05 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000034">
+			<Title>Gamma Ray chapter 5</Title>
+			<Series>Gamma Ray</Series>
+			<Number>5</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>54</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-22T00:00:00</Added>
+			<Opened>2020-02-22T00:00:00</Opened>
+			<LastPageRead>52</LastPageRead>
+			<Rating>4</Rating>
+			<FileSize>10641940</FileSize>
+			<FileModifiedTime>2019-01-23T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-22T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #06 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000035">
+			<Title>Gamma Ray chapter 6</Title>
+			<Series>Gamma Ray</Series>
+			<Number>6</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>59</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-23T00:00:00</Added>
+			<Rating>4.5</Rating>
+			<FileSize>10654285</FileSize>
+			<FileModifiedTime>2019-01-24T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-23T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #07 (2006).cbz" Id="0c0a0001-0000-0000-0000-000000000036">
+			<Title>Gamma Ray chapter 7</Title>
+			<Series>Gamma Ray</Series>
+			<Number>7</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2006</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>64</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-24T00:00:00</Added>
+			<Rating>5</Rating>
+			<FileSize>10666630</FileSize>
+			<FileModifiedTime>2019-01-25T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-24T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #08 (2006).cbz" Id="0c0a0001-0000-0000-0000-000000000037">
+			<Title>Gamma Ray chapter 8</Title>
+			<Series>Gamma Ray</Series>
+			<Number>8</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2006</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>69</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-25T00:00:00</Added>
+			<Opened>2020-02-25T00:00:00</Opened>
+			<LastPageRead>23</LastPageRead>
+			<FileSize>10678975</FileSize>
+			<FileModifiedTime>2019-01-26T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-25T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #09 (2006).cbz" Id="0c0a0001-0000-0000-0000-000000000038">
+			<Title>Gamma Ray chapter 9</Title>
+			<Series>Gamma Ray</Series>
+			<Number>9</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2006</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>74</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-26T00:00:00</Added>
+			<Opened>2020-02-26T00:00:00</Opened>
+			<LastPageRead>37</LastPageRead>
+			<Rating>0.5</Rating>
+			<FileSize>10691320</FileSize>
+			<FileModifiedTime>2019-01-27T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-26T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #10 (2006).cbz" Id="0c0a0001-0000-0000-0000-000000000039">
+			<Title>Gamma Ray chapter 10</Title>
+			<Series>Gamma Ray</Series>
+			<Number>10</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2006</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>79</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-27T00:00:00</Added>
+			<Opened>2020-02-27T00:00:00</Opened>
+			<LastPageRead>78</LastPageRead>
+			<Rating>1</Rating>
+			<FileSize>10703665</FileSize>
+			<FileModifiedTime>2019-01-28T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-27T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #11 (2006).cbz" Id="0c0a0001-0000-0000-0000-00000000003a">
+			<Title>Gamma Ray chapter 11</Title>
+			<Series>Gamma Ray</Series>
+			<Number>11</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2006</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>24</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-28T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<FileSize>10716010</FileSize>
+			<FileModifiedTime>2019-01-29T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-28T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #12 (2006).cbz" Id="0c0a0001-0000-0000-0000-00000000003b">
+			<Title>Gamma Ray chapter 12</Title>
+			<Series>Gamma Ray</Series>
+			<Number>12</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2006</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>29</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-01T00:00:00</Added>
+			<Opened>2020-02-29T00:00:00</Opened>
+			<LastPageRead>27</LastPageRead>
+			<Rating>2</Rating>
+			<FileSize>10728355</FileSize>
+			<FileModifiedTime>2019-01-30T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-29T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #13 (2007).cbz" Id="0c0a0001-0000-0000-0000-00000000003c">
+			<Title>Gamma Ray chapter 13</Title>
+			<Series>Gamma Ray</Series>
+			<Number>13</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2007</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>34</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-03-02T00:00:00</Added>
+			<Rating>2.5</Rating>
+			<FileSize>10740700</FileSize>
+			<FileModifiedTime>2019-01-31T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-30T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #14 (2007).cbz" Id="0c0a0001-0000-0000-0000-00000000003d">
+			<Title>Gamma Ray chapter 14</Title>
+			<Series>Gamma Ray</Series>
+			<Number>14</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2007</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>39</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-03T00:00:00</Added>
+			<Rating>3</Rating>
+			<FileSize>10753045</FileSize>
+			<FileModifiedTime>2019-02-01T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-31T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #15 (2007).cbz" Id="0c0a0001-0000-0000-0000-00000000003e">
+			<Title>Gamma Ray chapter 15</Title>
+			<Series>Gamma Ray</Series>
+			<Number>15</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2007</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>44</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-04T00:00:00</Added>
+			<Opened>2020-03-03T00:00:00</Opened>
+			<LastPageRead>14</LastPageRead>
+			<Rating>3.5</Rating>
+			<FileSize>10765390</FileSize>
+			<FileModifiedTime>2019-02-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #16 (2007).cbz" Id="0c0a0001-0000-0000-0000-00000000003f">
+			<Title>Gamma Ray chapter 16</Title>
+			<Series>Gamma Ray</Series>
+			<Number>16</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2007</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>49</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-05T00:00:00</Added>
+			<Opened>2020-03-04T00:00:00</Opened>
+			<LastPageRead>24</LastPageRead>
+			<Rating>4</Rating>
+			<FileSize>10777735</FileSize>
+			<FileModifiedTime>2019-02-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #17 (2007).cbz" Id="0c0a0001-0000-0000-0000-000000000040">
+			<Title>Gamma Ray chapter 17</Title>
+			<Series>Gamma Ray</Series>
+			<Number>17</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2007</Year>
+			<Month>5</Month>
+			<Day>21</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>54</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-06T00:00:00</Added>
+			<Opened>2020-03-05T00:00:00</Opened>
+			<LastPageRead>53</LastPageRead>
+			<Rating>4.5</Rating>
+			<FileSize>10790080</FileSize>
+			<FileModifiedTime>2019-02-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #18 (2007).cbz" Id="0c0a0001-0000-0000-0000-000000000041">
+			<Title>Gamma Ray chapter 18</Title>
+			<Series>Gamma Ray</Series>
+			<Number>18</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2007</Year>
+			<Month>6</Month>
+			<Day>24</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>59</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-07T00:00:00</Added>
+			<Rating>5</Rating>
+			<FileSize>10802425</FileSize>
+			<FileModifiedTime>2019-02-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #19 (2008).cbz" Id="0c0a0001-0000-0000-0000-000000000042">
+			<Title>Gamma Ray chapter 19</Title>
+			<Series>Gamma Ray</Series>
+			<Number>19</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>7</Month>
+			<Day>27</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>64</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-08T00:00:00</Added>
+			<Opened>2020-03-07T00:00:00</Opened>
+			<LastPageRead>62</LastPageRead>
+			<FileSize>10814770</FileSize>
+			<FileModifiedTime>2019-02-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Gamma Ray/Gamma Ray #20 (2008).cbz" Id="0c0a0001-0000-0000-0000-000000000043">
+			<Title>Gamma Ray chapter 20</Title>
+			<Series>Gamma Ray</Series>
+			<Number>20</Number>
+			<Count>20</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>8</Month>
+			<Day>2</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Science Fiction</Genre>
+			<PageCount>69</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Annual</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-09T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<FileSize>10827115</FileSize>
+			<FileModifiedTime>2019-02-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #01 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000044">
+			<Title>Delta Dawn chapter 1</Title>
+			<Series>Delta Dawn</Series>
+			<Number>1</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2010</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>41</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-10T00:00:00</Added>
+			<Opened>2020-03-09T00:00:00</Opened>
+			<LastPageRead>20</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10839460</FileSize>
+			<FileModifiedTime>2019-02-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #02 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000045">
+			<Title>Delta Dawn chapter 2</Title>
+			<Series>Delta Dawn</Series>
+			<Number>2</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2010</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>46</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-11T00:00:00</Added>
+			<Opened>2020-03-10T00:00:00</Opened>
+			<LastPageRead>45</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10851805</FileSize>
+			<FileModifiedTime>2019-02-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #03 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000046">
+			<Title>Delta Dawn chapter 3</Title>
+			<Series>Delta Dawn</Series>
+			<Number>3</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2010</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>51</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-03-12T00:00:00</Added>
+			<Rating>2</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10864150</FileSize>
+			<FileModifiedTime>2019-02-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #04 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000047">
+			<Title>Delta Dawn chapter 4</Title>
+			<Series>Delta Dawn</Series>
+			<Number>4</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2010</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>56</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-13T00:00:00</Added>
+			<Opened>2020-03-12T00:00:00</Opened>
+			<LastPageRead>54</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10876495</FileSize>
+			<FileModifiedTime>2019-02-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #05 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000048">
+			<Title>Delta Dawn chapter 5</Title>
+			<Series>Delta Dawn</Series>
+			<Number>5</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2010</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>61</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-14T00:00:00</Added>
+			<Rating>3</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10888840</FileSize>
+			<FileModifiedTime>2019-02-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #06 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000049">
+			<Title>Delta Dawn chapter 6</Title>
+			<Series>Delta Dawn</Series>
+			<Number>6</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2010</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>66</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-15T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10901185</FileSize>
+			<FileModifiedTime>2019-02-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #07 (2011).cbz" Id="0c0a0001-0000-0000-0000-00000000004a">
+			<Title>Delta Dawn chapter 7</Title>
+			<Series>Delta Dawn</Series>
+			<Number>7</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2011</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>71</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-16T00:00:00</Added>
+			<Opened>2020-03-15T00:00:00</Opened>
+			<LastPageRead>23</LastPageRead>
+			<Rating>4</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10913530</FileSize>
+			<FileModifiedTime>2019-02-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-13T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #08 (2011).cbz" Id="0c0a0001-0000-0000-0000-00000000004b">
+			<Title>Delta Dawn chapter 8</Title>
+			<Series>Delta Dawn</Series>
+			<Number>8</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2011</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>76</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-17T00:00:00</Added>
+			<Opened>2020-03-16T00:00:00</Opened>
+			<LastPageRead>38</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10925875</FileSize>
+			<FileModifiedTime>2019-02-15T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-14T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #09 (2011).cbz" Id="0c0a0001-0000-0000-0000-00000000004c">
+			<Title>Delta Dawn chapter 9</Title>
+			<Series>Delta Dawn</Series>
+			<Number>9</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2011</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>21</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-18T00:00:00</Added>
+			<Opened>2020-03-17T00:00:00</Opened>
+			<LastPageRead>20</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10938220</FileSize>
+			<FileModifiedTime>2019-02-16T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-15T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #10 (2011).cbz" Id="0c0a0001-0000-0000-0000-00000000004d">
+			<Title>Delta Dawn chapter 10</Title>
+			<Series>Delta Dawn</Series>
+			<Number>10</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2011</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>26</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-19T00:00:00</Added>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10950565</FileSize>
+			<FileModifiedTime>2019-02-17T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-16T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #11 (2011).cbz" Id="0c0a0001-0000-0000-0000-00000000004e">
+			<Title>Delta Dawn chapter 11</Title>
+			<Series>Delta Dawn</Series>
+			<Number>11</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2011</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>31</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-20T00:00:00</Added>
+			<Opened>2020-03-19T00:00:00</Opened>
+			<LastPageRead>29</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10962910</FileSize>
+			<FileModifiedTime>2019-02-18T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-17T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #12 (2011).cbz" Id="0c0a0001-0000-0000-0000-00000000004f">
+			<Title>Delta Dawn chapter 12</Title>
+			<Series>Delta Dawn</Series>
+			<Number>12</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2011</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>36</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-21T00:00:00</Added>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10975255</FileSize>
+			<FileModifiedTime>2019-02-19T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-18T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #13 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000050">
+			<Title>Delta Dawn chapter 13</Title>
+			<Series>Delta Dawn</Series>
+			<Number>13</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2012</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>41</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue, favorite</Tags>
+			<Pages />
+			<Added>2019-03-22T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10987600</FileSize>
+			<FileModifiedTime>2019-02-20T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-19T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #14 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000051">
+			<Title>Delta Dawn chapter 14</Title>
+			<Series>Delta Dawn</Series>
+			<Number>14</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2012</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>46</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-23T00:00:00</Added>
+			<Opened>2020-03-22T00:00:00</Opened>
+			<LastPageRead>15</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10999945</FileSize>
+			<FileModifiedTime>2019-02-21T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-20T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #15 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000052">
+			<Title>Delta Dawn chapter 15</Title>
+			<Series>Delta Dawn</Series>
+			<Number>15</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2012</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>51</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-24T00:00:00</Added>
+			<Opened>2020-03-23T00:00:00</Opened>
+			<LastPageRead>25</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11012290</FileSize>
+			<FileModifiedTime>2019-02-22T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-21T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #16 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000053">
+			<Title>Delta Dawn chapter 16</Title>
+			<Series>Delta Dawn</Series>
+			<Number>16</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2012</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>56</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-25T00:00:00</Added>
+			<Opened>2020-03-24T00:00:00</Opened>
+			<LastPageRead>55</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11024635</FileSize>
+			<FileModifiedTime>2019-02-23T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-22T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #17 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000054">
+			<Title>Delta Dawn chapter 17</Title>
+			<Series>Delta Dawn</Series>
+			<Number>17</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2012</Year>
+			<Month>5</Month>
+			<Day>21</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>61</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-26T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11036980</FileSize>
+			<FileModifiedTime>2019-02-24T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-23T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Delta Dawn/Delta Dawn #18 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000055">
+			<Title>Delta Dawn chapter 18</Title>
+			<Series>Delta Dawn</Series>
+			<Number>18</Number>
+			<Count>18</Count>
+			<Volume>2</Volume>
+			<Year>2012</Year>
+			<Month>6</Month>
+			<Day>24</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>66</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-27T00:00:00</Added>
+			<Opened>2020-03-26T00:00:00</Opened>
+			<LastPageRead>64</LastPageRead>
+			<Rating>4</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11049325</FileSize>
+			<FileModifiedTime>2019-02-25T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-24T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #01 (1990).cbz" Id="0c0a0001-0000-0000-0000-000000000056">
+			<Title>Epsilon Eight chapter 1</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>1</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1990</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>48</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-28T00:00:00</Added>
+			<Opened>2020-03-27T00:00:00</Opened>
+			<LastPageRead>47</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11061670</FileSize>
+			<FileModifiedTime>2019-02-26T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-25T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #02 (1990).cbz" Id="0c0a0001-0000-0000-0000-000000000057">
+			<Title>Epsilon Eight chapter 2</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>2</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1990</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>53</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-03-29T00:00:00</Added>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11074015</FileSize>
+			<FileModifiedTime>2019-02-27T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-26T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #03 (1990).cbz" Id="0c0a0001-0000-0000-0000-000000000058">
+			<Title>Epsilon Eight chapter 3</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>3</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1990</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>58</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-03-30T00:00:00</Added>
+			<Opened>2020-03-29T00:00:00</Opened>
+			<LastPageRead>56</LastPageRead>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11086360</FileSize>
+			<FileModifiedTime>2019-02-28T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-27T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #04 (1990).cbz" Id="0c0a0001-0000-0000-0000-000000000059">
+			<Title>Epsilon Eight chapter 4</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>4</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1990</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>63</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-03-31T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11098705</FileSize>
+			<FileModifiedTime>2019-03-01T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-02-28T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #05 (1990).cbz" Id="0c0a0001-0000-0000-0000-00000000005a">
+			<Title>Epsilon Eight chapter 5</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>5</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1990</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>68</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-04-01T00:00:00</Added>
+			<Rating>1</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11111050</FileSize>
+			<FileModifiedTime>2019-03-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #06 (1990).cbz" Id="0c0a0001-0000-0000-0000-00000000005b">
+			<Title>Epsilon Eight chapter 6</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>6</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1990</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>73</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-02T00:00:00</Added>
+			<Opened>2020-04-01T00:00:00</Opened>
+			<LastPageRead>24</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11123395</FileSize>
+			<FileModifiedTime>2019-03-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #07 (1991).cbz" Id="0c0a0001-0000-0000-0000-00000000005c">
+			<Title>Epsilon Eight chapter 7</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>7</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1991</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>78</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-03T00:00:00</Added>
+			<Opened>2020-04-02T00:00:00</Opened>
+			<LastPageRead>39</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11135740</FileSize>
+			<FileModifiedTime>2019-03-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #08 (1991).cbz" Id="0c0a0001-0000-0000-0000-00000000005d">
+			<Title>Epsilon Eight chapter 8</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>8</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1991</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>23</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-04T00:00:00</Added>
+			<Opened>2020-04-03T00:00:00</Opened>
+			<LastPageRead>22</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11148085</FileSize>
+			<FileModifiedTime>2019-03-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #09 (1991).cbz" Id="0c0a0001-0000-0000-0000-00000000005e">
+			<Title>Epsilon Eight chapter 9</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>9</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1991</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>28</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-05T00:00:00</Added>
+			<Rating>3</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11160430</FileSize>
+			<FileModifiedTime>2019-03-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #10 (1991).cbz" Id="0c0a0001-0000-0000-0000-00000000005f">
+			<Title>Epsilon Eight chapter 10</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>10</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1991</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>33</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-06T00:00:00</Added>
+			<Opened>2020-04-05T00:00:00</Opened>
+			<LastPageRead>31</LastPageRead>
+			<Rating>3.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11172775</FileSize>
+			<FileModifiedTime>2019-03-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #11 (1991).cbz" Id="0c0a0001-0000-0000-0000-000000000060">
+			<Title>Epsilon Eight chapter 11</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>11</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1991</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>38</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-07T00:00:00</Added>
+			<Rating>4</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11185120</FileSize>
+			<FileModifiedTime>2019-03-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #12 (1991).cbz" Id="0c0a0001-0000-0000-0000-000000000061">
+			<Title>Epsilon Eight chapter 12</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>12</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1991</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>43</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-08T00:00:00</Added>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11197465</FileSize>
+			<FileModifiedTime>2019-03-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #13 (1992).cbz" Id="0c0a0001-0000-0000-0000-000000000062">
+			<Title>Epsilon Eight chapter 13</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>13</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1992</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>48</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-09T00:00:00</Added>
+			<Opened>2020-04-08T00:00:00</Opened>
+			<LastPageRead>16</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11209810</FileSize>
+			<FileModifiedTime>2019-03-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #14 (1992).cbz" Id="0c0a0001-0000-0000-0000-000000000063">
+			<Title>Epsilon Eight chapter 14</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>14</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1992</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>53</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-10T00:00:00</Added>
+			<Opened>2020-04-09T00:00:00</Opened>
+			<LastPageRead>26</LastPageRead>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11222155</FileSize>
+			<FileModifiedTime>2019-03-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #15 (1992).cbz" Id="0c0a0001-0000-0000-0000-000000000064">
+			<Title>Epsilon Eight chapter 15</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>15</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1992</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>58</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-04-11T00:00:00</Added>
+			<Opened>2020-04-10T00:00:00</Opened>
+			<LastPageRead>57</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11234500</FileSize>
+			<FileModifiedTime>2019-03-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #16 (1992).cbz" Id="0c0a0001-0000-0000-0000-000000000065">
+			<Title>Epsilon Eight chapter 16</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>16</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1992</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>63</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-12T00:00:00</Added>
+			<Rating>1</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11246845</FileSize>
+			<FileModifiedTime>2019-03-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #17 (1992).cbz" Id="0c0a0001-0000-0000-0000-000000000066">
+			<Title>Epsilon Eight chapter 17</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>17</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1992</Year>
+			<Month>5</Month>
+			<Day>21</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>68</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-13T00:00:00</Added>
+			<Opened>2020-04-12T00:00:00</Opened>
+			<LastPageRead>66</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11259190</FileSize>
+			<FileModifiedTime>2019-03-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-13T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Epsilon Eight/Epsilon Eight #18 (1992).cbz" Id="0c0a0001-0000-0000-0000-000000000067">
+			<Title>Epsilon Eight chapter 18</Title>
+			<Series>Epsilon Eight</Series>
+			<Number>18</Number>
+			<Count>18</Count>
+			<Volume>1</Volume>
+			<Year>1992</Year>
+			<Month>6</Month>
+			<Day>24</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Fantasy, Adventure</Genre>
+			<PageCount>73</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-14T00:00:00</Added>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11271535</FileSize>
+			<FileModifiedTime>2019-03-15T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-14T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #01 (2015).cbz" Id="0c0a0001-0000-0000-0000-000000000068">
+			<Title>Zeta Zero chapter 1</Title>
+			<Series>Zeta Zero</Series>
+			<Number>1</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2015</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>55</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-15T00:00:00</Added>
+			<Rating>2.5</Rating>
+			<FileSize>11283880</FileSize>
+			<FileModifiedTime>2019-03-16T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-15T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #02 (2015).cbz" Id="0c0a0001-0000-0000-0000-000000000069">
+			<Title>Zeta Zero chapter 2</Title>
+			<Series>Zeta Zero</Series>
+			<Number>2</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2015</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>60</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-16T00:00:00</Added>
+			<Opened>2020-04-15T00:00:00</Opened>
+			<LastPageRead>58</LastPageRead>
+			<Rating>3</Rating>
+			<FileSize>11296225</FileSize>
+			<FileModifiedTime>2019-03-17T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-16T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #03 (2015).cbz" Id="0c0a0001-0000-0000-0000-00000000006a">
+			<Title>Zeta Zero chapter 3</Title>
+			<Series>Zeta Zero</Series>
+			<Number>3</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2015</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>65</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-17T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<FileSize>11308570</FileSize>
+			<FileModifiedTime>2019-03-18T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-17T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #04 (2015).cbz" Id="0c0a0001-0000-0000-0000-00000000006b">
+			<Title>Zeta Zero chapter 4</Title>
+			<Series>Zeta Zero</Series>
+			<Number>4</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2015</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>70</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-18T00:00:00</Added>
+			<Rating>4</Rating>
+			<FileSize>11320915</FileSize>
+			<FileModifiedTime>2019-03-19T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-18T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #05 (2015).cbz" Id="0c0a0001-0000-0000-0000-00000000006c">
+			<Title>Zeta Zero chapter 5</Title>
+			<Series>Zeta Zero</Series>
+			<Number>5</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2015</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>75</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-19T00:00:00</Added>
+			<Opened>2020-04-18T00:00:00</Opened>
+			<LastPageRead>25</LastPageRead>
+			<Rating>4.5</Rating>
+			<FileSize>11333260</FileSize>
+			<FileModifiedTime>2019-03-20T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-19T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #06 (2015).cbz" Id="0c0a0001-0000-0000-0000-00000000006d">
+			<Title>Zeta Zero chapter 6</Title>
+			<Series>Zeta Zero</Series>
+			<Number>6</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2015</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>20</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-20T00:00:00</Added>
+			<Opened>2020-04-19T00:00:00</Opened>
+			<LastPageRead>10</LastPageRead>
+			<Rating>5</Rating>
+			<FileSize>11345605</FileSize>
+			<FileModifiedTime>2019-03-21T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-20T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #07 (2016).cbz" Id="0c0a0001-0000-0000-0000-00000000006e">
+			<Title>Zeta Zero chapter 7</Title>
+			<Series>Zeta Zero</Series>
+			<Number>7</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2016</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>25</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue, favorite</Tags>
+			<Pages />
+			<Added>2019-04-21T00:00:00</Added>
+			<Opened>2020-04-20T00:00:00</Opened>
+			<LastPageRead>24</LastPageRead>
+			<FileSize>11357950</FileSize>
+			<FileModifiedTime>2019-03-22T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-21T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #08 (2016).cbz" Id="0c0a0001-0000-0000-0000-00000000006f">
+			<Title>Zeta Zero chapter 8</Title>
+			<Series>Zeta Zero</Series>
+			<Number>8</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2016</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>30</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-22T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<FileSize>11370295</FileSize>
+			<FileModifiedTime>2019-03-23T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-22T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #09 (2016).cbz" Id="0c0a0001-0000-0000-0000-000000000070">
+			<Title>Zeta Zero chapter 9</Title>
+			<Series>Zeta Zero</Series>
+			<Number>9</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2016</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>35</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-23T00:00:00</Added>
+			<Opened>2020-04-22T00:00:00</Opened>
+			<LastPageRead>33</LastPageRead>
+			<Rating>1</Rating>
+			<FileSize>11382640</FileSize>
+			<FileModifiedTime>2019-03-24T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-23T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #10 (2016).cbz" Id="0c0a0001-0000-0000-0000-000000000071">
+			<Title>Zeta Zero chapter 10</Title>
+			<Series>Zeta Zero</Series>
+			<Number>10</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2016</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>40</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-24T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<FileSize>11394985</FileSize>
+			<FileModifiedTime>2019-03-25T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-24T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #11 (2016).cbz" Id="0c0a0001-0000-0000-0000-000000000072">
+			<Title>Zeta Zero chapter 11</Title>
+			<Series>Zeta Zero</Series>
+			<Number>11</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2016</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>45</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-25T00:00:00</Added>
+			<Rating>2</Rating>
+			<FileSize>11407330</FileSize>
+			<FileModifiedTime>2019-03-26T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-25T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #12 (2016).cbz" Id="0c0a0001-0000-0000-0000-000000000073">
+			<Title>Zeta Zero chapter 12</Title>
+			<Series>Zeta Zero</Series>
+			<Number>12</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2016</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>50</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-26T00:00:00</Added>
+			<Opened>2020-04-25T00:00:00</Opened>
+			<LastPageRead>16</LastPageRead>
+			<Rating>2.5</Rating>
+			<FileSize>11419675</FileSize>
+			<FileModifiedTime>2019-03-27T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-26T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #13 (2017).cbz" Id="0c0a0001-0000-0000-0000-000000000074">
+			<Title>Zeta Zero chapter 13</Title>
+			<Series>Zeta Zero</Series>
+			<Number>13</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2017</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>55</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-27T00:00:00</Added>
+			<Opened>2020-04-26T00:00:00</Opened>
+			<LastPageRead>27</LastPageRead>
+			<Rating>3</Rating>
+			<FileSize>11432020</FileSize>
+			<FileModifiedTime>2019-03-28T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-27T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #14 (2017).cbz" Id="0c0a0001-0000-0000-0000-000000000075">
+			<Title>Zeta Zero chapter 14</Title>
+			<Series>Zeta Zero</Series>
+			<Number>14</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2017</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>60</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-04-28T00:00:00</Added>
+			<Opened>2020-04-27T00:00:00</Opened>
+			<LastPageRead>59</LastPageRead>
+			<Rating>3.5</Rating>
+			<FileSize>11444365</FileSize>
+			<FileModifiedTime>2019-03-29T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-28T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #15 (2017).cbz" Id="0c0a0001-0000-0000-0000-000000000076">
+			<Title>Zeta Zero chapter 15</Title>
+			<Series>Zeta Zero</Series>
+			<Number>15</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2017</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>65</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-04-29T00:00:00</Added>
+			<Rating>4</Rating>
+			<FileSize>11456710</FileSize>
+			<FileModifiedTime>2019-03-30T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-29T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Zeta Zero/Zeta Zero #16 (2017).cbz" Id="0c0a0001-0000-0000-0000-000000000077">
+			<Title>Zeta Zero chapter 16</Title>
+			<Series>Zeta Zero</Series>
+			<Number>16</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2017</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Di Evans</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Crime</Genre>
+			<PageCount>70</PageCount>
+			<LanguageISO>fr</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-04-30T00:00:00</Added>
+			<Opened>2020-04-29T00:00:00</Opened>
+			<LastPageRead>68</LastPageRead>
+			<Rating>4.5</Rating>
+			<FileSize>11469055</FileSize>
+			<FileModifiedTime>2019-03-31T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-30T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #01 (2003).cbz" Id="0c0a0001-0000-0000-0000-000000000078">
+			<Title>Sakura Road chapter 1</Title>
+			<Series>Sakura Road</Series>
+			<Number>1</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>62</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-05-01T00:00:00</Added>
+			<Opened>2020-04-30T00:00:00</Opened>
+			<LastPageRead>60</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11481400</FileSize>
+			<FileModifiedTime>2019-04-01T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-03-31T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #02 (2003).cbz" Id="0c0a0001-0000-0000-0000-000000000079">
+			<Title>Sakura Road chapter 2</Title>
+			<Series>Sakura Road</Series>
+			<Number>2</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>67</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-02T00:00:00</Added>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11493745</FileSize>
+			<FileModifiedTime>2019-04-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #03 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000007a">
+			<Title>Sakura Road chapter 3</Title>
+			<Series>Sakura Road</Series>
+			<Number>3</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>72</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-03T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11506090</FileSize>
+			<FileModifiedTime>2019-04-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #04 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000007b">
+			<Title>Sakura Road chapter 4</Title>
+			<Series>Sakura Road</Series>
+			<Number>4</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>77</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-04T00:00:00</Added>
+			<Opened>2020-05-03T00:00:00</Opened>
+			<LastPageRead>25</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11518435</FileSize>
+			<FileModifiedTime>2019-04-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #05 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000007c">
+			<Title>Sakura Road chapter 5</Title>
+			<Series>Sakura Road</Series>
+			<Number>5</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>22</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-05T00:00:00</Added>
+			<Opened>2020-05-04T00:00:00</Opened>
+			<LastPageRead>11</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11530780</FileSize>
+			<FileModifiedTime>2019-04-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #06 (2003).cbz" Id="0c0a0001-0000-0000-0000-00000000007d">
+			<Title>Sakura Road chapter 6</Title>
+			<Series>Sakura Road</Series>
+			<Number>6</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2003</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>27</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-06T00:00:00</Added>
+			<Opened>2020-05-05T00:00:00</Opened>
+			<LastPageRead>26</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11543125</FileSize>
+			<FileModifiedTime>2019-04-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #07 (2004).cbz" Id="0c0a0001-0000-0000-0000-00000000007e">
+			<Title>Sakura Road chapter 7</Title>
+			<Series>Sakura Road</Series>
+			<Number>7</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>32</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-07T00:00:00</Added>
+			<Rating>2.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11555470</FileSize>
+			<FileModifiedTime>2019-04-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #08 (2004).cbz" Id="0c0a0001-0000-0000-0000-00000000007f">
+			<Title>Sakura Road chapter 8</Title>
+			<Series>Sakura Road</Series>
+			<Number>8</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>37</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-08T00:00:00</Added>
+			<Opened>2020-05-07T00:00:00</Opened>
+			<LastPageRead>35</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11567815</FileSize>
+			<FileModifiedTime>2019-04-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #09 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000080">
+			<Title>Sakura Road chapter 9</Title>
+			<Series>Sakura Road</Series>
+			<Number>9</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>42</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-09T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11580160</FileSize>
+			<FileModifiedTime>2019-04-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #10 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000081">
+			<Title>Sakura Road chapter 10</Title>
+			<Series>Sakura Road</Series>
+			<Number>10</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>47</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-10T00:00:00</Added>
+			<Rating>4</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11592505</FileSize>
+			<FileModifiedTime>2019-04-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #11 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000082">
+			<Title>Sakura Road chapter 11</Title>
+			<Series>Sakura Road</Series>
+			<Number>11</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>52</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-05-11T00:00:00</Added>
+			<Opened>2020-05-10T00:00:00</Opened>
+			<LastPageRead>17</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11604850</FileSize>
+			<FileModifiedTime>2019-04-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #12 (2004).cbz" Id="0c0a0001-0000-0000-0000-000000000083">
+			<Title>Sakura Road chapter 12</Title>
+			<Series>Sakura Road</Series>
+			<Number>12</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2004</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>57</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-12T00:00:00</Added>
+			<Opened>2020-05-11T00:00:00</Opened>
+			<LastPageRead>28</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11617195</FileSize>
+			<FileModifiedTime>2019-04-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #13 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000084">
+			<Title>Sakura Road chapter 13</Title>
+			<Series>Sakura Road</Series>
+			<Number>13</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>62</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-13T00:00:00</Added>
+			<Opened>2020-05-12T00:00:00</Opened>
+			<LastPageRead>61</LastPageRead>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11629540</FileSize>
+			<FileModifiedTime>2019-04-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #14 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000085">
+			<Title>Sakura Road chapter 14</Title>
+			<Series>Sakura Road</Series>
+			<Number>14</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>67</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-14T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11641885</FileSize>
+			<FileModifiedTime>2019-04-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-13T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #15 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000086">
+			<Title>Sakura Road chapter 15</Title>
+			<Series>Sakura Road</Series>
+			<Number>15</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>72</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-15T00:00:00</Added>
+			<Opened>2020-05-14T00:00:00</Opened>
+			<LastPageRead>70</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11654230</FileSize>
+			<FileModifiedTime>2019-04-15T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-14T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Sakura Road/Sakura Road #16 (2005).cbz" Id="0c0a0001-0000-0000-0000-000000000087">
+			<Title>Sakura Road chapter 16</Title>
+			<Series>Sakura Road</Series>
+			<Number>16</Number>
+			<Count>16</Count>
+			<Volume>1</Volume>
+			<Year>2005</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Romance</Genre>
+			<PageCount>77</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>YesAndRightToLeft</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-16T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11666575</FileSize>
+			<FileModifiedTime>2019-04-16T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-15T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #01 (2008).cbz" Id="0c0a0001-0000-0000-0000-000000000088">
+			<Title>Ronin Tales chapter 1</Title>
+			<Series>Ronin Tales</Series>
+			<Number>1</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>69</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-17T00:00:00</Added>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11678920</FileSize>
+			<FileModifiedTime>2019-04-17T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-16T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #02 (2008).cbz" Id="0c0a0001-0000-0000-0000-000000000089">
+			<Title>Ronin Tales chapter 2</Title>
+			<Series>Ronin Tales</Series>
+			<Number>2</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>74</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-18T00:00:00</Added>
+			<Rating>2.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11691265</FileSize>
+			<FileModifiedTime>2019-04-18T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-17T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #03 (2008).cbz" Id="0c0a0001-0000-0000-0000-00000000008a">
+			<Title>Ronin Tales chapter 3</Title>
+			<Series>Ronin Tales</Series>
+			<Number>3</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>79</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-19T00:00:00</Added>
+			<Opened>2020-05-18T00:00:00</Opened>
+			<LastPageRead>26</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11703610</FileSize>
+			<FileModifiedTime>2019-04-19T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-18T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #04 (2008).cbz" Id="0c0a0001-0000-0000-0000-00000000008b">
+			<Title>Ronin Tales chapter 4</Title>
+			<Series>Ronin Tales</Series>
+			<Number>4</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>24</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-20T00:00:00</Added>
+			<Opened>2020-05-19T00:00:00</Opened>
+			<LastPageRead>12</LastPageRead>
+			<Rating>3.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11715955</FileSize>
+			<FileModifiedTime>2019-04-20T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-19T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #05 (2008).cbz" Id="0c0a0001-0000-0000-0000-00000000008c">
+			<Title>Ronin Tales chapter 5</Title>
+			<Series>Ronin Tales</Series>
+			<Number>5</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>29</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue, favorite</Tags>
+			<Pages />
+			<Added>2019-05-21T00:00:00</Added>
+			<Opened>2020-05-20T00:00:00</Opened>
+			<LastPageRead>28</LastPageRead>
+			<Rating>4</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11728300</FileSize>
+			<FileModifiedTime>2019-04-21T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-20T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #06 (2008).cbz" Id="0c0a0001-0000-0000-0000-00000000008d">
+			<Title>Ronin Tales chapter 6</Title>
+			<Series>Ronin Tales</Series>
+			<Number>6</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2008</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>34</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-22T00:00:00</Added>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11740645</FileSize>
+			<FileModifiedTime>2019-04-22T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-21T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #07 (2009).cbz" Id="0c0a0001-0000-0000-0000-00000000008e">
+			<Title>Ronin Tales chapter 7</Title>
+			<Series>Ronin Tales</Series>
+			<Number>7</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2009</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>39</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-23T00:00:00</Added>
+			<Opened>2020-05-22T00:00:00</Opened>
+			<LastPageRead>37</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11752990</FileSize>
+			<FileModifiedTime>2019-04-23T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-22T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #08 (2009).cbz" Id="0c0a0001-0000-0000-0000-00000000008f">
+			<Title>Ronin Tales chapter 8</Title>
+			<Series>Ronin Tales</Series>
+			<Number>8</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2009</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>44</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-24T00:00:00</Added>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11765335</FileSize>
+			<FileModifiedTime>2019-04-24T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-23T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #09 (2009).cbz" Id="0c0a0001-0000-0000-0000-000000000090">
+			<Title>Ronin Tales chapter 9</Title>
+			<Series>Ronin Tales</Series>
+			<Number>9</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2009</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>49</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-25T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11777680</FileSize>
+			<FileModifiedTime>2019-04-25T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-24T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #10 (2009).cbz" Id="0c0a0001-0000-0000-0000-000000000091">
+			<Title>Ronin Tales chapter 10</Title>
+			<Series>Ronin Tales</Series>
+			<Number>10</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2009</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>54</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-26T00:00:00</Added>
+			<Opened>2020-05-25T00:00:00</Opened>
+			<LastPageRead>18</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11790025</FileSize>
+			<FileModifiedTime>2019-04-26T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-25T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #11 (2009).cbz" Id="0c0a0001-0000-0000-0000-000000000092">
+			<Title>Ronin Tales chapter 11</Title>
+			<Series>Ronin Tales</Series>
+			<Number>11</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2009</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>59</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-27T00:00:00</Added>
+			<Opened>2020-05-26T00:00:00</Opened>
+			<LastPageRead>29</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11802370</FileSize>
+			<FileModifiedTime>2019-04-27T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-26T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #12 (2009).cbz" Id="0c0a0001-0000-0000-0000-000000000093">
+			<Title>Ronin Tales chapter 12</Title>
+			<Series>Ronin Tales</Series>
+			<Number>12</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2009</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>64</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-05-28T00:00:00</Added>
+			<Opened>2020-05-27T00:00:00</Opened>
+			<LastPageRead>63</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11814715</FileSize>
+			<FileModifiedTime>2019-04-28T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-27T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #13 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000094">
+			<Title>Ronin Tales chapter 13</Title>
+			<Series>Ronin Tales</Series>
+			<Number>13</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2010</Year>
+			<Month>1</Month>
+			<Day>9</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>69</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-05-29T00:00:00</Added>
+			<Rating>2.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11827060</FileSize>
+			<FileModifiedTime>2019-04-29T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-28T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Ronin Tales/Ronin Tales #14 (2010).cbz" Id="0c0a0001-0000-0000-0000-000000000095">
+			<Title>Ronin Tales chapter 14</Title>
+			<Series>Ronin Tales</Series>
+			<Number>14</Number>
+			<Count>14</Count>
+			<Volume>1</Volume>
+			<Year>2010</Year>
+			<Month>2</Month>
+			<Day>12</Day>
+			<Writer>Eri Sato</Writer>
+			<Publisher>Rising Sun</Publisher>
+			<Genre>Adventure</Genre>
+			<PageCount>74</PageCount>
+			<LanguageISO>ja</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>Yes</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-05-30T00:00:00</Added>
+			<Opened>2020-05-29T00:00:00</Opened>
+			<LastPageRead>72</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>11839405</FileSize>
+			<FileModifiedTime>2019-04-30T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-29T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #01 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000096">
+			<Title>The Long Night chapter 1</Title>
+			<Series>The Long Night</Series>
+			<Number>1</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2012</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>76</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-05-31T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11851750</FileSize>
+			<FileModifiedTime>2019-05-01T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-04-30T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #02 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000097">
+			<Title>The Long Night chapter 2</Title>
+			<Series>The Long Night</Series>
+			<Number>2</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2012</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>21</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-01T00:00:00</Added>
+			<Opened>2020-05-31T00:00:00</Opened>
+			<LastPageRead>7</LastPageRead>
+			<Rating>4</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11864095</FileSize>
+			<FileModifiedTime>2019-05-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #03 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000098">
+			<Title>The Long Night chapter 3</Title>
+			<Series>The Long Night</Series>
+			<Number>3</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2012</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>26</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-02T00:00:00</Added>
+			<Opened>2020-06-01T00:00:00</Opened>
+			<LastPageRead>13</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11876440</FileSize>
+			<FileModifiedTime>2019-05-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #04 (2012).cbz" Id="0c0a0001-0000-0000-0000-000000000099">
+			<Title>The Long Night chapter 4</Title>
+			<Series>The Long Night</Series>
+			<Number>4</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2012</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>31</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-03T00:00:00</Added>
+			<Opened>2020-06-02T00:00:00</Opened>
+			<LastPageRead>30</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11888785</FileSize>
+			<FileModifiedTime>2019-05-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #05 (2012).cbz" Id="0c0a0001-0000-0000-0000-00000000009a">
+			<Title>The Long Night chapter 5</Title>
+			<Series>The Long Night</Series>
+			<Number>5</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2012</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>36</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-04T00:00:00</Added>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11901130</FileSize>
+			<FileModifiedTime>2019-05-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #06 (2012).cbz" Id="0c0a0001-0000-0000-0000-00000000009b">
+			<Title>The Long Night chapter 6</Title>
+			<Series>The Long Night</Series>
+			<Number>6</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2012</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>41</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-05T00:00:00</Added>
+			<Opened>2020-06-04T00:00:00</Opened>
+			<LastPageRead>39</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11913475</FileSize>
+			<FileModifiedTime>2019-05-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #07 (2013).cbz" Id="0c0a0001-0000-0000-0000-00000000009c">
+			<Title>The Long Night chapter 7</Title>
+			<Series>The Long Night</Series>
+			<Number>7</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2013</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>46</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-06T00:00:00</Added>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11925820</FileSize>
+			<FileModifiedTime>2019-05-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #08 (2013).cbz" Id="0c0a0001-0000-0000-0000-00000000009d">
+			<Title>The Long Night chapter 8</Title>
+			<Series>The Long Night</Series>
+			<Number>8</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2013</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>51</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-07T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11938165</FileSize>
+			<FileModifiedTime>2019-05-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #09 (2013).cbz" Id="0c0a0001-0000-0000-0000-00000000009e">
+			<Title>The Long Night chapter 9</Title>
+			<Series>The Long Night</Series>
+			<Number>9</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2013</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>56</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-08T00:00:00</Added>
+			<Opened>2020-06-07T00:00:00</Opened>
+			<LastPageRead>18</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11950510</FileSize>
+			<FileModifiedTime>2019-05-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #10 (2013).cbz" Id="0c0a0001-0000-0000-0000-00000000009f">
+			<Title>The Long Night chapter 10</Title>
+			<Series>The Long Night</Series>
+			<Number>10</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2013</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>61</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-09T00:00:00</Added>
+			<Opened>2020-06-08T00:00:00</Opened>
+			<LastPageRead>30</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11962855</FileSize>
+			<FileModifiedTime>2019-05-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #11 (2013).cbz" Id="0c0a0001-0000-0000-0000-0000000000a0">
+			<Title>The Long Night chapter 11</Title>
+			<Series>The Long Night</Series>
+			<Number>11</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2013</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>66</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-06-10T00:00:00</Added>
+			<Opened>2020-06-09T00:00:00</Opened>
+			<LastPageRead>65</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11975200</FileSize>
+			<FileModifiedTime>2019-05-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/The Long Night/The Long Night #12 (2013).cbz" Id="0c0a0001-0000-0000-0000-0000000000a1">
+			<Title>The Long Night chapter 12</Title>
+			<Series>The Long Night</Series>
+			<Number>12</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>2013</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Horror</Genre>
+			<PageCount>71</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Graphic Novel</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-11T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>11987545</FileSize>
+			<FileModifiedTime>2019-05-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #01 (1985).cbz" Id="0c0a0001-0000-0000-0000-0000000000a2">
+			<Title>Quiet Harbor chapter 1</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>1</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1985</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>23</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-12T00:00:00</Added>
+			<Opened>2020-06-11T00:00:00</Opened>
+			<LastPageRead>7</LastPageRead>
+			<Rating>4</Rating>
+			<FileSize>11999890</FileSize>
+			<FileModifiedTime>2019-05-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #02 (1985).cbz" Id="0c0a0001-0000-0000-0000-0000000000a3">
+			<Title>Quiet Harbor chapter 2</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>2</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1985</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>28</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-13T00:00:00</Added>
+			<Opened>2020-06-12T00:00:00</Opened>
+			<LastPageRead>14</LastPageRead>
+			<Rating>4.5</Rating>
+			<FileSize>12012235</FileSize>
+			<FileModifiedTime>2019-05-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-13T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #03 (1985).cbz" Id="0c0a0001-0000-0000-0000-0000000000a4">
+			<Title>Quiet Harbor chapter 3</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>3</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1985</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>33</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-14T00:00:00</Added>
+			<Opened>2020-06-13T00:00:00</Opened>
+			<LastPageRead>32</LastPageRead>
+			<Rating>5</Rating>
+			<FileSize>12024580</FileSize>
+			<FileModifiedTime>2019-05-15T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-14T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #04 (1985).cbz" Id="0c0a0001-0000-0000-0000-0000000000a5">
+			<Title>Quiet Harbor chapter 4</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>4</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1985</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>38</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-15T00:00:00</Added>
+			<FileSize>12036925</FileSize>
+			<FileModifiedTime>2019-05-16T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-15T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #05 (1985).cbz" Id="0c0a0001-0000-0000-0000-0000000000a6">
+			<Title>Quiet Harbor chapter 5</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>5</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1985</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>43</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-16T00:00:00</Added>
+			<Opened>2020-06-15T00:00:00</Opened>
+			<LastPageRead>41</LastPageRead>
+			<Rating>0.5</Rating>
+			<FileSize>12049270</FileSize>
+			<FileModifiedTime>2019-05-17T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-16T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #06 (1985).cbz" Id="0c0a0001-0000-0000-0000-0000000000a7">
+			<Title>Quiet Harbor chapter 6</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>6</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1985</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>48</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-17T00:00:00</Added>
+			<Rating>1</Rating>
+			<FileSize>12061615</FileSize>
+			<FileModifiedTime>2019-05-18T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-17T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #07 (1986).cbz" Id="0c0a0001-0000-0000-0000-0000000000a8">
+			<Title>Quiet Harbor chapter 7</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>7</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1986</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>53</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-18T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<FileSize>12073960</FileSize>
+			<FileModifiedTime>2019-05-19T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-18T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #08 (1986).cbz" Id="0c0a0001-0000-0000-0000-0000000000a9">
+			<Title>Quiet Harbor chapter 8</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>8</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1986</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>58</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-19T00:00:00</Added>
+			<Opened>2020-06-18T00:00:00</Opened>
+			<LastPageRead>19</LastPageRead>
+			<Rating>2</Rating>
+			<FileSize>12086305</FileSize>
+			<FileModifiedTime>2019-05-20T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-19T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #09 (1986).cbz" Id="0c0a0001-0000-0000-0000-0000000000aa">
+			<Title>Quiet Harbor chapter 9</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>9</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1986</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>63</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue, favorite</Tags>
+			<Pages />
+			<Added>2019-06-20T00:00:00</Added>
+			<Opened>2020-06-19T00:00:00</Opened>
+			<LastPageRead>31</LastPageRead>
+			<Rating>2.5</Rating>
+			<FileSize>12098650</FileSize>
+			<FileModifiedTime>2019-05-21T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-20T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #10 (1986).cbz" Id="0c0a0001-0000-0000-0000-0000000000ab">
+			<Title>Quiet Harbor chapter 10</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>10</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1986</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>68</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-21T00:00:00</Added>
+			<Opened>2020-06-20T00:00:00</Opened>
+			<LastPageRead>67</LastPageRead>
+			<Rating>3</Rating>
+			<FileSize>12110995</FileSize>
+			<FileModifiedTime>2019-05-22T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-21T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #11 (1986).cbz" Id="0c0a0001-0000-0000-0000-0000000000ac">
+			<Title>Quiet Harbor chapter 11</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>11</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1986</Year>
+			<Month>11</Month>
+			<Day>3</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>73</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-22T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<FileSize>12123340</FileSize>
+			<FileModifiedTime>2019-05-23T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-22T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Quiet Harbor/Quiet Harbor #12 (1986).cbz" Id="0c0a0001-0000-0000-0000-0000000000ad">
+			<Title>Quiet Harbor chapter 12</Title>
+			<Series>Quiet Harbor</Series>
+			<Number>12</Number>
+			<Count>12</Count>
+			<Volume>1</Volume>
+			<Year>1986</Year>
+			<Month>12</Month>
+			<Day>6</Day>
+			<Writer>Fay Gray</Writer>
+			<Publisher>Northern Press</Publisher>
+			<Genre>Drama</Genre>
+			<PageCount>78</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-23T00:00:00</Added>
+			<Opened>2020-06-22T00:00:00</Opened>
+			<LastPageRead>76</LastPageRead>
+			<Rating>4</Rating>
+			<FileSize>12135685</FileSize>
+			<FileModifiedTime>2019-05-24T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-23T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #01 (1975).cbz" Id="0c0a0001-0000-0000-0000-0000000000ae">
+			<Title>Iron Orchard chapter 1</Title>
+			<Series>Iron Orchard</Series>
+			<Number>1</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1975</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>30</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-24T00:00:00</Added>
+			<Opened>2020-06-23T00:00:00</Opened>
+			<LastPageRead>15</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12148030</FileSize>
+			<FileModifiedTime>2019-05-25T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-24T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #02 (1975).cbz" Id="0c0a0001-0000-0000-0000-0000000000af">
+			<Title>Iron Orchard chapter 2</Title>
+			<Series>Iron Orchard</Series>
+			<Number>2</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1975</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>35</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-25T00:00:00</Added>
+			<Opened>2020-06-24T00:00:00</Opened>
+			<LastPageRead>34</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12160375</FileSize>
+			<FileModifiedTime>2019-05-26T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-25T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #03 (1975).cbz" Id="0c0a0001-0000-0000-0000-0000000000b0">
+			<Title>Iron Orchard chapter 3</Title>
+			<Series>Iron Orchard</Series>
+			<Number>3</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1975</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>40</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-26T00:00:00</Added>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12172720</FileSize>
+			<FileModifiedTime>2019-05-27T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-26T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #04 (1975).cbz" Id="0c0a0001-0000-0000-0000-0000000000b1">
+			<Title>Iron Orchard chapter 4</Title>
+			<Series>Iron Orchard</Series>
+			<Number>4</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1975</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>45</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-06-27T00:00:00</Added>
+			<Opened>2020-06-26T00:00:00</Opened>
+			<LastPageRead>43</LastPageRead>
+			<Rating>0.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12185065</FileSize>
+			<FileModifiedTime>2019-05-28T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-27T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #05 (1975).cbz" Id="0c0a0001-0000-0000-0000-0000000000b2">
+			<Title>Iron Orchard chapter 5</Title>
+			<Series>Iron Orchard</Series>
+			<Number>5</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1975</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>50</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-06-28T00:00:00</Added>
+			<Rating>1</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12197410</FileSize>
+			<FileModifiedTime>2019-05-29T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-28T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #06 (1975).cbz" Id="0c0a0001-0000-0000-0000-0000000000b3">
+			<Title>Iron Orchard chapter 6</Title>
+			<Series>Iron Orchard</Series>
+			<Number>6</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1975</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>55</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-06-29T00:00:00</Added>
+			<Rating>1.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12209755</FileSize>
+			<FileModifiedTime>2019-05-30T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-29T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #07 (1976).cbz" Id="0c0a0001-0000-0000-0000-0000000000b4">
+			<Title>Iron Orchard chapter 7</Title>
+			<Series>Iron Orchard</Series>
+			<Number>7</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1976</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>60</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-06-30T00:00:00</Added>
+			<Opened>2020-06-29T00:00:00</Opened>
+			<LastPageRead>20</LastPageRead>
+			<Rating>2</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12222100</FileSize>
+			<FileModifiedTime>2019-05-31T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-30T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #08 (1976).cbz" Id="0c0a0001-0000-0000-0000-0000000000b5">
+			<Title>Iron Orchard chapter 8</Title>
+			<Series>Iron Orchard</Series>
+			<Number>8</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1976</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>65</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-07-01T00:00:00</Added>
+			<Opened>2020-06-30T00:00:00</Opened>
+			<LastPageRead>32</LastPageRead>
+			<Rating>2.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12234445</FileSize>
+			<FileModifiedTime>2019-06-01T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-05-31T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #09 (1976).cbz" Id="0c0a0001-0000-0000-0000-0000000000b6">
+			<Title>Iron Orchard chapter 9</Title>
+			<Series>Iron Orchard</Series>
+			<Number>9</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1976</Year>
+			<Month>9</Month>
+			<Day>25</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>70</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-07-02T00:00:00</Added>
+			<Opened>2020-07-01T00:00:00</Opened>
+			<LastPageRead>69</LastPageRead>
+			<Rating>3</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12246790</FileSize>
+			<FileModifiedTime>2019-06-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Iron Orchard/Iron Orchard #10 (1976).cbz" Id="0c0a0001-0000-0000-0000-0000000000b7">
+			<Title>Iron Orchard chapter 10</Title>
+			<Series>Iron Orchard</Series>
+			<Number>10</Number>
+			<Count>10</Count>
+			<Volume>1</Volume>
+			<Year>1976</Year>
+			<Month>10</Month>
+			<Day>28</Day>
+			<Writer>Cy Dunn</Writer>
+			<Publisher>Orbit Books</Publisher>
+			<Genre>Western</Genre>
+			<PageCount>75</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-07-03T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>12259135</FileSize>
+			<FileModifiedTime>2019-06-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #01 (2019).cbz" Id="0c0a0001-0000-0000-0000-0000000000b8">
+			<Title>Misc One-Shots chapter 1</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>1</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2019</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>37</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-07-04T00:00:00</Added>
+			<Opened>2020-07-03T00:00:00</Opened>
+			<LastPageRead>36</LastPageRead>
+			<Rating>4</Rating>
+			<FileSize>12271480</FileSize>
+			<FileModifiedTime>2019-06-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #02 (2019).cbz" Id="0c0a0001-0000-0000-0000-0000000000b9">
+			<Title>Misc One-Shots chapter 2</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>2</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2019</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>42</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-07-05T00:00:00</Added>
+			<Rating>4.5</Rating>
+			<FileSize>12283825</FileSize>
+			<FileModifiedTime>2019-06-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #03 (2019).cbz" Id="0c0a0001-0000-0000-0000-0000000000ba">
+			<Title>Misc One-Shots chapter 3</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>3</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2019</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>47</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-07-06T00:00:00</Added>
+			<Opened>2020-07-05T00:00:00</Opened>
+			<LastPageRead>45</LastPageRead>
+			<Rating>5</Rating>
+			<FileSize>12296170</FileSize>
+			<FileModifiedTime>2019-06-06T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-05T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #04 (2019).cbz" Id="0c0a0001-0000-0000-0000-0000000000bb">
+			<Title>Misc One-Shots chapter 4</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>4</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2019</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>52</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-07-07T00:00:00</Added>
+			<FileSize>12308515</FileSize>
+			<FileModifiedTime>2019-06-07T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-06T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #05 (2019).cbz" Id="0c0a0001-0000-0000-0000-0000000000bc">
+			<Title>Misc One-Shots chapter 5</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>5</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2019</Year>
+			<Month>5</Month>
+			<Day>13</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>57</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>4</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-07-08T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<FileSize>12320860</FileSize>
+			<FileModifiedTime>2019-06-08T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-07T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #06 (2019).cbz" Id="0c0a0001-0000-0000-0000-0000000000bd">
+			<Title>Misc One-Shots chapter 6</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>6</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2019</Year>
+			<Month>6</Month>
+			<Day>16</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>62</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-07-09T00:00:00</Added>
+			<Opened>2020-07-08T00:00:00</Opened>
+			<LastPageRead>20</LastPageRead>
+			<Rating>1</Rating>
+			<FileSize>12333205</FileSize>
+			<FileModifiedTime>2019-06-09T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-08T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #07 (2020).cbz" Id="0c0a0001-0000-0000-0000-0000000000be">
+			<Title>Misc One-Shots chapter 7</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>7</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2020</Year>
+			<Month>7</Month>
+			<Day>19</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>67</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-07-10T00:00:00</Added>
+			<Opened>2020-07-09T00:00:00</Opened>
+			<LastPageRead>33</LastPageRead>
+			<Rating>1.5</Rating>
+			<FileSize>12345550</FileSize>
+			<FileModifiedTime>2019-06-10T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-09T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Misc One-Shots/Misc One-Shots #08 (2020).cbz" Id="0c0a0001-0000-0000-0000-0000000000bf">
+			<Title>Misc One-Shots chapter 8</Title>
+			<Series>Misc One-Shots</Series>
+			<Number>8</Number>
+			<Count>8</Count>
+			<Volume>1</Volume>
+			<Year>2020</Year>
+			<Month>8</Month>
+			<Day>22</Day>
+			<Writer>Gus Hall</Writer>
+			<Publisher>Indie Hub</Publisher>
+			<Genre>Humor</Genre>
+			<PageCount>72</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>One-Shot</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-07-11T00:00:00</Added>
+			<Opened>2020-07-10T00:00:00</Opened>
+			<LastPageRead>71</LastPageRead>
+			<Rating>2</Rating>
+			<FileSize>12357895</FileSize>
+			<FileModifiedTime>2019-06-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-06-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Alpha Force #01 (2001).cbz" Id="0c0a0001-0000-0000-0000-0000000000c0">
+			<Title>Alpha Force chapter 1</Title>
+			<Series>Alpha Force</Series>
+			<Number>1</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>1</Month>
+			<Day>1</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>20</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<Tags>red, favorite</Tags>
+			<Pages />
+			<Added>2019-01-01T00:00:00</Added>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10000000</FileSize>
+			<FileModifiedTime>2018-12-02T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-01T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Alpha Force #02 (2001).cbz" Id="0c0a0001-0000-0000-0000-0000000000c1">
+			<Title>Alpha Force chapter 2</Title>
+			<Series>Alpha Force</Series>
+			<Number>2</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>2</Month>
+			<Day>4</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>25</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>0.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-01-02T00:00:00</Added>
+			<Rating>0.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10012345</FileSize>
+			<FileModifiedTime>2018-12-03T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-02T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Alpha Force #03 (2001).cbz" Id="0c0a0001-0000-0000-0000-0000000000c2">
+			<Title>Alpha Force chapter 3</Title>
+			<Series>Alpha Force</Series>
+			<Number>3</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>3</Month>
+			<Day>7</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>30</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-01-03T00:00:00</Added>
+			<Opened>2020-01-03T00:00:00</Opened>
+			<LastPageRead>10</LastPageRead>
+			<Rating>1</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10024690</FileSize>
+			<FileModifiedTime>2018-12-04T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-03T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Alpha Force #04 (2001).cbz" Id="0c0a0001-0000-0000-0000-0000000000c3">
+			<Title>Alpha Force chapter 4</Title>
+			<Series>Alpha Force</Series>
+			<Number>4</Number>
+			<Count>26</Count>
+			<Volume>1</Volume>
+			<Year>2001</Year>
+			<Month>4</Month>
+			<Day>10</Day>
+			<Writer>Ann Lee</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Superhero</Genre>
+			<PageCount>35</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>No</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>1.5</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-01-04T00:00:00</Added>
+			<Opened>2020-01-04T00:00:00</Opened>
+			<LastPageRead>17</LastPageRead>
+			<Rating>1.5</Rating>
+			<SeriesComplete>Yes</SeriesComplete>
+			<FileSize>10037035</FileSize>
+			<FileModifiedTime>2018-12-05T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2018-12-04T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Beta Blades #15 (2000).cbz" Id="0c0a0001-0000-0000-0000-0000000000c4">
+			<Title>Beta Blades chapter 15</Title>
+			<Series>Beta Blades</Series>
+			<Number>15</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>3</Month>
+			<Day>15</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>37</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2</CommunityRating>
+			<Tags>green, favorite</Tags>
+			<Pages />
+			<Added>2019-02-10T00:00:00</Added>
+			<Rating>3.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10493800</FileSize>
+			<FileModifiedTime>2019-01-11T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-10T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Beta Blades #16 (2000).cbz" Id="0c0a0001-0000-0000-0000-0000000000c5">
+			<Title>Beta Blades chapter 16</Title>
+			<Series>Beta Blades</Series>
+			<Number>16</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>4</Month>
+			<Day>18</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>42</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>2.5</CommunityRating>
+			<Tags>blue</Tags>
+			<Pages />
+			<Added>2019-02-11T00:00:00</Added>
+			<Opened>2020-02-11T00:00:00</Opened>
+			<LastPageRead>14</LastPageRead>
+			<Rating>4</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10506145</FileSize>
+			<FileModifiedTime>2019-01-12T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-11T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Beta Blades #17 (2000).cbz" Id="0c0a0001-0000-0000-0000-0000000000c6">
+			<Title>Beta Blades chapter 17</Title>
+			<Series>Beta Blades</Series>
+			<Number>17</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>5</Month>
+			<Day>21</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>47</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3</CommunityRating>
+			<Tags>red</Tags>
+			<Pages />
+			<Added>2019-02-12T00:00:00</Added>
+			<Opened>2020-02-12T00:00:00</Opened>
+			<LastPageRead>23</LastPageRead>
+			<Rating>4.5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10518490</FileSize>
+			<FileModifiedTime>2019-01-13T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-12T08:00:00Z</FileCreationTime>
+		</Book>
+		<Book File="/library/Duplicates/Beta Blades #18 (2000).cbz" Id="0c0a0001-0000-0000-0000-0000000000c7">
+			<Title>Beta Blades chapter 18</Title>
+			<Series>Beta Blades</Series>
+			<Number>18</Number>
+			<Count>22</Count>
+			<Volume>1</Volume>
+			<Year>2000</Year>
+			<Month>6</Month>
+			<Day>24</Day>
+			<Writer>Bo Chen</Writer>
+			<Publisher>Apex Comics</Publisher>
+			<Genre>Fantasy</Genre>
+			<PageCount>52</PageCount>
+			<LanguageISO>en</LanguageISO>
+			<Format>Series</Format>
+			<BlackAndWhite>Yes</BlackAndWhite>
+			<Manga>No</Manga>
+			<CommunityRating>3.5</CommunityRating>
+			<Tags>green</Tags>
+			<Pages />
+			<Added>2019-02-13T00:00:00</Added>
+			<Opened>2020-02-13T00:00:00</Opened>
+			<LastPageRead>51</LastPageRead>
+			<Rating>5</Rating>
+			<SeriesComplete>No</SeriesComplete>
+			<FileSize>10530835</FileSize>
+			<FileModifiedTime>2019-01-14T09:30:00Z</FileModifiedTime>
+			<FileCreationTime>2019-01-13T08:00:00Z</FileCreationTime>
+		</Book>
+	</Books>
+	<ComicLists>
+		<Item Id="0c0a0002-0000-0000-0000-000000000000" Name="Library" xsi:type="ComicLibraryListItem">
+			<Display />
+		</Item>
+		<Item Id="0c0a0003-0000-0000-0000-000000000001" Name="Smart Lists" xsi:type="ComicListItemFolder">
+			<Display />
+			<Items>
+				<Item Id="0c0a0002-0000-0000-0000-000000000001" Name="Alpha series" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookSeriesMatcher">
+							<MatchValue>alpha</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000002" Name="Apex publisher" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher xsi:type="ComicBookPublisherMatcher">
+							<MatchValue>Apex Comics</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000003" Name="Years 2005 to 2010" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="3" xsi:type="ComicBookYearMatcher">
+							<MatchValue>2005</MatchValue>
+							<MatchValue2>2010</MatchValue2>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000004" Name="Long books" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookPageCountMatcher">
+							<MatchValue>60</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000005" Name="Black and white" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher xsi:type="ComicBookBlackAndWhiteMatcher">
+							<MatchValue />
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000006" Name="Manga right to left" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookMangaMatcher">
+							<MatchValue />
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000007" Name="Added after July 2019" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookAddedMatcher">
+							<MatchValue>2019-07-01</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000008" Name="In progress" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="3" xsi:type="ComicBookReadPercentageMatcher">
+							<MatchValue>1</MatchValue>
+							<MatchValue2>94</MatchValue2>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000009" Name="Horror or fantasy" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="2" xsi:type="ComicBookGenreMatcher">
+							<MatchValue>Horror;Fantasy</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-00000000000a" Name="Writers Ann or Bo" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="7" xsi:type="ComicBookWriterMatcher">
+							<MatchValue>^(Ann|Bo) </MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+			</Items>
+		</Item>
+		<Item Id="0c0a0003-0000-0000-0000-000000000002" Name="More Lists" xsi:type="ComicListItemFolder">
+			<Display />
+			<Items>
+				<Item Id="0c0a0002-0000-0000-0000-00000000000b" Name="Only duplicates" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher xsi:type="ComicBookDuplicateMatcher">
+							<MatchValue />
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-00000000000c" Name="Group beta or force" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatcherMode="Or" xsi:type="ComicBookGroupMatcher">
+							<Matchers>
+								<ComicBookMatcher MatchOperator="4" xsi:type="ComicBookSeriesMatcher">
+									<MatchValue>Beta</MatchValue>
+								</ComicBookMatcher>
+								<ComicBookMatcher MatchOperator="5" xsi:type="ComicBookSeriesMatcher">
+									<MatchValue>Force</MatchValue>
+								</ComicBookMatcher>
+							</Matchers>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-00000000000d" Name="Not rated" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher Not="true" xsi:type="ComicBookRatingMatcher">
+							<MatchValue>0</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-00000000000e" Name="Alpha on 2003 or later" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookYearMatcher">
+							<MatchValue>2003</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+					<BaseListId>0c0a0002-0000-0000-0000-000000000001</BaseListId>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-00000000000f" Name="Apex without Alpha" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher xsi:type="ComicBookPublisherMatcher">
+							<MatchValue>Apex Comics</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+					<BaseListId>0c0a0002-0000-0000-0000-000000000001</BaseListId>
+					<NotInBaseList>true</NotInBaseList>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000010" Name="Tag favorite" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="6" xsi:type="ComicBookTagsMatcher">
+							<MatchValue>favorite</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000011" Name="Language ja or fr" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="2" xsi:type="ComicBookLanguageMatcher">
+							<MatchValue>ja,fr</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000012" Name="Series complete" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher xsi:type="ComicBookSeriesCompleteMatcher">
+							<MatchValue />
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0003-0000-0000-0000-000000000003" Name="Nested" xsi:type="ComicListItemFolder">
+					<Display />
+					<Items>
+						<Item Id="0c0a0002-0000-0000-0000-000000000013" Name="Series with 20 or more books" xsi:type="ComicSmartListItem">
+							<Display />
+							<Matchers>
+								<ComicBookMatcher MatchOperator="1" xsi:type="SmartListSeriesCountMatcher">
+									<MatchValue>19</MatchValue>
+								</ComicBookMatcher>
+							</Matchers>
+						</Item>
+						<Item Id="0c0a0002-0000-0000-0000-000000000014" MatcherMode="Or" Name="Rated 4 or more, or manga" xsi:type="ComicSmartListItem">
+							<Display />
+							<Matchers>
+								<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookRatingMatcher">
+									<MatchValue>3.5</MatchValue>
+								</ComicBookMatcher>
+								<ComicBookMatcher xsi:type="ComicBookMangaMatcher">
+									<MatchValue />
+								</ComicBookMatcher>
+							</Matchers>
+						</Item>
+						<Item Id="0c0a0002-0000-0000-0000-000000000015" Name="First ten by series" xsi:type="ComicSmartListItem">
+							<Display />
+							<Matchers>
+								<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookPublisherMatcher">
+									<MatchValue />
+								</ComicBookMatcher>
+							</Matchers>
+							<Limit>true</Limit>
+							<LimitValue>10</LimitValue>
+							<LimitSelectionType>SortedBySeries</LimitSelectionType>
+						</Item>
+						<Item Id="0c0a0002-0000-0000-0000-000000000016" Name="Five random" xsi:type="ComicSmartListItem">
+							<Display />
+							<Matchers>
+								<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookPublisherMatcher">
+									<MatchValue>Orbit</MatchValue>
+								</ComicBookMatcher>
+							</Matchers>
+							<Limit>true</Limit>
+							<LimitValue>5</LimitValue>
+							<LimitRandomSeed>4711</LimitRandomSeed>
+						</Item>
+					</Items>
+				</Item>
+			</Items>
+		</Item>
+		<Item CombineMode="And" Id="0c0a0003-0000-0000-0000-000000000004" Name="Alpha and Apex" xsi:type="ComicListItemFolder">
+			<Display />
+			<Items>
+				<Item Id="0c0a0002-0000-0000-0000-000000000017" Name="Alpha (in intersection)" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher MatchOperator="1" xsi:type="ComicBookSeriesMatcher">
+							<MatchValue>alpha</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+				<Item Id="0c0a0002-0000-0000-0000-000000000018" Name="Apex (in intersection)" xsi:type="ComicSmartListItem">
+					<Display />
+					<Matchers>
+						<ComicBookMatcher xsi:type="ComicBookPublisherMatcher">
+							<MatchValue>Apex Comics</MatchValue>
+						</ComicBookMatcher>
+					</Matchers>
+				</Item>
+			</Items>
+		</Item>
+		<Item Id="0c0a0002-0000-0000-0000-000000000019" Name="Picks" xsi:type="ComicIdListItem">
+			<Display />
+			<BookIds>
+				<guid>0c0a0001-0000-0000-0000-000000000000</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000010</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000020</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000030</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000040</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000050</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000060</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000070</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000080</guid>
+				<guid>0c0a0001-0000-0000-0000-000000000090</guid>
+				<guid>0c0a0001-0000-0000-0000-0000000000a0</guid>
+				<guid>0c0a0001-0000-0000-0000-0000000000b0</guid>
+				<guid>0c0a0009-0000-0000-0000-0000000003e7</guid>
+			</BookIds>
+		</Item>
+		<Item Id="0c0a0003-0000-0000-0000-000000000005" Name="Temporary Lists" Temporary="true" xsi:type="ComicListItemFolder">
+			<Display />
+			<Items />
+		</Item>
+	</ComicLists>
+	<WatchFolders />
+	<BlackList />
+</ComicDatabase>
