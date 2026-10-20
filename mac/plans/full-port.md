@@ -389,6 +389,12 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Out of scope: restyling (P5.R*).
 - Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter Category=HiDpi` passes (state the count, both scales covered per control); `mac/tools/verify.sh`.
 
+#### R3 Fix the GetIsoCulture race in the host (smart lists lose books)
+- Depends: P0.7a · Effort: medium · Unattended: yes · Status: todo
+- Goal: smart lists with a language matcher return correct results every time. P0.7a found that `ComicBook.GetIsoCulture` fills a static unlocked `Dictionary`, and PLINQ threads race on first evaluation (a 64-book list returned 30 or 31 in 2 of 12 fresh processes).
+- Do: in `MacHost.ConfigureCore` (mac-owned) fill the dictionary once on one thread before any list evaluation (warm-up through the public API that triggers it, for all cultures it caches); remove `CoreRaces.WarmLanguageNames` workaround from the tests so they test the real path; audit other lazily filled static caches reachable from PLINQ list evaluation (grep the Core for static Dictionary/List fields used in matchers/ComicBook properties) and warm or document them. Record any race that cannot be fixed without editing an original file as a proposal in `mac/upstream-proposals/` (do not edit originals).
+- Accept: `dotnet test mac/tests/ComicRack.Characterization` passes 5 times in separate processes; a new test evaluates the language list in 10 fresh child processes and always gets the golden count; `mac/tools/verify.sh`.
+
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
 - Goal: one command that every task and the orchestrator run: disk guard, rule 1, build, fast tests, concise summary.
