@@ -67,6 +67,7 @@ Read first, completely:
 1. mac/plans/full-port.md: section 2 (Conventions), section 3 (Facts), the task block "#### {TASK_ID}" in section 7, and the blocks of the tasks listed in its "Depends".
 2. MACOS_NATIVE_PATH.md section 0 and section 9.2.
 3. Every file the task block names. Older facts are in mac/plans/mvp-track.md section 3; search it when the task refers to an M-task.
+4. If the task block has a "Parity:" line or changes anything a user sees: full-port.md section 2.11 (parity and chrome policy), mac/plans/chrome-guidelines.md, and the rows of mac/plans/parity-ledger.md that name this task (grep -n "{TASK_ID}" mac/plans/parity-ledger.md) or that the Parity line lists. Behaviour, defaults, menus, labels (original TR keys), shortcuts and layout must match the WinForms original exactly; only the chrome-guidelines section 7 decisions are native.
 
 Binding rules (full-port.md section 2 has the details):
 - Change nothing outside mac/ (MACOS_NATIVE_PATH.md and .github/workflows/mac-*.yml only if the task says so). Original code is changed only through pass B replacements with an entry in mac/replacements.json. If an edit of an original file looks unavoidable: do not make it; write the proposal to mac/upstream-proposals/{TASK_ID}.md and report RESULT: blocked.
@@ -80,7 +81,7 @@ Binding rules (full-port.md section 2 has the details):
 
 Do the task. Then:
 1. Run every Accept command of the task, and mac/tools/verify.sh. All must pass, except checks that need the owner or an unlocked screen, which you report as SKIPPED with the reason.
-2. Update the task's "Status:" line in full-port.md: "done YYYY-MM-DD", "done-with-caveat YYYY-MM-DD (what is unverified)", or "blocked (reason)".
+2. Update the task's "Status:" line in full-port.md: "done YYYY-MM-DD", "done-with-caveat YYYY-MM-DD (what is unverified)", or "blocked (reason)". For a UI task also update its parity-ledger rows in the same commit (done YYYY-MM-DD, or deviation with "impossible: ..." / "native: C-...", or todo with the task that finishes it) and add any new chrome decision to chrome-guidelines.md section 7.
 3. Commit once on macos: stage only paths you changed under mac/ (and the allowed files outside it); message "mac: {TASK_ID} <title> (<one-line result>)", ending with the Co-Authored-By trailer your environment specifies. If RESULT is failed, do not commit; leave the changes in the working tree.
 4. Reply with exactly this report and nothing else:
 TASK: {TASK_ID}
@@ -91,6 +92,8 @@ VERIFY: <the RESULT line of mac/tools/verify.sh>
 OWNER: <what only the owner can check or decide, or none>
 DISCOVERED: <items you added to section 9, or none>
 FACTS: <one line per fact you added to section 3, or none>
+LEDGER: <parity-ledger rows changed, as "ID -> status", or none>
+CHROME: <contact sheet path and new chrome decisions (C-... rows), or none>
 STOP: <STOP condition that triggered, or none>
 ```
 
@@ -116,7 +119,7 @@ A failure here that no single task explains becomes task `R<n>` at the front of 
 
 **Review**: one subagent with `subagent_type: general-purpose`, `model: opus`, `effort: high`, prompt:
 ```
-Review the macOS port changes in /Users/vince/dev/ComicRackCE between commit {FROM} and HEAD (git diff {FROM}..HEAD -- mac MACOS_NATIVE_PATH.md .github/workflows). Read mac/plans/full-port.md section 2 first. Look for correctness bugs, threading violations (Core events not marshalled through UiDispatch, UI work off the UI thread, blocking calls on the UI thread), pixel ownership violations (drawing Core-owned bitmaps), resource leaks, tests that cannot fail or depend on timing, replacements without a manifest entry, and changes outside mac/. Do not change any file. Report findings ranked by severity (high, medium, low), each with file:line, the failure scenario and a one-line fix. Report at most 15 findings; report none rather than speculative ones.
+Review the macOS port changes in /Users/vince/dev/ComicRackCE between commit {FROM} and HEAD (git diff {FROM}..HEAD -- mac MACOS_NATIVE_PATH.md .github/workflows). Read mac/plans/full-port.md section 2 first. Look for correctness bugs, threading violations (Core events not marshalled through UiDispatch, UI work off the UI thread, blocking calls on the UI thread), pixel ownership violations (drawing Core-owned bitmaps), resource leaks, tests that cannot fail or depend on timing, replacements without a manifest entry, changes outside mac/, and parity breaks (R9, section 2.11: UI that differs from the WinForms original or its view spec without a recorded ledger deviation, retyped strings instead of original TR keys, literal colours, invented menu items or shortcuts). Do not change any file. Report findings ranked by severity (high, medium, low), each with file:line, the failure scenario and a one-line fix. Report at most 15 findings; report none rather than speculative ones.
 ```
 `{FROM}` is the commit of the previous review (in `run-log.md`). High findings become `R<n>` tasks (template of §7, Effort high) at the front of the order; medium ones go to §9; low ones are dropped unless cheap to fold into a later task.
 
@@ -132,7 +135,7 @@ Review the macOS port changes in /Users/vince/dev/ComicRackCE between commit {FR
    - *Build error from a new linked file*: exclusion plus stub, or replacement. Effort high.
    - *Package change*: mirror it in `mac/*/Sources.props` (same version) unless Windows-only. Effort medium.
    - *Payload change* (`ComicRack/Output/**`): nothing to do unless the build copies it wrongly. INFO only.
-   - *UI parity candidates* (new or changed WinForms UI): add one line per feature to §9 ("upstream feature X: port to Mac?"); do not implement unless it is a fix to behaviour the Mac app already mirrors.
+   - *UI parity candidates* (new or changed WinForms UI; `ledger-check` fails on new menu items): R9 requires parity, so add a row to `mac/plans/parity-ledger.md` (status `todo`) per new or changed feature and a U-task that implements it (or names the existing task that owns the area); a change to behaviour the Mac app already mirrors is fixed in the U-task. A changed original colour (token test) is a U-task too.
 4. Run the U-tasks through the normal loop (§2 steps 2 to 6). Then re-run the check until it exits 0, then `mac/tools/upstream-sync-check.sh --record` (it updates and commits `mac/upstream-sync.json`).
 5. Continue with the normal loop.
 
@@ -169,7 +172,7 @@ Interactive mode (§1) asks for permission prompts unless the tools are allowed.
 
 | Condition | What the orchestrator does |
 |---|---|
-| **Checkpoint reached**: no `todo` task is runnable because every remaining one depends on an unanswered checkpoint | Write (or complete) the checkpoint block in `OWNER-ACTIONS.md`, set `Run state: STOPPED (waiting for C<n>, <date>)`, commit, print the owner summary (below) |
+| **Checkpoint reached**: no `todo` task is runnable because every remaining one depends on an unanswered checkpoint | For C2 and C6 first run `mac/tools/chrome-sheet.sh C2 --all` (or `C6`) and `python3 mac/tools/ledger-check/ledger-check.py --report`, and put the sheet path, the deviation list and the chrome decisions with a flip cost into the block (chrome-guidelines §9 step 5). Write (or complete) the checkpoint block in `OWNER-ACTIONS.md`, set `Run state: STOPPED (waiting for C<n>, <date>)`, commit, print the owner summary (below) |
 | Disk below 3 GB after the cleanup of §2 step 0 | Owner block "free disk space" (what uses space: `du -sh mac/fixtures mac/artifacts ~/.nuget/packages`), STOPPED |
 | `mac/tools/verify.sh` fails on HEAD without a task's changes (the tree was green before) and one `R` task did not fix it | Owner block with the failure, STOPPED |
 | Three tasks in a row ended `blocked` or `failed` | Something systemic: owner block with the three reasons, STOPPED |

@@ -1,22 +1,23 @@
 # macOS full port: master plan (after the MVP)
 
 > **Status:** adopted 2026-10-17 by the owner's requirements (§1.1). The MVP track (`mac/plans/mvp-track.md`, M0 to M2.6) is merged on `macos` and the owner verified it ("performance very good"), so gates G1 and G2 are passed.
-> **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D7), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
+> **Amended 2026-10-20** by owner requirement R9 (feature parity and original chrome, §1.1, §2.11, D9): new tasks P5.T1 to P5.T5, P5.R1 to P5.R3, P5.32a to P5.32c, P5.33, P5.34, P5.22c, P7.A1 to P7.A4; UI tasks carry a `Parity:` line. The parity references are `mac/plans/chrome-guidelines.md` (tokens, fonts, metrics, icons, chrome decisions) and `mac/plans/parity-ledger.md` (every original feature, its Mac task and status).
+> **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-17, planning session; next task: P0.2)
+Run state: RUNNING (2026-10-20, planning session: R9 parity amendment; next task: P0.3)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
-| P0 Safety net and tooling | 12 | 1 | P0.2 | P0.1 (`mac/tools/verify.sh`) done in the planning session |
+| P0 Safety net and tooling | 13 | 3 | P0.3 | includes R1; P0.1, P0.2, R1 done |
 | P1 Core runtime gaps | 3 | 0 | P1.2 | zero-edit fixes through pass B replacements |
 | P2 Platform pieces | 9 | 0 | P2.1 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 11 | 0 | P3.9 | includes M1.5c, M1.7, M1.8 |
 | P4 Scripting and Script UI layer | 36 | 0 | P4.1 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 52 | 0 | P5.0 | waves B, C, D |
+| P5 Screens (main window parity) | 66 | 0 | P5.0 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
-| P7 Hardening and v1 acceptance | 8 | 0 | P7.1 | ends with checkpoint C6 |
-| **Total** | **138** | **1** | | estimate in §10 |
+| P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
+| **Total** | **157** | **3** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -25,7 +26,7 @@ Run state: RUNNING (2026-10-17, planning session; next task: P0.2)
 3. **After an upstream merge** by the owner: `mac/UPSTREAM-SYNC.md`.
 4. **Owner**: open `mac/plans/OWNER-ACTIONS.md`. The "Inbox" lists what is asked of you; each block ends with the prompt to resume.
 
-Where things are: decisions §1, rules §2, facts §3, checkpoints §4, harness designs §5, order §6, tasks §7, the MVP open-item mapping §8, discovered work §9, estimate §10.
+Where things are: decisions §1, rules §2 (parity and chrome policy §2.11), facts §3, checkpoints §4, harness designs §5, order §6, tasks §7, the MVP open-item mapping §8, discovered work §9, estimate §10. Parity references: `mac/plans/parity-ledger.md`, `mac/plans/chrome-guidelines.md`.
 
 ---
 
@@ -43,6 +44,7 @@ Where things are: decisions §1, rules §2, facts §3, checkpoints §4, harness 
 | R6 | Screen Recording and Accessibility are granted to VS Code and the GUI session is unlocked: sessions may launch, drive and screenshot the real app. A reusable UI-automation tool and an end-to-end smoke suite verify real-window behaviour. | P0.6a, P0.6b, §5.3 |
 | R7 | Open decisions are settled with defaults (§1.2), not asked. | §1.2 |
 | R8 | Known owner inputs (Developer ID and notarization credentials, a real CBR, a plugin corpus) are explicit checkpoints. | §4 C1, C4, C5 |
+| R9 | (2026-10-20) (a) **Features stay exactly identical to the Windows app**: behaviours, defaults, menus and commands with their semantics, dialogs and fields, list and smart-list behaviour, settings, keyboard shortcuts (Ctrl mapped to Cmd where macOS convention says so, otherwise kept), file formats. A deviation is allowed only where macOS makes a Windows feature impossible; each one is listed and justified in the parity ledger. (b) **The look stays as close as possible to the WinForms app**: ComicRack's own chrome (theme colours, toolbar and button look, original icons, browser/list/tile look, dialog layouts, reader chrome, status bar, font size proportions) is kept wherever it does not conflict with native macOS features that clearly make more sense native (scrollbars, title bar and traffic lights, menu bar, standard dialogs, full screen, context-menu rendering, text editing, focus rings, Dock and app menu). When in doubt the original look wins; every native-over-original choice is a row in the chrome decisions table. | D9; §2.11; `mac/plans/parity-ledger.md`; `mac/plans/chrome-guidelines.md`; tasks P5.T*, P5.R*, P5.32a to c, P5.33, P5.34, P5.22c, P7.A1 to A4; C2 and C6 contact sheets |
 
 ### 1.2 Decisions settled with defaults (recorded 2026-10-17; the owner may override any of them in `OWNER-ACTIONS.md`)
 
@@ -54,7 +56,7 @@ Where things are: decisions §1, rules §2, facts §3, checkpoints §4, harness 
 | DD4 | Platform | arm64 only, macOS 14 or later (D5). |
 | DD5 | Upstream edits | None. Changes to original files are made as pass B replacements under `mac/` (§2.3), never in place. An exception needs owner approval at a checkpoint (§2.2). Fixes worth upstreaming are written as patch files in `mac/upstream-proposals/` for the owner to send. |
 | DD6 | Net48 characterization tests (P0.2/P0.3 of §9.3) | Not possible without Windows. Replaced by net10 golden tests (P0.7a/b). Because no original file is edited, the Windows build cannot change. An optional Windows recorder (P4.16) is v1-optional. |
-| DD7 | Closing the library window | The app keeps running (Mac convention); Window > Library (Cmd+0) and a Dock click reopen it (P5.10b). |
+| DD7 | Closing the library window | The app keeps running (Mac convention, ledger deviation of type native); Window > Library and a Dock click reopen it (P5.10b). Amended by R9: the shortcut is Option+Cmd+0, because Cmd+0 is the original Right to Left (Ctrl+0, ledger MD.12). |
 | DD8 | Reader defaults | WinForms defaults: single page, Best Fit ("Fit All"), right to left from the book's manga flag, swipe at the edge of a zoomed page turns the page; all remembered in preferences (P5.1, P5.23d). |
 | DD9 | Cover cache | 256 MB stays the default and becomes a preference (P5.22b); P3.3 may lower it if the Release numbers say so. |
 | DD10 | Archive writing (Q3) | Bundle the official 7-Zip macOS console binary `7zz` and keep the Core's own 7z path for ComicInfo writes (P2.4a/b); no RAR creation ever. |
@@ -63,10 +65,13 @@ Where things are: decisions §1, rules §2, facts §3, checkpoints §4, harness 
 | DD13 | `.compat` overlays (Q11) | Allowed as a last resort, maintained in this fork (P4.14). |
 | DD14 | HTML panel bridge (Q12) | Small in-house WKWebView wrapper (P4.11c). |
 | DD15 | Details-view control | A custom virtualized table on `ItemsRepeater` (already used). Avalonia's `TreeDataGrid` licence must be checked before any use (P5.11a records it); no paid component (D1 note). |
-| DD16 | Workspaces and tabs of the WinForms main window | Not ported (macOS has windows, Spaces and full screen); "Open in New Window" for a list is ported (P5.16a). |
+| DD16 | Workspaces and tabs of the WinForms main window | **Superseded by R9 (2026-10-20):** ported. The main window hosts the reader with book tabs (P5.32a), the browser docks and has its own tabs (P5.32b), workspaces are saved and applied (P5.32c); "Open in New Window" stays (P5.16a). |
 | DD17 | Translations of new strings | Existing TR translations are reused where the key exists; new Mac-only keys ship in English until translators add them (P5.27a). |
-| DD18 | Web comics (`.cbw`) and Ghostscript | Not in the D4 format list: not tested or surfaced in v1; whatever the Core does stays. |
-| DD19 | Keyboard shortcut editor of the Windows Preferences | Not ported: macOS System Settings > Keyboard > App Shortcuts can rebind any menu item; the reader's non-menu keys get a small table in the Reader pane only if P5.22a has room. |
+| DD18 | Web comics (`.cbw`) and Ghostscript | **Amended by R9:** "Update Web Comics" and its startup option are ported (Core feature, P5.19b, ledger MF.08, PB.04); Ghostscript stays whatever the Core does. |
+| DD19 | Keyboard shortcut editor of the Windows Preferences | **Superseded by R9:** ported as in the original (Preferences > Reader > Keyboard, import/export of the original layout files, P5.22c). |
+| DD20 | Keyboard shortcut mapping (R9) | Ctrl becomes Cmd, Alt becomes Option, Shift, function keys and the reader's single keys stay. A chord that macOS reserves or that is a standard Mac command with a different meaning gets Option added, then Ctrl+Cmd if that is taken too. Mac aliases are added where the command has a Mac standard (Cmd+, Ctrl+Cmd+F, Cmd+Shift+Z, Cmd+?, Cmd+W for Close, Cmd+Backspace for Remove). The full list is `mac/plans/chrome-guidelines.md` §6; every value is decided in the ledger's "Win → Mac" column, which tasks implement and P7.A1 checks. Replaces the shortcut bullet of the MVP rules. |
+| DD21 | Chrome defaults (R9 b) | The defaults of `mac/plans/chrome-guidelines.md` §7 (C-* rows): native for window frame, menu bar, scrollbars, standard panels and alerts, full screen, popup-menu rendering, text editing, focus rings, Dock and app menu, appearance switching, system font family; original for everything ComicRack draws itself (tokens, toolbars, tabs, status bar, item views, trees, headers, splitters, group boxes, dialogs and their button order, Preferences layout, dialog controls, reader chrome, icons, font sizes). The owner confirms or flips the rows with a flip cost on the C2 contact sheet. |
+| DD22 | R9 and the D4 scope | R9 does not widen D4: device sync, library sharing (remote libraries, server settings, wireless setup) and DjVu stay deferred; their ledger rows say `deferred (D4)`. Everything else in the original is in v1, including what earlier defaults had dropped (workspaces, tabs, keyboard editor, minimal UI, realistic page display, splash, tray equivalent, web comics). |
 
 ---
 
@@ -96,7 +101,7 @@ The MVP rules about one branch per task (`mac/<task-id>`, `mac/mvp`), PR descrip
 Every replacement gets a manifest entry in `mac/replacements.json` (P0.4) in the same commit. Prefer a patched copy over a rewrite: it re-syncs automatically.
 
 ### 2.4 Gates
-- **Fast gate** = `mac/tools/verify.sh` (disk guard, rule 1, build of `mac/ComicRack.Mac.slnx`, all tests except `Slow` and `E2E`; about 1 to 2 minutes incremental). Every task's acceptance includes it.
+- **Fast gate** = `mac/tools/verify.sh` (disk guard, rule 1, build of `mac/ComicRack.Mac.slnx`, all tests except `Slow` and `E2E`, and from P5.T3 on the parity ledger check; about 1 to 2 minutes incremental). Every task's acceptance includes it.
 - **Full gate** = `mac/tools/verify.sh --full` (adds `Slow` tests), then `mac/tools/e2e.sh` (after P0.6b; exit 4 = screen locked, recorded as skipped), then `dotnet run --project mac/tools/census -- --pass B` (0 errors) and `dotnet run --project mac/tools/drawing-coverage` (PASS), then after P0.5c `mac/tools/upstream-sync-check.sh --no-merge`. The orchestrator runs it every 5 tasks and at the end of each wave (`RUNBOOK.md` §4).
 - A task is done only when its acceptance commands pass. A check that needs the owner is recorded under the task ("Owner check") and folded into a checkpoint, never faked.
 
@@ -127,7 +132,7 @@ Every replacement gets a manifest entry in `mac/replacements.json` (P0.4) in the
 - Nothing slow on the UI thread: list evaluation, catalog builds, file IO and decodes run on the pool.
 - Pixels: never wrap Core-owned bitmaps (DD1); `CoverImage`/`PixelBlock` reference counting for anything drawn.
 - Log through `AppLog`. New UI strings go through TR (after P2.6).
-- Shortcuts: a Windows `Ctrl+X` becomes `Cmd+X` unless it clashes with a macOS standard (Cmd+H, Cmd+M, Cmd+Q, Cmd+W, Cmd+, , Cmd+Shift+3/4/5, Ctrl+Cmd+F, Cmd+Space, Cmd+Tab); then Option+Cmd. Function-key shortcuts (F3, F5 to F9) get a Cmd chord or stay menu-only. Each task records its mapping in its §3 facts.
+- Shortcuts: DD20 (R9). The value of every shortcut is the one in the ledger's "Win → Mac" column; a task that finds a clash not foreseen there applies the DD20 rule, writes the value into the ledger row and reports it. Function keys stay bound (they need fn on laptops).
 
 ### 2.9 Rollback (default for every task)
 Each task is one commit on `macos` that touches only `mac/` (and possibly `MACOS_NATIVE_PATH.md` or `.github/workflows/mac-*`): roll back with `git revert <commit>`. Windows is never affected. A task block names a different rollback only when it has one (data migration, bundle identity).
@@ -137,6 +142,19 @@ Each task is one commit on `macos` that touches only `mac/` (and possibly `MACOS
 - Never change system settings except, when `E2E_ALLOW_APPEARANCE=1`, the light/dark appearance, which it restores.
 - Never scan protected folders (`~/Documents`, `~/Desktop`, `~/Downloads`, external or network volumes): that would raise TCC prompts in the owner's session. Use folders under the repo or `$TMPDIR`.
 - The grants belong to VS Code: run sessions from VS Code (integrated terminal or the Claude Code extension). From another terminal app, `screencapture` and System Events fail (exit 4 "no GUI access").
+
+### 2.11 Parity and chrome policy (R9, D9; binding for every UI task)
+
+Applies to every task that adds or changes something a user sees: all P5 tasks, P4.5, P4.10a to P4.11e, P5.T*, P5.R*, P6.1 (icon), P7.1, P7.5, P7.A*. The task block's `Parity:` line names the ledger rows, view specs and chrome decisions that apply.
+1. **Derive a view spec from the WinForms original before coding.** For every original form, user control or custom-drawn view the task touches, write or extend `mac/specs/views/<OriginalTypeName>.md` (content and the `designer-dump` helper: `mac/plans/chrome-guidelines.md` §8). The original files are read, never edited.
+2. **Reproduce layout, fields and labels exactly**: same groups, order, controls, defaults, enable rules and button set; every label, menu text and message through the **original TR key** (section = form type name, key = control name, `ComicRack/Output/Languages/<culture>/<Form>.xml`), never a retyped English string. New Mac-only text gets a new key (DD17) and a `mac-only` ledger row.
+3. **Same behaviour and defaults**: commands do what the original's handler does (read `ComicRack/MainForm.cs` command bindings, the view's code-behind and the Core); option defaults equal `ComicRack/Config/Settings.cs` (tested in P5.1); shortcuts per the ledger (DD20).
+4. **Original icons and images** only, through `Icons.Get("<ResourceName>")` (P5.T2); no SF Symbols or new artwork for ComicRack chrome.
+5. **One shared theme**: colours only from the `Cr.*` tokens of `mac/ComicRack.Mac/Themes/` (P5.T1, chrome-guidelines §2), fonts and metrics from chrome-guidelines §3 and §4, control looks from the P5.T4 styles. No literal colours in views (a lint test from P5.T4 enforces it).
+6. **What stays native** is exactly chrome-guidelines §7 (window frame, menu bar, scrollbars, standard panels and alerts, full screen, popup-menu rendering, text editing, focus rings, Dock and app menu, appearance switching). Any other native-over-original choice needs a new §7 row with rationale, added by the task and listed in its report.
+7. **Ledger**: in the same commit, the task sets each of its ledger rows to `done <date>`, `deviation` (with `impossible: ...` or `native: <C-id>`) or leaves `todo` with the task that will finish it. `mac/tools/ledger-check` (P5.T3; part of `verify.sh` from then on) rejects malformed rows and original menu items without a row.
+8. **Visual check**: headless token and metric assertions, ui-drive shots in light and dark, and a contact sheet for the views the task changed (chrome-guidelines §9); the sheet path goes into the task's report and §3 facts. Look-and-feel verdicts belong to the owner and are collected on the C2 and C6 sheets, never claimed by a session.
+9. **Additions are allowed only as additions**: a Mac convenience (an alias shortcut, a trackpad gesture, a Mac group in Preferences) never replaces or hides an original feature and always gets a `mac-only` row.
 
 ---
 
@@ -163,6 +181,15 @@ Each task is one commit on `macos` that touches only `mac/` (and possibly `MACOS
 - Rule for new tests: a test that asserts on a process-wide counter takes its baseline after `Gc.Flush()` (Mac.Tests) or `LiveSettled()` (Drawing.Tests); a test that opens a `MacHost` closes it in `using` or `finally`; never assert the start order of parallel work.
 - Gate numbers after R1: 10 consecutive `mac/tools/verify.sh` runs passed (781 tests; 64 to 92 s each, mean about 76 s), plus 11 more passing runs on the final test code; the gate stays far under 3 minutes. Before R1 one of three runs on the same tree failed.
 
+**Facts from the R9 planning session (2026-10-20)**
+- Correction of the planning-session fact on WinForms surfaces: the original main menu is **File, Edit, Browse, Read, Display, Help** (`ComicRack/MainForm.Designer.cs:436-445`); there is no View or Book menu. The MVP menus (File, View, Window, Help, plus the reader's) are restructured by P5.R1 and P5.R3.
+- The parity inventory was extracted mechanically from the Designer files (menu trees with names, texts, shortcut keys and images), `ComicRack/MainForm.cs:1261-1558` (command bindings, `commands.Add`) and `:1563-1800` (reader `KeyboardMap`, groups Library, Browse, Auto Scroll, Scroll, Display Options, Page Display, ZoomAndRotate, Edit, Other), the Behavior options (`Settings.cs` booleans with `Category`/`Description`, rendered by `cYo.Common.Windows/Forms/FormUtility.cs:219-232`) and `ComicRack.Plugins/PluginEngine.cs` (17 hook types). Result: `mac/plans/parity-ledger.md`.
+- The Behavior pane of Preferences is generated, not designed: `PreferencesDialog.cs:105` calls `FormUtility.FillPanelWithOptions(pageBehavior, Program.Settings, TR.Load("Settings"))`; 40 options in 8 categories (ledger PB rows, defaults included).
+- Script hooks `Editor`, `BookOpened` and `ReaderResized` were missing from P4.3/P4.5; P4.5 now owns them.
+- The original has two themes, Default (Windows system colours) and an experimental Dark selected only by `-dark`; colour tables, fonts, metrics, icon folders and the custom-drawn controls are documented with source lines in `mac/plans/chrome-guidelines.md` §1 to §5. The repository has **no screenshots** of the app; references are owner screenshots (optional), the optional Windows CI job P5.T5, or view specs.
+- MVP shortcuts that clash with the original and are realigned by P5.R1/P5.R3: Cmd+0 (DD7 Window > Library; original Right to Left), Option+Cmd+P (MVP performance overlay; original Previous Book), Ctrl+Cmd+S (MVP Show Sidebar; original Shift+F6), MVP fit shortcuts (original Ctrl+1 to Ctrl+0 for fit and layout).
+- Original shortcut duplicates kept as in the original: Ctrl+Shift+N (New fileless Book Entry and Next Bookmark), Ctrl+Shift+0 (Only fit if oversized and Rotation 270°).
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -171,14 +198,14 @@ A checkpoint is a block in `mac/plans/OWNER-ACTIONS.md` (template in `RUNBOOK.md
 
 | # | When it occurs | What the owner is asked | Why then | If there is no answer |
 |---|---|---|---|---|
-| **C1** Samples and corpus | Now (written in the initial inbox; optional, non-blocking) | (a) one or two real `.cbr` files and a `.cb7` made by real 7-Zip, copied to `mac/fixtures/owner/` (git-ignored); (b) the plugins you use (names, or a copy of your Scripts folder to `mac/fixtures/owner/scripts/`); (c) optional: a copy of your Windows `Config.xml` to `mac/fixtures/owner/Config.xml`; (d) optional: your notes from `mac/plans/mvp-acceptance.md` §8.12 | P0.7b, P2.4b, P4.6b and P5.28b use them; the earlier the better | CBR/real-7z tests stay skipped (recorded as unverified); the corpus is the bundled samples plus public plugins; `Config.xml` import is tested on a synthetic file |
-| **C2** Mid-port review | After wave B (§6): about 35 tasks in, when the main window has editing, context menus and write-back | 30 to 60 minutes with a copy of your library: (a) the checks only a person can do: trackpad swipe and pinch feel, scroll feel, Retina sharpness, Metal frame rate; (b) an SMB share scan and the TCC prompts; (c) a CBR from your library; (d) push `macos` to `origin` once and look at the Actions tab (P3.9 CI); (e) approve or reject pending edit proposals and upstream proposals, if any | First moment the app is used like a daily tool; real-input defaults (swipe threshold, pinch speed) can still be tuned cheaply | Work continues through waves C to F; the items move to C6 |
+| **C1** Samples and corpus | Now (written in the initial inbox; optional, non-blocking) | (a) one or two real `.cbr` files and a `.cb7` made by real 7-Zip, copied to `mac/fixtures/owner/` (git-ignored); (b) the plugins you use (names, or a copy of your Scripts folder to `mac/fixtures/owner/scripts/`); (c) optional: a copy of your Windows `Config.xml` to `mac/fixtures/owner/Config.xml`; (d) optional: your notes from `mac/plans/mvp-acceptance.md` §8.12; (e) optional (added by P5.T3, R9): screenshots of the Windows app for the views it lists, to `mac/fixtures/owner/reference/` | P0.7b, P2.4b, P4.6b and P5.28b use them; (e) becomes the reference column of the contact sheets; the earlier the better | CBR/real-7z tests stay skipped (recorded as unverified); the corpus is the bundled samples plus public plugins; `Config.xml` import is tested on a synthetic file |
+| **C2** Mid-port review | After wave B (§6): about 35 tasks in, when the main window has editing, context menus and write-back | 30 to 60 minutes with a copy of your library: (a) the checks only a person can do: trackpad swipe and pinch feel, scroll feel, Retina sharpness, Metal frame rate; (b) an SMB share scan and the TCC prompts; (c) a CBR from your library; (d) push `macos` to `origin` once and look at the Actions tab (P3.9 CI; if P5.T5 exists, run "mac-reference-shots" once and unzip its artifact into `mac/fixtures/owner/reference/ci/`); (e) approve or reject pending edit proposals and upstream proposals, if any; (f) **chrome review, about 10 minutes**: open `mac/artifacts/chrome/C2/sheet.png` (or `sheet.html`), one row per view: reference, Mac light, Mac dark; answer per row "ok" or what differs, and confirm or flip the chrome-guidelines §7 defaults that have a flip cost (C-MENU-3, C-TB-1, C-TREE-1, C-DLG-2 button order, C-PREF-1, C-CTRL-1, C-FONT-1 small captions) | First moment the app is used like a daily tool; real-input defaults (swipe threshold, pinch speed) can still be tuned cheaply; the chrome foundation is done but most screens are not built yet, so a flip is cheap | Work continues through waves C to F; the items move to C6; the §7 defaults stand |
 | **C3** Script layer go/no-go (conditional) | Only if spike P4.1 (IronPython) or P4.2 (modal loop, identity mapping) ends NO-GO or needs a choice that weakens D6 | Choose between the options the spike wrote (for example IronPython 3.4 with a compatibility notice, or modeless-only dialogs) | D6 ("scripts run unmodified") is binding; only the owner can relax it | All non-script work continues; scripts run headless only (P4.3 to P4.6); the Script UI tasks (P4.7 onwards) stay blocked |
 | **C4** Plugin acceptance | After P4.15 (end of wave E) | Run your top plugins on the Mac with `mac/plans/plugin-acceptance.md` (P4.15), about 1 hour | Only you know what "works" means for your scripts | v1 ships with the automated corpus results; the checklist moves to C6 |
 | **C5** Release identity and credentials | When P6.1 to P6.6 are done (or earlier, whenever the owner is ready) | (a) Developer ID Application certificate in the login keychain; (b) `xcrun notarytool store-credentials comicrack-notary ...`; (c) confirm the bundle id `org.comicrackce.ComicRack` and the name `ComicRack CE`, or give others; (d) optional: a 1024 px icon source; (e) GitHub secrets for `mac-release.yml` if you want CI releases | Signing and notarization cannot be done without them; ad-hoc builds continue until then | P6.7 (signed, notarized release candidate) stays blocked; everything else proceeds |
-| **C6** v1 acceptance and release go | After P7.8 | `mac/plans/v1-acceptance.md` (all leftover owner-only checks from C2 and C4, a clean-user Gatekeeper launch, a final verdict) | End of the plan | Nothing is released; the app stays a local build |
+| **C6** v1 acceptance and release go | After P7.8 | `mac/plans/v1-acceptance.md` (all leftover owner-only checks from C2 and C4, a clean-user Gatekeeper launch, the **parity summary**: every ledger deviation with its reason and the `deferred (D4)` list; the **final chrome contact sheet** `mac/artifacts/chrome/C6/sheet.png` of every view, light and dark, about 15 minutes; a final verdict) | End of the plan | Nothing is released; the app stays a local build |
 
-**Checks that remain owner-only** (everything else is automated with `mac/tools/e2e.sh` or headless tests): trackpad gestures (two-finger swipe, pinch, momentum; macOS has no public API to synthesize them), scroll and page-turn *feel*, Metal/ProMotion frame-rate perception and multi-display behaviour, SMB/NAS libraries, TCC prompts on really protected folders, real CBR and real 7-Zip archives (samples), the owner's own plugins, Developer ID signing and notarization, Gatekeeper on a clean user or Mac, VoiceOver judgement, look and feel verdicts in light and dark mode.
+**Checks that remain owner-only** (everything else is automated with `mac/tools/e2e.sh` or headless tests): trackpad gestures (two-finger swipe, pinch, momentum; macOS has no public API to synthesize them), scroll and page-turn *feel*, Metal/ProMotion frame-rate perception and multi-display behaviour, SMB/NAS libraries, TCC prompts on really protected folders, real CBR and real 7-Zip archives (samples), the owner's own plugins, Developer ID signing and notarization, Gatekeeper on a clean user or Mac, VoiceOver judgement, look and feel verdicts in light and dark mode (collected on one contact sheet at C2 and one at C6, chrome-guidelines §9), changes of the system default apps (P5.34).
 
 ---
 
@@ -220,6 +247,13 @@ A checkpoint is a block in `mac/plans/OWNER-ACTIONS.md` (template in `RUNBOOK.md
 ### 5.4 Unattended loop (P0.8)
 - `mac/tools/run-plan.sh [--max-tasks N] [--dry-run]` starts one headless orchestrator run per task (`claude -p "<resume prompt>" --model sonnet --effort high`), checks the `Run state:` line of this file after each run, and ends on `STOPPED`, on a checkpoint STOP, on `--max-tasks`, or after two runs in a row that commit nothing. It needs a permission allowlist (`RUNBOOK.md` §7); `--dangerously-skip-permissions` is the owner's choice and is not used by default.
 
+### 5.5 Parity tooling (P5.T1 to P5.T4)
+- `Cr.*` theme tokens with a test that re-reads the original colour tables (P5.T1); `--theme light|dark` app option.
+- `Icons.Get(name)` over the original images linked at build time, `Assets/icon-map.json` generated from the `Resources.resx` files with a staleness test (P5.T2).
+- `mac/tools/designer-dump/designer-dump.py <Form.Designer.cs>` (view-spec skeleton), `mac/tools/ledger-check/ledger-check.py [--report] [--menus <ui-drive dump>]` (ledger format, coverage of every original menu and toolbar item, comparison of the running app's menus and shortcuts with the ledger), hidden app options `--show <ViewName>` and `--fixture-library <dir>`, `crcli image sheet`, `mac/tools/chrome-sheet.sh <label> [--all|View...]` (contact sheets in `mac/artifacts/chrome/<label>/`) (P5.T3).
+- Control themes and custom controls (`CrToolBar`, `CrSplitButton`, `CrTabBar`, `CrStatusBar`, `CrCollapsibleGroup`, `CrSizableContainer`, `CrHeader`, `CrDialogWindow`, `MacAlert`), the chrome gallery (`--show ChromeGallery`) and a lint test against literal colours in views (P5.T4).
+- After an upstream merge, `ledger-check` fails on a new or renamed original menu item and the token test fails on a changed original colour: both become U-tasks (`RUNBOOK.md` §5).
+
 ---
 
 ## 6. Execution order
@@ -227,19 +261,19 @@ A checkpoint is a block in `mac/plans/OWNER-ACTIONS.md` (template in `RUNBOOK.md
 The orchestrator takes the first task in this list whose status is `todo` and whose dependencies are `done` or `done-with-caveat`. Waves are not barriers; they set priority. The full gate and a review run at each wave end.
 
 - **Wave A, safety net and tooling:** P0.2, P0.3, P0.4, P0.6a, P0.6b, P0.8, P1.2, P1.1, P1.3, P0.5a, P0.5b, P0.5c, P0.7a, P0.7b, P4.1 (S4), P4.2 (S6).
-- **Wave B, daily use of the main window:** P5.0, P5.1, P5.2, P5.3, P5.4, P2.1, P5.5, P5.6, P2.4a, P2.4b, P5.7a, P5.7b, P5.7c, P5.8, P5.9, P5.10a, P5.10b, P2.6, P4.3, P3.9. → **C2**.
-- **Wave C, browsing and library management:** P5.11a, P5.11b, P5.12, P5.13a, P5.13b, P5.14, P5.15a, P5.15b, P5.16a, P5.16b, P5.16c, P5.17a, P5.17b, P5.17c, P5.18, P2.2, P5.19a, P5.19b, P5.20, P5.21, P3.1, P3.2, P3.3, P3.10, P4.4, P4.5, P4.6a, P4.6b.
-- **Wave D, reader, preferences, export, codecs:** P3.4, P3.5a, P3.5b, P3.6, P5.22a, P5.22b, P5.23a, P5.23b, P5.23c, P5.23d, P5.23e, P2.3a, P2.3b, P2.3c, P2.5, P5.24a, P5.24b, P5.25, P5.26, P5.27a, P5.27b, P5.28a, P5.28b, P5.29, P5.30, P5.31, P3.7, P3.8.
+- **Wave B, chrome foundation, then daily use of the main window:** P5.0, P2.6, P5.T1, P5.T2, P5.T3, P5.T4, P5.R1, P5.R2, P5.R3, P5.1, P5.2, P5.3, P5.4, P2.1, P5.32a, P5.5, P5.6, P2.4a, P2.4b, P5.7a, P5.7b, P5.7c, P5.8, P5.9, P5.10a, P5.10b, P4.3, P3.9, P5.T5 (optional). → **C2** (with the C2 contact sheet).
+- **Wave C, browsing and library management:** P5.32b, P5.11a, P5.11b, P5.12, P5.13a, P5.13b, P5.14, P5.15a, P5.15b, P5.16a, P5.16b, P5.16c, P5.17a, P5.17b, P5.17c, P5.18, P2.2, P5.19a, P5.19b, P5.20, P5.21, P3.1, P3.2, P3.3, P3.10, P4.4, P4.5, P4.6a, P4.6b.
+- **Wave D, reader, preferences, export, codecs:** P3.4, P3.5a, P3.5b, P3.6, P5.22a, P5.22b, P5.22c, P5.32c, P5.33, P5.23a, P5.23b, P5.23c, P5.23d, P5.23e, P5.23f, P2.3a, P2.3b, P2.3c, P2.5, P5.24a, P5.24b, P5.25, P5.26, P5.27a, P5.27b, P5.28a, P5.28b, P5.29, P5.30, P5.31, P5.34, P3.7, P3.8.
 - **Wave E, Script UI layer** (runs only if P4.2 is GO, else C3): P4.7, P4.8, P4.9a, P4.9b, P4.9c, P4.9d, P4.9e, P4.9f, P4.9g, P4.10a, P4.10b, P4.10c, P4.10d, P4.10e, P4.10f, P4.10g, P4.11a, P4.11b, P4.11c, P4.11d, P4.11e, P4.12a, P4.12b, P4.13a, P4.13b, P4.13c, P4.14, P4.15 → **C4**; P4.16 (optional).
-- **Wave F, packaging and hardening:** P6.1, P6.5, P6.2, P6.3, P6.4, P6.6, P7.1, P7.2, P7.3, P7.4, P7.5, P7.6, P7.7, P5.23f (optional), P6.7 (needs **C5**), P7.8 → **C6**.
-- **Front of the list now:** R1 (flaky fast gate).
+- **Wave F, packaging, hardening and parity audits:** P6.1, P6.5, P6.2, P6.3, P6.4, P6.6, P7.1, P7.2, P7.3, P7.4, P7.5, P7.6, P7.7, P7.A1, P7.A2, P7.A3, P7.A4, P6.7 (needs **C5**), P7.8 → **C6**.
+- **Front of the list now:** nothing (R1 done 2026-10-17).
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`R<n>`) go to the **front** of the list.
 
 ---
 
 ## 7. Tasks
 
-Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort** (session effort level, Sonnet tier for all implementation) · **Unattended** (`yes`, or `partial: <owner part> -> Cn`) · **Status**; **Goal**; **Add**; **Edit** (files under `mac/`; originals: none unless stated); **Out of scope**; **Accept** (commands; `verify.sh` = `mac/tools/verify.sh`); **Rollback** (default §2.9 unless stated). Paths are relative to the repository root.
+Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort** (session effort level, Sonnet tier for all implementation) · **Unattended** (`yes`, or `partial: <owner part> -> Cn`) · **Status**; **Goal**; **Add**; **Edit** (files under `mac/`; originals: none unless stated); **Out of scope**; **Accept** (commands; `verify.sh` = `mac/tools/verify.sh`); **Rollback** (default §2.9 unless stated); **Parity** (UI tasks: ledger rows by ID or prefix, view specs, chrome decisions; §2.11 applies in full, including the ledger update and the contact sheet, even where the Accept line does not repeat it). Paths are relative to the repository root.
 
 ### P0 Safety net and tooling
 
@@ -503,6 +537,7 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Add: `mac/ComicRack.Mac.Host/Scripting/{MacPluginEnvironment,MacScriptApplication,ScriptFolders,ScriptHost}.cs` (implementations of `IPluginEnvironment`, `IApplication`, `IBrowser`, `IOpenBooksManager` over the host; UI calls go to an injectable `IScriptUi` that headless runs answer with defaults), IronPython StdLib in the output (`IronPython.StdLib` package of the same version), script folders = bundled `Scripts/` (P2.6) + `<data>/Scripts`; `crcli script run <file.py> --hook Books --db x.xml` and `crcli script expr "<expr>" --db x.xml`.
 - Edit: `mac/ComicRack.Mac.Host/MacHost.cs`, `mac/ComicRack.Mac.Host/Library/LibraryLists.cs`, `mac/ComicRack.Mac/ViewModels/SidebarViewModel.cs`.
 - Accept: tests: every bundled sample's headless hooks run on a fixture DB; a Python expression list gives the same count as the equivalent non-Python matcher; `crcli smartlist --all --remap ...` on the fixture DB shows numbers for "Missing (to fix)" and "Next issues to read" (recorded); `verify.sh`.
+- Parity: SC.01 to SC.03, SC.05, SC.06, SC.09 to SC.11, SC.18 (headless part; ledger rows stay `todo` until P4.5 adds the UI part where the row names it).
 
 #### P4.4 `.crplugin` install and script management
 - Depends: P4.3 · Effort: medium · Unattended: yes · Status: todo
@@ -512,9 +547,10 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 
 #### P4.5 Scripts menu, automation commands, script console
 - Depends: P4.3, P5.3, P5.5 · Effort: high · Unattended: yes · Status: todo
-- Goal: the "Automation" commands of the WinForms menus: script commands listed by hook and menu, run on the selected books on a worker with progress and cancel, output in a script console window (the `ScriptOutputForm` equivalent), errors shown.
+- Goal: the "Automation" commands of the WinForms menus: script commands listed by hook and menu, run on the selected books on a worker with progress and cancel, output in a script console window (the `ScriptOutputForm` equivalent), errors shown. Also the hooks that need the UI (R9): `Editor` (commands in the Info dialog), `BookOpened` (on every book open in the reader) and `ReaderResized` (on reader size changes), with the arguments the WinForms app passes (read `ComicRack/MainForm.cs` and `ComicRack/ScriptUtility.cs`).
 - Add: `mac/ComicRack.Mac/Scripting/{ScriptCommandsViewModel,ScriptConsoleWindow}.*`; menu items in `MainMenu.cs` and the grid context menu; e2e case `scripts-menu` (runs a sample command on two books, console shows output).
-- Accept: tests; `mac/tools/e2e.sh scripts-menu`; `verify.sh`.
+- Accept: tests (a test script's `BookOpened` and `ReaderResized` hooks are called with the book and the size); `mac/tools/e2e.sh scripts-menu`; `verify.sh`.
+- Parity: MF.12, BC.15, SC.01 to SC.04, SC.07, SC.08, DL.27; view spec `ScriptOutputForm`; C-DLG-2.
 
 #### P4.6a Script compatibility scanner `crcli script-scan`
 - Depends: P4.3 · Effort: high · Unattended: yes · Status: todo
@@ -578,8 +614,8 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Accept: tests; `verify.sh`.
 
 #### P4.10a FormsBackend skeleton
-- Depends: P4.9f · Effort: xhigh · Unattended: partial (real-window checks need an unlocked GUI) · Status: todo
-- Goal: new project `mac/ComicRack.Mac.FormsBackend` (Avalonia; in the solution): peer registry, `Form` to `Window` (owner = main window, modal), Canvas-based containers at facade-computed rectangles, nested `DispatcherFrame` for `RunModal`, peers for `Label`, `Button`, `Panel`, `GroupBox`; wired into the app's `IScriptUi`.
+- Depends: P4.9f, P5.T4 · Effort: xhigh · Unattended: partial (real-window checks need an unlocked GUI) · Status: todo
+- Goal: new project `mac/ComicRack.Mac.FormsBackend` (Avalonia; in the solution): peer registry, `Form` to `Window` (owner = main window, modal), Canvas-based containers at facade-computed rectangles, nested `DispatcherFrame` for `RunModal`, peers for `Label`, `Button`, `Panel`, `GroupBox`; wired into the app's `IScriptUi`. R9: peers use the P5.T4 control themes and `Cr.*` tokens (C-CTRL-1, C-DLG-2), so a script dialog looks like a ComicRack WinForms dialog; this holds for every later P4.10/P4.11 peer.
 - Accept: headless tests (frames saved); e2e case `script-dialog-basic` (a test script shows a dialog with a label and OK; ui-drive clicks OK; the script receives `DialogResult.OK`); `verify.sh`.
 
 #### P4.10b Input controls
@@ -616,11 +652,13 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Depends: P4.10a, P5.6, P5.29 · Effort: high · Unattended: yes · Status: todo
 - Goal: `ScriptPanelHost` shows a script's control as a tab of the info panel and in Quick Open, calls `ShowInfo(books)` on selection change (contract of `ComicRack/ScriptUtility.cs` `CreatePagesUI`).
 - Accept: tests with `Sample.py`; e2e case `script-panel`; `verify.sh`.
+- Parity: SC.14, SC.16, IP.01; view spec `ComicPageContainerControl`.
 
 #### P4.11b Hook host: `DrawThumbnailOverlay`
 - Depends: P4.10e · Effort: high · Unattended: yes · Status: todo
 - Goal: the grid calls overlay hooks per cell with a `Graphics` over the cell canvas (clip = cell); results cached with the thumbnail and invalidated on book change; budget below 1 ms per visible cell (measured, logged).
 - Accept: tests (`FadeReadThumbnails`-style sample darkens read covers; cache hit avoids the Python call); `verify.sh`.
+- Parity: SC.17 (overlay drawn over the P5.R2 cell exactly where the original draws it: after the cover, before the selection).
 
 #### P4.11c WKWebView host control
 - Depends: none · Effort: xhigh · Unattended: partial (real rendering needs an unlocked GUI) · Status: todo
@@ -631,11 +669,13 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Depends: P4.11c, P4.3 · Effort: high · Unattended: yes · Status: todo
 - Goal: `ComicInfoHtml`/`QuickOpenHtml` (strings starting with `!` are URLs), the JavaScript proxy for `window.external` forwarding to the `ScriptProvider` object model (`ComicRack.Plugins/Controls/HtmlComicPageControl.cs` semantics), snapshot for synchronous property reads, the `WebBrowser` facade control (Navigate, DocumentText).
 - Accept: test with `Sample.py`'s HTML panel (`window.external.ComicRack.OpenBooks.OpenFile` call reaches the host); `verify.sh`.
+- Parity: SC.13, SC.15.
 
 #### P4.11e Plugin environment extras and Scripts preferences
 - Depends: P4.10a, P5.22a · Effort: high · Unattended: yes · Status: todo
-- Goal: `IPluginEnvironment.MainWindow` (facade handle of the main window) and `Theme` (facade `ToolStripRenderer` with macOS colours), `ConfigScript` through the modal path, the Scripts preferences pane (enable/disable, per-script compatibility report from P4.6a, install by drag and drop or a button).
+- Goal: `IPluginEnvironment.MainWindow` (facade handle of the main window) and `Theme` (facade `ToolStripRenderer` with the original ComicRack colours from the `Cr.*` tokens, light or dark as the app), `ConfigScript` through the modal path, the Scripts preferences pane exactly as the original Scripts tab (groups Script Packages, Available Scripts, Script Settings with their buttons and options) plus a Mac group with the per-script compatibility report from P4.6a; install by the original Install... button and by drag and drop.
 - Accept: tests; e2e case `scripts-prefs`; `verify.sh`.
+- Parity: PR.14 to PR.16, SC.12, FF.04; view spec `PreferencesDialog` (Scripts tab); C-GRP-1.
 
 #### P4.12a Corpus smoke run
 - Depends: P4.6b, P4.10a · Effort: high · Unattended: yes · Status: todo
@@ -678,277 +718,431 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 
 ### P5 Screens (main window parity)
 
-Every P5 task: view-model tests on the headless platform (frames saved when `CRMAC_FRAMES_DIR` is set), at least one e2e case under `mac/tests/e2e/cases/`, strings through TR once P2.6 is done, and a short spec in the task's §3 facts of what the WinForms original does (read from the named files, never edited).
+Every P5 task: view-model tests on the headless platform (frames saved when `CRMAC_FRAMES_DIR` is set), at least one e2e case under `mac/tests/e2e/cases/`, and the parity and chrome policy of §2.11: a view spec in `mac/specs/views/` for every original view it touches (read from the named files, never edited), labels through the original TR keys (P2.6), colours, fonts, metrics and icons from the P5.T1, P5.T2 and P5.T4 foundation, the ledger rows of its `Parity:` line updated in the same commit, shots in light and dark and a contact sheet of the changed views (path in the report). "Exactly as the original" in a Goal means: same items, order, labels, defaults, enable rules and shortcuts as the ledger says.
 
 #### P5.0 Owner MVP notes intake (M2.5)
 - Depends: none · Effort: low · Unattended: yes · Status: todo
-- Goal: if `mac/plans/mvp-acceptance.md` has Verdicts or `OWNER-ACTIONS.md` has MVP notes (C1 d), turn each "Issue"/"Fail" into a task `P5.0.<n>` in §7 and §6 (front of wave B); else mark `skipped (no notes)`.
+- Goal: if `mac/plans/mvp-acceptance.md` has Verdicts or `OWNER-ACTIONS.md` has MVP notes (C1 d), turn each "Issue"/"Fail" into a task `P5.0.<n>` in §7 and §6 (front of wave B); else mark `skipped (no notes)`. A note that asks for a non-original look or behaviour is checked against R9 first: if it conflicts, it becomes a question in the C2 block instead of a task.
 - Accept: §7 updated or the skip recorded; `verify.sh`.
+
+#### P5.T1 Theme tokens and appearance (chrome foundation 1)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: `mac/plans/chrome-guidelines.md` §2 as Avalonia resources: every `Cr.*` token in a light and a dark dictionary, the light toolstrip colours computed from the Windows 10 system colours, the selection style of §2.4 as a helper, appearance switching per C-APP-1 (follow macOS; `--theme light|dark` overrides, used by contact sheets and e2e).
+- Add: `mac/ComicRack.Mac/Themes/ComicRackTheme.Light.axaml`, `ComicRackTheme.Dark.axaml`, `ThemeTokens.cs` (typed access; `StyledSelection` frame and fill alpha per state), `ProfessionalColors.cs` (port of the system-colour formulas of dotnet/winforms `ProfessionalColorTable` `InitSystemColors`/`InitCommonColors`, MIT header kept, plus the `OptimizedProfessionalColorTable` changes); `mac/tests/ComicRack.Mac.Tests/Theme/ThemeTokenTests.cs` (reads the original files named in chrome-guidelines §2 with regexes, compares every token; light system values from the comments of `KnownColorTableEx.cs`; the source root can be redirected by an environment variable for the mutation check).
+- Edit: `mac/ComicRack.Mac/App.axaml(.cs)` (theme dictionaries per `ThemeVariant`; Fluent stays the base control theme until P5.T4), `mac/ComicRack.Mac/AppOptions.cs` (`--theme`), `mac/plans/chrome-guidelines.md` §2.3 (write the computed light toolstrip values into the table).
+- Out of scope: control templates (P5.T4), existing views (P5.R*).
+- Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter FullyQualifiedName~ThemeToken`; mutation: a scratch copy of `ThemeColorTable.cs` with one changed colour, pointed to by the variable, fails the test (tried, restored); `dotnet run --project mac/ComicRack.Mac -- --smoke-test=3 --headless --theme dark --data-dir "$(mktemp -d)"` exits 0; `verify.sh`.
+- Parity: C-APP-1; chrome-guidelines §2.
+
+#### P5.T2 Original icons and images (chrome foundation 2)
+- Depends: none · Effort: medium · Unattended: yes · Status: todo
+- Goal: chrome-guidelines §5: every original image available by its resource name, without copying or editing an original file; dark variants; magenta transparency; Retina scaling as the original at 200 %.
+- Edit: `mac/ComicRack.Mac/ComicRack.Mac.csproj` (`AvaloniaResource` items with `Link` for `ComicRack/Resources/**`, `cYo.Common.Windows/Resources/**`, `ComicRack.Engine/Resources/**`, `ComicRack.Engine.Display.Forms/Resources/**`, `ComicRack/Icons/*.ico`).
+- Add: `mac/tools/icon-map/icon-map.py` (python3 standard library: reads the `Properties/Resources.resx` files of the four projects, writes `mac/ComicRack.Mac/Assets/icon-map.json`: resource name → linked path, dark variant if any), the committed `icon-map.json`, `mac/ComicRack.Mac/Themes/Icons.cs` (`Icons.Get(name)` → cached `Bitmap`, dark lookup by the current appearance, magenta key for GIF/BMP sources), tests `mac/tests/ComicRack.Mac.Tests/Theme/IconTests.cs` (the map is not stale: regenerating it in a temp folder gives the same JSON; every `global::...Properties.Resources.<Name>` used in `ComicRack/**/*.Designer.cs` resolves; a magenta pixel becomes transparent).
+- Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter FullyQualifiedName~IconTests` (number of resolved names recorded in §3); `git status --porcelain ComicRack cYo.Common.Windows ComicRack.Engine ComicRack.Engine.Display.Forms` empty; `verify.sh`.
+- Parity: C-ICON-1.
+
+#### P5.T3 Parity tooling: view specs, ledger check, contact sheets (chrome foundation 3)
+- Depends: P0.6a · Effort: high · Unattended: partial (the contact sheet needs an unlocked GUI; if locked: `done-with-caveat`) · Status: todo
+- Goal: the tools of §5.5 that every later UI task and the audits use.
+- Add: `mac/tools/designer-dump/designer-dump.py` (chrome-guidelines §8 skeleton from a `*.Designer.cs`); `mac/tools/ledger-check/ledger-check.py` (rules: unique IDs, valid statuses, `deviation` rows have a reason starting `impossible:` or `native:`, every Mac task ID exists in §7; coverage: every `ToolStripMenuItem`, `ToolStripButton`, `ToolStripSplitButton` and `ToolStripDropDownButton` name in `ComicRack/**/*.Designer.cs` appears in some row (rows may list several names or `prefix*` patterns); `--report` (counts per area and status); `--menus <file>` compares a `ui-drive menu-items` dump with the ledger's labels and Mac shortcuts); a call of `ledger-check.py` in `mac/tools/verify.sh` (fast, no build); hidden app options `--show <ViewName>` (opens a named window, dialog or view after launch; `ChromeGallery` and `MainWindow` at least, every later task registers its views) and `--fixture-library <dir>` (temp library from a `crcli fixtures make` folder) in `mac/ComicRack.Mac/AppOptions.cs`; `crcli image sheet --out <png> --cols N <image-or-card.json>...` (Skia composition with captions, in `mac/ComicRack.Cli/Core/ImageCommands.cs`, tests); `mac/tools/chrome-sheet.sh <label> [--all|<View>...]` (per view: launch with `--theme light` and `--theme dark` plus `--show`, shot, reference per chrome-guidelines §1, a reference card from `mac/specs/views/<View>.md` (layout outline, token swatches, icons), output `mac/artifacts/chrome/<label>/sheet.html` and `sheet.png`); the README hero image downloaded once to `mac/artifacts/chrome/reference/` (record the URL in §3).
+- Edit: `mac/plans/parity-ledger.md` (the first `ledger-check` run lists original item names without a row: add them to the matching rows' "Original location"; a genuinely new feature gets a new row), `mac/plans/OWNER-ACTIONS.md` (one optional block, C1 (e), "Reference screenshots of the Windows app": the list of views (main window with browser and reader, Info dialog each tab, Preferences each tab, Edit Smart List both dialogs, Export Books, Book Display Settings, List Options, a context menu of the browser, the reader with the navigation overlay), light theme, plus `-dark` if convenient, saved as `mac/fixtures/owner/reference/<View>[-dark].png`).
+- Accept: `python3 mac/tools/ledger-check/ledger-check.py` exits 0; removing a row in a scratch copy (`LEDGER=<copy>`) makes it exit 1 naming the item; `python3 mac/tools/designer-dump/designer-dump.py ComicRack/Dialogs/PreferencesDialog.Designer.cs | grep -c "Reader\|Libraries\|Behavior\|Scripts\|Advanced"` is at least 5; `dotnet test mac/tests/ComicRack.Cli.Tests --filter FullyQualifiedName~ImageSheet`; `mac/tools/chrome-sheet.sh T3 MainWindow` writes both files (exit 4 = locked: SKIPPED); `verify.sh`.
+- Parity: chrome-guidelines §8 and §9; the whole ledger (format and coverage).
+
+#### P5.T4 Base control styles and native pieces (chrome foundation 4)
+- Depends: P5.T1, P5.T2, P5.T3 · Effort: high · Unattended: partial (real-window shots need an unlocked GUI) · Status: todo
+- Goal: chrome-guidelines §7 as reusable styles and controls, shown together in a gallery: toolbar (C-TB-1: 25 px, flat 16 px icon buttons with the `Cr.Tool*` hover and pressed fills, split button with a 14 px arrow part and a drop-down menu, separators, text-and-icon buttons like "100 %"), tab bar (C-TAB-1: tab height 24, bar 31, left indent 8, min 60 / max 250 tab width, selected `TabBarSelectedBack`, close box, a toolbar slot at the right), status bar (C-SB-1: 24 px, stretching text segment, 20 × 19 sunken icon slots, slider slot), collapsible group box (C-GRP-1), sizable container with the 6 px MozillaGrip and collapse animation (C-SPLIT-1), column header (C-HDR-1), tree item template (C-TREE-1 base: row height font + 8, bold selected label, arrow glyph images, `StyledSelection`), control themes for buttons, check boxes, radio buttons, combo boxes, numeric up/down, sliders, list boxes, text box frames and tab controls from §2.1/§2.5 tokens (C-CTRL-1), popup-menu style (C-MENU-3), overlay scroll bars (C-SCROLL-1), native focus ring (C-FOCUS-1), font resources (C-FONT-1), `CrDialogWindow` (C-DLG-2: modal, centred on the owner, OK / Cancel / Apply row as the original, Return and Esc), `MacAlert` (C-DLG-1: `NSAlert` through the Objective-C runtime, suppression check box for the "do not show again" questions; fallback: the MVP `MessageWindow` restyled), automatic window tabbing off (C-WIN-3).
+- Add: `mac/ComicRack.Mac/Themes/Controls/*.axaml`, `mac/ComicRack.Mac/Controls/{CrToolBar,CrSplitButton,CrTabBar,CrStatusBar,CrCollapsibleGroup,CrSizableContainer,CrHeader,CrDialogWindow}.cs`, `mac/ComicRack.Mac/Platform/MacAlert.cs`, `mac/ComicRack.Mac/Views/ChromeGalleryWindow.axaml(.cs)` (`--show ChromeGallery`: every control and state, light and dark), tests `mac/tests/ComicRack.Mac.Tests/Theme/ChromeMetricsTests.cs` (headless frames: the metrics above in DIPs, token pixels of toolbar hover, selection frame alpha 164 in Highlight, group header gradient ends) and `NoLiteralColorsTests.cs` (lint: no `#RRGGBB`, `Colors.` or `Brushes.` literal in `mac/ComicRack.Mac/Views/**` and `.axaml` outside `Themes/`; existing MVP files are listed as known exceptions until P5.R1 to P5.R3 remove them).
+- Edit: `mac/ComicRack.Mac/App.axaml` (Cr control themes override Fluent where defined).
+- Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter "FullyQualifiedName~ChromeMetrics|FullyQualifiedName~NoLiteralColors"`; e2e case `chrome-gallery` (shots light and dark, probes of two tokens); `mac/tools/chrome-sheet.sh T4 ChromeGallery`; `verify.sh`.
+- Parity: chrome-guidelines §7 rows C-TB-1, C-TAB-1, C-SB-1, C-GRP-1, C-SPLIT-1, C-HDR-1, C-TREE-1, C-CTRL-1, C-MENU-3, C-SCROLL-1, C-FOCUS-1, C-FONT-1, C-DLG-1, C-DLG-2, C-WIN-3.
+
+#### P5.T5 (v1-optional) Windows reference screenshots in CI
+- Depends: P3.9, P5.T3 · Effort: high · Unattended: partial (needs the owner to push and start the workflow -> C2 d) · Status: todo
+- Goal: real reference images without a Windows machine in the sessions: `.github/workflows/mac-reference-shots.yml` (`windows-latest`, manual trigger only): builds the WinForms solution (net48), runs `mac/tools/winforms-shots/` (a net48 console built only in that job, referencing the built `ComicRack.exe`; it creates a temp data folder with a generated library, constructs the forms of the P5.T3 owner list, selects each tab, and saves `Control.DrawToBitmap` PNGs in light and `-dark`), uploads them as an artifact named for the commit.
+- Out of scope: pixel comparison (the contact sheet shows them side by side).
+- Accept: `ruby -ryaml -e 'YAML.load_file(".github/workflows/mac-reference-shots.yml")'`; the harness compiles on this Mac against `Microsoft.NETFramework.ReferenceAssemblies` and the WindowsDesktop reference pack if that works, else the attempt is recorded in §3 and the compile is left to the CI job; `verify.sh`. Owner check (C2 d): one run and the downloaded images.
+- Parity: chrome-guidelines §1 reference source 2.
+
+#### P5.R1 Restyle the MVP main window shell and menu bar
+- Depends: P5.T4, P0.6b, P2.6 · Effort: high · Unattended: yes · Status: todo
+- Goal: the MVP main window looks and is organised as the original (`ComicRack/MainForm.Designer.cs`, `ComicRack/Views/ComicExplorerView.Designer.cs`, `ComicRack/Views/ComicBrowserControl.Designer.cs`): menu bar App, File, Edit, Browse, Read, Display, Window, Help with the original labels (TR `MainForm`), order, separators and the ledger shortcuts for every item the MVP can already do (other items appear when their tasks land; nothing invented); browser toolbar (C-TB-1) in the original position with the MVP functions mapped (Sidebar toggle, quick search box 130 × 24, the MVP sort as the Arrange split button); the MVP size slider moves to the status bar (SB.05); status bar segments (SB.01, SB.04); the sidebar becomes the side panel (252 wide, grip) with the library tree look (C-TREE-1, list icons by the Core's list types, counts); About, Settings… and Quit in the app menu (C-MENU-1); standard panels and alerts native (DL.34, `MacAlert`); the MVP literal colours are removed.
+- Edit: `mac/ComicRack.Mac/Views/MainWindow.axaml(.cs)`, `MainMenu.cs`, `mac/ComicRack.Mac/ViewModels/{MainViewModel,SidebarViewModel,BrowserViewModel}.cs`, `mac/ComicRack.Mac/Views/MessageWindow.axaml(.cs)`, e2e cases `menu-structure` and `open-folder` (new menu titles, paths and shortcuts), `mac/plans/mvp-acceptance.md` is not changed (MVP record).
+- Add: view specs `mac/specs/views/{MainForm,ComicExplorerView,ComicBrowserControl,ComicListLibraryBrowser}.md` (first versions).
+- Accept: tests; `mac/tools/e2e.sh menu-structure open-folder`; `python3 mac/tools/ledger-check/ledger-check.py --menus <menu-items dump>` reports no mismatch for the rows set `done`; `mac/tools/chrome-sheet.sh R1 MainWindow`; `verify.sh`.
+- Parity: MB.05, SB.01, SB.04, SB.05, LT.01 (look), MA.01, MA.03, DL.34, the MF/ME/MB/MR/MD/MH rows of commands the MVP already has; C-MENU-1, C-MENU-2, C-TB-1, C-SB-1, C-TREE-1, C-SPLIT-1, C-DLG-1.
+
+#### P5.R2 Restyle the browser items (thumbnails)
+- Depends: P5.T4, P5.R1 · Effort: high · Unattended: yes · Status: todo
+- Goal: grid cells drawn as `ThumbRenderer`, `ThumbIconRenderer`, `RatingRenderer` and `CoverViewItem` draw them (chrome-guidelines §4): shadow, 1 px border, 2:3 placeholder with "Loading Thumbnail...", caption lines with the size formula, selection per §2.4, dog-ear on hover and selection (`DogEarThumbnails`), state icons (open, last, new pages, fileless, deleted), user and community stars and numeric ratings (`NumericRatingThumbnails`), page-count badge, bookmark ribbons, fade-in (`FadeInThumbnails`), tooltips (`ShowToolTips`), same-size covers (`CoverThumbnailsSameSize`), item size by Cmd+scroll, pinch and the status-bar slider (BV.04). Pixel rules of §2.8 hold (refcounted `CoverImage`/`PixelBlock`, no Core-owned bitmaps); the M2.2b scroll budgets hold.
+- Edit: `mac/ComicRack.Mac/Views/{BookCell,BookGridView}.cs`, `mac/ComicRack.Mac/Browser/CoverDrawOperation.cs`.
+- Add: view spec `mac/specs/views/CoverViewItem.md` (thumbnail mode).
+- Accept: headless frame tests (shadow and border pixels; selection frame; dog-ear only on the selected cell when the option is on; star alpha 1.0 and 0.25); the existing M2.2b virtualization and timing tests unchanged; e2e case `grid-look` (shots light and dark, probes); `mac/tools/chrome-sheet.sh R2 BookGrid`; `verify.sh`.
+- Parity: BV.01, BV.04, BV.08, PB.21, PB.23 to PB.25, PB.27; C-LIST-1.
+
+#### P5.R3 Restyle the reader chrome
+- Depends: P5.T4 · Effort: high · Unattended: yes · Status: todo
+- Goal: the reader as the original (`ComicRack.Engine.Display.Forms/`, `MainForm.Designer.cs` reader part): the book tab strip with the reader toolbar at its right (TB.01 to TB.08 for what the MVP does; the Tools drop-down TB.09 with the items that exist), until P5.32a docks the reader the reader window shows that strip with one tab; default background WhiteSmoke, page shadow, overlays (page info top right with fade, message and loading centre, navigation overlay with the glass images and its auto-show option, visible-part overlay) with the §4 metrics; Read and Display menus and shortcuts per the ledger (MR.01 to MR.04, MD.03, MD.04, MD.06, MD.08 to MD.10, MD.12, MD.25; reader keys RK.05, RK.06, RK.09 to RK.11, RK.14, RK.16, RK.17, RK.21, RK.23, RK.26, RK.30 realigned to the original); page context menu (PC.01, PC.02, PC.06); `HideCursorFullScreen`. The MVP performance overlay moves to Ctrl+Option+Cmd+P (Option+Cmd+P is Previous Book).
+- Edit: `mac/ComicRack.Mac/Views/{ReaderWindow.axaml(.cs),ReaderView.cs,PerfOverlay.cs}`, `mac/ComicRack.Mac/Reader/ReaderPainter.cs`, `ReaderMenu.cs`, `MainMenu.cs`, e2e cases `reader-keys`, `overlay`, `fullscreen`.
+- Add: view specs `mac/specs/views/{ComicDisplayControl,NavigationOverlay}.md`.
+- Accept: tests; `mac/tools/e2e.sh reader-keys overlay fullscreen`; `mac/tools/chrome-sheet.sh R3 Reader`; `verify.sh`.
+- Parity: the rows listed in the Goal, PB.10; C-READ-1, C-TB-1, C-TAB-1, C-WIN-2.
 
 #### P5.1 Settings persistence and window state
 - Depends: none · Effort: high · Unattended: yes · Status: todo
-- Goal: `MacSettings` and app preferences saved as XML (`<data>/Settings.xml`, XmlSerializer, atomic write) on change (debounced) and at quit: window frames (library, readers), sidebar width and visibility, grid size and sort, reader fit, layout, right to left default, last folder; restore on launch with off-screen correction.
-- Add: `mac/ComicRack.Mac.Host/Settings/{AppPreferences,SettingsStore}.cs`; tests.
+- Goal: `MacSettings` and app preferences saved as XML (`<data>/Settings.xml`, XmlSerializer, atomic write) on change (debounced) and at quit: window frames (library, readers), sidebar width and visibility, grid size and sort, reader fit, layout, right to left default, last folder; restore on launch with off-screen correction. R9: the preference properties that mirror `ComicRack/Config/Settings.cs` keep the original names and **defaults** (every PB row and the reader, library and cache settings that the Mac app uses).
+- Add: `mac/ComicRack.Mac.Host/Settings/{AppPreferences,SettingsStore}.cs`; tests, including `SettingsDefaultsTests` (parses `ComicRack/Config/Settings.cs` `DefaultValue` attributes and initializers for the mirrored properties and compares).
 - Edit: `mac/ComicRack.Mac.Host/MacSettings.cs`, `mac/ComicRack.Mac/Services/HostService.cs`, view models and windows that own state.
-- Accept: tests (round trip, corrupt file falls back to defaults and keeps a `.bad` copy); e2e case `state-restore` (move and resize, quit, relaunch, same frame); `verify.sh`.
+- Accept: tests (round trip, corrupt file falls back to defaults and keeps a `.bad` copy, defaults equal the original); e2e case `state-restore` (move and resize, quit, relaunch, same frame); `verify.sh`.
+- Parity: PB.01 to PB.40 (defaults only; each row stays `todo` until its owning task makes the option work), FF.02.
 
 #### P5.2 Live refresh: read state, counts, scan progress in the grid
-- Depends: P5.1 · Effort: high · Unattended: yes · Status: todo
-- Goal: covers show read progress (bar or badge from `ReadPercentage`), sidebar counts refresh after scan, reading and edits (debounced, off the UI thread), the grid shows new books every few seconds during a scan keeping selection and scroll.
+- Depends: P5.1, P5.R2 · Effort: high · Unattended: yes · Status: todo
+- Goal: covers show read progress as the original thumbnail does (state icons and markers of P5.R2), sidebar counts and live counters refresh after scan, reading and edits (debounced, off the UI thread) with the original gauge look (new, unread, total pills, numbers option), the grid shows new books every few seconds during a scan keeping selection and scroll.
 - Edit: `mac/ComicRack.Mac/Browser/*`, `mac/ComicRack.Mac/ViewModels/{BrowserViewModel,SidebarViewModel,MainViewModel}.cs`.
-- Accept: tests; e2e case `refresh-after-read` (read 3 pages, close, the cover shows progress, "Reading" count +1); `verify.sh`.
+- Accept: tests; e2e case `refresh-after-read` (read 3 pages, close, the cover shows the reading marker, "Reading" count +1); `verify.sh`.
+- Parity: LT.01 (gauges), PR.10 (behaviour; the pane is P5.22b).
 
 #### P5.3 Multi-selection
 - Depends: none · Effort: high · Unattended: yes · Status: todo
-- Goal: Cmd-click, Shift-click, Shift+arrows, Cmd+A (Select All), Invert Selection, selection kept across sort and search; `SelectedBooks` for commands.
+- Goal: Cmd-click, Shift-click, Shift+arrows, Cmd+A (Select All), Invert Selection, selection kept across sort and search; `SelectedBooks` for commands; keyboard as the original `ItemView` (arrows, Return opens, Delete removes with the alias Cmd+Backspace).
 - Add: `mac/ComicRack.Mac/Browser/SelectionModel.cs`; tests.
 - Accept: tests; e2e case `grid-multiselect`; `verify.sh`.
+- Parity: BV.09, BV.10, BC.19.
 
-#### P5.4 Main window chrome
-- Depends: P5.1 · Effort: medium · Unattended: yes · Status: todo
-- Goal: unified toolbar (search with Cmd+F focus, view-mode control, sort, size, info pane toggle), resizable sidebar and info pane splitters (persisted), status bar.
+#### P5.4 Browser toolbar and main window layout
+- Depends: P5.1, P5.R1 · Effort: medium · Unattended: yes · Status: todo
+- Goal: the browser toolbar complete in the original order (Sidebar, Previous, Next | Views, Group, Stack, Arrange, quick search, List Layouts | Duplicate | Undo, Redo; items whose feature is not built yet are present and disabled, then enabled by their task), Cmd+F focuses the quick search, the side panel and info panel splitters (`SizableContainer`) persisted, the status bar complete; no unified macOS toolbar (C-TB-1).
 - Edit: `mac/ComicRack.Mac/Views/MainWindow.axaml(.cs)`, `MainMenu.cs`.
-- Accept: tests; e2e case `chrome` (Cmd+F focuses search; splitter drag persisted); `verify.sh`.
+- Accept: tests; e2e case `chrome` (Cmd+F focuses search; splitter drag persisted); `mac/tools/chrome-sheet.sh P5.4 MainWindow`; `verify.sh`.
+- Parity: BT.01 (and the toolbar slots of BT.02 to BT.12), GK.01; view spec `ComicBrowserControl`; C-TB-1, C-SPLIT-1.
 
 #### P5.5 Grid context menu, part 1
 - Depends: P5.3, P2.1 · Effort: high · Unattended: yes · Status: todo
-- Goal: Open, Open in Reader window, Mark as Read/Unread/Checked/Unchecked, My Rating (stars) and Quick Rating and Review dialog (`ComicRack/Dialogs/QuickRatingDialog.cs`), Reveal in Finder, Info..., Remove... (from the library, optionally to the Trash; `DeleteItemDialog.cs` semantics), also in the main menu (Edit, Book).
+- Goal: the browser context menu exactly as the original `contextMenuItems` (all items in order; this task implements Open, Info..., My Rating (stars, Quick Rating and Review dialog `ComicRack/Dialogs/QuickRatingDialog.cs`), Mark as (Unread, Read, Checked, Unchecked), Reveal in Finder, Remove... (`DeleteItemDialog` semantics: from list, library, optionally to the Trash), Select All and Invert Selection; the other items are present and disabled until P5.13b, P5.16c, P5.20, P5.21, P5.24a, P4.5 enable them), also in the Edit menu where the original has them (My Rating); `AutoShowQuickReview`; "do not show again" questions through `MacAlert`.
 - Accept: tests; e2e case `context-menu-1` (right click via ui-drive, mark read, count changes); `verify.sh`.
+- Parity: BC.01, BC.04, BC.07, BC.08, BC.17, BC.23, ME.04, DL.06, DL.18, DL.30, PB.18; view spec `ComicBrowserControl` (context menu), `QuickRatingDialog`, `DeleteItemDialog`; C-MENU-3, C-DLG-1, C-DLG-2.
 
-#### P5.6 Info panel (read-only)
+#### P5.6 Info panel and small preview
 - Depends: P5.4 · Effort: medium · Unattended: yes · Status: todo
-- Goal: the "Info Panel"/"Small Preview" pane: cover, key fields, summary, pages count, file info, read state for the selected book; multiple selection shows a summary.
-- Accept: tests; e2e case `info-panel`; `verify.sh`.
+- Goal: the Info Panel (Shift+F9; `ComicExplorerView.pluginContainer`, `ComicPageContainerControl` book info page with cover, fields, search links (`ShowSearchLinks`), read state; multiple selection summary) and the Small Preview (Shift+F7; `SmallComicPreview`: page viewer with its toolbar Open, First, Previous, Next, Last, Two Pages, Refresh, Close, "Nothing Selected"), both in the original positions and sizes (162 high at the bottom; 207 high under the tree).
+- Accept: tests; e2e case `info-panel`; `mac/tools/chrome-sheet.sh P5.6 MainWindow`; `verify.sh`.
+- Parity: MB.06, MB.08, IP.01, SP.01, PB.22; view specs `SmallComicPreview`, `ComicPageContainerControl`.
 
 #### P5.7a Info editor: shell, Summary and Details
 - Depends: P5.6 · Effort: high · Unattended: yes · Status: todo
-- Goal: the `ComicBookDialog` equivalent (`ComicRack/Dialogs/ComicBookDialog.cs`): window with Previous/Next book, OK/Cancel/Apply, Summary and Details fields with the Core's value lists (autocomplete from library values), undo via the Core's `ComicBookContainerUndo` where the WinForms app uses it.
-- Accept: tests (edit, apply, cancel restores, previous/next keeps edits); e2e case `info-edit` (edit Series, OK, grid shows it); `verify.sh`.
+- Goal: the `ComicBookDialog` (`ComicRack/Dialogs/ComicBookDialog.cs`) exactly: window size and tabs (Summary, Details, Plot & Notes, Catalog, Custom, Pages, Colors; the tab set of the original even where later tasks fill them), Previous/Next book, OK/Cancel/Apply, Summary and Details fields with their labels (TR `ComicBookDialog`), the Core's value lists (autocomplete from library values), the 3D cover (`InformationCover3D`), the thumbnail menu (Reset); Undo/Redo through the Core's `Database.Undo` (`ComicBookContainerUndo`) where the WinForms app uses it, also in the Edit menu and the browser toolbar.
+- Accept: tests (edit, apply, cancel restores, previous/next keeps edits, undo/redo); e2e case `info-edit` (edit Series, OK, grid shows it); `mac/tools/chrome-sheet.sh P5.7a ComicBookDialog`; `verify.sh`.
+- Parity: ME.01 to ME.03, BT.12, DL.01, IN.01, IN.02, IN.08, PB.38; view spec `ComicBookDialog`; C-DLG-2, C-CTRL-1.
 
 #### P5.7b Info editor: Plot and Notes, Review, Catalog, Custom
 - Depends: P5.7a · Effort: high · Unattended: yes · Status: todo
+- Goal: the remaining text tabs exactly as the original, with `CatalogOnlyForFileless` and `ShowCustomBookFields`.
 - Accept: tests; `verify.sh`.
+- Parity: IN.03 to IN.05, PB.32, PB.33.
 
-#### P5.7c Info editor: Pages and cover
+#### P5.7c Info editor: Pages, Colors and cover
 - Depends: P5.7a · Effort: high · Unattended: yes · Status: todo
-- Goal: page list with thumbnails, page type, rotation, bookmark, delete-page flag, front-cover choice, custom thumbnail set/remove; thumbnail invalidation (`ThumbnailService.Invalidate(book)`, new) when the cover changes.
+- Goal: Pages tab (page list with thumbnails, page type, rotation, bookmark, delete flag, front-cover choice, "Order by Name" / "Order by Name (numeric)" menu, custom thumbnail set/remove; thumbnail invalidation `ThumbnailService.Invalidate(book)`, new) and Colors tab (per-book colour adjustment, "Double Click on Color to set White Point").
 - Accept: tests; `verify.sh`.
+- Parity: IN.06, IN.07.
 
 #### P5.8 Multi-edit
 - Depends: P5.7a, P5.3 · Effort: high · Unattended: yes · Status: todo
-- Goal: `MultipleComicBooksDialog` semantics: mixed values shown as such, a change applies only to touched fields, all selected books updated in one undoable step.
+- Goal: `MultipleComicBooksDialog` exactly (layout, mixed values shown as the original shows them, a change applies only to touched fields, all selected books updated in one undoable step).
 - Accept: tests; e2e case `multi-edit`; `verify.sh`.
+- Parity: DL.02; view spec `MultipleComicBooksDialog`.
 
 #### P5.9 ComicInfo write-back UI
 - Depends: P2.4b, P5.7a · Effort: high · Unattended: yes · Status: todo
-- Goal: "Update Book Files" command (`QueueManager` file update queue), the automatic update setting (`IComicUpdateSettings`), queue progress in the status bar; failures listed.
+- Goal: "Update Book Files" (context menu) and "Update all Book Files" (File menu, Cmd+Shift+U) through the `QueueManager` file update queue, the automatic update setting (`IComicUpdateSettings`), queue progress with the status-bar activity icon; failures listed in the Errors dialog (P5.26).
 - Accept: tests: edit a CBZ's fields, update, `crcli info show` reads the new values; e2e case `write-back`; `verify.sh`.
+- Parity: MF.07, BC.16.
 
-#### P5.10a Opening files from Finder, Open File..., Open Recent
+#### P5.10a Opening files from Finder, Open File..., Recent Books
 - Depends: P5.1 · Effort: high · Unattended: yes · Status: todo
-- Goal: documents opened from Finder or `open -a` (Avalonia activation `UrlsOpened`/files) open in the reader and are added to the library according to the WinForms setting; File > Open File... takes Cmd+O (Ctrl+O on Windows) and the MVP's Open Folder becomes "Add Folder to Library..." with the Windows chord mapped to Cmd (`ComicRack/MainForm.Designer.cs`, `miAddFolderToLibrary`); File > Open Recent (persisted). Update the e2e cases `menu-structure` and `open-folder` for the new shortcuts.
+- Goal: documents opened from Finder or `open -a` (Avalonia activation `UrlsOpened`/files) open in the reader and are added to the library per `AddToLibraryOnOpen`; File > Open File... (Cmd+O); the MVP's Open Folder becomes "Add Folder to Library..." (Cmd+Shift+A, `miAddFolderToLibrary`); File > Recent Books (persisted; label as the original). Update the e2e cases `menu-structure` and `open-folder` for the new shortcuts.
 - Edit: `mac/ComicRack.Mac/App.axaml.cs`, `MainMenu.cs`, `mac/tools/make-app.sh` (`CFBundleDocumentTypes` for cbz, cbr, cb7, cbt, pdf, crplugin, cbl as viewer).
 - Accept: tests; e2e case `open-from-finder` (`open -a <bundle> <file.cbz>` opens a reader); `verify.sh`.
+- Parity: MF.01, MF.05, MF.16, PB.08.
 
-#### P5.10b Dock menu, Window menu, keep running without windows, quit flow
+#### P5.10b Dock menu, Window menu, keep running without windows, quit and restart flow
 - Depends: P5.10a · Effort: high · Unattended: yes · Status: todo
-- Goal: DD7; Dock menu with recent books; Window > Library (Cmd+0); quit with a progress sheet when the save takes over 0.5 s; a failed save at quit asks "Quit anyway?" (M2.1 items).
-- Accept: tests; e2e case `close-reopen` (close the library window, app keeps running, Cmd+0 reopens); `verify.sh`.
+- Goal: DD7 (amended: Window > Library is Option+Cmd+0); Dock menu with recent books; Window menu (C-MENU-2); File > Restart (Ctrl+Cmd+Shift+Q, relaunches the app); quit with a progress sheet when the save takes over 0.5 s; a failed save at quit asks "Quit anyway?" (M2.1 items).
+- Accept: tests; e2e case `close-reopen` (close the library window, app keeps running, Option+Cmd+0 reopens); `verify.sh`.
+- Parity: MF.17, MF.18, MA.02; C-MENU-2, C-DOCK-1.
+
+#### P5.32a Main window hosts the reader: book tabs, Reader in own Window
+- Depends: P5.R1, P5.R3, P5.1 · Effort: xhigh · Unattended: yes · Status: todo
+- Goal: the main window as `MainForm` (MV.01): the reader area with the book tab bar (one tab per open book, empty slot from New Tab, tab context menu: Close, Close All But This, Close All to the Right, Show in Browser, Reveal in Finder, Copy Full Path), the browser panel docked at the bottom (250 high, grip, collapsible; all docking modes in P5.32b), a Quick Open area when no book is open (filled by P5.29), Reader in own Window (F12 and the reader key D toggle; the MVP reader window becomes this mode, `ReaderForm`), File > Close / Close All / New Tab / Open Books, Read > Show in Browser / Previous Tab / Next Tab / Track current Page, Open in new Tab from the browser; open books restored at launch (`OpenLastFile`), `OpenInNewTab`.
+- Edit: `mac/ComicRack.Mac/Views/{MainWindow,ReaderWindow}.axaml(.cs)`, `mac/ComicRack.Mac/Services/ReaderManager.cs`, view models; e2e cases `grid-keys` and `reader-keys` (Return opens a tab in the main window).
+- Add: e2e case `book-tabs` (open 3 books, Cmd+Shift+K and Cmd+Shift+J cycle, Close All But This, F12 undocks and docks back).
+- Accept: tests; `mac/tools/e2e.sh book-tabs grid-keys reader-keys`; `mac/tools/chrome-sheet.sh P5.32a MainWindow Reader`; `verify.sh`.
+- Parity: MV.01, MF.02 to MF.04, MF.15, MR.08 to MR.10, MR.13, MD.26, TC.01 to TC.07, BC.02, RK.08, RK.15, DL.28, PB.02, PB.09; view spec `MainForm`; C-TAB-1.
 
 #### P5.11a Details view: virtualized table
-- Depends: P5.3 · Effort: high · Unattended: yes · Status: todo
-- Goal: a table of books (DD15: check and record Avalonia `TreeDataGrid`'s licence first; default a custom `ItemsRepeater` table): resizable and reorderable columns, sort by header click (ascending, descending), keyboard and selection shared with the grid, 100,000 rows smooth.
+- Depends: P5.3, P5.T4 · Effort: high · Unattended: yes · Status: todo
+- Goal: a table of books (DD15: check and record Avalonia `TreeDataGrid`'s licence first; default a custom `ItemsRepeater` table) that looks like the original details view (column headers C-HDR-1 with sort arrow, row height 16 + padding, zebra rows `DetailRowHighlight` at alpha 96, selection §2.4): resizable and reorderable columns, sort by header click, column chooser from the header menu, in-place Edit (F2), keyboard and selection shared with the grid, 100,000 rows smooth.
 - Accept: tests (virtualization counts like M2.2b); e2e case `details-view`; `verify.sh`.
+- Parity: BV.03, BC.06; view spec `ItemView` (details); C-LIST-1, C-HDR-1.
 
 #### P5.11b Columns, list layouts, per-list view settings
 - Depends: P5.11a · Effort: high · Unattended: yes · Status: todo
-- Goal: column chooser with the Core's columns, `ItemViewConfig` round trip in `DisplayListConfig` per list (view mode, columns, widths, sort, grouping) so a Windows library keeps its layouts, "Save List Layout", "Edit List Layouts", "Set all Lists to current Layout".
+- Goal: the Core's columns, `ItemViewConfig` round trip in `DisplayListConfig` per list (view mode, columns, widths, sort, grouping) so a Windows library keeps its layouts; List Options dialog (`ListLayoutDialog`: Details, Thumbnails, Tiles tabs; Edit List Layout Cmd+L), Save List Layout..., Edit Layouts... (`ListEditorDialog`, Option+Cmd+L), Set all Lists to current Layout, saved layouts applied from Browse > List Layout and the toolbar's List Layouts drop-down.
 - Accept: tests (a fixture list's columns survive import, edit, save, reload and match the original XML elements); `verify.sh`.
+- Parity: MB.14 to MB.18, BT.10, DL.10, DL.11, FF.01; view specs `ListLayoutDialog`, `ListEditorDialog`.
 
 #### P5.12 Tiles view and view-mode switch
 - Depends: P5.11b · Effort: medium · Unattended: yes · Status: todo
-- Goal: Tiles (cover plus a text block of fields), switch Thumbnails/Tiles/Details per list (persisted in the list's view config).
+- Goal: Tiles as `ThumbTileRenderer` draws them (192 × 96 default, inset 4, cover at most half the width, embossed text, `ThumbnailViewItemBack` fill), switch Thumbnails/Tiles/Details from the Views split button per list (persisted in the list's view config).
 - Accept: tests; e2e case `view-modes`; `verify.sh`.
+- Parity: BT.03, BV.02; C-LIST-1.
 
 #### P5.13a Grouping
 - Depends: P5.11b · Effort: high · Unattended: yes · Status: todo
-- Goal: group by the Core's groupers (Series, Publisher, Writer, Year, Read state, ...), group headers with counts, collapse/expand one and all, "Show Group Headers"; works in all three view modes.
+- Goal: group by the Core's groupers from the Group split button, group headers as `ItemView` draws them (40 high, 1.15 × font, `ItemViewGroupText`, count, separator lines, expand image), collapse/expand one and all, Show Group Headers (Cmd+Shift+G); works in all three view modes.
 - Accept: tests; `verify.sh`.
+- Parity: BT.04, BT.06.
 
 #### P5.13b Stacks
 - Depends: P5.13a · Effort: high · Unattended: yes · Status: todo
-- Goal: stack by the Core's stackers, open and close a stack, "Set as Top of Stack", custom stack thumbnail (`StacksConfig`).
+- Goal: stack by the Core's stackers (Stack split button), stacks drawn as the original (inset cover with rotated covers behind, `StackFill`/`StackBorder`, "N books" caption), open stack bar (Close Stack, Previous, Next), Reset Top of Stack, Set as Top of Stack, custom stack thumbnail set/remove (`StacksConfig`), `CommonListStackLayout`.
 - Accept: tests; e2e case `stacks`; `verify.sh`.
+- Parity: BT.07, BV.05, BC.21, PB.28.
 
 #### P5.14 Sorting by every field, natural order
 - Depends: P5.11b · Effort: medium · Unattended: yes · Status: todo
-- Goal: the Arrange menu with all Core sort keys, secondary order as the WinForms app, natural number order inside text ("Tome 2" before "Tome 10"), `BookCatalog` extended without losing its M2.2b timings.
+- Goal: the Arrange split button with all Core sort keys, secondary order as the WinForms app, natural number order inside text ("Tome 2" before "Tome 10"), `BookCatalog` extended without losing its M2.2b timings.
 - Accept: tests (timings over 100,000 items stay within 2x of M2.2b); `verify.sh`.
+- Parity: BT.08.
 
 #### P5.15a Quick search scopes and view filters
 - Depends: P5.11b · Effort: medium · Unattended: yes · Status: todo
-- Goal: search scope menu (All, Series, Writer, Artists, Descriptive, Catalog, Filename), view filters (Show All, Not Read, Reading, Read, Only Books, Only fileless Entries, Duplicates) with the "not all books are displayed" notice.
+- Goal: quick search scope menu (All, Series, Writer, Artists, Descriptive, Catalog, Filename) on the search box, `LocalQuickSearch` (each list keeps its own search), view filters in the Views menu (Show All, not Read, Reading, Read, only Books, only fileless Entries, Duplicates) with the original "Because of active Views options, not all Books are displayed." bar and Display All.
 - Accept: tests; `verify.sh`.
+- Parity: BT.05, BT.09, BV.06, GK.01, PB.26.
 
 #### P5.15b Search browser panes
 - Depends: P5.15a · Effort: high · Unattended: yes · Status: todo
-- Goal: the search browser (columns of values for genre, publisher, writer, series, ... with counts, multi-select narrowing), semantics read from `ComicRack.Engine/Controls/SearchBrowserControl.cs`.
+- Goal: the search browser (Shift+F8; three value columns with type combo boxes, counts, multi-select narrowing, 160 high with a grip), semantics and look read from `ComicRack.Engine/Controls/SearchBrowserControl.cs`.
 - Accept: tests; e2e case `search-browser`; `verify.sh`.
+- Parity: MB.07, SR.01; view spec `SearchBrowserControl`.
+
+#### P5.32b Browser docking, browser tabs and list history
+- Depends: P5.32a · Effort: high · Unattended: yes · Status: todo
+- Goal: F3 shows and hides the browser (Escape and the grip from the reader as RK.04), docking modes Dock Bottom, Left, Right, Fill and Info Panel Right from the Docking Mode split button on the browser tab strip (Option+Cmd+Shift+1 to 5), browser tabs (Library F6; Folders F7 and Pages F8 as placeholders that P5.30 and P5.23b fill; lists opened in tabs, "Open in New Tab" of the tree, New Tab button), previous/next list history (toolbar buttons, Cmd+J, Cmd+K, mouse buttons 4 and 5), `CloseBrowserOnOpen`, `AlwaysDisplayBrowserDockingGrip`, `AnimatePanels`.
+- Accept: tests; e2e case `browser-dock` (F3 hides and shows, Option+Cmd+Shift+2 docks left, state persisted after relaunch); `verify.sh`.
+- Parity: MV.02 to MV.04, MB.01, MB.02, MB.09, MB.10, BT.02, GK.02, RK.04, LT.02 (New Tab), LT.10, PB.07, PB.29, PB.36; view spec `MainView`; C-TAB-1, C-SPLIT-1.
 
 #### P5.16a Sidebar editing
 - Depends: P5.2 · Effort: high · Unattended: yes · Status: todo
-- Goal: New Folder, New List, New Smart List (opens P5.17a/b when they exist, a query editor until then), Rename (inline), Remove (with confirmation), Copy/Paste List, Open in New Window, context menu and the library tree toolbar; changes saved with the library.
+- Goal: the library tree menu and toolbar exactly as `ComicListLibraryBrowser`: Edit..., Rename (F2, inline), Sort, New Folder..., New List..., New Smart List... (opens P5.17a/b when they exist, a query editor until then), Copy List / Paste List, Open in New Window (`ComicBrowserForm`), Refresh, Remove... (with confirmation), Expand/Collapse all, tree quick search (Option+Cmd+F), Duplicate list from the browser toolbar, Edit List dialog (`EditListDialog`), name prompts through the `SelectItemDialog` equivalent; changes saved with the library.
 - Accept: tests; e2e case `sidebar-edit`; `verify.sh`.
+- Parity: LT.02 to LT.07, LT.09, LT.13, LT.14, BT.11, GK.03, DL.08, DL.29, DL.31; view specs `ComicListLibraryBrowser`, `EditListDialog`.
 
 #### P5.16b Sidebar drag and drop, favorites, collapse state
 - Depends: P5.16a · Effort: medium · Unattended: yes · Status: todo
-- Goal: reorder and nest by drag, Favorites ("Add to Favorites", "Show Favorites"), `ComicListItemFolder.Collapsed` persisted, list icons from the Core's image keys.
+- Goal: reorder and nest by drag, Favorites ("Add to Favorites", "Show Favorites", favorites panel with Refresh and Remove...), `ComicListItemFolder.Collapsed` persisted, list icons from the Core's image keys.
 - Accept: tests; `verify.sh`.
+- Parity: LT.12, LT.15, LT.16.
 
 #### P5.16c Reading lists
 - Depends: P5.16a, P5.3 · Effort: medium · Unattended: yes · Status: todo
-- Goal: Add to List (menu of lists), Move to Top/Bottom, Apply current Order, Export Reading List... / Import Reading List... (`.cbl`, `ComicRack.Engine/Database/ComicReadingListItem.cs`).
+- Goal: Add to List (menu of lists), Edit List > Move to Top/Bottom (Option+Cmd+T/B), Apply current Order, Export Reading List... / Import Reading List... (Cmd+Shift+C/V, `.cbl`, `ComicRack.Engine/Database/ComicReadingListItem.cs`), `ExportedListsContainFilenames`.
 - Accept: tests (a `.cbl` round trip); `verify.sh`.
+- Parity: BC.09, BC.10, LT.08, PB.40, FF.03.
 
 #### P5.17a Smart-list editor: query text
 - Depends: P5.16a · Effort: high · Unattended: yes · Status: todo
-- Goal: the `SmartListQueryDialog` equivalent: query text with the Core parser, error position, live count off the UI thread, save into the list.
+- Goal: the `SmartListQueryDialog` exactly: query text with the original syntax colouring (`SmartQuery*` tokens), its edit menu (Undo, Redo, Cut, Copy, Paste, Select All, Quick Format Cmd+F, Insert Match, Insert Value), the Core parser, error position, live count off the UI thread, save into the list.
 - Accept: tests (all 19 fixture smart lists round trip through their query text and keep their counts); `verify.sh`.
+- Parity: DL.22, LT.03; view spec `SmartListQueryDialog`.
 
 #### P5.17b Smart-list editor: rule builder
 - Depends: P5.17a · Effort: xhigh · Unattended: yes · Status: todo
-- Goal: `SmartListDialog`/`MatcherEditor`/`MatcherGroupEditor` semantics: rows of field, operator, value; groups with all/any/not; base list; limit and order; editors for text and number matchers.
+- Goal: `SmartListDialog`/`MatcherEditor`/`MatcherGroupEditor` exactly: rows of field, operator, value; groups with all/any/not; base list; limit and order; the rule menu (New Rule Cmd+R, New Group Cmd+G, Delete, Cut, Copy, Paste, Move Up Cmd+U, Move Down Cmd+D); editors for text and number matchers.
 - Accept: tests (build each fixture list's rules, compare XML with the original); e2e case `smartlist-editor`; `verify.sh`.
+- Parity: DL.12, DL.21; view specs `SmartListDialog`, `MatcherEditor`, `MatcherGroupEditor`.
 
 #### P5.17c Smart-list editor: remaining value editors
 - Depends: P5.17b · Effort: high · Unattended: yes · Status: todo
-- Goal: dates (relative and absolute), ratings, enums (manga, black and white, format...), yes/no, custom values, virtual tags, the plugin (script) matcher.
+- Goal: dates (relative and absolute), ratings, enums (manga, black and white, format...), yes/no, custom values, virtual tags, the plugin (script) matcher, the Match Value dialog (`ValueEditorDialog`).
 - Accept: tests (every matcher type in the Core has an editor; a reflection test lists them); `verify.sh`.
+- Parity: DL.25.
 
 #### P5.18 Drag and drop
 - Depends: P5.16c · Effort: high · Unattended: partial (drag from Finder is checked by e2e with a CGEvent drag; record if not reliable) · Status: todo
-- Goal: files and folders from Finder onto the window (add to library or open, as the WinForms setting), books onto a sidebar list (add), books to Finder (copy the file), `.crplugin` onto the window (install, P4.4).
+- Goal: files and folders from Finder onto the window (add to library or open, as the WinForms setting; nothing when `DisableDragDrop`), books onto a sidebar list (add), books to Finder (copy the file), `.crplugin` onto the window (install, P4.4).
 - Accept: tests; e2e case `drag-drop`; `verify.sh`.
+- Parity: LT.16, PB.30.
 
 #### P5.19a Watch folders
 - Depends: P5.1 · Effort: high · Unattended: yes · Status: todo
-- Goal: per-folder watch on/off (`WatchFolder.Watch`), re-enable for remapped imports, FSEvents cost measured on the 14,706-book stand-in tree (CPU, memory, latency of a new file), new files appear in the library.
+- Goal: per-folder watch on/off (`WatchFolder.Watch`), re-enable for remapped imports, FSEvents cost measured on the 14,706-book stand-in tree (CPU, memory, latency of a new file), new files appear in the library (checked per `NewBooksChecked`).
 - Accept: tests (copy a CBZ into a watched temp folder, it appears within 5 s); numbers in §3; `verify.sh`.
+- Parity: PB.39.
 
-#### P5.19b Missing files and rescans
+#### P5.19b Missing files, rescans, cover thumbnails, web comics
 - Depends: P5.19a, P2.2 · Effort: high · Unattended: yes · Status: todo
-- Goal: "Scan Book Folders", "Remove missing books" (`removeMissing: true` with the P2.2 `DriveChecker`), locate/relink a missing book (by path, then by size and hash), missing books shown as such in the grid.
+- Goal: "Scan Book Folders" (Cmd+Shift+S) and `ScanStartup`, "Remove missing books" (`removeMissing: true` with the P2.2 `DriveChecker`), locate/relink a missing book (by path, then by size and hash), missing books shown as such in the grid, "Generate Cover Thumbnails", "Update Web Comics" (Cmd+Shift+W) and `UpdateWebComicsStartup` (DD18 amended; tested with a generated `.cbw` pointing to a local file URL).
 - Accept: tests including a detached disk image (books on it are "missing", not removed); `verify.sh`.
+- Parity: MF.06, MF.08, MF.09, PB.03, PB.04.
 
 #### P5.20 Grid context menu, part 2
 - Depends: P5.5, P5.16c · Effort: high · Unattended: yes · Status: todo
-- Goal: Copy Data, Paste Data... (`ComicDataPasteDialog`: choose fields), Clear Data, Add to List, Refresh, Update Book Files, Export Books (P5.24a entry point), New fileless Book Entry..., Set custom thumbnail, Show in List, Browse Books.
+- Goal: Copy Data, Paste Data... (`ComicDataPasteDialog`: choose fields), Clear Data, Add to Library, Browse Books, Show in List, Web... (Cmd+R, opens the book's Web field), Refresh (F5 and the context item), Set as List Background and Reset List Background, New fileless Book Entry... (Cmd+Shift+N); Export Books and Update Book Files entries enabled when their tasks are done.
 - Accept: tests; e2e case `context-menu-2`; `verify.sh`.
+- Parity: BC.05, BC.11 to BC.13, BC.18, BC.20, BC.22, BV.07, ME.14, MF.13, DL.03; view spec `ComicDataPasteDialog`.
 
 #### P5.21 Open With external programs
 - Depends: P5.5 · Effort: medium · Unattended: yes · Status: todo
-- Goal: "Open With" submenu from Launch Services for the file type plus configured programs (`ComicRack/Config/ExternalProgram.cs` semantics), "Manage Programs...".
+- Goal: "Open With" submenu with the configured programs (`ComicRack/Config/ExternalProgram.cs` semantics) and "Manage Programs..." (`OpenWithDialog` layout); Launch Services applications for the file type are added below as a `mac-only` part.
 - Accept: tests; `verify.sh`.
+- Parity: BC.03, DL.15; view spec `OpenWithDialog`.
 
 #### P5.22a Preferences window: infrastructure, Reader, Behavior
-- Depends: P5.1 · Effort: high · Unattended: yes · Status: todo
-- Goal: Settings window (Cmd+,) with the v1 panes; Reader pane (default fit, layout, right to left, swipe-at-edge, page turn keys, background), Behavior pane (open behaviour, add-to-library rules, confirmations).
-- Accept: tests; e2e case `preferences`; `verify.sh`.
+- Depends: P5.1, P5.T4 · Effort: high · Unattended: yes · Status: todo
+- Goal: the `PreferencesDialog` exactly (C-PREF-1): left column with the five tabs and their 32 px icons, collapsible groups, OK / Cancel / Apply, opened by Cmd+, from the app menu (and Cmd+F9). Reader tab: Display (colour sliders, Automatic Contrast Enhancement, High Quality, Anamorphic Scaling, Reset), Overlays (with the overlay preview panel), Mouse Scrolling, Hardware Acceleration (deviation per PR.06), the Keyboard group as a placeholder until P5.22c, and a separate "macOS" group for the Mac-only reader options (swipe at the edge, DD8). Behavior tab: generated from the mirrored Settings booleans by category and description (TR `Settings`), exactly as `FormUtility.FillPanelWithOptions`.
+- Accept: tests (the Behavior tab lists the 40 options of the ledger in the original categories and order); e2e case `preferences`; `mac/tools/chrome-sheet.sh P5.22a PreferencesDialog`; `verify.sh`.
+- Parity: ME.16, DL.16, PR.01, PR.02, PR.04 to PR.07, PR.13; view spec `PreferencesDialog`; C-PREF-1, C-GRP-1.
 
 #### P5.22b Preferences: Libraries and Advanced
 - Depends: P5.22a, P5.19a · Effort: high · Unattended: yes · Status: todo
-- Goal: Libraries (watch folders, scan options, update-files options, cover cache size DD9, disk caches), Advanced (archive engine choice, memory caches, reset caches, log level, language picker hook for P5.27b).
+- Goal: Libraries tab (Book Folders with watch check boxes and Add/Remove/Change/Open, Scanning, Display live counters, Virtual Tags; Sharing and Server Settings hidden as D4), Advanced tab (Books: cover filter and file-writing options; Caches & Memory Usage with sizes, usage labels and Clear buttons (cover cache size DD9 is the thumbnail memory cache); Messages and Social reset; Languages as P5.27b; Database Backup and Backup Manager as P5.25; Explorer Integration as P5.34; Wireless Setup hidden as D4).
 - Accept: tests; `verify.sh`.
+- Parity: PR.08 to PR.12, PR.18, PR.21, PR.22, PR.24; view spec `PreferencesDialog`.
+
+#### P5.22c Preferences: keyboard shortcut editor
+- Depends: P5.22a · Effort: high · Unattended: yes · Status: todo
+- Goal: DD19 superseded: Reader > Keyboard as `cYo.Common.Windows/Forms/KeyboardShortcutEditor.cs` (command list by group with the original command ids, names and icons, up to the original number of keys per command, key capture as `KeyInputForm`), Import... with the "Default" layout entry, Export... (`*.xml` in the `cYo.Common.Windows/KeyboardShortcuts.cs` format, so layouts move between Windows and Mac); the reader uses the edited map.
+- Accept: tests (export then import round trip; a layout file written in the original format imports; changing Next Page to a new key works in the reader); `verify.sh`.
+- Parity: PR.03, DL.32, FF.05, RK.01 to RK.31 (keys editable); view spec `KeyboardShortcutEditor`.
+
+#### P5.32c Workspaces
+- Depends: P5.32b, P5.22a · Effort: high · Unattended: yes · Status: todo
+- Goal: DD16 superseded: Save Workspace... (Option+Cmd+W, `SaveWorkspaceDialog`), Edit Workspaces... (Ctrl+Cmd+W, `ListEditorDialog`), the workspace list in Browse > Workspaces and in the Tools drop-down; applying a workspace restores what `ComicRack/Config/DisplayWorkspace.cs` stores (window layout, docking, panel visibility and sizes, reader display settings); stored in the Mac settings with the same fields.
+- Accept: tests (round trip; applying restores dock mode and panel visibility); e2e case `workspaces`; `verify.sh`.
+- Parity: MB.11 to MB.13, DL.10, DL.19; view specs `SaveWorkspaceDialog`, `ListEditorDialog`.
+
+#### P5.33 Notification-area equivalent (menu bar status item)
+- Depends: P5.22a · Effort: medium · Unattended: yes · Status: todo
+- Goal: C-TRAY-1: with `MinimizeToTray` (minimize) or `CloseMinimizesToTray` (close), ComicRack hides its windows and its Dock icon (activation policy accessory) and shows an `NSStatusItem` with the original small icon and the menu Restore / Exit; Restore brings everything back (policy regular).
+- Accept: tests of the policy logic; e2e case `tray` (option on, Cmd+M hides the window, the status item's Restore brings it back); `verify.sh`.
+- Parity: NT.01, PB.34, PB.35; C-TRAY-1.
 
 #### P5.23a Reader: navigation extras
 - Depends: P5.1 · Effort: high · Unattended: yes · Status: todo
-- Goal: Go to Page (Cmd+G), Next/Previous/Random Book (in the current list order), bookmarks (set, remove, previous, next; the Core's page bookmarks), Last Page Read, Copy Page (clipboard image), Export Page..., remembered page failures for a few seconds (M2.3a item).
+- Goal: Previous/Next/Random Book (Option+Cmd+P/N/O and the reader keys P, N, L, in the current list order; `AutoNavigateComics`), bookmarks (Set Bookmark... with a name, Remove, Previous, Next, Last Page Read; the Core's page bookmarks; Cmd+Shift+B/D/P/N/L, Cmd+PageUp/PageDown), Copy Page (Cmd+C, clipboard image), Export Page... (Cmd+Shift+C), `OpenLastPage`, the page context menu's Books and Bookmarks submenus, remembered page failures for a few seconds (M2.3a item). No feature that the original lacks (the earlier "Go to Page" idea is dropped: Cmd+G is Reveal).
 - Accept: tests; e2e case `reader-nav`; `verify.sh`.
+- Parity: MR.05 to MR.07, ME.07 to ME.13, PC.04, PC.05, PC.07, RK.01 to RK.03, RK.07, PB.06, PB.11.
 
-#### P5.23b Reader: page browser
-- Depends: P5.23a · Effort: high · Unattended: yes · Status: todo
-- Goal: page thumbnails (strip or grid; the WinForms Pages view) with page types and bookmarks; click to go.
+#### P5.23b Pages view and page properties
+- Depends: P5.23a, P5.32b · Effort: high · Unattended: yes · Status: todo
+- Goal: the Pages browser tab (F8; `ComicPagesView`: thumbnails, tiles or details of the open book's pages, Group, Arrange, Page Filter) with the `PagesView` menu (Page Type, Page Rotation, Page Position Default/Near/Far, Set/Remove Bookmark, Move to Top/Bottom, Reset original Order, Copy Page, Merge Pages, Select All, Invert Selection, Refresh, Mark as Deleted), Edit > Page Type and Page Rotation, the permanent page rotation keys Y and Shift+Y; click to go.
 - Accept: tests; `verify.sh`.
+- Parity: MB.04, ME.05, ME.06, PC.03, PV.01 to PV.05, RK.29; view specs `ComicPagesView`, `PagesView`.
 
 #### P5.23c Reader: display settings
 - Depends: P5.23a, P3.6 · Effort: high · Unattended: yes · Status: todo
-- Goal: Book Display Settings (`ComicRack/Dialogs/ComicDisplaySettingsDialog.cs`): background colour or texture, paper texture, page margins, colour adjustment through the Core's `BitmapAdjustment`/`ImageProcessing` (per book and default), page transition (none or a simple slide).
+- Goal: Book Display Settings (F9; `ComicRack/Dialogs/ComicDisplaySettingsDialog.cs` exactly): background colour or texture, paper texture, page margins, colour adjustment through the Core's `BitmapAdjustment`/`ImageProcessing` (per book and default), page display change animation and `BlendWhilePaging`.
 - Accept: tests (an adjusted page differs as the P3.6 golden says); `verify.sh`.
+- Parity: MD.01, DL.04, PB.16; view spec `ComicDisplaySettingsDialog`.
 
 #### P5.23d Reader: magnifier, click zones, wheel paging, swipe at edge, auto scroll
 - Depends: P5.22a · Effort: high · Unattended: partial (feel -> C2) · Status: todo
-- Goal: magnifier (key and mouse; size and zoom from settings), click-to-turn zones, mouse-wheel paging preference, swipe at the edge of a zoomed page turns the page (DD8), auto scrolling.
+- Goal: magnifier (Option+Cmd+M, key M; the magnifier image frame; `MagnifySetupControl` in the toolbar drop-down: size, zoom, options), click-to-turn zones, mouse-wheel paging and `PageChangeDelay`, `ScrollingDoesBrowse`, swipe at the edge of a zoomed page turns the page (DD8, `mac-only`), auto scrolling (Cmd+S, key S) and double page auto scrolling (Option+Shift+S, Shift+S), move part keys (V, B, Cmd+Down/Up), Windows touch gestures mapped where a trackpad gesture exists.
 - Accept: tests; `verify.sh`.
+- Parity: MD.27, MR.11, MR.12, TB.07, DL.33, RK.12, RK.13, RK.19, RK.31, PB.12, PB.13.
 
-#### P5.23e Reader: remaining fit modes, rotation, page filter, full-resolution zoom
+#### P5.23e Reader: remaining fit modes, zoom, rotation, page filter, full-resolution zoom
 - Depends: P5.23a · Effort: high · Unattended: yes · Status: todo
-- Goal: Original Size, Fit Best (the Core's `BestFit`), Fit Width (adaptive), "only fit if oversized", rotate left/right and autorotate double pages, the navigator's page filter (deleted pages), re-decode the visible page without the 48 MP cap when zoomed, a background pass that learns page sizes for spread parity (M2.3b item).
+- Goal: Original Size, Fit Width (adaptive), Fit Best (the Core's `BestFit`), Only fit if oversized (Cmd+Shift+0, key O); Zoom In/Out (Cmd+=, Cmd+-, keys Z and Shift+Z), Toggle Zoom (Option+Cmd+Z, smart zoom), presets 100 to 400 %, Custom... (`ZoomDialog`); rotation menu (Rotate Left/Right, 0/90/180/270°, Autorotate Double Pages; keys R, Shift+R, A); `ResetZoomOnPageChange`, `ZoomInOutOnPageChange`, `TrueRightToLeftReading`, `LeftRightMovementReversed`; the navigator's page filter (deleted pages); re-decode the visible page without the 48 MP cap when zoomed; a background pass that learns page sizes for spread parity (M2.3b item).
 - Accept: tests; `verify.sh`.
+- Parity: MD.02, MD.05, MD.07, MD.13 to MD.23, RK.22, RK.24, RK.25, RK.27, RK.28, DL.26, PB.14, PB.15, PB.19, PB.20.
 
-#### P5.23f (v1-optional) Reader: continuous layout, double-page overlap, flip parts, minimal UI
-- Depends: P5.23e · Effort: high · Unattended: yes · Status: todo
+#### P5.23f Reader: continuous layout, double-page overlap, flip parts, minimal UI, realistic display
+- Depends: P5.23e, P5.32a · Effort: high · Unattended: yes · Status: todo
+- Goal: no longer optional (R9): Continuous layout, double-page overlap, flip parts, Minimal User Interface (F10, key K toggles its menu, `AutoMinimalGui`), Toggle Realistic Display (Shift+D, page ornaments; §8 item 132 reinstated), and the deviations TB.10 and PB.37 recorded (the macOS menu bar cannot be hidden from a window).
 - Accept: tests; `verify.sh`.
+- Parity: MD.11, MD.24, TB.10, RK.18, RK.20, PB.17, PB.37.
 
 #### P5.24a Export
 - Depends: P5.20 · Effort: high · Unattended: yes · Status: todo
-- Goal: the `ExportComicsDialog` equivalent as a sheet: formats CBZ, CB7 (with `7zz`), CBT, folder of images, image format and quality, resize, naming, target folder, "add to library", "Export with Previous"; runs on the Core's `ComicExporter` with progress and cancel; BMP/GIF/TIFF writers through ImageIO if the dialog offers them.
+- Goal: the `ExportComicsDialog` exactly, as a modal dialog window (C-DLG-2): formats CBZ, CB7 (with `7zz`), CBT, folder of images, image format and quality, resize, naming, target folder, "add to library", saved export settings, Export Books... (Cmd+Shift+E) and Export with Previous (Option+Cmd+E); runs on the Core's `ComicExporter` with progress and cancel; BMP/GIF/TIFF writers through ImageIO if the dialog offers them.
 - Accept: tests (exported CBZ opens with the same page count; image format honoured); e2e case `export`; `verify.sh`.
+- Parity: BC.14, DL.09, FF.08; view spec `ExportComicsDialog`.
 
 #### P5.24b PDF export
 - Depends: P5.24a · Effort: high · Unattended: yes · Status: todo
 - Goal: pass B rewrite of `PdfStorageProvider` (today a throwing replacement) writing PDF with Skia `SKDocument` (one page per image, page size from the image), same options; manifest entry.
 - Accept: test: export 5 pages to PDF, `crcli page` reads them back with pdfium at the expected sizes; `verify.sh`.
+- Parity: FF.08.
 
 #### P5.25 Backup and restore
 - Depends: P5.22a · Effort: medium · Unattended: yes · Status: todo
-- Goal: Backup now, Restore from backup (with a confirmation and a pre-restore copy), automatic backup settings (`ComicRack.Engine/Backup/{BackupManager,BackupArchiveCreator}.cs`).
+- Goal: the Advanced tab's Database Backup (Backup Database..., Restore Database... with a confirmation and a pre-restore copy) and Backup Manager groups (location, items, number kept, alternate configs, backup on startup and shut down; `ComicRack.Engine/Backup/{BackupManager,BackupArchiveCreator}.cs`), the backup status-bar icon.
 - Accept: tests (backup, change, restore, the change is gone); `verify.sh`.
+- Parity: PR.19, PR.20, FF.06.
 
-#### P5.26 Tasks and errors
+#### P5.26 Tasks, errors, progress
 - Depends: P5.9 · Effort: high · Unattended: yes · Status: todo
-- Goal: Tasks window (queue status of scanner, thumbnails, file updates, with cancel), Show Errors list, and a Mac `AutomaticProgressDialog` (the M0.3b stub runs inline) that shows a progress sheet for long Core operations.
+- Goal: Tasks dialog (Cmd+Shift+T; `TasksDialog` Background Tasks tab with cancel; Server Statistics tab hidden as D4), Errors dialog (`ShowErrorsDialog`), the status-bar activity icons with their animations (scan, read info, write info, pages, export, backup) and their click actions, and a Mac `AutomaticProgressDialog`/`ProgressDialog` (the M0.3b stub runs inline) for long Core operations.
 - Accept: tests; `verify.sh`.
+- Parity: MF.11, SB.02, DL.17, DL.20, DL.24; view specs `TasksDialog`, `ShowErrorsDialog`.
 
 #### P5.27a Localization sweep
 - Depends: P2.6, P5.22b · Effort: medium · Unattended: yes · Status: todo
-- Goal: every Mac view string through TR; WinForms keys reused where the text is the same, new keys in `mac/ComicRack.Mac/Languages/en/Mac.xml` (DD17; copied next to the TR files at build); a lint test that fails on literal user-facing strings in `.axaml` and menus.
+- Goal: every Mac view string through TR with the **original keys** (§2.11 rule 2; section = original form, key = control name); new keys only for Mac-only text, in `mac/ComicRack.Mac/Languages/en/Mac.xml` (DD17; copied next to the TR files at build); a lint test that fails on literal user-facing strings in `.axaml` and menus and on a Mac key whose English text equals an existing original key's text.
 - Accept: tests; `verify.sh`.
 
 #### P5.27b Language choice
 - Depends: P5.27a · Effort: medium · Unattended: yes · Status: todo
-- Goal: language picker in Preferences (restart prompt); e2e in German shows translated menus.
+- Goal: the Advanced tab's Languages group (list, restart note, "Help localizing ComicRack..."); e2e in German shows translated menus.
 - Accept: e2e case `german`; `verify.sh`.
+- Parity: PR.17.
 
 #### P5.28a Windows import, version 2
 - Depends: P5.1 · Effort: high · Unattended: yes · Status: todo
 - Goal: preview ("N of M books found"), UNC prefixes, NFC normalization of paths, relink by size and hash for books not found by prefix, cleanup or restore of `ComicDb.before-import-*.xml`, the CLI's `PathRemap` replaced by the host's `PathRemapRule` and import (M1.5b, M2.1, M2.2c items).
 - Accept: tests; `verify.sh`.
+- Parity: the import dialog is a `mac-only` row (no original equivalent); add it.
 
 #### P5.28b Settings and library compatibility through XML
 - Depends: P5.28a, P5.22b · Effort: high · Unattended: partial (a real `Config.xml` -> C1, else synthetic) · Status: todo
-- Goal: DD3: import the portable sections of a Windows `Config.xml` (reader and library defaults, smart-list related settings, external programs, read with an `XmlReader` without linking `ComicRack/Config/Settings.cs`), and "Export Library for Windows..." (reverse mapping, never in place).
+- Goal: DD3: import the portable sections of a Windows `Config.xml` (reader and library defaults, smart-list related settings, external programs, workspaces, list layouts, keyboard layout, read with an `XmlReader` without linking `ComicRack/Config/Settings.cs`), and "Export Library for Windows..." (reverse mapping, never in place).
 - Accept: tests (round trip: import a Windows DB, export it back with the reverse mapping, XML equal except paths); `verify.sh`.
+- Parity: FF.01, FF.02.
 
 #### P5.29 Quick Open pane
-- Depends: P5.4 · Effort: medium · Unattended: yes · Status: todo
-- Goal: the WinForms Quick Open view (recently added, recently read, continue reading) as a start pane; host location for `QuickOpenUI`/`QuickOpenHtml` (P4.11a/d).
-- Accept: tests; `verify.sh`.
+- Depends: P5.32a · Effort: medium · Unattended: yes · Status: todo
+- Goal: the WinForms `QuickOpenView` in the reader area when no book is open (`ShowQuickOpen`): the "Quick Open" caption card (616 × 289, `CaptionControl` look), recent and continue-reading books as 128 px thumbnails, buttons Open, Browser, Open File...; host location for `QuickOpenUI`/`QuickOpenHtml` (P4.11a/d).
+- Accept: tests; `mac/tools/chrome-sheet.sh P5.29 MainWindow`; `verify.sh`.
+- Parity: QO.01, PB.31; view spec `QuickOpenView`.
 
 #### P5.30 Folders browser
-- Depends: P5.11a · Effort: medium · Unattended: yes · Status: todo
-- Goal: the "Folders" browser mode (`ComicRack/Views/ComicListFolderFilesBrowser.cs` semantics): browse a folder tree, show its books (in the library or not), open and add.
+- Depends: P5.11a, P5.32b · Effort: medium · Unattended: yes · Status: todo
+- Goal: the Folders browser tab (F7; `ComicRack/Views/ComicListFolderFilesBrowser.cs` semantics and look): folder tree with its toolbar (Show Favorites, Include all Subfolders, New Window, New Tab, Refresh) and menu (Open in New Window, Open in New Tab, Add Folder to Favorites, Add Folder to Library, Refresh), folder favorites, books of a folder (in the library or not), open and add.
 - Accept: tests; `verify.sh`.
+- Parity: MB.03, FB.01 to FB.04; view spec `ComicListFolderFilesBrowser`.
 
-#### P5.31 About, News, updates, Help
+#### P5.31 Splash, About, News, updates, Help
 - Depends: P2.6 · Effort: medium · Unattended: yes · Status: todo
-- Goal: About with GPL notice, source link and versions; News as plain text; "Check for Updates..." opens the release page; Help menu items from `ComicRack/Output/Help/*.ini`.
+- Goal: the original splash (`Splash`: 619 × 317 image with version text, fade) at startup when `ShowSplash`, and the same panel as About (app menu; Option+F1) with the GPL notice and source link added below as `mac-only`; News dialog (`NewsDialog`) and `NewsStartup`; "Check For Update..." opens the release page; Help menu exactly: ComicRack Documentation... (F1, Cmd+?), Plugins (script help entries), Choose Help System (`ComicRack/Output/Help/*.ini`), ComicRack Homepage... (Shift+F1), ComicRack User Forum... (Option+Cmd+F1); Quick Introduction stays deferred (DjVu, D4).
 - Accept: tests; `verify.sh`.
+- Parity: MH.01 to MH.10, DL.13, DL.23, PB.01, PB.05; view specs `Splash`, `NewsDialog`; C-SPLASH-1.
+
+#### P5.34 Finder integration (file associations)
+- Depends: P5.10a, P5.22b · Effort: medium · Unattended: partial (changing the real default apps is an owner check -> C6; tests use a fake) · Status: todo
+- Goal: the Advanced tab's Explorer Integration group as "Finder Integration": the original format list (`PreferencesDialog.cs:867-872`), "Overwrite existing associations" (= make ComicRack CE the default app through Launch Services, `LSSetDefaultRoleHandlerForContentType`, versus only being listed in Open With through `CFBundleDocumentTypes`), Change... applies. Sessions never call the real API (it would change the owner's system, §2.6 rule 5): an `IFileAssociations` adapter with a fake in tests.
+- Accept: tests with the fake adapter; `verify.sh`. Owner check (C6): one association set and reverted.
+- Parity: PR.23.
 
 ### P6 Packaging and release
 
 #### P6.1 v1 identity, document types, MVP migration
 - Depends: P5.10a, P2.6 · Effort: high · Unattended: yes (the final id is confirmed at C5) · Status: todo
-- Goal: DD2: `ComicRack CE`, default id `org.comicrackce.ComicRack` (env `BUNDLE_ID`), `Product` attribute and data folders `ComicRack Community Edition` (Application Support, Caches, Logs), first-launch offer to copy an MVP library, `Info.plist` (`CFBundleDocumentTypes`, `UTImportedTypeDeclarations` for cbz/cbr/cb7/cbt/cbl/crplugin, version from git), icon (`.icns` from the best source; C5 may supply 1024 px).
+- Goal: DD2: `ComicRack CE`, default id `org.comicrackce.ComicRack` (env `BUNDLE_ID`), `Product` attribute and data folders `ComicRack Community Edition` (Application Support, Caches, Logs), first-launch offer to copy an MVP library, `Info.plist` (`CFBundleDocumentTypes`, `UTImportedTypeDeclarations` for cbz/cbr/cb7/cbt/cbl/crplugin, version from git), icon (`.icns` built from the original `ComicRack/Icons/icon1.ico` 256 px frame, C-ICON-1; C5 may supply a 1024 px rendering of the same artwork).
 - Edit: `mac/tools/make-app.sh` (new name `mac/artifacts/ComicRack CE.app`), `mac/ComicRack.Mac/ComicRack.Mac.csproj`, `mac/ComicRack.Mac.Host/MacPaths.cs`, tests and docs that name the MVP folders.
 - Rollback: revert the commit; a migrated library stays in the new folder and the MVP folder is untouched (copy, never move).
 - Accept: tests; e2e `launch-quit` and `menu-structure` with the new name; `plutil -lint` of the plist; `verify.sh`.
@@ -983,12 +1177,13 @@ Every P5 task: view-model tests on the headless platform (frames saved when `CRM
 - Goal: build, sign with the Developer ID, notarize, staple, DMG; verify `spctl -a -t exec -vv` says "accepted, source=Notarized Developer ID" and the quarantined copy launches; drop `disable-library-validation`.
 - Accept: the commands' output in §3; e2e `launch-quit --bundle` on the notarized app; `verify.sh`.
 
-### P7 Hardening and v1 acceptance
+### P7 Hardening, parity audits and v1 acceptance
 
 #### P7.1 Crash reports and logs
 - Depends: P5.10b · Effort: medium · Unattended: yes · Status: todo
-- Goal: an unhandled exception shows a crash dialog (`CrashDialog` semantics: details, copy, quit or continue), "Report a Problem..." in Help zips the logs and settings (no library) to a chosen folder, log rotation checked.
+- Goal: an unhandled exception shows a crash dialog (`CrashDialog` layout and semantics: details, copy, quit or continue), "Report a Problem..." in Help zips the logs and settings (no library) to a chosen folder (a `mac-only` ledger row), log rotation checked.
 - Accept: tests; e2e case `report-problem`; `verify.sh`.
+- Parity: DL.05; view spec `CrashDialog`; C-DLG-2.
 
 #### P7.2 Large library
 - Depends: P3.1, P5.11a · Effort: high · Unattended: yes · Status: todo
@@ -1020,9 +1215,34 @@ Every P5 task: view-model tests on the headless platform (frames saved when `CRM
 - Goal: launch time (cold, warm), memory after a full scroll, page turn and scroll numbers from `crcli bench --compare` and the overlay log; fix the top regressions within the session; update the baseline only with a reason.
 - Accept: `crcli bench ... --compare mac/benchmarks/baseline.json` exits 0; `verify.sh --full`.
 
+#### P7.A1 Parity audit: menus, commands and shortcuts
+- Depends: P5.32c, P5.22c, P5.23f, P5.31, P5.33, P4.5 · Effort: high · Unattended: partial (real-window checks need an unlocked GUI) · Status: todo
+- Goal: walk the ledger areas MF, ME, MB, MR, MD, MH, MA, TB, TC, PC, NT, BT, BC, LT, FB, PV, RK, GK in the running app: `ui-drive menu-items` for every menu compared with the ledger by `ledger-check --menus` (labels, order, shortcuts, check marks, enabled state with and without a book open), each context menu opened with `--show` and a right click, reader keys driven by e2e; fix gaps that take under an hour in this task, turn bigger ones into `R<n>` tasks; set rows to `done` or `deviation` (reason) with the date.
+- Add: e2e case `menu-parity` (the full menu dump compared with the ledger).
+- Accept: `python3 mac/tools/ledger-check/ledger-check.py --report` shows no `todo` in these areas except rows whose owning task is not done (listed in §9 with the task); `mac/tools/e2e.sh menu-parity`; `verify.sh`.
+- Parity: the areas listed.
+
+#### P7.A2 Parity audit: dialogs, Preferences, settings and files
+- Depends: P7.A1, P5.24b, P5.25, P5.26, P5.27b, P5.28b, P5.34, P4.11e · Effort: high · Unattended: partial (shots need an unlocked GUI) · Status: todo
+- Goal: walk DL, IN, PR, PB, FF: every dialog opened with `--show` and compared with its view spec (an Avalonia control-tree dump against `designer-dump`: same groups, controls, order, TR keys and defaults); every Behavior option toggled and its effect checked (a test per PB row where feasible, else a scripted e2e step); the `SettingsDefaultsTests` of P5.1 extended to every mirrored property; file round trips (FF rows); a contact sheet `A2 --dialogs`.
+- Accept: `ledger-check --report` shows no `todo` in these areas (same exception rule); `mac/tools/chrome-sheet.sh A2 --dialogs`; `verify.sh`.
+- Parity: the areas listed; chrome-guidelines §7 C-DLG-2, C-PREF-1, C-CTRL-1.
+
+#### P7.A3 Parity audit: browser, lists, reader and scripting behaviour
+- Depends: P7.A1, P4.15 · Effort: high · Unattended: partial (shots need an unlocked GUI) · Status: todo
+- Goal: walk BV, MV, SB, SR, SP, IP, QO, SC with behaviour scenarios on fixture libraries (grouping, stacking, sorting, filters, quick search scopes, search browser narrowing, list layouts per list, docking modes, workspaces, reader modes and overlays, every hook type with a sample script); compare the look of each view with chrome-guidelines §4 metrics (headless assertions) and produce a contact sheet `A3 --views`.
+- Accept: `ledger-check --report` shows no `todo` in these areas (same exception rule); `mac/tools/chrome-sheet.sh A3 --views`; `verify.sh`.
+- Parity: the areas listed; chrome-guidelines §7 C-LIST-1, C-TREE-1, C-READ-1, C-TAB-1, C-SB-1.
+
+#### P7.A4 Final parity and chrome audit before v1 acceptance
+- Depends: P7.A1, P7.A2, P7.A3, P7.1 to P7.7 · Effort: medium · Unattended: partial (the sheet needs an unlocked GUI) · Status: todo
+- Goal: the whole ledger has no `todo` row (only `done`, `deviation` with a valid reason, `deferred (D4)`, `mac-only`); every chrome-guidelines §7 row is applied as decided (or as the owner flipped it at C2); the literal-colour lint and `ledger-check` are green; the C6 contact sheet `mac/tools/chrome-sheet.sh C6 --all` (every view, light and dark, with references); a parity summary for `mac/plans/v1-acceptance.md` (counts per status, the deviation list with reasons, the D4 list).
+- Accept: `python3 mac/tools/ledger-check/ledger-check.py --report --strict` (strict: any `todo` fails) exits 0; the sheet files exist; `verify.sh --full`.
+- Parity: the whole ledger.
+
 #### P7.8 v1 acceptance pack and hand-over
-- Depends: every non-optional task · Effort: medium · Unattended: partial (the owner's run -> C6) · Status: todo
-- Goal: `mac/plans/v1-acceptance.md` (all owner-only items left from C2 and C4, a clean-user Gatekeeper launch, real library, SMB, TCC, gestures, plugins, verdict table), `mac/QUICKSTART.md` for v1, the full gate, an Opus-tier review of the whole `mac/` tree against §2.8, the C6 block.
+- Depends: every non-optional task (including P7.A4) · Effort: medium · Unattended: partial (the owner's run -> C6) · Status: todo
+- Goal: `mac/plans/v1-acceptance.md` (all owner-only items left from C2 and C4, a clean-user Gatekeeper launch, real library, SMB, TCC, gestures, plugins, the P7.A4 parity summary and the C6 contact sheet `mac/artifacts/chrome/C6/sheet.png`, verdict table), `mac/QUICKSTART.md` for v1, the full gate, an Opus-tier review of the whole `mac/` tree against §2.8 and §2.11, the C6 block.
 - Accept: full gate passes; the pack exists; `verify.sh --full`.
 
 ### Upstream sync tasks
@@ -1170,7 +1390,7 @@ Items are listed in the order of `mvp-track.md` §9; "closed" means a later MVP 
 | 129 | [M2.3a] items closed by M2.3a | closed |
 | 130 | [M2.3b] real pinch, pan, full screen, Metal unverified | P0.6b (full screen, keys, menus); pinch and pan feel: C2 |
 | 131 | [M2.3b] reading mode not persisted | P5.1 |
-| 132 | [M2.3b] Original/BestFit/FitWidthAdaptive, Continuous, overlap, FlipParts, ornaments, auto scroll, page filter | P5.23e (fit modes, page filter), P5.23d (auto scroll), P5.23f (continuous, overlap, FlipParts); realistic page ornaments dropped (cosmetic WinForms feature, no v1 value) |
+| 132 | [M2.3b] Original/BestFit/FitWidthAdaptive, Continuous, overlap, FlipParts, ornaments, auto scroll, page filter | P5.23e (fit modes, page filter), P5.23d (auto scroll), P5.23f (continuous, overlap, FlipParts, and realistic page ornaments: reinstated by R9, ledger RK.18) |
 | 133 | [M2.3b] swipe at the edge of a zoomed page | DD8, P5.23d |
 | 134 | [M2.3b] spread parity for pages not yet decoded | P5.23e |
 | 135 | [M2.3b] spread prefetch memory (`Ahead`) | P3.3 |
@@ -1195,14 +1415,16 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 
 | Phase | Tasks | Agent time per task (typical) | Agent hours |
 |---|---|---|---|
-| P0 | 12 (1 done) | 1.5 to 2.5 h | 20 to 28 |
+| P0 | 13 (3 done, incl. R1) | 1.5 to 2.5 h | 20 to 28 |
 | P1 | 3 | 1.5 to 2 h | 5 to 6 |
 | P2 | 9 | 1.5 to 2.5 h | 15 to 22 |
 | P3 | 11 | 1 to 2 h | 12 to 20 |
 | P4 | 36 | 2 to 3 h (xhigh tasks at the top) | 75 to 105 |
-| P5 | 52 | 1.5 to 2.5 h | 85 to 130 |
+| P5 | 66 (52 + 14 added by R9; the existing blocks also grew: view specs, exact layouts, ledger) | 1.5 to 2.5 h | 105 to 175 |
 | P6 | 7 | 1 to 2 h | 8 to 13 |
-| P7 | 8 | 1.5 to 2.5 h | 12 to 20 |
-| **Total** | **138** | | **about 230 to 345 h**, plus about 15 minutes of orchestrator verification per task (about 35 h) and retries (+15 %) |
+| P7 | 12 (8 + 4 parity audits) | 1.5 to 2.5 h | 18 to 32 |
+| **Total** | **157** | | **about 260 to 400 h**, plus about 15 minutes of orchestrator verification per task (about 40 h) and retries (+15 %) |
 
-Calendar: with the unattended loop running most of the day and night, about 8 to 12 tasks a day when nothing blocks, so **4 to 6 weeks of agent wall time**; with GUI-lock gaps (e2e tasks wait for an unlocked screen), retries, owner checkpoints (C2 to C6: about 4 to 6 hours of owner time in all, spread over the period) and upstream merges, plan for **7 to 10 weeks calendar** to C6. The Script UI layer (wave E, 28 tasks) is the largest uncertainty: a NO-GO at P4.2 removes most of it from v1 and moves C3 forward.
+R9 adds roughly 30 to 55 agent hours (the chrome foundation, the restyle, the main-window structure, workspaces, keyboard editor, tray, Finder integration and the audits) and makes every UI task somewhat longer.
+
+Calendar: with the unattended loop running most of the day and night, about 8 to 12 tasks a day when nothing blocks, so **5 to 7 weeks of agent wall time**; with GUI-lock gaps (e2e tasks and contact sheets wait for an unlocked screen), retries, owner checkpoints (C2 to C6: about 4.5 to 6.5 hours of owner time in all, including two contact-sheet reviews of 10 to 15 minutes) and upstream merges, plan for **9 to 12 weeks calendar** to C6. The Script UI layer (wave E, 28 tasks) is the largest uncertainty: a NO-GO at P4.2 removes most of it from v1 and moves C3 forward.
