@@ -1,133 +1,147 @@
 using System;
 using System.Collections.Generic;
 using cYo.Common.Collections;
-using cYo.Common.Mathematics;
 using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.IO.Network;
 
 namespace ComicRack.Mac.Host
 {
 	/// <summary>
-	/// The settings the Core reads, with the defaults of the WinForms class (ComicRack/Config/Settings.cs). It is not
-	/// persisted in the MVP. Setters raise the same change events and clamp like the original.
-	/// "Settings.cs:N" below is the line of the field initializer, or of the constant, in that file.
+	/// The settings the Core reads, with the defaults of the WinForms class (ComicRack/Config/Settings.cs). The values live in
+	/// <see cref="AppPreferences"/> (which keeps the citations of the original's lines and is saved by <see cref="SettingsStore"/>); this class is the
+	/// view of them that the Core's interfaces ask for. Setters raise the same change event and clamp like the original.
 	/// </summary>
 	public sealed class MacSettings : ICacheSettings, IComicUpdateSettings, ISharesSettings, IVirtualTagSettings
 	{
-		// Settings.cs:110-122
-		public const int MinimumMemoryPageCacheCount = 20;
-		public const int MaximumMemoryPageCacheCount = 100;
-		public const int DefaultMemoryPageCacheCount = 25;
-		public const int MinimumMemoryThumbnailCacheMB = 5;
-		public const int MaximumMemoryThumbnailCacheMB = 500;
-		public const int DefaultMemoryThumbnailCacheMB = 50;
-		public const int DefaultInternetCacheSizeMB = 1000;
+		public const int MinimumMemoryPageCacheCount = AppPreferences.MinimumMemoryPageCacheCount;
+		public const int MaximumMemoryPageCacheCount = AppPreferences.MaximumMemoryPageCacheCount;
+		public const int DefaultMemoryPageCacheCount = AppPreferences.DefaultMemoryPageCacheCount;
+		public const int MinimumMemoryThumbnailCacheMB = AppPreferences.MinimumMemoryThumbnailCacheMB;
+		public const int MaximumMemoryThumbnailCacheMB = AppPreferences.MaximumMemoryThumbnailCacheMB;
+		public const int DefaultMemoryThumbnailCacheMB = AppPreferences.DefaultMemoryThumbnailCacheMB;
+		public const int DefaultInternetCacheSizeMB = AppPreferences.DefaultInternetCacheSizeMB;
 
-		private bool thumbCacheEnabled = true; // Settings.cs:316
-		private int thumbCacheSizeMB = 500; // Settings.cs:318
-		private bool pageCacheEnabled = true; // Settings.cs:320
-		private int pageCacheSizeMB = 500; // Settings.cs:322
-		private bool internetCacheEnabled = true; // Settings.cs:324
-		private int internetCacheSizeMB = DefaultInternetCacheSizeMB; // Settings.cs:326
-		private int memoryThumbCacheSizeMB = DefaultMemoryThumbnailCacheMB; // Settings.cs:328
-		private int memoryPageCacheCount = DefaultMemoryPageCacheCount; // Settings.cs:330
-		private bool memoryThumbCacheOptimized = true; // Settings.cs:332
-		private bool memoryPageCacheOptimized = true; // Settings.cs:334
-		private bool updateComicFiles; // Settings.cs:202
-		private bool updateComicBookFiles; // Settings.cs:204
-		private bool autoUpdateComicsFiles; // Settings.cs:206
-		private bool lookForShared = true; // Settings.cs:158
+		private static readonly HashSet<string> cacheProperties = new HashSet<string>
+		{
+			nameof(AppPreferences.ThumbCacheEnabled), nameof(AppPreferences.ThumbCacheSizeMB), nameof(AppPreferences.PageCacheEnabled), nameof(AppPreferences.PageCacheSizeMB),
+			nameof(AppPreferences.InternetCacheEnabled), nameof(AppPreferences.InternetCacheSizeMB), nameof(AppPreferences.MemoryThumbCacheSizeMB), nameof(AppPreferences.MemoryPageCacheCount),
+			nameof(AppPreferences.MemoryThumbCacheOptimized), nameof(AppPreferences.MemoryPageCacheOptimized),
+		};
+
+		private readonly AppPreferences preferences;
 		private readonly SmartList<ComicLibraryServerConfig> shares = new SmartList<ComicLibraryServerConfig>(); // Settings.cs:156
 		private readonly List<VirtualTag> virtualTags = new List<VirtualTag>(); // Settings.cs:2420
+
+		/// <summary>The defaults of the original, in preferences of its own (tests, tools).</summary>
+		public MacSettings()
+			: this(new AppPreferences())
+		{
+		}
+
+		/// <summary>The Core's view of <paramref name="preferences"/>: what the user changes there reaches the Core, and the other way round.</summary>
+		public MacSettings(AppPreferences preferences)
+		{
+			this.preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
+			preferences.PropertyChanged += (sender, e) =>
+			{
+				if (cacheProperties.Contains(e.PropertyName))
+				{
+					CacheSettingsChanged?.Invoke(this, EventArgs.Empty);
+				}
+			};
+		}
+
+		/// <summary>The preferences behind these settings.</summary>
+		public AppPreferences Preferences => preferences;
 
 		public event EventHandler CacheSettingsChanged;
 
 		public bool ThumbCacheEnabled
 		{
-			get { return thumbCacheEnabled; }
-			set { Set(ref thumbCacheEnabled, value); }
+			get { return preferences.ThumbCacheEnabled; }
+			set { preferences.ThumbCacheEnabled = value; }
 		}
 
 		public int ThumbCacheSizeMB
 		{
-			get { return thumbCacheSizeMB; }
-			set { Set(ref thumbCacheSizeMB, value); }
+			get { return preferences.ThumbCacheSizeMB; }
+			set { preferences.ThumbCacheSizeMB = value; }
 		}
 
 		public bool PageCacheEnabled
 		{
-			get { return pageCacheEnabled; }
-			set { Set(ref pageCacheEnabled, value); }
+			get { return preferences.PageCacheEnabled; }
+			set { preferences.PageCacheEnabled = value; }
 		}
 
 		public int PageCacheSizeMB
 		{
-			get { return pageCacheSizeMB; }
-			set { Set(ref pageCacheSizeMB, value); }
+			get { return preferences.PageCacheSizeMB; }
+			set { preferences.PageCacheSizeMB = value; }
 		}
 
 		public bool InternetCacheEnabled
 		{
-			get { return internetCacheEnabled; }
-			set { Set(ref internetCacheEnabled, value); }
+			get { return preferences.InternetCacheEnabled; }
+			set { preferences.InternetCacheEnabled = value; }
 		}
 
 		public int InternetCacheSizeMB
 		{
-			get { return internetCacheSizeMB; }
-			set { Set(ref internetCacheSizeMB, value); }
+			get { return preferences.InternetCacheSizeMB; }
+			set { preferences.InternetCacheSizeMB = value; }
 		}
 
 		/// <summary>Clamped to 5..500, as in Settings.cs:2196.</summary>
 		public int MemoryThumbCacheSizeMB
 		{
-			get { return memoryThumbCacheSizeMB; }
-			set { Set(ref memoryThumbCacheSizeMB, value.Clamp(MinimumMemoryThumbnailCacheMB, MaximumMemoryThumbnailCacheMB)); }
+			get { return preferences.MemoryThumbCacheSizeMB; }
+			set { preferences.MemoryThumbCacheSizeMB = value; }
 		}
 
 		/// <summary>Clamped to 20..100, as in Settings.cs:2217.</summary>
 		public int MemoryPageCacheCount
 		{
-			get { return memoryPageCacheCount; }
-			set { Set(ref memoryPageCacheCount, value.Clamp(MinimumMemoryPageCacheCount, MaximumMemoryPageCacheCount)); }
+			get { return preferences.MemoryPageCacheCount; }
+			set { preferences.MemoryPageCacheCount = value; }
 		}
 
 		public bool MemoryThumbCacheOptimized
 		{
-			get { return memoryThumbCacheOptimized; }
-			set { Set(ref memoryThumbCacheOptimized, value); }
+			get { return preferences.MemoryThumbCacheOptimized; }
+			set { preferences.MemoryThumbCacheOptimized = value; }
 		}
 
 		public bool MemoryPageCacheOptimized
 		{
-			get { return memoryPageCacheOptimized; }
-			set { Set(ref memoryPageCacheOptimized, value); }
+			get { return preferences.MemoryPageCacheOptimized; }
+			set { preferences.MemoryPageCacheOptimized = value; }
 		}
 
 		// IComicUpdateSettings: in the WinForms class each of the three also has its own change event, which nothing in the Core subscribes to.
 		public bool UpdateComicFiles
 		{
-			get { return updateComicFiles; }
-			set { updateComicFiles = value; }
+			get { return preferences.UpdateComicFiles; }
+			set { preferences.UpdateComicFiles = value; }
 		}
 
 		public bool UpdateComicBookFiles
 		{
-			get { return updateComicBookFiles; }
-			set { updateComicBookFiles = value; }
+			get { return preferences.UpdateComicBookFiles; }
+			set { preferences.UpdateComicBookFiles = value; }
 		}
 
 		public bool AutoUpdateComicsFiles
 		{
-			get { return autoUpdateComicsFiles; }
-			set { autoUpdateComicsFiles = value; }
+			get { return preferences.AutoUpdateComicsFiles; }
+			set { preferences.AutoUpdateComicsFiles = value; }
 		}
 
 		// ISharesSettings: the MVP has no library sharing, so the list stays empty.
 		public bool LookForShared
 		{
-			get { return lookForShared; }
-			set { lookForShared = value; }
+			get { return preferences.LookForShared; }
+			set { preferences.LookForShared = value; }
 		}
 
 		public SmartList<ComicLibraryServerConfig> Shares => shares;
@@ -140,14 +154,5 @@ namespace ComicRack.Mac.Host
 
 		// IVirtualTagSettings
 		public List<VirtualTag> VirtualTags => virtualTags;
-
-		private void Set<T>(ref T field, T value)
-		{
-			if (!EqualityComparer<T>.Default.Equals(field, value))
-			{
-				field = value;
-				CacheSettingsChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
 	}
 }

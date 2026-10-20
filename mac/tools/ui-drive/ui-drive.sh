@@ -22,6 +22,7 @@ usage: ui-drive.sh <command> [args]
   wait-window <title-regex> [seconds=30]                 wait until a window of the app has a matching title
   windows [--all]                                        list the windows of the app: id layer onscreen x y w h title
   front                                                  bring the app to the front (activates only the launched pid)
+  frame <title> <x> <y> <w> <h>                          move and resize the app's window with that exact title (point units, the whole window incl. title bar)
   menu <Menu> <Item> [<Sub>]                             click a menu item (path of any depth)
   menu-items [<Menu> [<Item>...]]                        list menu bar items, or the items of a menu: name, shortcut, mark, enabled
   key <combo>                                            e.g. cmd+shift+g, return, escape, right, f5, cmd+code19 (see README)
@@ -442,6 +443,38 @@ cmd_front() {
 	echo "frontmost: pid $UD_PID"
 }
 
+# frame <title> <x> <y> <w> <h>: sets the position and size of the launched app's window with that exact title through System Events. It sends no key or
+# click and changes nothing but the geometry of a window of the launched pid, so it needs no frontmost app.
+cmd_frame() {
+	[ $# -eq 5 ] || die 2 "frame needs <title> <x> <y> <w> <h>"
+	local title=$1; shift
+	local n
+	for n in "$@"; do case "$n" in ''|*[!0-9-]*) die 2 "frame: x, y, w and h must be whole numbers" ;; esac; done
+	load_session; check_gui
+	local out
+	out=$(printf '%s\n' '
+on run argv
+	set targetPid to (item 1 of argv) as integer
+	set wanted to item 2 of argv
+	tell application "System Events"
+		set p to first process whose unix id is targetPid
+		set w to first window of p whose name is wanted
+		set position of w to {(item 3 of argv) as integer, (item 4 of argv) as integer}
+		set size of w to {(item 5 of argv) as integer, (item 6 of argv) as integer}
+		set pos to position of w
+		set siz to size of w
+		return ((item 1 of pos) as text) & "," & ((item 2 of pos) as text) & " " & ((item 1 of siz) as text) & "x" & ((item 2 of siz) as text)
+	end tell
+end run' | osascript - "$UD_PID" "$title" "$@" 2>&1); local rc=$?
+	if [ $rc -ne 0 ]; then
+		case "$out" in
+			*"not allowed assistive"*|*"-1719"*|*"-25211"*|*"-1743"*) die 4 "no Accessibility access: $out" ;;
+			*) die 1 "AppleScript failed: $out" ;;
+		esac
+	fi
+	echo "frame: $out"
+}
+
 cmd_menu() {
 	strip_common "$@"; set -- ${REST[@]+"${REST[@]}"}
 	[ $# -ge 2 ] || die 2 "menu needs <Menu> <Item> [<Sub>]"
@@ -775,6 +808,7 @@ case "$command_name" in
 	wait-window) cmd_wait_window "$@" ;;
 	windows) cmd_windows "$@" ;;
 	front) cmd_front "$@" ;;
+	frame) cmd_frame "$@" ;;
 	menu) cmd_menu "$@" ;;
 	menu-items) cmd_menu_items "$@" ;;
 	key) cmd_key "$@" ;;

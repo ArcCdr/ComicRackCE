@@ -10,6 +10,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using cYo.Projects.ComicRack.Engine;
 using ComicRack.Mac.Diagnostics;
+using ComicRack.Mac.Host;
 using ComicRack.Mac.Reader;
 using ComicRack.Mac.Services;
 using ComicRack.Mac.ViewModels;
@@ -45,8 +46,14 @@ namespace ComicRack.Mac
 			Themes.ChromeVariants.Reset();
 			Themes.ChromeVariants.Configure(options.Chrome);
 			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
+			// The saved settings are read before anything else that depends on them (P5.1): the host service owns the file, and only a desktop run has one.
+			if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime)
+			{
+				hostService = new HostService(options);
+			}
 			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
-			Localization.Apply(options.Language);
+			// The language is --language (or the environment) over the saved CultureName, as ExtendedSettings.Language over Settings.CultureName in the original (Program.cs:792).
+			Localization.Apply(options.Language ?? hostService?.Preferences.Current.CultureName);
 			// FadeInThumbnails: covers fade in only in a running desktop app; a headless test session shows the finished frame at once.
 			Controls.CoverView.FadeEnabled = ApplicationLifetime is IClassicDesktopStyleApplicationLifetime && !options.Headless;
 			// The fades and the slide of the reader overlays run on the same condition; a test moves them by hand (ReaderOverlayClock.Advance).
@@ -70,10 +77,14 @@ namespace ComicRack.Mac
 				// An exception on the UI thread is logged through the host log and the app keeps running.
 				Dispatcher.UIThread.UnhandledException += OnUiThreadUnhandledException;
 
-				hostService = new HostService(options);
+				AppPreferences preferences = hostService.Preferences.Current;
 				var window = new MainWindow();
+				// Where the library window was (moved back on a screen if its monitor is gone); from the first frame on, its moves and resizes are kept.
+				WindowFrame placed = WindowFrameTracker.Restore(window, preferences.LibraryWindow);
+				WindowFrameTracker.Attach(window, frame => preferences.LibraryWindow = frame, placed);
+				AppLog.Info(placed == null ? "Library window: no saved frame." : "Library window restored to " + placed + " (saved " + preferences.LibraryWindow + ").");
 				perf = new PerfOverlayController(new PerfSources(), new AvaloniaPerfTicker(), StopwatchClock.Now, AppLog.Info);
-				readers = new ReaderManager(hostService, perf);
+				readers = new ReaderManager(hostService, perf, preferences);
 				perf.Sources.DecodeMilliseconds = readers.LastDecodeMilliseconds;
 				perf.Sources.CachedTurnMilliseconds = readers.LastCachedTurnMilliseconds;
 				perf.Sources.Thumbnails = () =>
@@ -82,7 +93,7 @@ namespace ComicRack.Mac
 					return stats == null ? null : ((int, int)?)(stats.Queued, stats.InFlight);
 				};
 				window.AttachPerfOverlay(perf);
-				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers);
+				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers, preferences);
 				window.DataContext = viewModel;
 				ViewRegistry.Library = viewModel;
 				// Avalonia.Native has made the app menu before this runs and ignores a menu set now: its items are changed in place (MainMenu.FillAppMenu).

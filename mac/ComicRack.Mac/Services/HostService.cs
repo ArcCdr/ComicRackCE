@@ -23,6 +23,8 @@ namespace ComicRack.Mac.Services
 		private readonly CancellationTokenSource shutdown = new CancellationTokenSource();
 		private Task<MacHost> opening;
 		private bool disposed;
+		private SettingsStore preferences;
+		private readonly object preferencesGate = new object();
 
 		public HostService(AppOptions options)
 		{
@@ -31,6 +33,30 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>The open host, or null while opening, after a failure and after <see cref="Dispose"/>.</summary>
 		public MacHost Host { get; private set; }
+
+		/// <summary>
+		/// The saved settings of the app (<c>&lt;data&gt;/Settings.xml</c>, P5.1), read on first use. They are available before the host opens, so the windows can
+		/// be placed where they were. Every change is saved after a short quiet time and everything pending is written by <see cref="Dispose"/>.
+		/// </summary>
+		public SettingsStore Preferences
+		{
+			get
+			{
+				lock (preferencesGate)
+				{
+					if (preferences == null)
+					{
+						MacPaths paths = options.DataDirectory != null ? MacPaths.Under(options.DataDirectory) : MacPaths.ForCurrentUser();
+						preferences = SettingsStore.Open(SettingsStore.PathIn(paths.DataFolder), log: message => AppLog.Error(message));
+						if (preferences.LoadNote != null)
+						{
+							AppLog.Info(preferences.LoadNote);
+						}
+					}
+					return preferences;
+				}
+			}
+		}
 
 		/// <summary>The folders of the host (data, cache, logs); set by <see cref="Start"/>.</summary>
 		public MacPaths Paths { get; private set; }
@@ -72,7 +98,8 @@ namespace ComicRack.Mac.Services
 		{
 			MacPaths paths = Paths;
 			Failure = null;
-			opening = Task.Run(() => MacHost.Open(new MacHostOptions { Paths = paths }));
+			var settings = new MacSettings(Preferences.Current);
+			opening = Task.Run(() => MacHost.Open(new MacHostOptions { Paths = paths, Settings = settings }));
 			Ready = Complete(opening);
 		}
 
@@ -245,6 +272,23 @@ namespace ComicRack.Mac.Services
 			return v;
 		}
 
+		private void FlushPreferences()
+		{
+			SettingsStore store;
+			lock (preferencesGate)
+			{
+				store = preferences;
+			}
+			try
+			{
+				store?.Dispose();
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("Saving the settings failed.", ex);
+			}
+		}
+
 		/// <summary>Stops the cover service (cancels queued and running decodes, waits for the ones that cannot be interrupted). Must precede the close of the host.</summary>
 		private void DisposeThumbnails()
 		{
@@ -283,6 +327,8 @@ namespace ComicRack.Mac.Services
 				return;
 			}
 			disposed = true;
+			// What was changed in the last moments (a window moved, a size picked) is written first: nothing below can fail it.
+			FlushPreferences();
 			try
 			{
 				shutdown.Cancel();

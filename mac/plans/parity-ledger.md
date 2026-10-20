@@ -351,7 +351,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | PR.01 | Window frame | left tab column (Reader, Libraries, Behavior, Scripts, Advanced), collapsible groups, OK / Cancel / Apply | P5.22a | todo | original layout (C-PREF-1) |
 | PR.02 | Reader > Display | contrast, brightness, saturation, gamma, sharpening sliders, Automatic Contrast Enhancement, High Quality, Anamorphic Scaling, Reset | P5.22a | todo | |
 | PR.03 | Reader > Keyboard | shortcut editor, Import... (with Default layout), Export... (`*.xml`), `miDefaultKeyboardLayout` | P5.22c | todo | DD19 overridden by R9 |
-| PR.04 | Reader > Overlays | Show Navigation automatically, visible Page Part, Messages and Status, current Page, page names; sizing; navigation position | P5.22a | todo | the overlays work with the original's defaults since P5.R3 (`ReaderOptions`); the check boxes are P5.22a, saving them P5.1 |
+| PR.04 | Reader > Overlays | Show Navigation automatically, visible Page Part, Messages and Status, current Page, page names; sizing; navigation position | P5.22a | todo | the overlays work with the original's defaults since P5.R3 (`ReaderOptions`); the check boxes are P5.22a; saved in Settings.xml since P5.1 |
 | PR.05 | Reader > Mouse Scrolling | wheel speed slow/fast, Inertial Mouse scrolling, Smooth Auto Scrolling | P5.22a | todo | |
 | PR.06 | Reader > Hardware Acceleration | Animation of Page Display changes, Hardware Acceleration, Software Filters, Hardware Filters | P5.22a | deviation | impossible: partly (no OpenGL/Tao path, §6.4): rendering is always Metal through Skia and "Enable Hardware Acceleration" has no off switch on macOS; animation and filters keep their meaning |
 | PR.07 | Reader > macOS group (swipe at edge, pinch speed, trackpad) | Mac-only additions (DD8) | P5.22a | mac-only | |
@@ -388,7 +388,7 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.07 | Opening a Book | Close the Browser when a new Book is opened (`CloseBrowserOnOpen`) | false | P5.32b | todo | |
 | PB.08 | Opening a Book | Opened Files are added to the Library (`AddToLibraryOnOpen`) | false | P5.10a | todo | |
 | PB.09 | Opening a Book | Open in new Tab (`OpenInNewTab`) | false | P5.32a | todo | |
-| PB.10 | Reading | Hide the mouse cursor in Full Screen (`HideCursorFullScreen`) | true | P5.R3 | done 2026-10-21 | the option works (5 s without movement, the original's `AutoHideCursorDuration`); the check box is P5.22a, saving it P5.1 |
+| PB.10 | Reading | Hide the mouse cursor in Full Screen (`HideCursorFullScreen`) | true | P5.R3 | done 2026-10-21 | the option works (5 s without movement, the original's `AutoHideCursorDuration`); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.11 | Reading | Reading beyond start or end opens the next Book (`AutoNavigateComics`) | true | P5.23a | todo | |
 | PB.12 | Reading | Wheel and cursor key delay on page transitions (`PageChangeDelay`) | true | P5.23d | todo | |
 | PB.13 | Reading | Scrolling to page margin browses to new pages (`ScrollingDoesBrowse`) | true | P5.23d | todo | |
@@ -399,13 +399,13 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.18 | Reading | Show Quick Review Dialog after finishing Book (`AutoShowQuickReview`) | false | P5.5 | todo | |
 | PB.19 | Right to Left | True right to left reading (`TrueRightToLeftReading`) | false | P5.23e | todo | |
 | PB.20 | Right to Left | Left/right movement is also reversed (`LeftRightMovementReversed`) | false | P5.23e | todo | |
-| PB.21 | Browser | Show Tooltips for Books (`ShowToolTips`) | false | P5.R2 | done 2026-10-20 | the option works (`ThumbnailOptions.ShowToolTips`); the check box is P5.22a, saving it P5.1 |
+| PB.21 | Browser | Show Tooltips for Books (`ShowToolTips`) | false | P5.R2 | done 2026-10-20 | the option works (`ThumbnailOptions.ShowToolTips`); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.22 | Browser | Show Search Links (`ShowSearchLinks`) | true | P5.6 | todo | |
-| PB.23 | Browser | New loaded Thumbnails fade in (`FadeInThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (`CoverView` fade, 300 ms); the check box is P5.22a, saving it P5.1 |
-| PB.24 | Browser | Selected Thumbnails have a dog-ear (`DogEarThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (dog-ear on the selected and the hot cover); the check box is P5.22a, saving it P5.1 |
-| PB.25 | Browser | Thumbnails display numeric ratings (`NumericRatingThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (tags, else stars below or over the cover); the check box is P5.22a, saving it P5.1 |
+| PB.23 | Browser | New loaded Thumbnails fade in (`FadeInThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (`CoverView` fade, 300 ms); saved in Settings.xml since P5.1; the check box is P5.22a |
+| PB.24 | Browser | Selected Thumbnails have a dog-ear (`DogEarThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (dog-ear on the selected and the hot cover); saved in Settings.xml since P5.1; the check box is P5.22a |
+| PB.25 | Browser | Thumbnails display numeric ratings (`NumericRatingThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (tags, else stars below or over the cover); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.26 | Browser | Each List has own Quick Search settings (`LocalQuickSearch`) | true | P5.15a | todo | |
-| PB.27 | Browser | All Cover Thumbnails have the same Size (`CoverThumbnailsSameSize`) | false | P5.R2 | done 2026-10-20 | the option works (every cover fills the 2:3 box, a landscape one shows its right part); the check box is P5.22a, saving it P5.1 |
+| PB.27 | Browser | All Cover Thumbnails have the same Size (`CoverThumbnailsSameSize`) | false | P5.R2 | done 2026-10-20 | the option works (every cover fills the 2:3 box, a landscape one shows its right part); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.28 | Browser | All Stacks in a List have the same Layout (`CommonListStackLayout`) | false | P5.13b | todo | |
 | PB.29 | Browser | Always display Browser Docking Grip (`AlwaysDisplayBrowserDockingGrip`) | false | P5.32b | todo | |
 | PB.30 | Browser | Disable opening files via drag-and-drop (`DisableDragDrop`) | false | P5.18 | todo | |

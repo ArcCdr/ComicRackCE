@@ -255,9 +255,13 @@ namespace ComicRack.Mac.Tests
 
 		public System.Collections.Generic.List<(string Title, string Message)> Messages { get; } = new System.Collections.Generic.List<(string, string)>();
 
-		public Task<string> PickFolderAsync(string title)
+		/// <summary>The folder the last folder prompt asked to start in, or null.</summary>
+		public string LastStartFolder { get; private set; }
+
+		public Task<string> PickFolderAsync(string title, string startFolder = null)
 		{
 			FolderPrompts++;
+			LastStartFolder = startFolder;
 			return Task.FromResult(FolderToPick);
 		}
 

@@ -240,6 +240,7 @@ namespace ComicRack.Mac.Controls
 			if (change.Property == IsExpandedProperty)
 			{
 				StartSlide(AnimateExpand && EnableAnimation && VisualRoot != null && SlideMilliseconds > 0);
+				UpdateChildReach();
 				ExpandedChanged?.Invoke(this, EventArgs.Empty);
 			}
 			else if (change.Property == ExpandedExtentProperty && IsExpanded && !sliding && state != GripState.Pressed)
@@ -250,6 +251,10 @@ namespace ComicRack.Mac.Controls
 			else if (change.Property == GripWidthProperty && !IsExpanded)
 			{
 				currentExtent = Target;
+			}
+			else if (change.Property == ChildProperty)
+			{
+				UpdateChildReach();
 			}
 		}
 
@@ -295,7 +300,32 @@ namespace ComicRack.Mac.Controls
 		{
 			sliding = false;
 			timer?.Stop();
+			UpdateChildReach();
 		}
+
+		// A collapsed panel is clipped to nothing but its content is still there: hide it from the keyboard (Tab) and from assistive technology
+		// once the slide has ended, and show it again before it slides open.
+		private void UpdateChildReach()
+		{
+			Control child = Child;
+			if (child == null)
+			{
+				return;
+			}
+			bool reachable = IsExpanded || sliding;
+			if (!reachable && child.IsVisible)
+			{
+				child.IsVisible = false;
+				hidChild = child;
+			}
+			else if (reachable && ReferenceEquals(hidChild, child))
+			{
+				child.IsVisible = true;
+				hidChild = null;
+			}
+		}
+
+		private Control hidChild;
 
 		protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
 		{

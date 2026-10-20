@@ -34,7 +34,7 @@ Browse > Sidebar (MB.05, Shift+F6) and the Sidebar toolbar button collapse and e
 Side panel 252, grip 6 (`Cr.ControlLight` hot, `Cr.Highlight` pressed), tree background Cr.Window.
 
 ## 7. Behaviour
-The panel width is not persisted yet (P5.1). The grip drags the width; a collapsed panel has no visible grip (the Sidebar button and menu reopen it).
+The panel width and whether it is open are saved in Settings.xml (P5.1) and restored at the next start; a collapsed panel is out of reach of Tab. The grip drags the width; a collapsed panel has no visible grip (the Sidebar button and menu reopen it).
 
 ## 8. Planned differences
 Small preview and Info panel are not in the window until P5.6.

@@ -112,6 +112,10 @@ namespace ComicRack.Mac.ViewModels
 		[ObservableProperty]
 		public partial bool IsVisible { get; set; } = true;
 
+		/// <summary>The width of the open side panel in device independent pixels (the grip changes it; 252 as in the original).</summary>
+		[ObservableProperty]
+		public partial double Width { get; set; } = AppPreferences.DefaultSidebarWidth;
+
 		/// <summary>A message for the middle of the grid ("Requires scripts (not in MVP)", "This list is empty"), or null.</summary>
 		[ObservableProperty]
 		[NotifyPropertyChangedFor(nameof(HasNotice))]

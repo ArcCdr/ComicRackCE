@@ -4,6 +4,7 @@ using System.Linq;
 using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.Display;
 using ComicRack.Mac.Diagnostics;
+using ComicRack.Mac.Host;
 using ComicRack.Mac.Reader;
 using ComicRack.Mac.ViewModels;
 using ComicRack.Mac.Views;
@@ -24,24 +25,32 @@ namespace ComicRack.Mac.Services
 	}
 
 	/// <summary>
-	/// Opens reader windows for the books of the open library and keeps track of them. One window per book; the fit mode last chosen
-	/// is the start mode of the next reader. A reader uses the page cache of the host's <c>ImagePool</c>, so every reader has to be
+	/// Opens reader windows for the books of the open library and keeps track of them. One window per book; the fit mode, the page layout and the reading
+	/// direction last chosen are the start values of the next reader, and with the window frame they are kept in the saved preferences (P5.1). A reader uses the page cache of the host's <c>ImagePool</c>, so every reader has to be
 	/// closed before the host is: <see cref="CloseAll"/> is called before an import replaces the library and before the app quits.
 	/// </summary>
 	public sealed class ReaderManager : IReaderLauncher
 	{
 		private readonly HostService hostService;
 		private readonly Dictionary<ComicBook, ReaderWindow> windows = new Dictionary<ComicBook, ReaderWindow>();
+		private readonly AppPreferences preferences;
 		private ImageFitMode fit = ImageFitMode.Fit;
 		private PageLayoutMode layoutMode = PageLayoutMode.Single;
 
 		private readonly PerfOverlayController perf;
 		private ReaderWindow recent;
 
-		public ReaderManager(HostService hostService, PerfOverlayController perf = null)
+		/// <param name="preferences">The saved preferences the readers start from and write back to; null for none (every reader starts with the defaults).</param>
+		public ReaderManager(HostService hostService, PerfOverlayController perf = null, AppPreferences preferences = null)
 		{
 			this.hostService = hostService ?? throw new ArgumentNullException(nameof(hostService));
 			this.perf = perf;
+			this.preferences = preferences;
+			if (preferences != null)
+			{
+				fit = ReaderOptions.ParseFit(preferences.ReaderFit);
+				layoutMode = ReaderOptions.ParseMode(preferences.ReaderLayout);
+			}
 		}
 
 		/// <summary>The reader the overlay reports on: the active reader window, else the one used last. Null if none is open.</summary>
@@ -96,11 +105,44 @@ namespace ComicRack.Mac.Services
 				return;
 			}
 			var session = new CoreReadingSession(book, host.ImagePool);
-			var model = new ReaderViewModel(session, new ReaderOptions { Fit = fit, Mode = layoutMode });
-			model.FitChanged += (sender, e) => fit = model.Fit;
-			model.LayoutChanged += (sender, e) => layoutMode = model.LayoutMode;
+			ReaderOptions readerOptions = ReaderOptions.From(preferences);
+			readerOptions.Fit = fit;
+			readerOptions.Mode = layoutMode;
+			var model = new ReaderViewModel(session, readerOptions);
+			model.FitChanged += (sender, e) =>
+			{
+				fit = model.Fit;
+				if (preferences != null)
+				{
+					preferences.ReaderFit = fit.ToString();
+				}
+			};
+			model.LayoutChanged += (sender, e) =>
+			{
+				layoutMode = model.LayoutMode;
+				if (preferences != null)
+				{
+					preferences.ReaderLayout = layoutMode.ToString();
+				}
+			};
+			// A book that says nothing about its direction starts the way the last such book was read.
+			model.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(ReaderViewModel.RightToLeft) && preferences != null && session.RightToLeft == null)
+				{
+					preferences.RightToLeftDefault = model.RightToLeft;
+				}
+			};
 			var thumbnails = hostService.Thumbnails != null ? new CorePageThumbnails(book, hostService.Thumbnails) : null;
 			var window = new ReaderWindow(model, false, perf, thumbnails);
+			if (preferences != null)
+			{
+				// Where the last reader was; one that opens while others are open is moved aside so that the windows do not cover each other.
+				int others = windows.Count;
+				WindowFrame placed = WindowFrameTracker.Restore(window, preferences.ReaderWindow, others);
+				var tracker = WindowFrameTracker.Attach(window, frame => preferences.ReaderWindow = frame, placed);
+				window.Closed += (sender, e) => tracker.Dispose();
+			}
 			window.Activated += (sender, e) => recent = window;
 			recent = window;
 			windows[book] = window;

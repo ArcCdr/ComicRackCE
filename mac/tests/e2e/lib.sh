@@ -73,7 +73,7 @@ launch_app() {
 	E2E_LAUNCHED=1
 	must wait-window "^ComicRack$" 60
 	WINDOW_LINE=$LAST_OUT
-	must front
+	front_app
 }
 
 # Application log (the data folder's Logs/ComicRack.log) helpers.
@@ -88,6 +88,7 @@ expect_log() {
 }
 
 quit_app() {
+	front_app
 	ui quit
 	if [ "$LAST_RC" = 0 ]; then E2E_LAUNCHED=0; ok "Cmd+Q: $LAST_OUT"; else bad "quit failed: $LAST_OUT"; fi
 	return "$LAST_RC"

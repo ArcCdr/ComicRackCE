@@ -1,5 +1,6 @@
 using System;
 using cYo.Projects.ComicRack.Engine.Display;
+using ComicRack.Mac.Host;
 using ComicRack.Mac.Services;
 
 namespace ComicRack.Mac.Reader
@@ -7,6 +8,42 @@ namespace ComicRack.Mac.Reader
 	/// <summary>Settings of a <see cref="ComicRack.Mac.ViewModels.ReaderViewModel"/>. The defaults are what the app uses; tests change some.</summary>
 	public sealed class ReaderOptions
 	{
+		/// <summary>
+		/// The options a new reader starts with, from the saved preferences (P5.1): the overlays and the cursor as Preferences > Reader > Overlays and Behavior set them,
+		/// and the fit, the page layout and the reading direction the reader chose last. A value that is not a name of the enum (a hand edited file) is the default.
+		/// </summary>
+		public static ReaderOptions From(AppPreferences preferences)
+		{
+			var options = new ReaderOptions();
+			if (preferences == null)
+			{
+				return options;
+			}
+			options.ShowCurrentPageOverlay = preferences.ShowCurrentPageOverlay;
+			options.CurrentPageShowsName = preferences.CurrentPageShowsName;
+			options.ShowVisiblePagePartOverlay = preferences.ShowVisiblePagePartOverlay;
+			options.ShowStatusOverlay = preferences.ShowStatusOverlay;
+			options.ShowNavigationOverlay = preferences.ShowNavigationOverlay;
+			options.NavigationOverlayOnTop = preferences.NavigationOverlayOnTop;
+			options.HideCursorFullScreen = preferences.HideCursorFullScreen;
+			options.Fit = ParseFit(preferences.ReaderFit);
+			options.Mode = ParseMode(preferences.ReaderLayout);
+			options.RightToLeft = preferences.RightToLeftDefault;
+			return options;
+		}
+
+		/// <summary>The fit mode of a saved name: one of the modes the reader has (Fit All, Fit Width, Fit Height), else Fit All.</summary>
+		public static ImageFitMode ParseFit(string name)
+		{
+			return Enum.TryParse(name, out ImageFitMode fit) && (fit == ImageFitMode.Fit || fit == ImageFitMode.FitWidth || fit == ImageFitMode.FitHeight) ? fit : ImageFitMode.Fit;
+		}
+
+		/// <summary>The page layout of a saved name: Single, Double or DoubleAdaptive, else Single.</summary>
+		public static PageLayoutMode ParseMode(string name)
+		{
+			return Enum.TryParse(name, out PageLayoutMode mode) && (mode == PageLayoutMode.Double || mode == PageLayoutMode.DoubleAdaptive) ? mode : PageLayoutMode.Single;
+		}
+
 		/// <summary>The page cache and prefetcher.</summary>
 		public PageServiceOptions Pages { get; set; } = new PageServiceOptions();
 
@@ -52,7 +89,7 @@ namespace ComicRack.Mac.Reader
 		/// </summary>
 		public bool RealisticPages { get; set; } = true;
 
-		// ---- the overlays and the cursor: the defaults of Settings.cs and EngineConfiguration (Preferences > Reader > Overlays is P5.22a, saving them P5.1)
+		// ---- the overlays and the cursor: the defaults of Settings.cs and EngineConfiguration (Preferences > Reader > Overlays is P5.22a; <see cref="From"/> reads them from the saved preferences)
 
 		/// <summary><c>ShowCurrentPageOverlay</c> (true): the page number fades in at the top right when the page changes.</summary>
 		public bool ShowCurrentPageOverlay { get; set; } = true;

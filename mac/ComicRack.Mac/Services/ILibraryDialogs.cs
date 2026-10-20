@@ -24,8 +24,8 @@ namespace ComicRack.Mac.Services
 	/// </summary>
 	public interface ILibraryDialogs
 	{
-		/// <summary>Asks for a folder. Returns its local path, or null if the user cancelled.</summary>
-		Task<string> PickFolderAsync(string title);
+		/// <summary>Asks for a folder, starting in <paramref name="startFolder"/> when it is given. Returns its local path, or null if the user cancelled.</summary>
+		Task<string> PickFolderAsync(string title, string startFolder = null);
 
 		/// <summary>Asks for a database file and the prefix mappings. Returns null if the user cancelled.</summary>
 		Task<ImportRequest> AskImportAsync();

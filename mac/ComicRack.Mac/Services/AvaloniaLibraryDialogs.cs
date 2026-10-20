@@ -17,12 +17,14 @@ namespace ComicRack.Mac.Services
 			this.owner = owner;
 		}
 
-		public async Task<string> PickFolderAsync(string title)
+		public async Task<string> PickFolderAsync(string title, string startFolder = null)
 		{
+			IStorageFolder start = string.IsNullOrEmpty(startFolder) ? null : await owner.StorageProvider.TryGetFolderFromPathAsync(startFolder);
 			IReadOnlyList<IStorageFolder> folders = await owner.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
 			{
 				Title = title,
 				AllowMultiple = false,
+				SuggestedStartLocation = start,
 			});
 			return folders.Count == 0 ? null : folders[0].TryGetLocalPath();
 		}

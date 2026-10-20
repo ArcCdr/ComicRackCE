@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
 using ComicRack.Mac.Services;
 
@@ -25,14 +26,18 @@ namespace ComicRack.Mac.ViewModels
 		private readonly HostService hostService;
 		private readonly ILibraryDialogs dialogs;
 		private readonly IReaderLauncher readers;
+		private readonly AppPreferences preferences;
 		private CancellationTokenSource operation;
 
-		public MainViewModel(IShell shell, HostService hostService, ILibraryDialogs dialogs, IReaderLauncher readers = null)
+		/// <param name="preferences">The saved preferences (P5.1): the side panel, the size of the thumbnails, the sort, the thumbnail options and the last folder start from them
+		/// and are written back to them. Null (tests without a settings file) keeps nothing.</param>
+		public MainViewModel(IShell shell, HostService hostService, ILibraryDialogs dialogs, IReaderLauncher readers = null, AppPreferences preferences = null)
 		{
 			this.shell = shell;
 			this.hostService = hostService;
 			this.dialogs = dialogs;
 			this.readers = readers;
+			this.preferences = preferences;
 			StatusText = "Starting the library engine...";
 			BookCountText = "Starting the library engine...";
 			Browser.OpenBookRequested += OnOpenBookRequested;
@@ -45,6 +50,52 @@ namespace ComicRack.Mac.ViewModels
 			};
 			Sidebar.SelectionChanged += (sender, e) => _ = ShowSelectedListAsync();
 			hostService.Closing += (sender, e) => Browser.Thumbnails = null; // the cover service is about to be disposed (import)
+			if (preferences != null)
+			{
+				RestoreAndFollow(preferences);
+			}
+		}
+
+		// The state of the library window that is kept between runs: it starts from the preferences and every change is written back.
+		private void RestoreAndFollow(AppPreferences saved)
+		{
+			Sidebar.IsVisible = saved.SidebarVisible;
+			Sidebar.Width = saved.SidebarWidth;
+			Browser.ThumbnailSize = Math.Clamp(saved.ThumbnailSize, BrowserViewModel.MinThumbnailSize, BrowserViewModel.MaxThumbnailSize);
+			Browser.SortIndex = Enum.TryParse(saved.SortBy, out BookSort sort) && Enum.IsDefined(typeof(BookSort), sort) ? (int)sort : 0;
+			Browser.ThumbnailOptions.Bind(saved);
+			Sidebar.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(SidebarViewModel.IsVisible))
+				{
+					saved.SidebarVisible = Sidebar.IsVisible;
+				}
+				else if (e.PropertyName == nameof(SidebarViewModel.Width))
+				{
+					saved.SidebarWidth = Sidebar.Width;
+				}
+			};
+			Browser.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(BrowserViewModel.ThumbnailSize))
+				{
+					saved.ThumbnailSize = Browser.ThumbnailSize;
+				}
+				else if (e.PropertyName == nameof(BrowserViewModel.SortIndex))
+				{
+					saved.SortBy = Browser.Sort.ToString();
+				}
+			};
+		}
+
+		/// <summary>The folder the folder picker starts in: the last one that was added to the library, if it still exists.</summary>
+		public string LastFolder
+		{
+			get
+			{
+				string folder = preferences?.LastFolder;
+				return !string.IsNullOrEmpty(folder) && Directory.Exists(folder) ? folder : null;
+			}
 		}
 
 		/// <summary>The reader windows of this app (null when the view model was made without a launcher).</summary>
@@ -258,7 +309,7 @@ namespace ComicRack.Mac.ViewModels
 		{
 			await RunExclusive(async () =>
 			{
-				string folder = await dialogs.PickFolderAsync("Choose a folder of comics to add to the library");
+				string folder = await dialogs.PickFolderAsync("Choose a folder of comics to add to the library", LastFolder);
 				if (folder == null)
 				{
 					StatusText = AddFolderTitle + " cancelled.";
@@ -369,6 +420,10 @@ namespace ComicRack.Mac.ViewModels
 			{
 				await ReportProblem(AddFolderTitle, "The library engine is not running, so a folder cannot be added.");
 				return null;
+			}
+			if (preferences != null)
+			{
+				preferences.LastFolder = folder;
 			}
 			CancellationToken token = BeginProgress("Scanning " + Path.GetFileName(folder.TrimEnd('/')) + "...");
 			AppLog.Info("Scan of " + folder + " started.");

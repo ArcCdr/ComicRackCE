@@ -8,7 +8,7 @@ namespace ComicRack.Mac.Tests
 {
 	/// <summary>
 	/// One launch of the app without a window: the same objects App.OnFrameworkInitializationCompleted wires (HostService,
-	/// MainViewModel, the Opened handler), on a private data folder. <see cref="Quit"/> does what App.OnExit does.
+	/// MainViewModel with the saved preferences, the Opened handler), on a private data folder. <see cref="Quit"/> does what App.OnExit does.
 	/// </summary>
 	public sealed class Launch : IDisposable
 	{
@@ -34,7 +34,7 @@ namespace ComicRack.Mac.Tests
 			try
 			{
 				launch.Service = new HostService(options);
-				launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs, readers?.Invoke(launch.Service));
+				launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs, readers?.Invoke(launch.Service), launch.Service.Preferences.Current);
 				launch.Service.Opened += (sender, e) => launch.ViewModel.OnHostOpened();
 				launch.Service.Start();
 				await launch.Service.Ready;

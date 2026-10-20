@@ -25,8 +25,8 @@
     </c:CrStatusBar>
 
     <!-- Side panel with the library tree (LT.01). The grip (right) resizes it and the Sidebar button, Browse > Sidebar and Shift+F6 collapse it. -->
-    <c:CrSizableContainer Name="SidebarPanel" DockPanel.Dock="Left" Grip="Right" ExpandedExtent="252"
-                          IsExpanded="{Binding Sidebar.IsVisible, Mode=TwoWay}">
+    <c:CrSizableContainer Name="SidebarPanel" DockPanel.Dock="Left" Grip="Right"
+                          ExpandedExtent="{Binding Sidebar.Width, Mode=TwoWay}" IsExpanded="{Binding Sidebar.IsVisible, Mode=TwoWay}">
       <Border Classes="cr-panel">
         <c:CrTreeView Name="SidebarTree" ItemsSource="{Binding Sidebar.Roots}" SelectedItem="{Binding Sidebar.SelectedNode, Mode=TwoWay}"
                       IconMember="IconName" TextMember="Name" CountMember="CountText" CountVisibleMember="HasCount" ToolTipMember="Badge"

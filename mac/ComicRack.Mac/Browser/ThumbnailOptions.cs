@@ -1,5 +1,7 @@
 using System;
+using System.ComponentModel;
 using ComicRack.Mac.Controls;
+using ComicRack.Mac.Host;
 using cYo.Projects.ComicRack.Engine;
 
 namespace ComicRack.Mac.Browser
@@ -14,8 +16,8 @@ namespace ComicRack.Mac.Browser
 
 	/// <summary>
 	/// The settings of the original that change how thumbnails behave, with the defaults of <c>ComicRack/Config/Settings.cs</c> (the line of each
-	/// initializer is named; <c>SettingsDefaultsTests</c> of P5.1 compares them with the file). P5.1 loads and saves them; until then they are the defaults.
-	/// A change raises <see cref="Changed"/> and the browser draws its cells again.
+	/// initializer is named; <c>SettingsDefaultsTests</c> compares them with the file). <see cref="Bind"/> connects them to the saved preferences (P5.1);
+	/// without it they are the defaults. A change raises <see cref="Changed"/> and the browser draws its cells again.
 	/// </summary>
 	public sealed class ThumbnailOptions
 	{
@@ -86,18 +88,81 @@ namespace ComicRack.Mac.Browser
 			set => Set(ref updateComicBookFiles, value);
 		}
 
+		private AppPreferences bound;
+
+		/// <summary>
+		/// Connects these options to the preferences: they take the saved values now, a change here is stored there (and saved with them), and a change made in
+		/// the preferences reaches the browser. Binding again replaces the first binding.
+		/// </summary>
+		public void Bind(AppPreferences preferences)
+		{
+			if (bound != null)
+			{
+				bound.PropertyChanged -= OnPreferenceChanged;
+			}
+			bound = preferences;
+			if (preferences == null)
+			{
+				return;
+			}
+			ShowToolTips = preferences.ShowToolTips;
+			FadeInThumbnails = preferences.FadeInThumbnails;
+			DogEarThumbnails = preferences.DogEarThumbnails;
+			NumericRatingThumbnails = preferences.NumericRatingThumbnails;
+			CoverThumbnailsSameSize = preferences.CoverThumbnailsSameSize;
+			UpdateComicFiles = preferences.UpdateComicFiles;
+			UpdateComicBookFiles = preferences.UpdateComicBookFiles;
+			preferences.PropertyChanged += OnPreferenceChanged;
+		}
+
+		private void OnPreferenceChanged(object sender, PropertyChangedEventArgs e)
+		{
+			AppPreferences p = bound;
+			switch (e.PropertyName)
+			{
+				case nameof(AppPreferences.ShowToolTips): ShowToolTips = p.ShowToolTips; break;
+				case nameof(AppPreferences.FadeInThumbnails): FadeInThumbnails = p.FadeInThumbnails; break;
+				case nameof(AppPreferences.DogEarThumbnails): DogEarThumbnails = p.DogEarThumbnails; break;
+				case nameof(AppPreferences.NumericRatingThumbnails): NumericRatingThumbnails = p.NumericRatingThumbnails; break;
+				case nameof(AppPreferences.CoverThumbnailsSameSize): CoverThumbnailsSameSize = p.CoverThumbnailsSameSize; break;
+				case nameof(AppPreferences.UpdateComicFiles): UpdateComicFiles = p.UpdateComicFiles; break;
+				case nameof(AppPreferences.UpdateComicBookFiles): UpdateComicBookFiles = p.UpdateComicBookFiles; break;
+			}
+		}
+
 		/// <summary>Whether a book is open in a reader (or was the last one opened), for the state icon; null: no book is.</summary>
 		public Func<ComicBook, ThumbnailMarker> MarkerOf { get; set; }
 
 		/// <summary><c>CoverViewItem.OnDraw</c>: numeric ratings give tags, else the stars go under the cover or over it.</summary>
 		public ThumbnailRatingMode RatingMode => numericRatingThumbnails ? ThumbnailRatingMode.Tags : ratingStarsBelowThumbnails ? ThumbnailRatingMode.StarsBelow : ThumbnailRatingMode.StarsOverlay;
 
-		private void Set(ref bool field, bool value)
+		private void Set(ref bool field, bool value, [System.Runtime.CompilerServices.CallerMemberName] string name = null)
 		{
 			if (field != value)
 			{
 				field = value;
+				Store(name, value);
 				Changed?.Invoke(this, EventArgs.Empty);
+			}
+		}
+
+		// A change made here is kept in the bound preferences (a no-op when they already hold it).
+		private void Store(string name, bool value)
+		{
+			AppPreferences p = bound;
+			if (p == null)
+			{
+				return;
+			}
+			switch (name)
+			{
+				case nameof(ShowToolTips): p.ShowToolTips = value; break;
+				case nameof(FadeInThumbnails): p.FadeInThumbnails = value; break;
+				case nameof(DogEarThumbnails): p.DogEarThumbnails = value; break;
+				case nameof(NumericRatingThumbnails): p.NumericRatingThumbnails = value; break;
+				case nameof(CoverThumbnailsSameSize): p.CoverThumbnailsSameSize = value; break;
+				case nameof(UpdateComicFiles): p.UpdateComicFiles = value; break;
+				case nameof(UpdateComicBookFiles): p.UpdateComicBookFiles = value; break;
 			}
 		}
 

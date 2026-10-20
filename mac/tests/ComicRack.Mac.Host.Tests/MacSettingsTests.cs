@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Xunit;
 
@@ -22,7 +23,9 @@ namespace ComicRack.Mac.Host.Tests
 
 		private static string[] SettingsLines() => File.ReadAllLines(Path.Combine(RepoRoot(), "ComicRack", "Config", "Settings.cs"));
 
-		private static string[] MacSettingsLines() => File.ReadAllLines(Path.Combine(RepoRoot(), "mac", "ComicRack.Mac.Host", "MacSettings.cs"));
+		// the citations moved with the values: AppPreferences holds them, MacSettings keeps the two it still owns
+		private static string[] MacSettingsLines() => File.ReadAllLines(Path.Combine(RepoRoot(), "mac", "ComicRack.Mac.Host", "MacSettings.cs"))
+			.Concat(File.ReadAllLines(Path.Combine(RepoRoot(), "mac", "ComicRack.Mac.Host", "Settings", "AppPreferences.cs"))).ToArray();
 
 		[Fact]
 		public void Every_cited_line_of_Settings_cs_holds_the_field_or_constant_it_names()
@@ -38,10 +41,11 @@ namespace ComicRack.Mac.Host.Tests
 					continue;
 				}
 				int n = int.Parse(m.Groups["line"].Value);
-				Assert.Matches(@"\b" + Regex.Escape(m.Groups["name"].Value) + @"\b", settings[n - 1]);
+				// a field of an automatic property is cited at the property (same name, capital first letter)
+				Assert.Matches("(?i)\\b" + Regex.Escape(m.Groups["name"].Value) + "\\b", settings[n - 1]);
 				checkedCount++;
 			}
-			Assert.True(checkedCount >= 15, "only " + checkedCount + " cited fields were found");
+			Assert.True(checkedCount >= 60, "only " + checkedCount + " cited fields were found");
 		}
 
 		[Fact]
