@@ -41,6 +41,16 @@
     <None Include="..\..\ComicRack\Output\Resources\Icons\**" Link="Resources\Icons\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <None Include="..\..\ComicRack\Output\Resources\Textures\**" Link="Resources\Textures\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- P5.T2: the images of the WinForms original, linked (never copied or edited) into the assembly as avares://ComicRack.Mac/Assets/Original/<repository path>.
+       Assets/icon-map.json (mac/tools/icon-map/icon-map.py) maps the resource names of the four Resources.resx files to these paths; Themes/Icons.cs reads both. -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\icon-map.json" />
+    <AvaloniaResource Include="..\..\ComicRack\Resources\**" Link="Assets\Original\ComicRack\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\..\cYo.Common.Windows\Resources\**" Link="Assets\Original\cYo.Common.Windows\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\..\ComicRack.Engine\Resources\**" Link="Assets\Original\ComicRack.Engine\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\..\ComicRack.Engine.Display.Forms\Resources\**" Link="Assets\Original\ComicRack.Engine.Display.Forms\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\..\ComicRack\Icons\*.ico" Link="Assets\Original\ComicRack\Icons\%(Filename)%(Extension)" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
   </ItemGroup>

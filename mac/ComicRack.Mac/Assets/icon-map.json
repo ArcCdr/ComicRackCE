@@ -1,0 +1,1178 @@
+{
+  "format": 1,
+  "order": [
+    "ComicRack",
+    "cYo.Common.Windows",
+    "ComicRack.Engine",
+    "ComicRack.Engine.Display.Forms",
+    "ComicRack.Icons"
+  ],
+  "projects": {
+    "ComicRack": {
+      "names": {
+        "About": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/About.gif"
+        },
+        "AddFavorites": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AddFavorites.png"
+        },
+        "AddFolder": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AddFolder.png"
+        },
+        "AddList": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AddList.png"
+        },
+        "AddListFavorites": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AddListFavorites.png"
+        },
+        "AddTab": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AddTab.png"
+        },
+        "AdvancedPref": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AdvancedPref.png"
+        },
+        "AlignBottom": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AlignBottom.gif"
+        },
+        "AlignFill": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AlignFill.gif"
+        },
+        "AlignLeft": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AlignLeft.gif"
+        },
+        "AlignRight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AlignRight.gif"
+        },
+        "ArrowDown": {
+          "dark": "ComicRack/Resources/Dark/ArrowDown.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ArrowDown.png"
+        },
+        "ArrowRight": {
+          "dark": "ComicRack/Resources/Dark/ArrowRight.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ArrowRight.png"
+        },
+        "AutoRotate": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/AutoRotate.png"
+        },
+        "BackgroundJob": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/BackgroundJob.png"
+        },
+        "Backup": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Backup.png"
+        },
+        "BehaviorPref": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/BehaviorPref.png"
+        },
+        "BigBallAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/BigBallAnimation.gif"
+        },
+        "Bookmark": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Bookmark.png"
+        },
+        "BrowseNext": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/BrowseNext.png"
+        },
+        "BrowsePrevious": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/BrowsePrevious.png"
+        },
+        "Browser": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Browser.png"
+        },
+        "Clock": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Clock.png"
+        },
+        "Close": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Close.png"
+        },
+        "ComicPage": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ComicPage.png"
+        },
+        "ComicRackApp256": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ComicRackApp256.png"
+        },
+        "ComicRackAppSmall": {
+          "kind": "icon",
+          "path": "ComicRack/Resources/ComicRackAppSmall.ico"
+        },
+        "Copy": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Copy.png"
+        },
+        "CursorScroll": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/CursorScroll.png"
+        },
+        "Cut": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Cut.png"
+        },
+        "DarkArrowDown": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/ArrowDown.png"
+        },
+        "DarkArrowRight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/ArrowRight.png"
+        },
+        "DarkDetailView": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/DetailView.png"
+        },
+        "DarkDoubleArrow": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/DoubleArrow.png"
+        },
+        "DarkEditDelete": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/EditDelete.png"
+        },
+        "DarkGapDown": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GapDown.png"
+        },
+        "DarkGapUp": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GapUp.png"
+        },
+        "DarkGapUpDown": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GapUpDown.png"
+        },
+        "DarkGoFirst": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GoFirst.png"
+        },
+        "DarkGoLast": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GoLast.png"
+        },
+        "DarkGoNext": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GoNext.png"
+        },
+        "DarkGoPrevious": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GoPrevious.png"
+        },
+        "DarkGroup": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/Group.png"
+        },
+        "DarkGroupDown": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GroupDown.png"
+        },
+        "DarkGroupUp": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/GroupUp.png"
+        },
+        "DarkLocked": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/Locked.png"
+        },
+        "DarkRename": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/Rename.png"
+        },
+        "DarkRenumber": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/Renumber.png"
+        },
+        "DarkSmallArrowDown": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/SmallArrowDown.png"
+        },
+        "DarkSmallArrowRight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/SmallArrowRight.png"
+        },
+        "DarkSmallCloseGray": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/SmallCloseGray.png"
+        },
+        "DarkSort": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/Sort.png"
+        },
+        "DarkSortDown": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/SortDown.png"
+        },
+        "DarkSortUp": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/SortUp.png"
+        },
+        "DarkStarWhite": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/StarWhite.png"
+        },
+        "DarkStarWhiteHollow": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/StarWhiteHollow.png"
+        },
+        "DarkThumbView": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/ThumbView.png"
+        },
+        "DarkTileView": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/TileView.png"
+        },
+        "DarkZoomClear": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Dark/ZoomClear.png"
+        },
+        "DataSourceConnected": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DataSourceConnected.png"
+        },
+        "DataSourceDisconnected": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DataSourceDisconnected.png"
+        },
+        "Database": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Database.png"
+        },
+        "Deleted": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Deleted.png"
+        },
+        "DetailView": {
+          "dark": "ComicRack/Resources/Dark/DetailView.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DetailView.png"
+        },
+        "DeviceSync": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DeviceSync.png"
+        },
+        "DeviceSyncAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DeviceSyncAnimation.gif"
+        },
+        "DeviceSyncAnimationWithError": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DeviceSyncAnimationWithError.gif"
+        },
+        "DeviceSyncError": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DeviceSyncError.png"
+        },
+        "DisplaySettings": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DisplaySettings.png"
+        },
+        "DoubleArrow": {
+          "dark": "ComicRack/Resources/Dark/DoubleArrow.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/DoubleArrow.png"
+        },
+        "EditClear": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/EditClear.png"
+        },
+        "EditCopy": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/EditCopy.png"
+        },
+        "EditDelete": {
+          "dark": "ComicRack/Resources/Dark/EditDelete.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/EditDelete.png"
+        },
+        "EditDevices": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/EditDevices.png"
+        },
+        "EditPaste": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/EditPaste.png"
+        },
+        "EditSearchDocument": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/EditSearchDocument.png"
+        },
+        "ExpandCollapseAll": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ExpandCollapseAll.png"
+        },
+        "Export": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Export.png"
+        },
+        "ExportAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ExportAnimation.gif"
+        },
+        "ExportAnimationWithError": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ExportAnimationWithError.gif"
+        },
+        "ExportError": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ExportError.png"
+        },
+        "Favorites": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Favorites.png"
+        },
+        "FileBrowser": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FileBrowser.gif"
+        },
+        "FilelessMarker": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FilelessMarker.png"
+        },
+        "FitAll": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FitAll.png"
+        },
+        "FitBest": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FitBest.png"
+        },
+        "FitHeight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FitHeight.png"
+        },
+        "FitRotate": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FitRotate.png"
+        },
+        "FitWidth": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FitWidth.png"
+        },
+        "FitWidthAdaptive": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FitWidthAdaptive.png"
+        },
+        "FullScreen": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/FullScreen.png"
+        },
+        "GapDown": {
+          "dark": "ComicRack/Resources/Dark/GapDown.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GapDown.png"
+        },
+        "GapUp": {
+          "dark": "ComicRack/Resources/Dark/GapUp.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GapUp.png"
+        },
+        "GapUpDown": {
+          "dark": "ComicRack/Resources/Dark/GapUpDown.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GapUpDown.png"
+        },
+        "GaugesAll": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GaugesAll.png"
+        },
+        "GaugesNew": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GaugesNew.png"
+        },
+        "GaugesTotal": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GaugesTotal.png"
+        },
+        "GaugesUnread": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GaugesUnread.png"
+        },
+        "GetInfo": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GetInfo.png"
+        },
+        "GoFirst": {
+          "dark": "ComicRack/Resources/Dark/GoFirst.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GoFirst.png"
+        },
+        "GoLast": {
+          "dark": "ComicRack/Resources/Dark/GoLast.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GoLast.png"
+        },
+        "GoNext": {
+          "dark": "ComicRack/Resources/Dark/GoNext.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GoNext.png"
+        },
+        "GoPrevious": {
+          "dark": "ComicRack/Resources/Dark/GoPrevious.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GoPrevious.png"
+        },
+        "GrayLight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GrayLight.png"
+        },
+        "GreenLight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GreenLight.png"
+        },
+        "Group": {
+          "dark": "ComicRack/Resources/Dark/Group.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Group.png"
+        },
+        "GroupDown": {
+          "dark": "ComicRack/Resources/Dark/GroupDown.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GroupDown.png"
+        },
+        "GroupUp": {
+          "dark": "ComicRack/Resources/Dark/GroupUp.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/GroupUp.png"
+        },
+        "Heart": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Heart.png"
+        },
+        "Help": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Help.png"
+        },
+        "IncludeSubFolders": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/IncludeSubFolders.png"
+        },
+        "InfoPanel": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/InfoPanel.png"
+        },
+        "Keyboard": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Keyboard.png"
+        },
+        "LastMarker": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/LastMarker.png"
+        },
+        "Library": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Library.png"
+        },
+        "LibraryPref": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/LibraryPref.png"
+        },
+        "List": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/List.png"
+        },
+        "ListLayout": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ListLayout.png"
+        },
+        "Locked": {
+          "dark": "ComicRack/Resources/Dark/Locked.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Locked.png"
+        },
+        "MenuToggle": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/MenuToggle.png"
+        },
+        "Minus": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Minus.png"
+        },
+        "Network": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Network.png"
+        },
+        "NewBookmark": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NewBookmark.png"
+        },
+        "NewList": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NewList.png"
+        },
+        "NewSearchDocument": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NewSearchDocument.png"
+        },
+        "NewSearchFolder": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NewSearchFolder.png"
+        },
+        "NewTab": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NewTab.png"
+        },
+        "NewWindow": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NewWindow.png"
+        },
+        "News": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/News.png"
+        },
+        "Next": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Next.png"
+        },
+        "NextBookmark": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NextBookmark.png"
+        },
+        "NextFromList": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NextFromList.png"
+        },
+        "NotValidated": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NotValidated.png"
+        },
+        "NumberFrame": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/NumberFrame.png"
+        },
+        "Open": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Open.png"
+        },
+        "OpenMarker": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/OpenMarker.png"
+        },
+        "Original": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Original.png"
+        },
+        "Oversized": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Oversized.png"
+        },
+        "Package": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Package.png"
+        },
+        "Page": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Page.png"
+        },
+        "Pin": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Pin.png"
+        },
+        "Preferences": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Preferences.png"
+        },
+        "PrevFromList": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/PrevFromList.png"
+        },
+        "Previous": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Previous.png"
+        },
+        "PreviousBookmark": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/PreviousBookmark.png"
+        },
+        "RandomComic": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RandomComic.png"
+        },
+        "RatingBlue": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RatingBlue.png"
+        },
+        "RatingYellow": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RatingYellow.png"
+        },
+        "ReadInfoAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ReadInfoAnimation.gif"
+        },
+        "ReadPagesAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ReadPagesAnimation.gif"
+        },
+        "ReaderPref": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ReaderPref.png"
+        },
+        "RedExclamation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RedExclamation.png"
+        },
+        "Redo": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Redo.png"
+        },
+        "Refresh": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Refresh.png"
+        },
+        "RefreshThumbnail": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RefreshThumbnail.png"
+        },
+        "RemoteDatabase": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RemoteDatabase.png"
+        },
+        "RemoteDatabaseLocked": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RemoteDatabaseLocked.png"
+        },
+        "RemoteDatabaseLocked1": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RemoteDatabaseLocked1.png"
+        },
+        "RemoveBookmark": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RemoveBookmark.png"
+        },
+        "Rename": {
+          "dark": "ComicRack/Resources/Dark/Rename.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rename.png"
+        },
+        "Renumber": {
+          "dark": "ComicRack/Resources/Dark/Renumber.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Renumber.png"
+        },
+        "Restart": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Restart.png"
+        },
+        "RevealExplorer": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RevealExplorer.png"
+        },
+        "RightToLeft": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RightToLeft.png"
+        },
+        "Rotate0": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate0.png"
+        },
+        "Rotate0Permanent": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate0Permanent.png"
+        },
+        "Rotate180": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate180.png"
+        },
+        "Rotate180Permanent": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate180Permanent.png"
+        },
+        "Rotate270": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate270.png"
+        },
+        "Rotate270Permanent": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate270Permanent.png"
+        },
+        "Rotate90": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate90.png"
+        },
+        "Rotate90Permanent": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Rotate90Permanent.png"
+        },
+        "RotateLeft": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RotateLeft.png"
+        },
+        "RotateRight": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/RotateRight.png"
+        },
+        "Save": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Save.png"
+        },
+        "Scan": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Scan.png"
+        },
+        "ScanAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ScanAnimation.gif"
+        },
+        "Screenshot": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Screenshot.png"
+        },
+        "ScriptingPref": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ScriptingPref.png"
+        },
+        "Search": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Search.png"
+        },
+        "SearchDocument": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SearchDocument.png"
+        },
+        "SearchFolder": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SearchFolder.png"
+        },
+        "SharingPref": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SharingPref.png"
+        },
+        "Sidebar": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Sidebar.png"
+        },
+        "SinglePage": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SinglePage.png"
+        },
+        "SinglePageRtl": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SinglePageRtl.png"
+        },
+        "SmallArrowDown": {
+          "dark": "ComicRack/Resources/Dark/SmallArrowDown.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SmallArrowDown.png"
+        },
+        "SmallArrowRight": {
+          "dark": "ComicRack/Resources/Dark/SmallArrowRight.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SmallArrowRight.png"
+        },
+        "SmallBallAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SmallBallAnimation.gif"
+        },
+        "SmallClose": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SmallClose.png"
+        },
+        "SmallCloseGray": {
+          "dark": "ComicRack/Resources/Dark/SmallCloseGray.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SmallCloseGray.png"
+        },
+        "SmallPreview": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SmallPreview.png"
+        },
+        "Sort": {
+          "dark": "ComicRack/Resources/Dark/Sort.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Sort.png"
+        },
+        "SortDown": {
+          "dark": "ComicRack/Resources/Dark/SortDown.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SortDown.png"
+        },
+        "SortUp": {
+          "dark": "ComicRack/Resources/Dark/SortUp.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SortUp.png"
+        },
+        "Splash": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Splash.png"
+        },
+        "Stacking": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Stacking.png"
+        },
+        "Star": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Star.png"
+        },
+        "StarBlack": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/StarBlack.png"
+        },
+        "StarBlackHollow": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/StarBlackHollow.png"
+        },
+        "StarBlue": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/StarBlue.png"
+        },
+        "StarSmall": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/StarSmall.png"
+        },
+        "StarYellow": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/StarYellow.png"
+        },
+        "SyncBrowser": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/SyncBrowser.png"
+        },
+        "TempFolder": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TempFolder.png"
+        },
+        "ThumbView": {
+          "dark": "ComicRack/Resources/Dark/ThumbView.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ThumbView.png"
+        },
+        "TileView": {
+          "dark": "ComicRack/Resources/Dark/TileView.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TileView.png"
+        },
+        "Tools": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Tools.png"
+        },
+        "TwoPage": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TwoPage.png"
+        },
+        "TwoPageAutoscroll": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TwoPageAutoscroll.png"
+        },
+        "TwoPageForced": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TwoPageForced.png"
+        },
+        "TwoPageForcedRtl": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TwoPageForcedRtl.png"
+        },
+        "TwoPageRtl": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/TwoPageRtl.png"
+        },
+        "Undo": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Undo.png"
+        },
+        "UndockReader": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/UndockReader.png"
+        },
+        "UpdateBig": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/UpdateBig.png"
+        },
+        "UpdateInfoAnimation": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/UpdateInfoAnimation.gif"
+        },
+        "UpdatePages": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/UpdatePages.gif"
+        },
+        "UpdateSmall": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/UpdateSmall.png"
+        },
+        "UpdateWeb": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/UpdateWeb.png"
+        },
+        "Validated": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Validated.png"
+        },
+        "View": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/View.png"
+        },
+        "ViewOptions": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ViewOptions.png"
+        },
+        "WebBlog": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/WebBlog.png"
+        },
+        "WebForum": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/WebForum.png"
+        },
+        "Workspace": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Workspace.png"
+        },
+        "Zoom": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/Zoom.png"
+        },
+        "ZoomClear": {
+          "dark": "ComicRack/Resources/Dark/ZoomClear.png",
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ZoomClear.png"
+        },
+        "ZoomIn": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ZoomIn.png"
+        },
+        "ZoomOut": {
+          "kind": "bitmap",
+          "path": "ComicRack/Resources/ZoomOut.png"
+        }
+      },
+      "namespace": "cYo.Projects.ComicRack.Viewer.Properties"
+    },
+    "ComicRack.Engine": {
+      "names": {
+        "ErrorPage": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/ErrorPage.jpg"
+        },
+        "NewPages": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages.png"
+        },
+        "NewPages1": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages1.png"
+        },
+        "NewPages2": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages2.png"
+        },
+        "NewPages3": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages3.png"
+        },
+        "NewPages4": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages4.png"
+        },
+        "NewPages5": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages5.png"
+        },
+        "NewPages5Plus": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/NewPages5Plus.png"
+        },
+        "PageCurl": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/PageCurl.png"
+        },
+        "PageCurlShadow": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/PageCurlShadow.png"
+        },
+        "RedCross": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/RedCross.png"
+        },
+        "ShadowMap": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/ShadowMap.png"
+        },
+        "Unknown": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine/Resources/Unknown.jpg"
+        }
+      },
+      "namespace": "cYo.Projects.ComicRack.Engine.Properties"
+    },
+    "ComicRack.Engine.Display.Forms": {
+      "names": {
+        "BlackGlassPanel": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/BlackGlassPanel.png"
+        },
+        "BlackGlassScrollbarBack": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/BlackGlassScrollbarBack.png"
+        },
+        "BlueGlassButton": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/BlueGlassButton.png"
+        },
+        "BlueGlassPanel": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/BlueGlassPanel.png"
+        },
+        "Close": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/Close.png"
+        },
+        "GoFirst": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/GoFirst.png"
+        },
+        "GoLast": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/GoLast.png"
+        },
+        "GoNext": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/GoNext.png"
+        },
+        "GoPrevious": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/GoPrevious.png"
+        },
+        "GradientFramedBackground": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/GradientFramedBackground.png"
+        },
+        "GrayGlassButton": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/GrayGlassButton.png"
+        },
+        "Magnifier": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/Magnifier.png"
+        },
+        "MagnifierLight": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/MagnifierLight.png"
+        },
+        "TouchPad": {
+          "kind": "bitmap",
+          "path": "ComicRack.Engine.Display.Forms/Resources/TouchPad.png"
+        }
+      },
+      "namespace": "cYo.Projects.ComicRack.Engine.Display.Forms.Properties"
+    },
+    "ComicRack.Icons": {
+      "names": {
+        "icon1": {
+          "kind": "icon",
+          "path": "ComicRack/Icons/icon1.ico"
+        },
+        "icon2": {
+          "kind": "icon",
+          "path": "ComicRack/Icons/icon2.ico"
+        },
+        "icon3": {
+          "kind": "icon",
+          "path": "ComicRack/Icons/icon3.ico"
+        },
+        "icon4": {
+          "kind": "icon",
+          "path": "ComicRack/Icons/icon4.ico"
+        },
+        "uninst_103": {
+          "kind": "icon",
+          "path": "ComicRack/Icons/uninst_103.ico"
+        }
+      },
+      "namespace": ""
+    },
+    "cYo.Common.Windows": {
+      "names": {
+        "DarkSimpleArrowDown": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Dark/SimpleArrowDown.png"
+        },
+        "DarkSimpleArrowLeft": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Dark/SimpleArrowLeft.png"
+        },
+        "DarkSimpleArrowRight": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Dark/SimpleArrowRight.png"
+        },
+        "DarkSmallArrowDown": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Dark/SmallArrowDown.png"
+        },
+        "DarkSortDown": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Dark/SortDown.png"
+        },
+        "DarkSortUp": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Dark/SortUp.png"
+        },
+        "InsertArrow": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/InsertArrow.png"
+        },
+        "MozillaGrip": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/MozillaGrip.gif"
+        },
+        "Route": {
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/Route.png"
+        },
+        "SimpleArrowDown": {
+          "dark": "cYo.Common.Windows/Resources/Dark/SimpleArrowDown.png",
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/SimpleArrowDown.png"
+        },
+        "SimpleArrowLeft": {
+          "dark": "cYo.Common.Windows/Resources/Dark/SimpleArrowLeft.png",
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/SimpleArrowLeft.png"
+        },
+        "SimpleArrowRight": {
+          "dark": "cYo.Common.Windows/Resources/Dark/SimpleArrowRight.png",
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/SimpleArrowRight.png"
+        },
+        "SmallArrowDown": {
+          "dark": "cYo.Common.Windows/Resources/Dark/SmallArrowDown.png",
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/SmallArrowDown.png"
+        },
+        "SortDown": {
+          "dark": "cYo.Common.Windows/Resources/Dark/SortDown.png",
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/SortDown.png"
+        },
+        "SortUp": {
+          "dark": "cYo.Common.Windows/Resources/Dark/SortUp.png",
+          "kind": "bitmap",
+          "path": "cYo.Common.Windows/Resources/SortUp.png"
+        }
+      },
+      "namespace": "cYo.Common.Windows.Properties"
+    }
+  }
+}
