@@ -28,7 +28,6 @@ namespace ComicRack.Characterization
 
 		private static MacHost Open(TempFolder temp, string databaseFile)
 		{
-			CoreRaces.WarmLanguageNames();
 			return MacHost.Open(new MacHostOptions { Paths = temp.Paths, DatabaseFile = databaseFile });
 		}
 

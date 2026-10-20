@@ -44,7 +44,6 @@ namespace ComicRack.Characterization
 		[FixtureDbFact]
 		public void Every_list_of_the_fixture_library_has_its_golden_count()
 		{
-			CoreRaces.WarmLanguageNames();
 			using (var temp = new TempFolder())
 			{
 				// A copy, opened read only: the fixture itself is never touched.

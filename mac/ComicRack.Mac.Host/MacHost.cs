@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using cYo.Common.Collections;
@@ -184,6 +186,35 @@ namespace ComicRack.Mac.Host
 
 			// ComicBrowserControl.cs:1609 registers the settings before the first virtual tag is read.
 			VirtualTagsCollection.RegisterSettings(Settings);
+
+			WarmLanguageCultures();
+		}
+
+		private static readonly object WarmGate = new object();
+		private static bool languagesWarmed;
+
+		/// <summary>
+		/// ComicBook.GetIsoCulture fills a static, unsynchronized Dictionary on first use per language. A smart list with a language
+		/// matcher evaluates its books in PLINQ, so concurrent first calls corrupt the dictionary and lose books (found by P0.7a: a
+		/// 64-book list returned 30 or 31 in 2 of 12 fresh processes). Filling it once on this thread, for every two-letter ISO code it
+		/// can ever cache, makes all later calls read-only. Other lazily filled statics reached from list evaluation:
+		/// hasAsText and WebComic.rxCache are locked; searchableProperties and Description are idempotent single assignments;
+		/// cachedTypeList is filled by the matcher registration above.
+		/// </summary>
+		private static void WarmLanguageCultures()
+		{
+			lock (WarmGate)
+			{
+				if (languagesWarmed)
+				{
+					return;
+				}
+				foreach (string iso in CultureInfo.GetCultures(CultureTypes.NeutralCultures).Select(c => c.TwoLetterISOLanguageName).Distinct())
+				{
+					ComicBook.GetIsoCulture(iso);
+				}
+				languagesWarmed = true;
+			}
 		}
 
 		/// <summary>
