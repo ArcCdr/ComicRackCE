@@ -22,12 +22,6 @@ namespace ComicRack.Mac.Host.Tests
 	/// </summary>
 	public class WindowsTripwireTests
 	{
-		// Findings of the first run of the v1 paths (P1.2), recorded in full-port.md section 9. P1.3 fixes them and then removes this
-		// list: the test must show zero calls. Any other Windows call fails the test now.
-		//   kernel32!CreateFile    NtfsInfoStorage.Load -> AlternateDataStreamFile.Exists (scan, every book; P1.3: DisableNTFS)
-		//   shlwapi!PathGetCharType FileUtility.MakeValidFilename (scan, every archive entry; falls back to the managed code after an exception)
-		private static readonly string[] KnownUntilP13 = { "kernel32!CreateFile", "shlwapi!PathGetCharType" };
-
 		[Theory]
 		[InlineData("kernel32.dll", "kernel32")]
 		[InlineData("KERNEL32", "kernel32")]
@@ -154,12 +148,10 @@ namespace ComicRack.Mac.Host.Tests
 				}
 
 				string log = File.ReadAllText(temp.Paths.LogFile);
-				var unknown = NativeLibraryResolver.WindowsCallRecords.Where(c => !KnownUntilP13.Contains(c.ToString())).ToList();
+				var unknown = NativeLibraryResolver.WindowsCallRecords.ToList();
 				Assert.True(unknown.Count == 0, "Windows calls on the v1 path:\n" + string.Join("\n", unknown.Select(c => c + "\n" + c.Stack)));
-				foreach (string line in log.Split('\n').Where(l => l.Contains("Windows API ")))
-				{
-					Assert.Contains(KnownUntilP13, k => line.Contains("Windows API " + k + " called from"));
-				}
+				Assert.DoesNotContain("Windows API ", log);
+				Assert.Equal(0, NativeLibraryResolver.WindowsCalls);
 			}
 		}
 	}

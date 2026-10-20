@@ -230,6 +230,10 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Test: `WindowsTripwireTests` in `ComicRack.Mac.Host.Tests` (name table, installed assemblies, a deliberate `cYo.Common.Win32.Keyboard` call logged once with its stack, and the v1 flow: `FixtureCommands` books, scan, thumbnail, page, smart lists, save, close, reopen). The flow lists two known findings in `KnownUntilP13`; any other Windows call fails it. P1.3 fixes the two and then deletes that list so the test requires zero. The test project now references `ComicRack.Cli` (for `FixtureCommands`).
 - The app smoke run (`--smoke-test=3 --headless`, empty library) logs no tripwire line.
 
+**Facts from P1.3 (2026-10-20)**
+- `MacHost.ConfigureCore` sets `EngineConfiguration.Default.DisableNTFS = true`, so `NtfsInfoStorage` never calls kernel32. Pass B has two more replacements (manifest entries): `cYo.Common.Core/Replacements/PassB/Resources.cs` (rewrite of `Properties/Resources.Designer.cs`: `Folder`, `FolderHome`, `PlusOverlay`, `Wikipedia` decoded from embedded files, logical names `cYo.Common.Resources.<file>`, a new Bitmap per access) and `.../FileUtility.cs` (patched copy, `PathGetCharType` is a managed table with the shlwapi results for controls and `"<>|:` (invalid), `*?` (wild), `\/` (separator)).
+- `WindowsTripwireTests` no longer has a known list: the v1 flow must leave `WindowsCalls` at 0 and the log without a `Windows API` line. Tests added to `CoreRuntimeTests`: the four Common resources, and `MakeValidFilename` without a Windows call.
+
 **Facts from P1.1 (2026-10-20)**
 - Three patched copies in pass B (`Compile Remove` of the originals in the two `Sources.props`; manifest entries with budgets 8, 12 and 10 changed lines): `cYo.Common.Core/Replacements/PassB/ThreadUtility.cs` (`Abort(thread, timeOut)`: `Join(timeOut)`, then `Trace.TraceWarning("Thread '<name>' did not stop within <ms> ms and is abandoned ...")` and return), `.../BackgroundRunner.cs` (`Dispose`: same after 5 s; the wait handles `runEvent` and `exitEvent` are then **not** disposed, because the abandoned thread still waits on them and would die with an unhandled `ObjectDisposedException`), `ComicRack.Engine.Core/Replacements/PassB/ComicScanner.cs` (`Stop`: same after 10 s; `abortScanning` stays set as in the original). All Core worker threads are background threads, so an abandoned one cannot keep the process alive. Only `ThreadUtility.Abort` (called from `ImageProvider.Dispose`, 30 s) and `ComicScanner.Stop` (called from `QueueManager.Dispose` and the "Abort Scanning" task) were reachable; `BackgroundRunner` has no user in the linked Core. `ProcessingQueue.Stop`/`Dispose` in this tree only join with a timeout and never abort.
 - `MacHost` adds a `HostTraceListener` (new file `mac/ComicRack.Mac.Host/HostTraceListener.cs`) while it is open: `Trace.TraceWarning`/`TraceError` from the Core go to the host log as `[WARN]`/`[ERROR]` lines; plain `Trace.Write` and `Debug` output is ignored. `MacHost.Dispose` had no Abort special case (nothing to remove).
@@ -429,7 +433,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: `dotnet test mac/tests/ComicRack.Mac.Host.Tests --filter FullyQualifiedName~Tripwire`; the app smoke run (`dotnet run --project mac/ComicRack.Mac -- --smoke-test=3 --headless --data-dir "$(mktemp -d)"`) logs no tripwire line; `verify.sh`.
 
 #### P1.3 Runtime gap sweep: Common resources, NTFS store, tripwire findings
-- Depends: P1.2 · Effort: medium · Unattended: yes · Status: todo
+- Depends: P1.2 · Effort: medium · Unattended: yes · Status: done 2026-10-20
 - Goal: close the known small runtime gaps.
 - Add: `mac/cYo.Common.Core/Replacements/PassB/Resources.cs` (Common's `Properties/Resources`: `Wikipedia`, `PlusOverlay` from embedded files, same pattern as the Engine replacement of M1.3) with manifest entry.
 - Edit: `mac/ComicRack.Mac.Host/MacHost.cs` (`ConfigureCore`: `EngineConfiguration.Default.DisableNTFS = true`, `ComicRack.Engine/EngineConfiguration.cs:600`, so `NtfsInfoStorage` never reaches kernel32), plus a fix per tripwire finding of P1.2 that is on a v1 path (each as a replacement with a manifest entry).
@@ -1466,6 +1470,7 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 - [P1.2] The tripwire does not watch non-system native names (libwebp, libheif, libjxl under `Resources\x64\`, `7z.exe`); the codec tasks of P2 (WebP, HEIF, AVIF, JXL) must add their own checks. Linked but not on the v1 flow tested by P1.2: `cYo.Common.Win32` shell, power, credentials, `FileExplorer`, `ShellRegister`, `Keyboard` code paths (P2.1 and P2.x decide each).
 
 ---
+- [P1.3] Flaky under load (failed once in a full verify run, passed alone 3 times and on the rerun): `WindowTests.Pressing_Cancel_in_the_window_cancels_the_running_scan` (the progress panel check races with a 200-book scan that finishes early); make it deterministic.
 
 ## 10. Estimates (low confidence)
 

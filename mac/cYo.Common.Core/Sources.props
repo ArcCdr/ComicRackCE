@@ -17,6 +17,12 @@
     <!-- Thread.Abort is not supported on .NET 10: the replacements report and abandon a thread that ignores its timeout (P1.1). -->
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Threading\ThreadUtility.cs" />
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Threading\BackgroundRunner.cs" />
+    <!-- Properties\Resources.Designer.cs reads ResXFileRef bitmaps of the framework's System.Drawing.Bitmap: replaced by Replacements\PassB\Resources.cs (P1.3).
+         PathGetCharType is a shlwapi P/Invoke: FileUtility.cs is a patched copy with a managed table (P1.3). -->
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Properties\Resources.Designer.cs" />
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\IO\FileUtility.cs" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\cYo.Common\Resources\*.png;$(MSBuildThisFileDirectory)..\..\cYo.Common\Resources\*.bmp"
+                      LogicalName="cYo.Common.Resources.%(Filename)%(Extension)" />
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
   </ItemGroup>
   <ItemGroup>

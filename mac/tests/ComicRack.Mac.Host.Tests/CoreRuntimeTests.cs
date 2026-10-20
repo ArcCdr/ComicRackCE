@@ -14,6 +14,32 @@ namespace ComicRack.Mac.Host.Tests
 	/// <summary>Run-time gaps of the Core on .NET 10 that compiling does not show (BinaryFormatter, Thread.Abort, the error page).</summary>
 	public class CoreRuntimeTests
 	{
+		[Theory]
+		[InlineData("Wikipedia")]
+		[InlineData("PlusOverlay")]
+		[InlineData("Folder")]
+		[InlineData("FolderHome")]
+		public void Common_resources_are_readable(string name)
+		{
+			// Properties.Resources of cYo.Common is internal: read it the way the Core does, through its property.
+			Type resources = typeof(cYo.Common.IO.FileUtility).Assembly.GetType("cYo.Common.Properties.Resources", throwOnError: true);
+			using (var bitmap = (Bitmap)resources.GetProperty(name, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).GetValue(null))
+			{
+				Assert.NotNull(bitmap);
+				Assert.True(bitmap.Width > 0 && bitmap.Height > 0);
+			}
+		}
+
+		[Fact]
+		public void MakeValidFilename_replaces_what_shlwapi_rejects_without_a_Windows_call()
+		{
+			NativeLibraryResolver.ResetWindowsCalls();
+			Assert.Equal("a_b_c_d_e_f_g_h_i_j.jpg", cYo.Common.IO.FileUtility.MakeValidFilename("a:b*c?d\\e/f\"g<h>i|j.jpg"));
+			Assert.Equal("Caf\u00e9 #1 (x).png", cYo.Common.IO.FileUtility.MakeValidFilename("Caf\u00e9 #1 (x).png"));
+			Assert.Equal("a_b", cYo.Common.IO.FileUtility.MakeValidFilename("a\tb"));
+			Assert.Equal(0, NativeLibraryResolver.WindowsCalls);
+		}
+
 		[Fact]
 		public void CreateErrorPage_returns_the_picture_without_text()
 		{

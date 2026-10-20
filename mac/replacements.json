@@ -350,6 +350,25 @@
       "sha256": "fa6855ce936357003df65f016d6d6b59bed992c733181b6a5368f20c494e84b9",
       "maxChangedLines": 10,
       "reason": "Stop abandons a scanning thread that ignores the timeout instead of Thread.Abort (P1.1)"
+    },
+    {
+      "original": "cYo.Common/Properties/Resources.Designer.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/Resources.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "512c9a3c917489cb77bf66c6ee04aadf28aaf035",
+      "sha256": "b1532e6819d4caad238e1800bfaf6bdce5388c746ea93fd3868b56a2b98164a4",
+      "reason": "ResXFileRef bitmaps bind to the framework System.Drawing.Bitmap; Wikipedia and PlusOverlay come from embedded files (P1.3)"
+    },
+    {
+      "original": "cYo.Common/IO/FileUtility.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/FileUtility.cs",
+      "kind": "patched-copy",
+      "pass": "B",
+      "base": "512c9a3c917489cb77bf66c6ee04aadf28aaf035",
+      "sha256": "d950e6b268df6960d0b3667a8972e3e6e218aec220cc2121adfaf41816955e7b",
+      "maxChangedLines": 10,
+      "reason": "PathGetCharType (shlwapi) replaced by a managed table, so MakeValidFilename no longer throws per character (P1.3)"
     }
   ]
 }

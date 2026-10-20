@@ -169,6 +169,9 @@ namespace ComicRack.Mac.Host
 			EngineConfiguration config = EngineConfiguration.Default;
 			config.CbzUses = config.CbrUses = config.Cb7Uses = config.CbtUses = EngineConfiguration.CbEngines.SharpCompress;
 
+			// The NTFS alternate data stream store (NtfsInfoStorage) calls kernel32 CreateFile for every scanned book.
+			config.DisableNTFS = true;
+
 			// Program.cs:780-787 with the ExtendedSettings defaults (ExtendedSettings.cs:57, 75, 82; not set by its constructor: DisableBackgroundQueryCacheUpdate stays false).
 			ListExtensions.ParallelEnabled = config.EnableParallelQueries;
 			if (config.IgnoredArticles != null)
