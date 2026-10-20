@@ -75,6 +75,10 @@ if [ "$BUILD" = 1 ]; then
 	if dotnet build mac/ComicRack.Mac.slnx -c "$CONFIG" -nologo -v q >"$LOGS/build.log" 2>&1; then
 		warnings=$(grep -Eo '[0-9]+ Warning\(s\)' "$LOGS/build.log" | tail -1 | awk '{print $1}')
 		add build PASS "$CONFIG, 0 errors, ${warnings:-?} warnings, $(( $(now) - t0 )) s"
+		if [ "$FULL" = 1 ]; then
+			# INFO only: warning lines of this build (an incremental build repeats none of the cached ones; use a clean build for the full count)
+			SUMMARY+=("$(printf '%-8s %-6s %s' info INFO "$(grep -c 'warning ' "$LOGS/build.log") warning lines in build.log")")
+		fi
 	else
 		errors=$(grep -E ': error ' "$LOGS/build.log" | sort -u)
 		add build FAIL "$(printf '%s\n' "$errors" | grep -c . | tr -d ' ') errors (mac/artifacts/verify/build.log); first ones:"

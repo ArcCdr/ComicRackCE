@@ -181,6 +181,11 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Rule for new tests: a test that asserts on a process-wide counter takes its baseline after `Gc.Flush()` (Mac.Tests) or `LiveSettled()` (Drawing.Tests); a test that opens a `MacHost` closes it in `using` or `finally`; never assert the start order of parallel work.
 - Gate numbers after R1: 10 consecutive `mac/tools/verify.sh` runs passed (781 tests; 64 to 92 s each, mean about 76 s), plus 11 more passing runs on the final test code; the gate stays far under 3 minutes. Before R1 one of three runs on the same tree failed.
 
+**Facts from P0.3 (2026-10-20)**
+- Clean build of `mac/ComicRack.Mac.slnx` before: 1158 lines matching `warning ` (579 distinct; each is printed twice). After: **52** (the acceptance command's count). `mac/Shadow.props` now has a shadow-only `NoWarn` of CS3001;CS3002;CS3003;CS3009;SYSLIB0003;SYSLIB0004;SYSLIB0021;SYSLIB0050;CA2022;CS0649;CS0472;CS0169;CS0114;CS0659;CS1717;CS8632;CS8981 (every id measured only in linked original files; the mac-owned `Replacements/` files in the shadow projects are covered too).
+- The 52 left are all mac-owned: NU1904 (System.Drawing.Common 4.7.0 vulnerability, from the Compat/Core package references, 28 lines), NU1510 (redundant `Microsoft.CSharp` and `System.Text.Json` references, 8), CS0618 (`Bitmap.Save(string, int?)` in 5 test files, 12), xUnit2013/xUnit2031 (2 tests, 4).
+- `verify.sh --full` prints an INFO line with the warning-line count of its build log (only a clean build gives the full count).
+
 **Facts from the R9 planning session (2026-10-20)**
 - Correction of the planning-session fact on WinForms surfaces: the original main menu is **File, Edit, Browse, Read, Display, Help** (`ComicRack/MainForm.Designer.cs:436-445`); there is no View or Book menu. The MVP menus (File, View, Window, Help, plus the reader's) are restructured by P5.R1 and P5.R3.
 - The parity inventory was extracted mechanically from the Designer files (menu trees with names, texts, shortcut keys and images), `ComicRack/MainForm.cs:1261-1558` (command bindings, `commands.Add`) and `:1563-1800` (reader `KeyboardMap`, groups Library, Browse, Auto Scroll, Scroll, Display Options, Page Display, ZoomAndRotate, Edit, Other), the Behavior options (`Settings.cs` booleans with `Category`/`Description`, rendered by `cYo.Common.Windows/Forms/FormUtility.cs:219-232`) and `ComicRack.Plugins/PluginEngine.cs` (17 hook types). Result: `mac/plans/parity-ledger.md`.
@@ -298,7 +303,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: `grep -n "Apache-2.0" MACOS_NATIVE_PATH.md` shows §5.3; `grep -n "S2" MACOS_NATIVE_PATH.md | grep 2026` shows the §11.4 entry; `verify.sh`.
 
 #### P0.3 Warning hygiene for the linked sources
-- Depends: none · Effort: medium · Unattended: yes · Status: todo
+- Depends: none · Effort: medium · Unattended: yes · Status: done 2026-10-20
 - Goal: the build output shows the warnings of mac-owned code, not the ~550 of the decompiled sources.
 - Edit: `mac/Shadow.props` (a `NoWarn` list for the shadow projects only: `CS3001;CS3002;CS3003;SYSLIB0003;SYSLIB0004;SYSLIB0021;CA2022;CS0649;CS0472` plus any other id that occurs only in linked files, measured), `mac/tools/verify.sh` (print the warning count of a clean build as an INFO line with `--full`).
 - Out of scope: fixing warnings in mac-owned projects (list them in §9 if any).
@@ -1428,3 +1433,4 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 R9 adds roughly 30 to 55 agent hours (the chrome foundation, the restyle, the main-window structure, workspaces, keyboard editor, tray, Finder integration and the audits) and makes every UI task somewhat longer.
 
 Calendar: with the unattended loop running most of the day and night, about 8 to 12 tasks a day when nothing blocks, so **5 to 7 weeks of agent wall time**; with GUI-lock gaps (e2e tasks and contact sheets wait for an unlocked screen), retries, owner checkpoints (C2 to C6: about 4.5 to 6.5 hours of owner time in all, including two contact-sheet reviews of 10 to 15 minutes) and upstream merges, plan for **9 to 12 weeks calendar** to C6. The Script UI layer (wave E, 28 tasks) is the largest uncertainty: a NO-GO at P4.2 removes most of it from v1 and moves C3 forward.
+- [P0.3] Mac-owned warnings left (52 lines in a clean build): NU1904 System.Drawing.Common 4.7.0 (Compat/Core package references), NU1510 redundant `Microsoft.CSharp` / `System.Text.Json` references in `ComicRack.Plugins.Core` and `cYo.Common.Core`, CS0618 `Bitmap.Save(string, int?)` in 5 test files, xUnit2013 (`BookGridTests.cs:328`), xUnit2031 (`FolderScannerTests.cs:57`).

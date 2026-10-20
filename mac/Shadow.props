@@ -33,4 +33,9 @@
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
+  <!-- Warnings that occur only in the linked original sources (decompiled code: no CLS attributes, BinaryFormatter, unused fields, ...).
+       Measured by a clean build (P0.3); mac-owned projects (no Shadow.props) keep every warning. -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS3001;CS3002;CS3003;CS3009;SYSLIB0003;SYSLIB0004;SYSLIB0021;SYSLIB0050;CA2022;CS0649;CS0472;CS0169;CS0114;CS0659;CS1717;CS8632;CS8981</NoWarn>
+  </PropertyGroup>
 </Project>
