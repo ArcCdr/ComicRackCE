@@ -25,3 +25,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-20 17:27 | P3.H | done-with-caveat | 37358a2 |  | HiDPI test harness: 1x and 2x rendering (headless render scaling, 104 HiDpi tests for grid, covers, reader, draw operations and the Drawing stand-in; BookGri... |
 | 2026-10-20 17:42 | P4.1 | done | f122cc3 |  | Spike S4: IronPython 2.7.12 on .NET 10 arm64 (verdict GO with a build-time patch of IronPython.dll: stock engine cannot create new-style classes on .NET 9+;... |
 | 2026-10-20 18:28 | P4.2 | done-with-caveat | 1a782ba |  | Spike S6: Script UI modal loop and assembly identity (verdict GO: nested DispatcherFrame modal loop, Python Control subclass with OnPaint, Autonumber.py and... |
+| 2026-10-20 19:00 | RV4a | done | 4998708 |  | Review fixes: plan tooling, safety scripts, docs (plan-status.sh with table, next task and run-log backfill; scoped allowlist; e2e exit codes 5 and 6; ui-dri... |
