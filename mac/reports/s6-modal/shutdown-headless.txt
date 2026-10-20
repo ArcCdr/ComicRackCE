@@ -1,0 +1,4 @@
+S6 headless, runtime .NET 10.0.13, facade System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null
+SHUTDOWN dialog is open, requesting application shutdown
+SHUTDOWN Shutdown() returned on the UI thread; waiting for the process to end
+SHUTDOWN ShowDialog returned Cancel (the nested frame ended)

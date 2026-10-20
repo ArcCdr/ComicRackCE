@@ -1,0 +1,30 @@
+# variant baseline: rebind 
+INFO runtime: .NET 10.0.13 Arm64
+PASS CompileExpression: delegate gives true/false/false
+PASS Python 2 integer division: 7 / 2 = 3
+PASS syntax error: null delegate
+INFO DuckTyping.Implement: raised NotSupportedException: cYo.Common.Reflection.CodeDomDuckTypeGenerator is not yet supported on macOS (the CodeDom generator is excluded on net10; no bundled script uses it)
+PASS ComicBookExpressionMatcher: 1 of 3 books match (1 expected)
+PASS probe script commands: 6 scenarios: unmodified_references, control_subclass, full_names, core_names, drawing_alone, drawing_common
+FAIL unmodified_references: the two AddReferenceByPartialName lines and both star imports work: IOError: System.IO.IOException: Could not add reference to assembly System.Windows.Forms    at IronPython.Runtime.ClrModule.AddReferenceByPartialName(CodeConte
+FAIL control_subclass: raised TargetInvocationException: Exception has been thrown by the target of an invocation. <- IOException: Could not add reference to assembly System.Windows.Forms
+FAIL full_names: raised TargetInvocationException: Exception has been thrown by the target of an invocation. <- ImportException: No module named Windows
+INFO full_names: RES AddReference('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089') = ERROR IOError: System.IO.IOException: Could not add reference to assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089    
+FAIL full_names: AddReference with the System.Windows.Forms strong name
+INFO full_names: RES AddReference('System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a') = ok
+PASS full_names: AddReference with the System.Drawing strong name
+INFO full_names: RES AddReferenceByName('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089') = ERROR IOError: [Errno 2] Could not load file or assembly 'System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'. The system cannot
+FAIL full_names: AddReferenceByName with the System.Windows.Forms strong name
+INFO core_names: RES AddReferenceByPartialName('ComicRack.Engine') = ERROR IOError: System.IO.IOException: Could not add reference to assembly ComicRack.Engine    at IronPython.Runtime.ClrModule.AddReferenceByPartialName(CodeContext c
+FAIL core_names: AddReferenceByPartialName('ComicRack.Engine') (RefreshView.py)
+INFO core_names: RES AddReferenceByPartialName('ComicRack.Plugins') = ERROR IOError: System.IO.IOException: Could not add reference to assembly ComicRack.Plugins    at IronPython.Runtime.ClrModule.AddReferenceByPartialName(CodeContext 
+FAIL core_names: AddReferenceByPartialName('ComicRack.Plugins')
+INFO core_names: RES AddReferenceByPartialName('cYo.Common') = ERROR IOError: System.IO.IOException: Could not add reference to assembly cYo.Common    at IronPython.Runtime.ClrModule.AddReferenceByPartialName(CodeContext context
+FAIL core_names: AddReferenceByPartialName('cYo.Common')
+FAIL core_names: ComicBook from cYo.Projects.ComicRack.Engine can be created: ImportError: No module named Reflection
+FAIL drawing_alone: System.Drawing alone: Bitmap(4, 4) works: SystemError: The type initializer for 'Gdip' threw an exception.
+FAIL drawing_common: System.Drawing.Common: Bitmap(4, 4) works: SystemError: The type initializer for 'Gdip' threw an exception.
+PASS Sample.py commands found: 12 commands: ConfigureBookHasBeenOpened, GetBooksWith, AutoadjustTwoPageMode, DummySearch, DummyHtmlInfoPanel, WebLinkInfoPanel, DummyUIInfoPanel, ComicRackUserForum, DummyUIQuickOpen, FadeReadThumbnails, ShowStartupMessage, ShowShutdownMessage
+PASS Sample.xml commands found: 2 commands
+FAIL Sample.py compiles: IOException: Could not add reference to assembly System.Windows.Forms
+INFO result: 12 failed

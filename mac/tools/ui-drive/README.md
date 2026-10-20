@@ -48,6 +48,7 @@ crcli is built on first use when it is missing or older than its sources.
 - The data folder is always private (a temp folder by default); a `--data-dir` that is one of the owner's folders (`~/Library/Application Support|Caches|Logs/ComicRack*`, `ComicRackAPI`) is refused.
 - Nothing changes system settings. The light/dark appearance is only switched by tests that set `E2E_ALLOW_APPEARANCE=1` (P0.6b), which restore it.
 - Use folders under the repository or `$TMPDIR` for scans. Never scan `~/Documents`, `~/Desktop`, `~/Downloads` or external volumes (TCC prompts in the owner's session).
+- `UI_DRIVE_EXE=<path>` makes `launch` start that executable instead of the app (used by spike S6, `mac/spikes/S6-modal/real.sh`): no build, the same checks (unlocked screen, no foreign `ComicRack.Mac`, temporary data folder, input only while that pid is frontmost).
 - `UI_DRIVE_DIR` moves the artifacts folder (session, shots, helper): tests use it so a real session is never touched. `UI_DRIVE_NO_BUILD=1` skips the incremental build of `--dev`.
 
 ## Example

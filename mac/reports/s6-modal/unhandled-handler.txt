@@ -1,0 +1,4 @@
+S6 headless, runtime .NET 10.0.13, facade System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null
+UNHANDLED posting a job that throws, with a Dispatcher.UnhandledException handler
+UNHANDLED handler got InvalidOperationException: thrown by a job (marking it handled)
+UNHANDLED the UI thread is still running afterwards

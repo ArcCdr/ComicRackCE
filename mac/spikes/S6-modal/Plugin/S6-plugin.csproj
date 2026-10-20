@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Spike S6 (P4.2): a compiled plug-in that uses WinForms types (like the C# plug-ins of the community). Built against the facade;
+       the fake-ref command of s6-rebind then gives it the reference a .NET Framework build would have (System.Windows.Forms 4.0.0.0, token b77a5c561934e089). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>S6-plugin</AssemblyName>
+    <RootNamespace>S6Plugin</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Forms\S6-forms.csproj" />
+  </ItemGroup>
+</Project>

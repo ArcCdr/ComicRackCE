@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Spike S6 (P4.2): a small System.Windows.Forms facade with the literal assembly name of the real one (identity option "literal name").
+       State lives in the facade; peers come from an IFormsBackend. Not part of ComicRack.Mac.slnx. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>System.Windows.Forms</AssemblyName>
+    <RootNamespace>System.Windows.Forms</RootNamespace>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Deterministic>false</Deterministic>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
+  </ItemGroup>
+</Project>

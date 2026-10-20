@@ -1,0 +1,10 @@
+S6 headless, runtime .NET 10.0.13, facade System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null
+READY A autonumber dialog, UI thread
+RESULT A numbers=7,8,9
+READY B autonumber dialog, worker thread
+RESULT B numbers=x,x,x
+READY C message box YesNo, worker thread
+RESULT C answer=True
+READY D owner-draw panel
+RESULT D closed
+DONE

@@ -1,0 +1,63 @@
+# variant renamed-drawingtoken: rebind --rename cYo.Compat.Forms=System.Windows.Forms:4.0.0.0 --rename cYo.Compat.Drawing=System.Drawing.Common:4.0.2.0:cc7b13ffcd2ddd51 --rename ComicRack.Engine.Core=ComicRack.Engine --rename ComicRack.Plugins.Core=ComicRack.Plugins --rename cYo.Common.Core=cYo.Common --drop System.Drawing.Common.dll
+INFO runtime: .NET 10.0.13 Arm64
+PASS CompileExpression: delegate gives true/false/false
+PASS Python 2 integer division: 7 / 2 = 3
+PASS syntax error: null delegate
+INFO DuckTyping.Implement: raised NotSupportedException: cYo.Common.Reflection.CodeDomDuckTypeGenerator is not yet supported on macOS (the CodeDom generator is excluded on net10; no bundled script uses it)
+PASS ComicBookExpressionMatcher: 1 of 3 books match (1 expected)
+PASS probe script commands: 6 scenarios: unmodified_references, control_subclass, full_names, core_names, drawing_alone, drawing_common
+PASS unmodified_references: the two AddReferenceByPartialName lines and both star imports work
+INFO unmodified_references: RES Form from = System.Windows.Forms 4.0.0.0
+INFO unmodified_references: RES Control from = System.Windows.Forms 4.0.0.0
+INFO unmodified_references: RES DialogResult from = System.Windows.Forms 4.0.0.0
+INFO unmodified_references: RES Point from = System.Drawing.Primitives 10.0.0.0
+INFO unmodified_references: RES Size from = System.Drawing.Primitives 10.0.0.0
+INFO unmodified_references: RES SizeF from = System.Drawing.Primitives 10.0.0.0
+INFO unmodified_references: RES Rectangle from = System.Drawing.Primitives 10.0.0.0
+INFO unmodified_references: RES Color from = System.Drawing.Primitives 10.0.0.0
+INFO unmodified_references: RES Bitmap from = System.Drawing.Common 4.0.2.0
+INFO unmodified_references: RES Graphics from = System.Drawing.Common 4.0.2.0
+INFO unmodified_references: RES SolidBrush from = System.Drawing.Common 4.0.2.0
+INFO unmodified_references: RES Font from = System.Drawing.Common 4.0.2.0
+INFO unmodified_references: RES Pen from = System.Drawing.Common 4.0.2.0
+INFO unmodified_references: RES Image from = System.Drawing.Common 4.0.2.0
+PASS unmodified_references: Form is the Forms stand-in: System.Windows.Forms 4.0.0.0
+PASS unmodified_references: Bitmap, Graphics.FromImage, SolidBrush, FillRectangle work (FadeReadThumbnails of Sample.py): System.Drawing.Common 4.0.2.0
+PASS control_subclass: class UIControl(Control) with an OnPaint override can be created: IronPython.NewTypes.System.Windows.Forms.Control_1$1
+INFO full_names: RES AddReference('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089') = ok
+PASS full_names: AddReference with the System.Windows.Forms strong name
+INFO full_names: RES AddReference('System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a') = ok
+PASS full_names: AddReference with the System.Drawing strong name
+INFO full_names: RES AddReferenceByName('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089') = ok
+PASS full_names: AddReferenceByName with the System.Windows.Forms strong name
+INFO full_names: RES Form from = System.Windows.Forms 4.0.0.0
+INFO full_names: RES Bitmap from = System.Drawing.Common 4.0.2.0
+INFO core_names: RES AddReferenceByPartialName('ComicRack.Engine') = ok
+PASS core_names: AddReferenceByPartialName('ComicRack.Engine') (RefreshView.py)
+INFO core_names: RES AddReferenceByPartialName('ComicRack.Plugins') = ok
+PASS core_names: AddReferenceByPartialName('ComicRack.Plugins')
+INFO core_names: RES AddReferenceByPartialName('cYo.Common') = ok
+PASS core_names: AddReferenceByPartialName('cYo.Common')
+PASS core_names: ComicBook from cYo.Projects.ComicRack.Engine can be created: ComicRack.Engine 1.0.9789.32663
+PASS drawing_alone: System.Drawing alone: Bitmap(4, 4) works: System.Drawing.Common 4.0.2.0
+PASS drawing_common: System.Drawing.Common: Bitmap(4, 4) works: System.Drawing.Common 4.0.2.0
+PASS Sample.py commands found: 12 commands: ConfigureBookHasBeenOpened, GetBooksWith, AutoadjustTwoPageMode, DummySearch, DummyHtmlInfoPanel, WebLinkInfoPanel, DummyUIInfoPanel, ComicRackUserForum, DummyUIQuickOpen, FadeReadThumbnails, ShowStartupMessage, ShowShutdownMessage
+PASS Sample.xml commands found: 2 commands
+PASS Sample.py compiles: top level ran (imports, class UIControl(Control))
+PASS hook ParseComicPath (ParseComicPath)
+PASS hook GetBooksWith (CreateBookList)
+PASS hook DummySearch (NetSearch)
+PASS hook DummyHtmlInfoPanel (ComicInfoHtml)
+PASS hook WebLinkInfoPanel (ComicInfoHtml)
+INFO ui hook DummyUIInfoPanel (ComicInfoUI): raised TargetInvocationException: Exception has been thrown by the target of an invocation. <- UnboundNameException: global name 'ListBox' is not defined
+INFO ui hook BookHasBeenOpened (BookOpened): raised TargetInvocationException: Exception has been thrown by the target of an invocation. <- UnboundNameException: global name 'MessageBox' is not defined
+INFO ui hook ShowStartupMessage (Startup): raised TargetInvocationException: Exception has been thrown by the target of an invocation. <- UnboundNameException: global name 'MessageBox' is not defined
+INFO ui hook FadeReadThumbnails (DrawThumbnailOverlay): returned null
+INFO script Autonumber.py: top level runs; 1 commands: RenumberBooks[Books]
+INFO script CommitProposed.py: top level runs; 1 commands: CommitProposed[Books]
+INFO script NewComics.py: top level runs; 1 commands: NewComicBooks[NewBooks]
+INFO script OtherScripts.py: top level runs; 3 commands: SaveCSVList[Books, Library], RenameBookFiles[Books], SetComicInfoDirty[Books]
+INFO script RefreshView.py: top level raised IOException: Could not add reference to assembly cYo.Common.Windows
+INFO script SearchAndReplace.py: top level runs; 1 commands: SearchAndReplace[Books]
+PASS hook ComicRackUserForum (QuickOpenHtml)
+INFO result: all checks passed

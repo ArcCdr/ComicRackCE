@@ -1,0 +1,16 @@
+headless cases: exit 0, 78 PASS, 0 FAIL (RESULT no failures, 78 checks passed)
+headless shutdown during a modal dialog: ShowDialog returned and the process exited with code 0
+interactive scenario, answered by the autopilot (headless): A=7,8,9 B=unchanged C=True
+an exception escaping a UI job: without a handler the process aborts (exit 134); with Dispatcher.UnhandledException marking it handled the app survives (exit 0)
+identity   forms-v4-notoken: 9 PASS, 0 FAIL, 21 INFO
+identity   forms-v1-notoken: 4 PASS, 5 FAIL, 21 INFO
+identity   forms-v10-notoken: 9 PASS, 0 FAIL, 21 INFO
+identity   forms-v4-fwtoken: 9 PASS, 0 FAIL, 21 INFO
+identity   forms-v4-othertoken: 9 PASS, 0 FAIL, 21 INFO
+identity   forms-hook: 9 PASS, 0 FAIL, 30 INFO
+identity   core-baseline: 8 PASS, 12 FAIL, 9 INFO
+identity   core-renamed: 27 PASS, 0 FAIL, 35 INFO
+identity   core-renamed-v10: 27 PASS, 0 FAIL, 35 INFO
+identity   core-renamed-drawingtoken: 27 PASS, 0 FAIL, 35 INFO
+identity   core-forms-only: 20 PASS, 7 FAIL, 35 INFO
+S6 RESULT: no failure

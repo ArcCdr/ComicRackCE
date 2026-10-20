@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Spike S6 (P4.2): rewrites assembly names, versions, public key tokens and references in a copy of a build output, so that
+       the identity options can be tried without touching a production project (a renamed AssemblyName gives the same binaries). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>s6-rebind</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+  </ItemGroup>
+</Project>

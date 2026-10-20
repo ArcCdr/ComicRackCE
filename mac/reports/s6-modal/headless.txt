@@ -1,0 +1,117 @@
+S6 headless, runtime .NET 10.0.13, facade System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null
+INFO M01 case: ShowDialog on the UI thread blocks inside a nested frame, the UI keeps running, typed values come back
+PASS M01 a job queued while the dialog is open runs; ShowDialog has not returned
+PASS M01 the dialog is a modal form
+PASS M01 typing in the peers reaches the facade: text=hello num=42 checked=True index=1
+INFO M01 snapshot: headless-M01-dialog.png
+PASS M01 ShowDialog returns the button's DialogResult (OK) after a pointer click: OK
+PASS M01 the values are readable after the dialog closed
+PASS M01 event order is WinForms-like: before ShowDialog,Load,Activated,Shown,FormClosing,FormClosed,after ShowDialog
+PASS M01 the closed form is not in the open list
+INFO M02 case: ShowDialog from a background thread: the thread blocks, the UI thread keeps pumping (timer ticks), the thread continues with the result
+PASS M02 the UI thread kept running (3 timer ticks) while the worker thread was blocked in ShowDialog: ticks=3
+PASS M02 the worker thread is still inside ShowDialog
+PASS M02 InvokeRequired is true off the UI thread
+PASS M02 ShowDialog returned Cancel to the worker thread: Cancel
+PASS M02 the code after ShowDialog ran on the same worker thread: thread 6 (UI thread is 1)
+PASS M02 the form, built and finished on the worker thread, keeps its state
+INFO M03 case: MessageBox.Show blocks on the UI thread and on a background thread; Esc/close box/Enter follow the WinForms rules
+PASS M03 MessageBox is a dialog form with a Yes and a No button
+INFO M03 snapshot: headless-M03-messagebox.png
+PASS M03 YesNo: the close box is ignored
+PASS M03 YesNo: Escape is ignored
+PASS M03 YesNo: clicking No returns No: No
+PASS M03 MessageBox from a background thread blocks that thread
+PASS M03 Enter takes the first button (Yes); the thread continues where it was: Yes, thread 9 -> 9
+PASS M03 OKCancel: Escape returns Cancel
+PASS M03 OK only: the close box returns OK, as the native message box does: OK
+INFO M04 case: Closing during the nested frame: Close() from another thread, user close with a cancelling FormClosing, DialogResult assignment, Dispose
+PASS M04 Close() from another thread ends ShowDialog with Cancel: Cancel closing:None,closed:None
+PASS M04 a cancelling FormClosing keeps the window open and the loop running
+PASS M04 the second user close ends ShowDialog with Cancel: Cancel, FormClosing called 2 times
+PASS M04 Form.DialogResult = Retry closes the form and ShowDialog returns Retry: Retry
+PASS M04 Dispose() while ShowDialog runs releases the loop (Cancel): Cancel
+PASS M04 the same form can be shown modally again and starts with its old values: peer text 'kept'
+PASS M04 ShowDialog on a form that is already shown throws InvalidOperationException
+INFO M05 case: Nested dialogs: LIFO closing, and closing the lower dialog first
+PASS M05 a dialog opened from the Shown event of another runs on top of it (two nested frames)
+PASS M05 closing B ends only B; A stays open
+PASS M05 A returns Cancel after B: A shown|B returned OK|A returned Cancel
+INFO M05 A2.Close() while B2 is on top: B2 still open afterwards: False; A2 ShowDialog returned already: False; log so far: 
+PASS M05 both ShowDialog calls return and the innermost one returns first: B2 returned Cancel|A2 returned Cancel
+INFO M06 case: Exceptions in handlers during the nested frame go to Application.ThreadException and do not stop the loop
+PASS M06 the exception reached Application.ThreadException: 1 seen
+PASS M06 the dialog is still open and its loop runs
+PASS M06 a later click is still handled; ShowDialog returns OK
+[facade] unhandled exception in a UI event handler: ArgumentException: unhandled in the app
+PASS M06 without a ThreadException handler the facade records the exception and keeps the loop alive
+INFO M07 case: Application.DoEvents pumps the queue inside a UI-thread loop; it is a no-op off the UI thread
+PASS M07 a click posted to the queue was handled inside the DoEvents loop, before the loop ended: clicks=1, handled in loop=True
+PASS M07 DoEvents off the UI thread returns at once
+INFO M08 case: Cross-thread work during a dialog: property writes without Invoke, Invoke, BeginInvoke, Close from the worker (progress dialog pattern)
+PASS M08 200 unsynchronized Text writes from the worker: facade and peer end with the last one: facade 'done', peer 'done'
+PASS M08 Invoke runs the delegate on the UI thread and returns its value to the worker: ran on 1 (UI 1), result 42
+PASS M08 BeginInvoke/EndInvoke run on the UI thread
+PASS M08 Close() from the worker side ends the dialog
+INFO M09 case: Modeless Show returns at once and the form stays alive; closing it disposes it
+PASS M09 a modeless form is registered, visible, and survives GC
+PASS M09 a modeless form is not modal
+PASS M09 a button's DialogResult does not close a modeless form (WinForms only closes modal forms that way)
+PASS M09 Close() raises FormClosed, hides and disposes a modeless form: disposed=True closed events=1
+INFO M10 case: Modality: while a dialog is open the owner window does not take clicks (headless: informational)
+INFO M10 owner window IsEffectivelyEnabled while the dialog is open: True
+MAIN-CLICK 1
+INFO M10 a pointer click on the owner's button during the dialog: handled (the headless platform does not block the owner)
+INFO P01 case: A Python subclass of Control overrides OnPaint and OnResize; its drawing reaches the frame; Invalidate repaints
+PASS P01 the instance is an IronPython new-style subclass of the facade Control: IronPython.NewTypes.System.Windows.Forms.Control_1$1
+PASS P01 OnPaint, overridden in Python, was called by the peer: paints=2
+PASS P01 PaintEventArgs.ClipRectangle is the control's client area: {X=0,Y=0,Width=120,Height=80}
+PASS P01 the pixels drawn by the Python FillRectangle are in the window frame: rgb 220,30,30 at scale 1
+INFO P01 a Python override calling the base method Control.OnPaint(self, e): ok
+PASS P01 Invalidate() repaints: the new colour shows: rgb 30,30,200
+PASS P01 OnResize, overridden in Python, is called when the size changes: resizes=2
+PASS P01 an exception in the Python OnPaint reaches Application.ThreadException and the app keeps rendering: 1 seen: OnPaint failed on purpose
+INFO P02 case: A Paint event handler assigned from Python draws with the stand-in Graphics
+PASS P02 the Paint handler of a plain Control, written in Python, drew a green rectangle: rgb 20,160,40
+INFO P03 case: Python handlers: a MessageBox inside a Click handler inside a modal dialog; a failing handler; ShowDialog from a Python thread
+PASS P03 a Python Click handler opened a MessageBox: two nested frames, the outer ShowDialog is still waiting
+PASS P03 the Python handler continued with the MessageBox result: Tag=Yes
+PASS P03 a Python handler that raises: ThreadException got it, dialog open: 1 seen: ValueErrorException: handler failed on purpose
+PASS P03 the dialog closes through the button written in Python (DialogResult OK)
+PASS P03 a .NET Thread started from Python can show a dialog; it blocks there
+PASS P03 the Python thread got the DialogResult: result=OK
+INFO P04 case: Cost of the Python OnPaint path (information): dispatch into the override, FillRectangle, bitmap round trip
+INFO P04 Python OnPaint (one FillRectangle of the stand-in Graphics) called through the facade: 5 microseconds per call on a reused bitmap; 9 microseconds per call with a new 240x160 bitmap and Graphics each time (what the peer does per frame)
+PASS P04 the cost is far below one 60 Hz frame (16 ms) for a single control: 9 us
+INFO S01 case: Autonumber.py, unmodified: RenumberBooks shows its dialog; values typed in the peers renumber the books (UI thread, worker thread, Cancel, Enter)
+PASS S01 the script loaded: clr.AddReferenceByPartialName('System.Windows.Forms') and ('System.Drawing') resolved
+INFO S01 control tree of the dialog: 
+Form '' {X=0,Y=0,Width=243,Height=154} "Autonumber Wizard"
+  Label '' {X=12,Y=53,Width=88,Height=13} "Begin at Number:"
+  NumericUpDown '' {X=166,Y=51,Width=65,Height=20} ""
+  NumericUpDown '' {X=166,Y=76,Width=65,Height=20} ""
+  CheckBox '' {X=15,Y=79,Width=97,Height=13} "Save total Number:"
+  ComboBox '' {X=13,Y=14,Width=217,Height=21} ""
+  Button '' {X=65,Y=118,Width=80,Height=24} "&OK"
+  Button '' {X=151,Y=118,Width=80,Height=24} "&Cancel"
+PASS S01 the dialog is the script's: title, client size, button set, AcceptButton/CancelButton: Autonumber Wizard {Width=243, Height=154}
+PASS S01 the script's defaults are in the controls (Begin 7, End 9, series, 2 combo items): start=7 end=9
+PASS S01 ComicRack.Theme.ApplyTheme(form) was called through the stub (ProductVersion >= '0.9.182')
+INFO S01 snapshot: headless-S01-autonumber.png
+PASS S01 OK renumbered the alternate numbers 10, 11, 12 and the total 12 (decimal assigned to int properties by IronPython): 10/12/7,11/12/8,12/12/9
+PASS S01 Escape (CancelButton) leaves the books unchanged: 1,1
+PASS S01 the script runs on a worker thread and is blocked in ShowDialog
+PASS S01 Enter (AcceptButton) accepted; the script continued on its own thread and numbered 100, 101, 102: 100,101,102
+INFO S01 script output: (none)
+INFO S02 case: Sample.py, unmodified: the MessageBox hooks, the Control subclass UIControl hosted as an info panel, ShowInfo
+PASS S02 the script loaded: three import lines, class UIControl(Control) at the top level
+PASS S02 BookHasBeenOpened shows 'opened Batman #12' in a MessageBox and blocks the hook thread: opened Batman #12
+PASS S02 ConfigureBookHasBeenOpened: MessageBox on the UI thread closed with Enter
+PASS S02 the shutdown box has the caption 'Shutdown Script' and Yes/No: Shutdown Script
+PASS S02 ShowShutdownMessage returns False for No and True for Yes (the comparison with DialogResult.Yes works in Python)
+PASS S02 the ComicInfoUI hook returned the Python Control subclass: IronPython.NewTypes.System.Windows.Forms.Control_1$1
+PASS S02 ShowInfo(books) filled the ListBox child (facade and peer), Dock=Fill gave it the panel's size: facade 3, peer 3, list {Width=320, Height=200}, panel {Width=320, Height=200}
+PASS S02 print output of the script arrives: Calling...3 | Adding Panel #1 | Adding Panel #2 | Adding Panel #3 | 
+INFO S02 snapshot: headless-S02-info-panel.png
+PASS no dialog is left open at the end
+RESULT no failures, 78 checks passed

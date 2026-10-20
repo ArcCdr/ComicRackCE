@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Spike S6 (P4.2): an Avalonia app that runs the Script UI modal-loop cases against a small System.Windows.Forms facade,
+       headless and in a real window, and runs the bundled Autonumber.py and Sample.py unmodified. Not part of ComicRack.Mac.slnx. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>S6-modal</AssemblyName>
+    <RootNamespace>S6</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <AvaloniaVersion>12.1.4</AvaloniaVersion>
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <NoWarn>$(NoWarn);CA1416;NU1510;NU1904;CS0618</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Native" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.HarfBuzz" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Headless" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="$(SkiaSharpVersion)" />
+    <!-- Same engine as the Core uses (ComicRack.Plugins.Core); the output is patched by run.sh like the S4 spike. -->
+    <PackageReference Include="IronPython" Version="2.7.12" />
+    <PackageReference Include="IronPython.StdLib" Version="2.7.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Forms\S6-forms.csproj" />
+    <ProjectReference Include="..\..\..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\scripts\*.py" Link="scripts\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

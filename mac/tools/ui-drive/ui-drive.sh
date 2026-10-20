@@ -38,6 +38,7 @@ usage: ui-drive.sh <command> [args]
   check                                                  exit 0 if the GUI session is usable, 4 if locked or no GUI
   quit                                                   Cmd+Q, wait for the exit, print the exit code
   kill                                                   terminate the launched app
+UI_DRIVE_EXE=<path> makes 'launch' start that executable instead of the app (spikes; no build, same guards).
 Input commands (menu, key, keycode, type, click, choose-path) refuse with exit 5 unless the launched app is frontmost;
 add --reactivate (or UI_DRIVE_REACTIVATE=1) to let them activate it once first.
 EOF
@@ -257,7 +258,12 @@ cmd_launch() {
 		esac
 		shift
 	done
-	if [ "$mode" = bundle ]; then
+	if [ -n "${UI_DRIVE_EXE:-}" ]; then
+		# Another Avalonia app of this repository (a spike): same guards, no build.
+		mode=custom
+		exe=$UI_DRIVE_EXE
+		[ -x "$exe" ] || die 1 "UI_DRIVE_EXE is not an executable file: $exe"
+	elif [ "$mode" = bundle ]; then
 		exe="$ROOT/mac/artifacts/ComicRack CE (MVP).app/Contents/MacOS/ComicRack.Mac"
 		[ -x "$exe" ] || die 1 "no bundle at $exe (run mac/tools/make-app.sh)"
 	else
