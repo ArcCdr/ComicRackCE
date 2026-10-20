@@ -47,6 +47,9 @@ namespace ComicRack.Mac.Themes
 
 		/// <summary>Popup menus and context menus.</summary>
 		Menus,
+
+		/// <summary>The browser's item views (thumbnails now; tiles and details later): <c>CrThumbnailItem</c>, <c>CoverView</c>.</summary>
+		ItemView,
 	}
 
 	/// <summary>The look of one <see cref="ChromeElement"/>.</summary>
@@ -100,6 +103,7 @@ namespace ComicRack.Mac.Themes
 			[ChromeElement.Buttons] = ChromeVariant.Original,
 			[ChromeElement.ComboBox] = ChromeVariant.Original,
 			[ChromeElement.Menus] = ChromeVariant.Original,
+			[ChromeElement.ItemView] = ChromeVariant.Original,
 		};
 
 		/// <summary>

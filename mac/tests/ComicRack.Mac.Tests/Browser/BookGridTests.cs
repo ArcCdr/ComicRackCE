@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Thumbnails;
 using ComicRack.Mac.Tests.Thumbnails;
 using ComicRack.Mac.ViewModels;

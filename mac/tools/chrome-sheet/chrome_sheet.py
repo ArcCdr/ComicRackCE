@@ -23,7 +23,7 @@ import datetime
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 
 # View names that stand for original forms whose spec files carry the original type name (P5.R1 writes MainForm.md and friends).
-SPEC_ALIASES = {"MainWindow": ["MainWindow", "MainForm"]}
+SPEC_ALIASES = {"MainWindow": ["MainWindow", "MainForm"], "BookGrid": ["BookGrid", "CoverViewItem"]}
 DESIGNERS = {"MainWindow": "ComicRack/MainForm.Designer.cs"}
 DEFAULT_TOKENS = ["Window", "Control", "ControlText", "Highlight", "ControlDark", "SelectionFocused", "SelectionUnfocused"]
 DEFAULT_DECISIONS = ["C-APP-1", "C-FONT-1", "C-ICON-1"]

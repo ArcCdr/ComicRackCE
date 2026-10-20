@@ -188,14 +188,14 @@
 | BT.10 | Toolbar: List Layouts (Edit, Save, Reset List Background, Edit Layouts, saved layouts) | `tsListLayouts`, `tsEditListLayout`, `tsSaveListLayout`, `tsEditLayouts` | Ctrl+L, Ctrl+Alt+L as MB rows | P5.11b | todo | |
 | BT.11 | Toolbar: Duplicate list (into a new list or smart list) | `tbbDuplicateList`, `dummyEntryToolStripMenuItem2` | — | P5.16a | todo | |
 | BT.12 | Toolbar: Undo / Redo | `tbUndo`, `tbRedo` | as ME.02/03 | P5.7a | todo | |
-| BV.01 | Thumbnails view (cover, title lines, rating, badges) | `ItemView` + `ComicBookViewItem` | — | P5.R2 | todo | |
+| BV.01 | Thumbnails view (cover, title lines, rating, badges) | `ItemView` + `ComicBookViewItem` | — | P5.R2 | done 2026-10-20 | thumbnail items drawn as `ThumbRenderer` and `ThumbIconRenderer` draw them (`CrThumbnailItem`, spec `CoverViewItem`): shadow, frame, empty tile, caption of three lines with the selection style, dog-ear, ribbons, state icons, ratings. Uniform item width (the grid is the MVP's `UniformGridLayout`): a variable width per cover is a section 9 item; the open and last markers are drawn but filled by P5.2; clicking the stars to rate is P5.5 |
 | BV.02 | Tiles view | `ItemView` tiles | — | P5.12 | todo | |
 | BV.03 | Details view (columns, sort by header, column chooser) | `ItemView` details | — | P5.11a | todo | |
-| BV.04 | Item size by Ctrl+mouse wheel and by the status-bar slider | `ComicBrowserControl.cs:1255` | Ctrl+wheel → Cmd+wheel, also pinch | P5.R2 | todo | |
+| BV.04 | Item size by Ctrl+mouse wheel and by the status-bar slider | `ComicBrowserControl.cs:1255` | Ctrl+wheel → Cmd+wheel, also pinch | P5.R2 | done 2026-10-20 | Cmd+wheel (16 per notch, 80 to 360), a trackpad pinch, and the status-bar slider all set the same item size; the caption font and the cell follow it |
 | BV.05 | Open stack panel (Close Stack, Previous, Next, stack caption) | `openStackPanel` | — | P5.13b | todo | |
 | BV.06 | "Not all Books are displayed" bar with Display All | `displayOptionPanel` | — | P5.15a | todo | |
 | BV.07 | List background image | `miSetListBackground`, `miResetListBackground` | — | P5.20 | todo | |
-| BV.08 | Book tooltips (`ShowToolTips`), fade-in, dog-ear, numeric ratings, same-size covers | Settings (PB rows) | — | P5.R2 | todo | |
+| BV.08 | Book tooltips (`ShowToolTips`), fade-in, dog-ear, numeric ratings, same-size covers | Settings (PB rows) | — | P5.R2 | done 2026-10-20 | tool tip card (`CrBookToolTip`, 360 x 120), fade-in of new covers, dog-ear, numeric rating tags, same size covers; the options are `ThumbnailOptions` with the defaults of `Settings.cs` |
 | BV.09 | Multi-selection, Select All, Invert Selection | `miSelectAll`, `miInvertSelection` | Ctrl+A → Cmd+A | P5.3 | todo | |
 | BV.10 | Keyboard in the browser: arrows, Return opens, Delete removes | `ItemView` | Delete, alias Cmd+Backspace | P5.3 | todo | |
 | BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | todo | |
@@ -399,13 +399,13 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.18 | Reading | Show Quick Review Dialog after finishing Book (`AutoShowQuickReview`) | false | P5.5 | todo | |
 | PB.19 | Right to Left | True right to left reading (`TrueRightToLeftReading`) | false | P5.23e | todo | |
 | PB.20 | Right to Left | Left/right movement is also reversed (`LeftRightMovementReversed`) | false | P5.23e | todo | |
-| PB.21 | Browser | Show Tooltips for Books (`ShowToolTips`) | false | P5.R2 | todo | |
+| PB.21 | Browser | Show Tooltips for Books (`ShowToolTips`) | false | P5.R2 | done 2026-10-20 | the option works (`ThumbnailOptions.ShowToolTips`); the check box is P5.22a, saving it P5.1 |
 | PB.22 | Browser | Show Search Links (`ShowSearchLinks`) | true | P5.6 | todo | |
-| PB.23 | Browser | New loaded Thumbnails fade in (`FadeInThumbnails`) | true | P5.R2 | todo | |
-| PB.24 | Browser | Selected Thumbnails have a dog-ear (`DogEarThumbnails`) | true | P5.R2 | todo | |
-| PB.25 | Browser | Thumbnails display numeric ratings (`NumericRatingThumbnails`) | true | P5.R2 | todo | |
+| PB.23 | Browser | New loaded Thumbnails fade in (`FadeInThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (`CoverView` fade, 300 ms); the check box is P5.22a, saving it P5.1 |
+| PB.24 | Browser | Selected Thumbnails have a dog-ear (`DogEarThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (dog-ear on the selected and the hot cover); the check box is P5.22a, saving it P5.1 |
+| PB.25 | Browser | Thumbnails display numeric ratings (`NumericRatingThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (tags, else stars below or over the cover); the check box is P5.22a, saving it P5.1 |
 | PB.26 | Browser | Each List has own Quick Search settings (`LocalQuickSearch`) | true | P5.15a | todo | |
-| PB.27 | Browser | All Cover Thumbnails have the same Size (`CoverThumbnailsSameSize`) | false | P5.R2 | todo | |
+| PB.27 | Browser | All Cover Thumbnails have the same Size (`CoverThumbnailsSameSize`) | false | P5.R2 | done 2026-10-20 | the option works (every cover fills the 2:3 box, a landscape one shows its right part); the check box is P5.22a, saving it P5.1 |
 | PB.28 | Browser | All Stacks in a List have the same Layout (`CommonListStackLayout`) | false | P5.13b | todo | |
 | PB.29 | Browser | Always display Browser Docking Grip (`AlwaysDisplayBrowserDockingGrip`) | false | P5.32b | todo | |
 | PB.30 | Browser | Disable opening files via drag-and-drop (`DisableDragDrop`) | false | P5.18 | todo | |

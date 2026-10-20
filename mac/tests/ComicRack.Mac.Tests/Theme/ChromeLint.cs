@@ -28,7 +28,7 @@ namespace ComicRack.Mac.Tests.Theme
 		/// </summary>
 		public static readonly IReadOnlyDictionary<string, (string Finding, string Reason)> Allowed = new Dictionary<string, (string, string)>(StringComparer.Ordinal)
 		{
-			["Views/BookGridView.cs"] = ("new FuncDataTemplate", "the ItemsRepeater needs an element factory for its virtualization; it only creates a BookCell, which takes its look from the cr-book-* classes"),
+			["Views/BookGridView.cs"] = ("new FuncDataTemplate", "the ItemsRepeater needs an element factory for its virtualization; it only creates a BookCell (a CrThumbnailItem), which takes its look from the chrome layer"),
 		};
 
 		private static readonly string[] ChromeFolders = { "Themes/", "Controls/", "Platform/", "Assets/", "bin/", "obj/" };

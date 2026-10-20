@@ -1,0 +1,32 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- The colours that ComicRack's thumbnail renderers write as literals (ThumbRenderer, RatingRenderer, ThumbIconRenderer in ComicRack.Engine/Drawing),
+       read by CrThumbnailItem through ChromePaint.ResourceBrush. They do not change with the appearance in the original either: the shadow, the frame
+       and the ribbon outlines are black, an unloaded cover is white, the badge is black with alpha 192. The colour of the caption and of the selection
+       comes from the Cr tokens, not from here. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <!-- ThumbRenderer.DrawShadow: Color.Black at opacity 0.33 (255 * 0.33 = 84) -->
+      <SolidColorBrush x:Key="Cr.Thumb.ShadowBrush" Color="#54000000" />
+      <!-- ThumbRenderer.DrawThumbnail: graphics.DrawRectangle(Pens.Black, ...) -->
+      <SolidColorBrush x:Key="Cr.Thumb.BorderBrush" Color="#FF000000" />
+      <!-- ThumbRenderer.MissingBackColor = Color.White; DrawMissingThumbnail text Brushes.LightGray -->
+      <SolidColorBrush x:Key="Cr.Thumb.MissingBackBrush" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="Cr.Thumb.MissingTextBrush" Color="#FFD3D3D3" />
+      <!-- ThumbRenderer.DrawPageNumber: fill Color.FromArgb(192, Black), text White, frame Pens.Black -->
+      <SolidColorBrush x:Key="Cr.Thumb.BadgeBackBrush" Color="#C0000000" />
+      <SolidColorBrush x:Key="Cr.Thumb.BadgeTextBrush" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="Cr.Thumb.BadgeFrameBrush" Color="#FF000000" />
+      <!-- ThumbRenderer.DefaultBookmarkColors: Orange, Green, Red, Blue; the ribbon fades to half of each channel; shadow and outline are black -->
+      <SolidColorBrush x:Key="Cr.Thumb.Bookmark0Brush" Color="#FFFFA500" />
+      <SolidColorBrush x:Key="Cr.Thumb.Bookmark1Brush" Color="#FF008000" />
+      <SolidColorBrush x:Key="Cr.Thumb.Bookmark2Brush" Color="#FFFF0000" />
+      <SolidColorBrush x:Key="Cr.Thumb.Bookmark3Brush" Color="#FF0000FF" />
+      <SolidColorBrush x:Key="Cr.Thumb.BookmarkShadowBrush" Color="#FF000000" />
+      <SolidColorBrush x:Key="Cr.Thumb.BookmarkFrameBrush" Color="#FF000000" />
+      <!-- RatingRenderer.RatingTextColor = Color.DimGray (the number on the rating tags) -->
+      <SolidColorBrush x:Key="Cr.Thumb.RatingTextBrush" Color="#FF696969" />
+      <!-- The paper of the grid behind the cells: ThemeColors.ItemView.MainBack (itemView.BackColor in ComicBrowserControl.Designer.cs) -->
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

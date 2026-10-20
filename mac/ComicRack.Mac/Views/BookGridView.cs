@@ -4,7 +4,9 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using ComicRack.Mac.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.VisualTree;
 using ComicRack.Mac.Browser;
@@ -22,12 +24,13 @@ namespace ComicRack.Mac.Views
 	/// </summary>
 	public sealed class BookGridView : UserControl
 	{
-		/// <summary>Space around the grid, and between the cells.</summary>
-		public const double GridMargin = 12, Spacing = 10;
+		/// <summary>Space around the grid and between the cells: <c>ItemView.ItemPadding</c> (1, 1) on each side of an item, so 1 and 2 (the cell's own border is 4).</summary>
+		public const double GridMargin = 1, Spacing = 2;
 
 		private readonly ScrollViewer scroll;
 		private readonly ItemsRepeater repeater;
 		private readonly UniformGridLayout layout;
+		private readonly ThumbnailOptions fallbackOptions = new ThumbnailOptions();
 		private BrowserViewModel model;
 		private BookItem[] items = Array.Empty<BookItem>();
 		private int realized;
@@ -51,12 +54,15 @@ namespace ComicRack.Mac.Views
 				VerticalCacheLength = 1,
 				HorizontalCacheLength = 0,
 				Margin = new Thickness(GridMargin),
-				HorizontalAlignment = HorizontalAlignment.Center, // the leftover width is shared by both sides
+				HorizontalAlignment = HorizontalAlignment.Left, // the leftover width is shared by both sides: see CenterCells
 			};
+			PointerTouchPadGestureMagnify += OnMagnify;
+			AddHandler(PointerWheelChangedEvent, OnPreviewWheel, RoutingStrategies.Tunnel);
 			repeater.ElementPrepared += OnElementPrepared;
 			repeater.ElementClearing += OnElementClearing;
 			scroll = new ScrollViewer
 			{
+				Classes = { "cr-item-view" },
 				HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
 				VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
 				Content = repeater,
@@ -81,6 +87,12 @@ namespace ComicRack.Mac.Views
 		public double CellHeight => cellHeight;
 
 		public ThumbnailService Thumbnails => model?.Thumbnails;
+
+		/// <summary>The settings that change how thumbnails look and behave (dog-ear, fade-in, numeric ratings, same size covers).</summary>
+		public ThumbnailOptions Options => model?.ThumbnailOptions ?? fallbackOptions;
+
+		/// <summary>The item size of the browser: the cover height the cells are drawn for.</summary>
+		public double CoverHeight => model?.ThumbnailSize ?? BrowserViewModel.DefaultThumbnailSize;
 
 		/// <summary>The height to request thumbnails at: the cover height in device pixels.</summary>
 		public int RequestPixels
@@ -156,14 +168,67 @@ namespace ComicRack.Mac.Views
 			if (model != null)
 			{
 				model.PropertyChanged -= OnModelChanged;
+				model.ThumbnailOptions.Changed -= OnOptionsChanged;
 			}
 			model = DataContext as BrowserViewModel;
 			if (model != null)
 			{
 				model.PropertyChanged += OnModelChanged;
+				model.ThumbnailOptions.Changed += OnOptionsChanged;
 				ApplyMetrics(model.ThumbnailSize);
 			}
 			ApplyItems();
+		}
+
+		// A thumbnail setting changed: the cells are drawn again; same size covers change the cell's content, not its size.
+		private void OnOptionsChanged(object sender, EventArgs e)
+		{
+			foreach (BookCell cell in BoundCells())
+			{
+				cell.RefreshLook();
+			}
+		}
+
+		protected override void OnGotFocus(FocusChangedEventArgs e)
+		{
+			base.OnGotFocus(e);
+			SetViewFocused(true);
+		}
+
+		protected override void OnLostFocus(FocusChangedEventArgs e)
+		{
+			base.OnLostFocus(e);
+			SetViewFocused(IsKeyboardFocusWithin);
+		}
+
+		// The selection is drawn in the focused colour while the grid has the keyboard focus (StyledRenderer.GetSelectionColor(controlFocused)).
+		private void SetViewFocused(bool focused)
+		{
+			foreach (BookCell cell in BoundCells())
+			{
+				cell.ViewFocused = focused;
+			}
+		}
+
+		// BV.04: Cmd+wheel (the original's Ctrl+wheel) changes the item size by 16 per notch. It is taken in the tunnel phase: the scroll viewer
+		// below would scroll with the wheel before the event reached this view.
+		private void OnPreviewWheel(object sender, PointerWheelEventArgs e)
+		{
+			if (model != null && e.KeyModifiers.HasFlag(KeyModifiers.Meta))
+			{
+				model.ThumbnailSize = Math.Clamp(model.ThumbnailSize + e.Delta.Y * 16, BrowserViewModel.MinThumbnailSize, BrowserViewModel.MaxThumbnailSize);
+				e.Handled = true;
+			}
+		}
+
+		// BV.04: a pinch on the trackpad scales the item size.
+		private void OnMagnify(object sender, PointerDeltaEventArgs e)
+		{
+			if (model != null)
+			{
+				model.ThumbnailSize = Math.Clamp(model.ThumbnailSize * (1 + e.Delta.X), BrowserViewModel.MinThumbnailSize, BrowserViewModel.MaxThumbnailSize);
+				e.Handled = true;
+			}
 		}
 
 		private void OnModelChanged(object sender, PropertyChangedEventArgs e)
@@ -177,6 +242,7 @@ namespace ComicRack.Mac.Views
 					ApplyMetrics(model.ThumbnailSize);
 					foreach (BookCell cell in BoundCells())
 					{
+						cell.RefreshLook();
 						cell.RefreshThumbnail(force: false);
 					}
 					break;
@@ -206,16 +272,38 @@ namespace ComicRack.Mac.Views
 
 		private void ApplyMetrics(double coverHeight)
 		{
-			// A cover cell is a box of cover proportions (about 2:3 to 3:4) with two lines of text under it.
-			cellWidth = Math.Round(coverHeight * 0.74) + 28;
-			cellHeight = Math.Round(coverHeight) + 28 + 38;
+			// An item is the cover (2:3) with its border and the caption under it (ThumbnailMetrics, from CoverViewItem.MeasureItem).
+			cellWidth = ThumbnailMetrics.CellWidth(coverHeight);
+			cellHeight = ThumbnailMetrics.CellHeight(coverHeight);
 			layout.MinItemWidth = cellWidth;
 			layout.MinItemHeight = cellHeight;
+			CenterCells();
 		}
 
 		private void OnViewportChanged()
 		{
-			// Only the number of columns changes with the width; the repeater lays out again by itself.
+			// The number of columns changes with the width; the repeater lays out again by itself.
+			CenterCells();
+		}
+
+		// The cells are centred in the viewport on a whole unit, so that their frames and shadows stay sharp (a half unit of leftover would put
+		// every edge between two pixels at 1x).
+		private void CenterCells()
+		{
+			double viewport = scroll.Viewport.Width > 0 ? scroll.Viewport.Width : scroll.Bounds.Width;
+			if (viewport <= 0)
+			{
+				return;
+			}
+			int columns = Columns;
+			double content = columns * cellWidth + (columns - 1) * Spacing;
+			double left = GridMargin + Math.Max(0, Math.Floor((viewport - 2 * GridMargin - content) / 2));
+			double width = content + Spacing + 1; // the layout divides by (cell + spacing): 6.9999 columns would be 6
+			if (repeater.Margin.Left != left || repeater.Width != width)
+			{
+				repeater.Width = width; // the layout then fills exactly this many columns, whatever margin is left of them
+				repeater.Margin = new Thickness(left, GridMargin, GridMargin, GridMargin);
+			}
 		}
 
 		private void OnElementPrepared(object sender, ItemsRepeaterElementPreparedEventArgs e)

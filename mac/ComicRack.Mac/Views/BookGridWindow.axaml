@@ -1,0 +1,10 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:ComicRack.Mac.Views"
+        x:Class="ComicRack.Mac.Views.BookGridWindow"
+        Classes="cr-window"
+        Title="ComicRack Book Grid"
+        Width="900" Height="720"
+        WindowStartupLocation="CenterOwner">
+  <v:BookGridView x:Name="Grid" />
+</Window>

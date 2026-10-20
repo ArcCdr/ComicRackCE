@@ -134,7 +134,7 @@ if (thumbnails.TryGetCached(book, 300, out ThumbnailResult hit)) { ... }     // 
 
 ### Browser grid (M2.2b)
 
-The main window shows the library as a grid of covers (`Views/BookGridView`, `Views/BookCell`, `Browser/*`, `ViewModels/BrowserViewModel`): a toolbar with a search box (title and series), a sort box (Series, Title, Date added) and a thumbnail size slider; Enter or a double click on a book opens the reader (M2.3a).
+The main window shows the library as a grid of covers (`Views/BookGridView`, `Views/BookCell` on `Controls/CrThumbnailItem`, `Browser/*`, `ViewModels/BrowserViewModel`; thumbnails are drawn as the original's `ThumbRenderer` does, spec `specs/views/CoverViewItem.md`): a toolbar with a search box (title and series), a sort box (Series, Title, Date added) and a thumbnail size slider; Enter or a double click on a book opens the reader (M2.3a).
 
 - **Virtualized:** an `ItemsRepeater` with a `UniformGridLayout` (package `Avalonia.Controls.ItemsRepeater` 12.0.0; the Avalonia 12 core assemblies do not contain it) realizes only the cells around the viewport and recycles them, so 14,706 and 100,000 books create the same few dozen cells.
 - **Covers:** a cell asks `ThumbnailService.TryGetCached` when it is realized, otherwise `RequestResult` with a token that it cancels when it is recycled. The picture is drawn by `CoverDrawOperation` (an `ICustomDrawOperation` that draws the `SKImage` on the render thread's canvas with one call; no bitmap copy). `CoverImage` reference-counts the image, because a queued frame may still draw it after its cell was recycled.

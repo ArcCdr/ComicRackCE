@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Styling;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.Tests.Diagnostics;
 using ComicRack.Mac.Services;
@@ -135,25 +136,18 @@ namespace ComicRack.Mac.Tests.Theme
 				Assert.StartsWith("Menlo", text.FontFamily.Name);
 				Assert.Equal(Avalonia.Media.Color.FromRgb(0xE8, 0xF4, 0xE8), Of(text.Foreground));
 
-				// book cell: 6 padding, 2 frame, radius 8, transparent; selected = light blue fill and a blue frame
-				Assert.Equal(new Thickness(6), cell.Padding);
-				Assert.Equal(new Thickness(2), cell.BorderThickness);
-				Assert.Equal(new CornerRadius(8), cell.CornerRadius);
-				Assert.Equal(Avalonia.Media.Colors.Transparent, Of(cell.Background));
-				Assert.Equal(Avalonia.Media.Colors.Transparent, Of(cell.BorderBrush));
+				// thumbnail item: the colours of the original's renderers come from CrThumbnailLook.axaml, the caption and the selection from the tokens
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0x54, 0, 0, 0), Of(Controls.ChromePaint.ResourceBrush(cell, "Cr.Thumb.ShadowBrush")));
+				Assert.Equal(Avalonia.Media.Colors.White, Of(Controls.ChromePaint.ResourceBrush(cell, "Cr.Thumb.MissingBackBrush")));
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0xC0, 0, 0, 0), Of(Controls.ChromePaint.ResourceBrush(cell, "Cr.Thumb.BadgeBackBrush")));
 				Assert.False(cell.IsSelectedForTest);
 				cell.SetSelected(true);
 				Settle(window);
 				Assert.True(cell.IsSelectedForTest);
-				Assert.Equal(Avalonia.Media.Color.FromArgb(0x38, 0x0A, 0x84, 0xFF), Of(cell.Background));
-				Assert.Equal(Avalonia.Media.Color.FromArgb(0xFF, 0x0A, 0x84, 0xFF), Of(cell.BorderBrush));
 				cell.SetSelected(false);
 				Settle(window);
-				Assert.Equal(Avalonia.Media.Colors.Transparent, Of(cell.Background));
 
-				// cover tile and reader paper come from the same file, by key
-				Assert.Equal(Avalonia.Media.Color.FromArgb(0x26, 0x80, 0x80, 0x80), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.CoverPlaceholderFillBrush")));
-				Assert.Equal(Avalonia.Media.Color.FromArgb(0x40, 0x80, 0x80, 0x80), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.CoverPlaceholderLineBrush")));
+				// the reader paper comes from the MVP look file, by key
 				Assert.Equal(Avalonia.Media.Color.FromRgb(0x1E, 0x1E, 0x1E), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.ReaderPaperBrush")));
 				Assert.Null(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.NoSuchBrush"));
 				window.Close();

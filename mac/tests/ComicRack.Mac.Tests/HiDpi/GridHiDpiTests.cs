@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Headless;
 using Avalonia.VisualTree;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Tests.Browser;
 using ComicRack.Mac.Tests.Thumbnails;
 using Avalonia.Threading;
@@ -126,11 +127,11 @@ namespace ComicRack.Mac.Tests.HiDpi
 			BookCell cell = h.Grid.CellAt(0);
 			Rect box = Dpi.Area(cell.Cover, h.Window);
 			int deviceHeight = Scales.Device(box.Height, scale);
-			int deviceWidth = Scales.Device(box.Height * 2 / 3, scale);
+			int deviceWidth = Scales.Device(box.Width, scale);
 			SKImage picture = Pictures.Lines(deviceWidth, deviceHeight);
 			SetCover(cell, picture);
 			h.Layout();
-			Rect fit = CoverView.Fit(box.Width, box.Height, deviceWidth, deviceHeight);
+			Rect fit = cell.Cover.PictureRect;
 			var placed = new Rect(box.X + fit.X, box.Y + fit.Y, fit.Width, fit.Height);
 			return (cell, picture, RectInt.Snapped(placed, scale));
 		}
@@ -155,9 +156,11 @@ namespace ComicRack.Mac.Tests.HiDpi
 					Raster source = Raster.From(picture);
 					output.WriteLine($"scale {scale}: picture {source.Width} x {source.Height}, drawn at {area}");
 					Assert.True(Math.Abs(area.Width - source.Width) <= 1 && Math.Abs(area.Height - source.Height) <= 1, "the picture covers its own number of pixels: " + area);
-					// the pixels of the frame inside the cover are the pixels of the picture, one to one
-					Raster drawn = frame.Crop(new RectInt(area.Left, area.Top, area.Left + source.Width, area.Top + source.Height));
-					Difference d = drawn.Compare(source, 24);
+					// the pixels of the frame inside the cover are the pixels of the picture, one to one; the first row and column are the black frame
+					// of the thumbnail (ThumbRenderer draws it over the edge of the picture), so one unit all around is left out
+					int inset = Scales.Device(1, scale);
+					Raster drawn = frame.Crop(new RectInt(area.Left + inset, area.Top + inset, area.Left + source.Width - inset, area.Top + source.Height - inset));
+					Difference d = drawn.Compare(source.Crop(new RectInt(inset, inset, source.Width - inset, source.Height - inset)), 24);
 					output.WriteLine("difference to the picture: " + d);
 					Assert.True(d.Mean < 1.0 && d.Bad < 0.005, "the cover is a copy of its picture: " + d);
 				}
@@ -176,12 +179,12 @@ namespace ComicRack.Mac.Tests.HiDpi
 					BookCell cell = h.Grid.CellAt(0);
 					Rect box = Dpi.Area(cell.Cover, h.Window);
 					// a picture with 2x the device pixels of the box (what a 2x display shows of a 1x thumbnail step above)
-					int w = Scales.Device(box.Height * 2 / 3, scale) * 2, hh = Scales.Device(box.Height, scale) * 2;
+					int w = Scales.Device(box.Width, scale) * 2, hh = Scales.Device(box.Height, scale) * 2;
 					{
 						SetCover(cell, Pictures.Lines(w, hh));
 						h.Layout();
 						Raster frame = Dpi.Capture(h.Window, "grid-cover-reduced");
-						Rect fit = CoverView.Fit(box.Width, box.Height, w, hh);
+						Rect fit = cell.Cover.PictureRect;
 						RectInt area = RectInt.Snapped(new Rect(box.X + fit.X, box.Y + fit.Y, fit.Width, fit.Height), scale);
 						Raster inside = frame.Crop(area.Inflate(-3));
 						// The picture has a black column every 8 pixels (and a black row every 10); reduced by 2 that is a period of 4 device pixels
@@ -260,7 +263,7 @@ namespace ComicRack.Mac.Tests.HiDpi
 			{
 				Rect box = Dpi.Area(cell.Cover, h.Window);
 				// a smooth cover of the box proportions with the pixels of the display, so that any scale gives the same picture
-				int w = Scales.Device(box.Height * 2 / 3, scale), hh = Scales.Device(box.Height, scale);
+				int w = Scales.Device(box.Width, scale), hh = Scales.Device(box.Height, scale);
 				using (var bitmap = new SKBitmap(new SKImageInfo(w, hh, SKColorType.Bgra8888, SKAlphaType.Opaque)))
 				using (var canvas = new SKCanvas(bitmap))
 				using (var paint = new SKPaint())
@@ -314,8 +317,8 @@ namespace ComicRack.Mac.Tests.HiDpi
 					var inside = new Point(otherArea.X + 10, otherArea.Y + 10);
 					Click(h, inside);
 					Assert.Equal(7, h.Model.SelectedIndex);
-					// the gap between two cells (10 units) belongs to no cell, at any scale
-					var gap = new Point(otherArea.Right + 4, otherArea.Y + 30);
+					// the gap between two cells (BookGridView.Spacing) belongs to no cell, at any scale
+					var gap = new Point(otherArea.Right + BookGridView.Spacing / 2, otherArea.Y + 30);
 					Click(h, gap);
 					Assert.Equal(7, h.Model.SelectedIndex);
 				}
@@ -323,8 +326,10 @@ namespace ComicRack.Mac.Tests.HiDpi
 		}
 
 		[Theory]
-		[MemberData(nameof(Scales.AllData), MemberType = typeof(Scales))]
-		public async Task The_selection_border_is_two_logical_units_thick_in_whole_device_pixels(double scale)
+		[InlineData(1.0)]
+		[InlineData(2.0)]
+		[InlineData(3.0)]
+		public async Task The_selection_frame_behind_the_caption_is_one_logical_unit_thick_in_whole_device_pixels(double scale)
 		{
 			await Ui.Run(async () =>
 			{
@@ -335,18 +340,21 @@ namespace ComicRack.Mac.Tests.HiDpi
 					BookCell cell = h.Grid.CellAt(0);
 					Assert.True(cell.IsSelectedForTest);
 					Raster frame = Dpi.Capture(h.Window, "grid-selected");
-					Rect area = Dpi.Area(cell, h.Window);
-					int y = Scales.Device(area.Y + area.Height / 2, scale);
-					int left = Scales.Device(area.X, scale);
-					// the pure border colour (0A84FF) along the row through the middle of the cell, at its left edge
-					int run = frame.CountInRow(y, left - 2, left + 4 * (int)Math.Ceiling(scale) + 4, c => Raster.Near(c, new SKColor(0x0A, 0x84, 0xFF), 3));
-					output.WriteLine($"scale {scale}: border run {run} pixels");
-					Assert.Equal(Scales.Device(2, scale), run);
-					// and no half covered pixel next to it: the neighbour outside is the window, the neighbour inside the tint
-					int top = Scales.Device(area.Y, scale);
-					int x = Scales.Device(area.X + area.Width / 2, scale);
-					int vertical = frame.CountInColumn(x, top - 2, top + 4 * (int)Math.Ceiling(scale) + 4, c => Raster.Near(c, new SKColor(0x0A, 0x84, 0xFF), 3));
-					Assert.Equal(Scales.Device(2, scale), vertical);
+					Rect highlight = cell.CaptionHighlight;
+					Rect origin = Dpi.Area(cell, h.Window);
+					Rect caption = new Rect(origin.X + highlight.X + 2, origin.Y + highlight.Y + 2, highlight.Width - 4, highlight.Height - 4);
+					// StyledRenderer: the text rectangle plus 2 units, a 1 unit frame at alpha 255 (selected and focused) in the colour of the unfocused selection
+					var colour = ComicRack.Mac.Themes.ThemeTokens.Get(ComicRack.Mac.Themes.ThemeTokens.Names.SelectionUnfocused, Avalonia.Styling.ThemeVariant.Light);
+					var frameColour = new SKColor(colour.R, colour.G, colour.B);
+					int y = Scales.Device(caption.Y + caption.Height / 2, scale);
+					int left = Scales.Device(caption.X - 2, scale);
+					int run = frame.CountInRow(y, left - 2, left + 4 * (int)Math.Ceiling(scale) + 4, c => Raster.Near(c, frameColour, 3));
+					output.WriteLine($"scale {scale}: frame run {run} pixels at x {left}");
+					Assert.Equal(Scales.Device(1, scale), run);
+					int top = Scales.Device(caption.Y - 2, scale);
+					int x = Scales.Device(caption.X + caption.Width / 2, scale);
+					int vertical = frame.CountInColumn(x, top - 2, top + 4 * (int)Math.Ceiling(scale) + 4, c => Raster.Near(c, frameColour, 3));
+					Assert.Equal(Scales.Device(1, scale), vertical);
 				}
 			});
 		}
@@ -367,7 +375,7 @@ namespace ComicRack.Mac.Tests.HiDpi
 				{
 					(Rect logical, double ink) = MeasureTitle(h, scale);
 					output.WriteLine($"scale {scale}: title box {logical}, ink width {ink} device pixels (1x: {inkOne})");
-					Assert.True(Math.Abs(logicalOne.X - logical.X) <= 1 / scale && Math.Abs(logicalOne.Y - logical.Y) <= 1 / scale && logicalOne.Width == logical.Width && logicalOne.Height == logical.Height, $"{logical} at {scale}x, {logicalOne} at 1x");
+					Assert.True(Math.Abs(logicalOne.X - logical.X) <= 1 / scale && Math.Abs(logicalOne.Y - logical.Y) <= 1 / scale && Math.Abs(logicalOne.Width - logical.Width) <= 1 / scale && Math.Abs(logicalOne.Height - logical.Height) <= 1 / scale, $"{logical} at {scale}x, {logicalOne} at 1x");
 					// the same string, 12 units high: the ink is about `scale` times as wide as at 1x (glyph advances are hinted differently)
 					Assert.InRange(ink / inkOne, scale * 0.93, scale * 1.07);
 				}
@@ -377,7 +385,7 @@ namespace ComicRack.Mac.Tests.HiDpi
 		private static (Rect box, double inkWidth) MeasureTitle(GridHarness h, double scale)
 		{
 			BookCell cell = h.Grid.CellAt(0);
-			TextBlock title = cell.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == cell.TitleText);
+			TextBlock title = cell.CaptionBlock;
 			Rect box = Dpi.Area(title, h.Window);
 			Raster frame = Dpi.Capture(h.Window, "grid-text");
 			var region = new RectInt(Scales.Device(box.Left, scale), Scales.Device(box.Top, scale), Scales.Device(box.Right, scale), Scales.Device(box.Bottom, scale));

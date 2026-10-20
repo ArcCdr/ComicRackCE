@@ -47,6 +47,8 @@ namespace ComicRack.Mac
 			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
 			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
 			Localization.Apply(options.Language);
+			// FadeInThumbnails: covers fade in only in a running desktop app; a headless test session shows the finished frame at once.
+			Controls.CoverView.FadeEnabled = ApplicationLifetime is IClassicDesktopStyleApplicationLifetime && !options.Headless;
 			if (options.Headless)
 			{
 				// The system alert runs a modal loop of its own: not on the headless platform (the alert window answers instead).
@@ -80,6 +82,7 @@ namespace ComicRack.Mac
 				window.AttachPerfOverlay(perf);
 				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers);
 				window.DataContext = viewModel;
+				ViewRegistry.Library = viewModel;
 				// Avalonia.Native has made the app menu before this runs and ignores a menu set now: its items are changed in place (MainMenu.FillAppMenu).
 				NativeMenu appMenu = NativeMenu.GetMenu(this);
 				if (appMenu != null)

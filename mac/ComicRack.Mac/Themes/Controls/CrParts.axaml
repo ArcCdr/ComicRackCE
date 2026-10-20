@@ -14,6 +14,10 @@
   <Style Selector="Border.cr-panel">
     <Setter Property="Background" Value="{DynamicResource Cr.WindowBrush}" />
   </Style>
+  <!-- The paper of the browser's item views (itemView.BackColor = ThemeColors.ItemView.MainBack) -->
+  <Style Selector="ScrollViewer.cr-item-view">
+    <Setter Property="Background" Value="{DynamicResource Cr.ItemViewMainBackBrush}" />
+  </Style>
   <Style Selector="Border.cr-card">
     <Setter Property="Background" Value="{DynamicResource Cr.WindowBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource Cr.ControlDarkBrush}" />

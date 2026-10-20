@@ -100,6 +100,9 @@ namespace ComicRack.Mac.ViewModels
 		[ObservableProperty]
 		public partial bool IsLoading { get; set; }
 
+		/// <summary>The settings that change how thumbnails look and behave (P5.R2); the grid listens to their changes.</summary>
+		public ThumbnailOptions ThumbnailOptions { get; } = new ThumbnailOptions();
+
 		/// <summary>The service the cells request covers from; null while there is no open library (cells then show empty tiles).</summary>
 		[ObservableProperty]
 		public partial ThumbnailService Thumbnails { get; set; }

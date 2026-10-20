@@ -108,6 +108,11 @@ shoot() {
 		[ -n "$title" ] || { echo "chrome-sheet: could not read the window title of $view from the log: $out" >&2; "$UI" kill >/dev/null 2>&1; return 1; }
 		# every character that is not a letter, digit or space matches any character (awk -v would process backslashes)
 		regex="^$(printf '%s' "$title" | sed 's/[^A-Za-z0-9 ]/./g')\$"
+		if [ "$view" = BookGrid ]; then
+			# a view of the library's browser: wait for the fixture library and the covers as for the library window
+			"$UI" expect-log 'Fixture library: .* scanned' 120 >/dev/null 2>&1 || echo "chrome-sheet: note: the fixture library did not finish scanning in time" >&2
+			sleep 3
+		fi
 		sleep 1
 	fi
 	out=$("$UI" wait-window "$regex" 60 2>&1) || { rc=$?; echo "chrome-sheet: no window for $view: $out" >&2; "$UI" kill >/dev/null 2>&1; return $rc; }

@@ -141,6 +141,18 @@ namespace ComicRack.Mac.Thumbnails
 		/// <summary>Like <see cref="Request"/>, with the information whether the picture is the placeholder and why.</summary>
 		public Task<ThumbnailResult> RequestResult(ComicBook book, int sizePx, CancellationToken cancellationToken)
 		{
+			return RequestResult(book, FrontCover, sizePx, cancellationToken);
+		}
+
+		/// <summary>The value of <c>page</c> that means the front cover of the book (the page the book's preferred front cover names).</summary>
+		public const int FrontCover = -1;
+
+		/// <summary>
+		/// A page of the book instead of its front cover: the page behind the dog-ear of a selected cell (<c>CoverViewItem.GetBackThumbnail</c>).
+		/// Same sizes, cache and rules as <see cref="RequestResult(ComicBook, int, CancellationToken)"/>.
+		/// </summary>
+		public Task<ThumbnailResult> RequestResult(ComicBook book, int page, int sizePx, CancellationToken cancellationToken)
+		{
 			if (book == null)
 			{
 				throw new ArgumentNullException(nameof(book));
@@ -155,7 +167,7 @@ namespace ComicRack.Mac.Thumbnails
 				return Task.FromCanceled<ThumbnailResult>(cancellationToken);
 			}
 			int height = ThumbnailSteps.Snap(sizePx);
-			var key = new Key(book.GetFrontCoverThumbnailKey(), height);
+			var key = new Key(page == FrontCover ? book.GetFrontCoverThumbnailKey() : book.GetThumbnailKey(page), height);
 			Subscriber subscriber = null;
 			ThumbnailResult hit;
 			List<Entry> removed = null;
@@ -208,6 +220,12 @@ namespace ComicRack.Mac.Thumbnails
 		/// </summary>
 		public bool TryGetCached(ComicBook book, int sizePx, out ThumbnailResult result)
 		{
+			return TryGetCached(book, FrontCover, sizePx, out result);
+		}
+
+		/// <summary>Like <see cref="TryGetCached(ComicBook, int, out ThumbnailResult)"/> for a page of the book (see <see cref="RequestResult(ComicBook, int, int, CancellationToken)"/>).</summary>
+		public bool TryGetCached(ComicBook book, int page, int sizePx, out ThumbnailResult result)
+		{
 			if (book == null)
 			{
 				throw new ArgumentNullException(nameof(book));
@@ -216,7 +234,7 @@ namespace ComicRack.Mac.Thumbnails
 			{
 				throw new ArgumentOutOfRangeException(nameof(sizePx), "The size must be positive.");
 			}
-			var key = new Key(book.GetFrontCoverThumbnailKey(), ThumbnailSteps.Snap(sizePx));
+			var key = new Key(page == FrontCover ? book.GetFrontCoverThumbnailKey() : book.GetThumbnailKey(page), ThumbnailSteps.Snap(sizePx));
 			List<Entry> removed = null;
 			bool hit;
 			lock (gate)

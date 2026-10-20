@@ -74,6 +74,11 @@
       <!-- Pictures of the original -->
       <ControlTheme x:Key="CrIcon.Original" TargetType="c:CrIcon" />
 
+      <!-- Item views: the thumbnail item and its cover draw themselves from the Cr tokens and the Cr.Thumb.* colours. -->
+      <ControlTheme x:Key="CrThumbnailItem.Original" TargetType="c:CrThumbnailItem" />
+      <ControlTheme x:Key="CoverView.Original" TargetType="c:CoverView" />
+      <ControlTheme x:Key="CrBookToolTip.Original" TargetType="c:CrBookToolTip" />
+
       <!-- Dialog window: the base window theme (the dialog draws its surface from the Cr.Control token itself). -->
       <ControlTheme x:Key="CrDialogWindow.Original" TargetType="c:CrDialogWindow" BasedOn="{StaticResource {x:Type Window}}" />
 

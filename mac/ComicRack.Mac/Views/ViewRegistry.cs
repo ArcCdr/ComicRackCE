@@ -18,12 +18,16 @@ namespace ComicRack.Mac.Views
 		/// <summary>The name of the library window, which is always open.</summary>
 		public const string MainWindowName = "MainWindow";
 
+		/// <summary>The view model of the library window, for the views that show a part of it (set by the app once it exists; null in tests).</summary>
+		public static ViewModels.MainViewModel Library { get; set; }
+
 		private static readonly Dictionary<string, Func<Window>> factories = new Dictionary<string, Func<Window>>(StringComparer.OrdinalIgnoreCase);
 
 		static ViewRegistry()
 		{
 			factories[MainWindowName] = null;
 			Register("ChromeGallery", () => new ChromeGalleryWindow());
+			Register("BookGrid", () => new BookGridWindow());
 		}
 
 		/// <summary>Adds (or replaces) a view. The factory runs on the UI thread and returns a window that is not shown yet.</summary>

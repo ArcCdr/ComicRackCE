@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Avalonia;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Reader;
 using SkiaSharp;
 using Xunit;
