@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-20, orchestrator; next task: P5.T1)
+Run state: RUNNING (2026-10-20, orchestrator; next task: RV5)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -14,11 +14,11 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: P5.T1)
 | P2 Platform pieces | 9 | 1 | P2.1 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 66 | 1 | P5.T1 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 66 | 6 | P5.R2 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 5 | 5 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **162** | **25** | | estimate in §10 |
+| RV Review fixes and upstream sync | 6 | 5 | RV5 | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **163** | **30** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -487,6 +487,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **Wave F, packaging, hardening and parity audits:** P6.1, P6.5, P6.2, P6.3, P6.4, P6.6, P7.1, P7.2, P7.3, P7.4, P7.5, P7.6, P7.7, P7.A1, P7.A2, P7.A3, P7.A4, P6.7 (needs **C5**), P7.8 → **C6**.
 - **Front of the list:** every `todo` task named `RV<n>[a-z]` or `U<yyyymmdd>.<n>` (their Status lines say which; `mac/tools/plan-status.sh` prints the next runnable task).
 - **P3.H** (HiDPI 1x/2x test harness) runs right after P0.7b and before any P5 task.
+- **RV5** (chrome isolation) runs right after P5.R1 and before P5.R2/P5.R3 and all further screens.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`RV<n>`, formerly `R<n>`; renamed because R1 to R9 are the owner requirements of §1.1) go to the **front** of the list.
 
 ---
@@ -534,6 +535,13 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Depends: none · Effort: high · Unattended: yes · Status: done 2026-10-20
 - Goal: fix product/test findings. (1) MacHost teardown after an abandoned scanner thread (MacHost.cs ~312-315, PassB/ComicScanner.cs ~100-106): detect a live 'Book Scanner' thread, warn, mark save verification 'unchecked' instead of false failure/silent loss, do not raise ScanNotify on a disposed QueueManager. (2) FolderScanner.WaitForScannerThreadToExit waits on the Thread object this host started, not the global name. (3) FixtureGridTests memory test: assert `peakAfterWarm - footWarm` against a bound as well. (4) Drift guards: keep an independent hash for CacheManager in the test or document why not; set manifest line budgets to actual counts. (5) Strengthen weak tests: GridHiDpiTests `dark > 0`, MainData 1.0 self-compare, NameInfo golden name that the parsers read differently (e.g. 'Batman.012.1940.cbz'), deterministic check of ComicBook.languages in the language race test. (6) `ScriptSelfTest.cs`: dev-only (not reachable in release bundle unless env var), refuse the real Scripts folder, delete its temp folder. Add tests for each fix (mutation-check where feasible).
 - Accept: new tests fail without the fix (show once) and pass with it; `mac/tools/verify.sh --full` once.
+
+#### RV5 Chrome isolation: one swappable layer (owner requirement 2026-10-20)
+- Depends: P5.R1 · Effort: high · Unattended: yes · Status: todo
+- Goal: the chrome (everything that makes the app look like ComicRack rather than stock Avalonia/macOS) lives in ONE isolated layer that can be changed or replaced per element without touching views, view-models or logic, so the owner can later move individual elements to a native macOS look. Rule added as R10: views and view-models never contain chrome (no literal colours/fonts/sizes/paths of icons, no custom templates inline); they use semantic parts only.
+- Do: (1) Audit the current code (`mac/ComicRack.Mac/Controls/`, `Themes/`, `Views/`, `Browser/`, `Reader/` views) and write `mac/plans/chrome-architecture.md`: the layers (tokens -> control themes/templates -> `Controls/` wrappers (Cr* controls) -> views), the public surface views may use (Cr* controls, style classes like `cr-toolbar`, `Cr.*` tokens via ThemeTokens, `Icons.Get(name)`), and the swap mechanism. (2) Implement a per-element chrome variant switch in one place: `ChromeVariants` (e.g. Toolbar, TabBar, StatusBar, Tree, ListHeader, Buttons, ComboBox, Dialogs, Menus...) each `Original` (default) | `Native`, set from one file/setting (`mac/ComicRack.Mac/Themes/ChromeVariants.cs` + optional env/pref override), resolved by control themes (e.g. ControlTheme selection by variant class on the root) so a variant can be flipped without editing any view. Implement at least one real `Native` variant end-to-end as proof (e.g. the status bar or the buttons use stock Fluent/macOS-leaning look) and a test proving the flip changes only the theme, not the view tree. (3) Move any chrome leaking in views (inline styles, templates, fonts, icon paths, sizes constants that are look-only) into the layer; views reference style classes/Cr* controls only. (4) Enforcement tests (architecture tests): views/viewmodels assemblies' sources contain no colour literals/FontFamily literals/inline `<Style>`/`<ControlTemplate>`; Views may reference only the allowed namespaces; every Cr* control resolves through a ControlTheme keyed by variant; `Icons` is the only way to load icons; failing test lists offenders. (5) Add the rule to full-port.md §2.11 and to the subagent prompt in RUNBOOK §3 ('chrome only in the chrome layer'); add a 'how to switch an element to native' section to `chrome-guidelines.md`.
+- Out of scope: new visual designs; changing the default look.
+- Accept: architecture tests pass and fail when an inline colour/template is added to a view (show once); variant flip test passes; `mac/tools/verify.sh`; the e2e `chrome-gallery` case unchanged (default look identical: compare screenshots before/after within a tolerance via `crcli image`).
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
