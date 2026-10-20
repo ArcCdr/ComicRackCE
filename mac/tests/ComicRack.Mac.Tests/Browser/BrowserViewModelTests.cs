@@ -34,7 +34,7 @@ namespace ComicRack.Mac.Tests.Browser
 				vm.SetCatalog(new BookCatalog(new[] { Item("b", "S", "2", day: 5), Item("a", "S", "1", day: 2), Item("c", "T", "1", day: 40) }));
 				await vm.WhenIdle();
 				Assert.Equal(new[] { "a", "b", "c" }, vm.Items.Select(i => i.Title));
-				Assert.Equal("3 books", vm.SummaryText);
+				Assert.Equal("3 Books", vm.SummaryText);
 
 				vm.SortIndex = 2; // date added, newest first
 				await vm.WhenIdle();
@@ -43,7 +43,7 @@ namespace ComicRack.Mac.Tests.Browser
 				vm.SearchText = "s";
 				await vm.WhenIdle();
 				Assert.Equal(new[] { "b", "a" }, vm.Items.Select(i => i.Title)); // the series S, newest first
-				Assert.Equal("2 of 3 books", vm.SummaryText);
+				Assert.Equal("2 Books (1 filtered)", vm.SummaryText);
 				Assert.True(vm.ConsumeScrollReset());
 				Assert.False(vm.ConsumeScrollReset());
 

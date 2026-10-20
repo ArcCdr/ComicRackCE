@@ -41,7 +41,7 @@ namespace ComicRack.Mac.Tests
 						await vm.OpenFolderCommand.ExecuteAsync(null);
 						Assert.Equal(1, launch.Dialogs.FolderPrompts);
 						Assert.Equal(0, vm.BookCount);
-						Assert.Equal("Open Folder cancelled.", vm.StatusText);
+						Assert.Equal("Add Folder to Library cancelled.", vm.StatusText);
 						Assert.False(vm.IsBusy);
 
 						launch.Dialogs.FolderToPick = books;

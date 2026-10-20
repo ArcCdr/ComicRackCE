@@ -222,7 +222,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 						Assert.Equal(3, vm.Browser.Items.Length);
 						Assert.All(vm.Browser.Items, i => Assert.Equal("Alpha", i.Series));
 						Assert.False(vm.Sidebar.HasNotice);
-						Assert.Equal("3 books", vm.Browser.SummaryText);
+						Assert.StartsWith("Alphas: 3 Books", vm.Browser.SummaryText);
 
 						// A list that needs scripts: an empty grid, the notice, no crash.
 						int errors = Services.AppLog.ErrorCount;
@@ -272,8 +272,8 @@ namespace ComicRack.Mac.Tests.Sidebar
 						window.Show();
 						Layout(window);
 						var tree = window.FindControl<TreeView>("SidebarTree");
-						var panel = window.FindControl<Border>("SidebarPanel");
-						Assert.True(panel.IsVisible);
+						var panel = window.FindControl<ComicRack.Mac.Controls.CrSizableContainer>("SidebarPanel");
+						Assert.True(panel.IsExpanded);
 						Assert.NotEmpty(tree.GetRealizedTreeContainers());
 						Save(window, "sidebar-1-small-library");
 
@@ -285,7 +285,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 
 						vm.ToggleSidebarCommand.Execute(null);
 						Layout(window);
-						Assert.False(panel.IsVisible);
+						Assert.False(panel.IsExpanded);
 						Save(window, "sidebar-3-hidden");
 					}
 				});

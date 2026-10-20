@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# overlay: Option+Cmd+P toggles the performance overlay: View menu check mark, a Perf line in the log within 12 s, off again
+# overlay: Ctrl+Option+Cmd+P toggles the performance overlay: Window menu check mark, a Perf line in the log within 12 s, off again
 # (mvp-acceptance.md 6.1, 6.2, 6.5).
 . "$(dirname "$0")/../lib.sh"; e2e_begin
 
 launch_app
-mark() { menu_line View "Show Performance Overlay" | awk -F'\t' '{print $3}'; }
+mark() { menu_line Window "Show Performance Overlay" | awk -F'\t' '{print $3}'; }
 [ -z "$(mark)" ] && ok "overlay is off at the start (no check mark)" || bad "overlay is already on at the start"
-press opt+cmd+p
+press ctrl+opt+cmd+p
 sleep 1
-if [ -n "$(mark)" ]; then ok "Option+Cmd+P: the menu item is checked"; else bad "Option+Cmd+P: the menu item is not checked"; fi
+if [ -n "$(mark)" ]; then ok "Ctrl+Option+Cmd+P: the menu item is checked"; else bad "Ctrl+Option+Cmd+P: the menu item is not checked"; fi
 shot overlay-on
 expect_log "Perf: fps" 14
-press opt+cmd+p
+press ctrl+opt+cmd+p
 sleep 1
-if [ -z "$(mark)" ]; then ok "Option+Cmd+P again: the check mark is gone"; else bad "the check mark stayed after the second toggle"; fi
+if [ -z "$(mark)" ]; then ok "Ctrl+Option+Cmd+P again: the check mark is gone"; else bad "the check mark stayed after the second toggle"; fi
 n=$(log_count 'Perf: fps')
 sleep 12
 n2=$(log_count 'Perf: fps')

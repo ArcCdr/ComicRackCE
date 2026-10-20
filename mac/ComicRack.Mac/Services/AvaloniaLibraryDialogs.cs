@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
+using ComicRack.Mac.Platform;
 using ComicRack.Mac.Views;
 
 namespace ComicRack.Mac.Services
 {
-	/// <summary>The real dialogs: the Avalonia StorageProvider folder picker and two small windows, all owned by the main window.</summary>
+	/// <summary>The real dialogs: the Avalonia StorageProvider folder picker, the Import window and the system alert, all owned by the main window.</summary>
 	public sealed class AvaloniaLibraryDialogs : ILibraryDialogs
 	{
 		private readonly Window owner;
@@ -31,9 +32,15 @@ namespace ComicRack.Mac.Services
 			return new ImportWindow().ShowDialog<ImportRequest>(owner);
 		}
 
-		public Task ShowMessageAsync(string title, string message)
+		/// <summary>A problem the user must know about: the system alert (C-DLG-1, DL.34), on the UI thread; the alert window where that cannot run.</summary>
+		public async Task ShowMessageAsync(string title, string message)
 		{
-			return new MessageWindow(title, message).ShowDialog(owner);
+			await MacAlert.ShowAsync(owner, new MacAlertOptions
+			{
+				Message = title ?? string.Empty,
+				Informative = message ?? string.Empty,
+				Style = MacAlertStyle.Warning,
+			});
 		}
 	}
 }

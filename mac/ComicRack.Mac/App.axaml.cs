@@ -44,6 +44,11 @@ namespace ComicRack.Mac
 			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
 			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
 			Localization.Apply(options.Language);
+			if (options.Headless)
+			{
+				// The system alert runs a modal loop of its own: not on the headless platform (the alert window answers instead).
+				Platform.MacAlert.UseNative = false;
+			}
 			if (!options.Headless && OperatingSystem.IsMacOS())
 			{
 				// C-WIN-3: the app has its own tab bars, so macOS must not merge its windows into tabs.
@@ -72,7 +77,16 @@ namespace ComicRack.Mac
 				window.AttachPerfOverlay(perf);
 				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers);
 				window.DataContext = viewModel;
-				NativeMenu.SetMenu(this, MainMenu.BuildAppMenu(viewModel));
+				// Avalonia.Native has made the app menu before this runs and ignores a menu set now: its items are changed in place (MainMenu.FillAppMenu).
+				NativeMenu appMenu = NativeMenu.GetMenu(this);
+				if (appMenu != null)
+				{
+					MainMenu.FillAppMenu(appMenu, viewModel);
+				}
+				else
+				{
+					NativeMenu.SetMenu(this, MainMenu.BuildAppMenu(viewModel));
+				}
 				NativeMenu.SetMenu(window, MainMenu.BuildMenuBar(viewModel, perf));
 				hostService.Opened += (sender, e) => viewModel.OnHostOpened();
 				desktop.MainWindow = window;

@@ -80,7 +80,7 @@ namespace ComicRack.Mac.Views
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
-			if (!e.Handled && perf != null && e.Key == Key.P && e.KeyModifiers == (KeyModifiers.Meta | KeyModifiers.Alt))
+			if (!e.Handled && perf != null && e.Key == MainMenu.PerfKey && e.KeyModifiers == MainMenu.PerfModifiers)
 			{
 				perf.Toggle();
 				e.Handled = true;

@@ -14,19 +14,19 @@ IMPORT_WIN=$(printf '%s' "$LAST_OUT" | awk -F'\t' '{print $1}')
 ok "import window opened (id $IMPORT_WIN)"
 shot import-dialog "$IMPORT_WIN"
 
-# Layout in window points (640 x 437): the "Choose..." button right of the database box, the mappings box below it.
+# Layout in window points (640 x 410 since the P5.T4 control sizes; the shot includes the title bar): the "Choose..." button right of the database box, the mappings box below it.
 front_app
-must click 580 159 --window "$IMPORT_WIN"
+must click 587 145 --window "$IMPORT_WIN"
 must wait-window "ComicDb|Choose" 15
 ok "the native file picker opened: $LAST_OUT"
 must choose-path "$DB"
 sleep 1
 front_app
-must click 320 265 --window "$IMPORT_WIN"
+must click 320 245 --window "$IMPORT_WIN"
 must type "S:\\media\\BD\\=$BD/"
 shot import-filled "$IMPORT_WIN"
 front_app
-must click 591 403 --window "$IMPORT_WIN"   # the Import button (Return would add a line in the mappings box)
+must click 595 377 --window "$IMPORT_WIN"   # the Import button (Return would add a line in the mappings box)
 expect_log "Imported [0-9.,]+ books" 180
 if printf '%s\n' "$LAST_OUT" | grep -q -E "Imported 14.{0,3}706 books"; then ok "14,706 books imported"; else bad "expected 14,706 imported books: $LAST_OUT"; fi
 if printf '%s\n' "$LAST_OUT" | grep -q -E "14.{0,3}706 of them found on this Mac"; then ok "all 14,706 books were found under the mapped folder"; else bad "not every book was found: $LAST_OUT"; fi

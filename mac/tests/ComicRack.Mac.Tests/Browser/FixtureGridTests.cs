@@ -108,7 +108,7 @@ namespace ComicRack.Mac.Tests.Browser
 						var grid = window.FindControl<BookGridView>("BookGrid");
 						Layout(window);
 						Assert.False(window.FindControl<StackPanel>("EmptyState").IsVisible);
-						Assert.Equal(14706.ToString("N0") + " books", window.FindControl<TextBlock>("SummaryLabel").Text);
+						Assert.StartsWith("Library: 14706 Books", window.FindControl<TextBlock>("StatusLabel").Text);
 
 						var clock = Stopwatch.StartNew();
 						await WaitForCovers(grid, window);
@@ -117,18 +117,18 @@ namespace ComicRack.Mac.Tests.Browser
 						Assert.All(grid.BoundCells(), c => Assert.False(string.IsNullOrEmpty(c.TitleText)));
 
 						// Search, as typed in the box.
-						var box = window.FindControl<TextBox>("SearchBox");
+						var box = window.FindControl<ComicRack.Mac.Controls.CrSearchBox>("SearchBox");
 						box.Text = "lester";
 						await vm.Browser.WhenIdle();
 						await WaitForCovers(grid, window);
 						output.WriteLine($"search \"lester\": {vm.Browser.SummaryText}, query {vm.Browser.LastQueryMilliseconds:0.0} ms");
-						Assert.Contains(" of " + 14706.ToString("N0") + " books", window.FindControl<TextBlock>("SummaryLabel").Text);
+						Assert.Contains("(" + (14706 - vm.Browser.Items.Length) + " filtered)", window.FindControl<TextBlock>("StatusLabel").Text);
 						Assert.All(vm.Browser.Items, i => Assert.True(i.TitleKey.Contains("lester") || i.SeriesKey.Contains("lester")));
 						Save(window, "main-7-fixture-search");
 
 						// Sort by date added; clear the search.
 						box.Text = string.Empty;
-						window.FindControl<ComboBox>("SortBox").SelectedIndex = 2;
+						vm.Browser.SortIndex = 2;
 						await vm.Browser.WhenIdle();
 						await WaitForCovers(grid, window);
 						Assert.Equal(2, vm.Browser.SortIndex);

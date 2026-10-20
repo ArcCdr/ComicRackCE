@@ -19,7 +19,6 @@ namespace ComicRack.Mac.Tests.Theme
 		private static readonly Dictionary<string, string> KnownExceptions = new Dictionary<string, string>(StringComparer.Ordinal)
 		{
 			["Views/BookCell.cs"] = "P5.R2 (thumbnail items)",
-			["Views/ImportWindow.axaml"] = "P5.R1 (message and import dialogs)",
 			["Views/PerfOverlay.cs"] = "P5.R3 (the performance overlay moves with the reader chrome)",
 			["Views/ReaderView.cs"] = "P5.R3 (reader chrome)",
 			["Views/ReaderWindow.axaml"] = "P5.R3 (reader chrome)",

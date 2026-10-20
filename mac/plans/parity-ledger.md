@@ -14,12 +14,12 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| MF.00 | Main menu bar: File, Edit, Browse, Read, Display, Help (in this order) | `mainMenuStrip`: `fileMenu`, `editMenu`, `browseMenu`, `readMenu`, `displayMenu`, `helpMenu` | — | P5.R1 | todo | becomes the macOS menu bar (C-MENU-1); the six menus keep their names and order |
+| MF.00 | Main menu bar: File, Edit, Browse, Read, Display, Help (in this order) | `mainMenuStrip`: `fileMenu`, `editMenu`, `browseMenu`, `readMenu`, `displayMenu`, `helpMenu` | — | P5.R1 | done 2026-10-20 | becomes the macOS menu bar (C-MENU-1); the six menus keep their names, texts (TR) and order, the Mac Window menu sits before Help; Edit and Read are empty until their tasks land |
 | MF.01 | Open File... | File `miOpenComic` | Ctrl+O → Cmd+O | P5.10a | todo | MVP has Open Folder on Cmd+O; P5.10a moves it |
 | MF.02 | Close (current book tab) | File `miCloseComic` | Ctrl+X → Option+Cmd+X, alias Cmd+W | P5.32a | todo | Cmd+X is Cut on macOS |
 | MF.03 | Close All | File `miCloseAllComics` | Ctrl+Shift+X → Cmd+Shift+X | P5.32a | todo | |
 | MF.04 | New Tab (empty reader slot) | File `miAddTab` (`OpenBooks.AddSlot`) | Ctrl+T → Cmd+T | P5.32a | todo | |
-| MF.05 | Add Folder to Library... | File `miAddFolderToLibrary` | Ctrl+Shift+A → Cmd+Shift+A | P5.10a | todo | MVP "Open Folder" becomes this |
+| MF.05 | Add Folder to Library... | File `miAddFolderToLibrary` | Ctrl+Shift+A → Cmd+Shift+A | P5.10a | todo | label and shortcut applied by P5.R1 (the MVP's Open Folder with the native folder picker); P5.10a adds the name-or-path dialog and the original's background scan |
 | MF.06 | Scan Book Folders | File `miScan` | Ctrl+Shift+S → Cmd+Shift+S | P5.19b | todo | |
 | MF.07 | Update all Book Files | File `miUpdateAllComicFiles` | Ctrl+Shift+U → Cmd+Shift+U | P5.9 | todo | |
 | MF.08 | Update Web Comics | File `miUpdateWebComics` | Ctrl+Shift+W → Cmd+Shift+W | P5.19b | todo | Core feature; DD18 overridden by R9 |
@@ -53,7 +53,7 @@
 | MB.02 | Library | Browse `miViewLibrary` | F6 | P5.32b | todo | |
 | MB.03 | Folders | Browse `miViewFolders` | F7 | P5.30 | todo | |
 | MB.04 | Pages | Browse `miViewPages` | F8 | P5.23b | todo | |
-| MB.05 | Sidebar | Browse `miSidebar` | Shift+F6 | P5.R1 | todo | MVP: View > Show Sidebar |
+| MB.05 | Sidebar | Browse `miSidebar` | Shift+F6 | P5.R1 | done 2026-10-20 | check item that follows the side panel; the toolbar button `tbSidebar` (BT.01) does the same |
 | MB.06 | Small Preview | Browse `miSmallPreview` | Shift+F7 | P5.6 | todo | |
 | MB.07 | Search Browser | Browse `miSearchBrowser` | Shift+F8 | P5.15b | todo | |
 | MB.08 | Info Panel | Browse `miInfoPanel` | Shift+F9 | P5.6 | todo | |
@@ -104,11 +104,11 @@
 | MD.22 | Rotation > 270° | Display `miRotate270` | Ctrl+Shift+0 → Cmd+Shift+0 | P5.23e | todo | |
 | MD.23 | Rotation > Autorotate Double Pages | Display `miAutoRotate` | — | P5.23e | todo | |
 | MD.24 | Minimal User Interface | Display `miMinimalGui` | F10 | P5.23f | todo | |
-| MD.25 | Full Screen | Display `miFullScreen` | F11, alias Ctrl+Cmd+F | P5.R3 | todo | native full screen (C-WIN-2) |
+| MD.25 | Full Screen | Display `miFullScreen` | F11, alias Ctrl+Cmd+F | P5.R3 | todo | native full screen (C-WIN-2); the item is in the library window's Display menu since P5.R1 (checked while full screen); the reader's menu is P5.R3 |
 | MD.26 | Reader in own Window | Display `miReaderUndocked` | F12 | P5.32a | todo | |
 | MD.27 | Magnifier | Display `miMagnify` | Ctrl+M → Option+Cmd+M | P5.23d | todo | Cmd+M is Minimize |
 | MH.01 | Help (internal, hidden) | Help `miHelp` | — | — | deviation | native: hidden in the original too; nothing to port |
-| MH.02 | ComicRack Documentation... | Help `miWebHelp` | F1, alias Cmd+? | P5.31 | todo | |
+| MH.02 | ComicRack Documentation... | Help `miWebHelp` | F1, alias Cmd+? | P5.31 | todo | item and shortcuts in place since P5.R1; the action reports "not available yet" until P5.31 |
 | MH.03 | Plugins (script help entries) | Help `miHelpPlugins` (`MainForm.cs:3241`) | — | P5.31 | todo | |
 | MH.04 | Choose Help System | Help `miChooseHelpSystem` (`Output/Help/*.ini`) | — | P5.31 | todo | |
 | MH.05 | Quick Introduction | Help `miHelpQuickIntro` (DjVu file) | — | — | deferred (D4) | DjVu |
@@ -117,9 +117,11 @@
 | MH.08 | News... | Help `miNews` | — | P5.31 | todo | |
 | MH.09 | Check For Update... | Help `miCheckUpdate` | — | P5.31 | todo | |
 | MH.10 | About... (splash panel) | Help `miAbout` | Alt+F1 → Option+F1 | P5.31 | deviation | native: About lives in the app menu (C-MENU-1); the panel itself is the original splash |
-| MA.01 | App menu: About, Settings…, Services, Hide, Hide Others, Show All, Quit | macOS | Cmd+, / Cmd+H / Option+Cmd+H / Cmd+Q | P5.R1 | mac-only | C-MENU-1 |
+| MA.01 | App menu: About, Settings…, Services, Hide, Hide Others, Show All, Quit | macOS | Cmd+, / Cmd+H / Option+Cmd+H / Cmd+Q | P5.R1 | mac-only | C-MENU-1; done 2026-10-20: About with the app name, Settings… (disabled until P5.22a), Hide Others fixed to Option+Cmd+H |
 | MA.02 | Window menu: Minimize, Zoom, Library window, Bring All to Front | macOS | Cmd+M; Library: Option+Cmd+0 | P5.10b | mac-only | C-MENU-2 |
-| MA.03 | Text editing commands in text fields (Cut, Copy, Paste, Select All, Undo) | macOS | Cmd+X/C/V/A/Z | P5.R1 | mac-only | C-TEXT-1 |
+| MA.03 | Text editing commands in text fields (Cut, Copy, Paste, Select All, Undo) | macOS | Cmd+X/C/V/A/Z | P5.R1 | mac-only | C-TEXT-1; done 2026-10-20: the text boxes (quick search) handle the Command keys themselves, the Edit menu holds no text items so that Cmd+Z stays free for the original's Undo (ME.02) |
+| MA.04 | File > Import Windows Library… (copy a ComicDb.xml with path mappings) | none in the original | — | P5.R1 | mac-only | Mac-only addition from the MVP (M2.1) |
+| MA.05 | Window > Show Performance Overlay | none in the original | Ctrl+Option+Cmd+P | P5.R1 | mac-only | developer aid of the MVP; moved from Option+Cmd+P, which is Previous Book (MR.05) |
 
 ## Reader toolbar, tools menu, tabs, page context menu, tray (`MainForm.Designer.cs`)
 
@@ -155,11 +157,11 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| SB.01 | Status text ("Ready", messages) | `tsText` | — | P5.R1 | todo | |
+| SB.01 | Status text ("Ready", messages) | `tsText` | — | P5.R1 | done 2026-10-20 | the browser's `SelectionInfo` (list name, books, filtered, size, selection) while a library is open, else the app's message |
 | SB.02 | Activity icons: backup, export, read info, write info, page reading, scanning (animated) | `tsBackupActivity`, `tsExportActivity`, `tsReadInfoActivity`, `tsWriteInfoActivity`, `tsPageActivity`, `tsScanActivity` | — | P5.26 | todo | original animated images |
 | SB.03 | Activity icons: device sync, server, data source state | `tsDeviceSyncActivity`, `tsServerActivity`, `tsDataSourceState` | — | — | deferred (D4) | |
-| SB.04 | Book / Page / page count segments | `tsBook`, `tsCurrentPage`, `tsPageCount` | — | P5.R1 | todo | |
-| SB.05 | Thumbnail size slider (visible when the browser is shown) | `ToolStripThumbSize` inserted at `MainForm.cs:963` | — | P5.R1 | todo | MVP slider moves from the top bar to here |
+| SB.04 | Book / Page / page count segments | `tsBook`, `tsCurrentPage`, `tsPageCount` | — | P5.32a | todo | segments and texts (None, NA, NA) in the library window since P5.R1; they follow the open book when the main window hosts the reader (P5.32a) |
+| SB.05 | Thumbnail size slider (visible when the browser is shown) | `ToolStripThumbSize` inserted at `MainForm.cs:963` | — | P5.R1 | done 2026-10-20 | the slider is the last segment of the status bar |
 
 ## Main view: browser docking and browser tabs (`ComicRack/Views/MainView.Designer.cs`, `MainForm.cs`)
 
@@ -224,7 +226,7 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| LT.01 | Library tree with list icons, counts and live counters (gauges) | `ComicListLibraryBrowser`, Settings `LibraryGauges*` | — | P5.R1 (look), P5.2 (gauges) | todo | |
+| LT.01 | Library tree with list icons, counts and live counters (gauges) | `ComicListLibraryBrowser`, Settings `LibraryGauges*` | — | P5.2 | todo | look done by P5.R1 (original images by list type, row height, bold selection, total counter pill); P5.2 adds the unread and new counters and the live update |
 | LT.02 | Tree toolbar: New Folder, New List, New Smart List, New Window, New Tab, Expand/Collapse all, Refresh, Show Favorites, Quick Search | `ComicListLibraryBrowser.toolStrip`, `tbNewFolder`, `tbNewList`, `tbNewSmartList`, `tbExpandCollapseAll` | Quick Search Ctrl+Alt+F → Option+Cmd+F | P5.16a | todo | New Tab: P5.32b |
 | LT.03 | Tree menu: Edit... (smart list editor) | `treeContextMenu.miEditSmartList` | — | P5.17a | todo | |
 | LT.04 | Tree menu: Rename | `miQueryRename` | F2 | P5.16a | todo | |

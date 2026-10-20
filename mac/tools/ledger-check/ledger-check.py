@@ -331,6 +331,7 @@ def read_menu_dump(path, azerty=False):
             if cols[0] == "-" or not cols[0].strip():
                 continue
             shortcut = cols[1] if len(cols) > 1 else ""
+            shortcut = "".join("F%d" % (ord(c) - 0xF704 + 1) if 0xF704 <= ord(c) <= 0xF71B else c for c in shortcut)
             items.append({"menu": menu, "name": cols[0], "shortcut": azerty_shortcut(shortcut) if azerty else shortcut,
                           "mark": cols[2] if len(cols) > 2 else "", "enabled": cols[3] if len(cols) > 3 else ""})
     return items
@@ -346,7 +347,9 @@ def compare_menus(rows, dump):
     for r in rows:
         if not r.status.startswith("done"):
             continue
-        if not re.search(r"`(?:mi|tb|cm|ts)\w+`|`(?:\w+\.)+(?:mi|tb|cm|ts)\w+`", r.location) and not re.search(r"\b(File|Edit|Browse|Read|Display|Help)\b `", r.location):
+        # status strip labels (tsText, tsBook, ...) and the size slider are not menu or toolbar items
+        location = re.sub(r"`ts(?:Text|Book|CurrentPage|PageCount|DataSourceState|\w*Activity)`|`ToolStripThumbSize`", "", r.location)
+        if not re.search(r"`(?:mi|tb|cm|ts)\w+`|`(?:\w+\.)+(?:mi|tb|cm|ts)\w+`", location) and not re.search(r"\b(File|Edit|Browse|Read|Display|Help)\b `", location):
             continue
         forms = label_forms(r.label)
         hit = None
@@ -364,6 +367,11 @@ def compare_menus(rows, dump):
         if wanted:
             shown = {norm_shortcut(it["shortcut"]) for it in hit if it["shortcut"].strip()}
             shown.discard(None)
+            # A function key is a private use character in the accessibility tree (decoded by read_menu_dump); a function key without a
+            # modifier (F1, F11) has no shortcut text there at all, so an item without one satisfies a bare F key.
+            for w in wanted:
+                if re.fullmatch(r"F\d{1,2}", w) and not [it for it in hit if it["shortcut"].strip()]:
+                    shown.add(w)
             if not shown & set(wanted):
                 findings.append("%s %s: the menu shows %s, the ledger wants %s" % (
                     r.id, r.label, ", ".join(sorted(shown)) or "no shortcut", " or ".join(wanted)))

@@ -282,20 +282,31 @@ namespace ComicRack.Mac.Tests
 		}
 
 		[Fact]
-		public async Task The_message_window_shows_title_and_text()
+		public async Task A_problem_message_is_an_alert_with_the_title_as_message_and_the_text_as_description()
 		{
 			await Ui.Run(async () =>
 			{
-				var owner = new MainWindow { DataContext = NewMainWindow().vm };
-				owner.Show();
-				var message = new MessageWindow("The library was not saved", "ComicRack could not write the library file: the disk is full.");
-				Task closed = message.ShowDialog(owner);
-				Dispatcher.UIThread.RunJobs();
-				Capture(message, "message-1");
-				Assert.Equal("The library was not saved", message.FindControl<TextBlock>("TitleLabel").Text);
-				message.FindControl<Button>("OkButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-				await closed;
-				owner.Close();
+				bool native = ComicRack.Mac.Platform.MacAlert.UseNative;
+				ComicRack.Mac.Platform.MacAlert.UseNative = false; // the system alert runs a modal loop of its own
+				try
+				{
+					var owner = new MainWindow { DataContext = NewMainWindow().vm };
+					owner.Show();
+					Task shown = new AvaloniaLibraryDialogs(owner).ShowMessageAsync("The library was not saved", "ComicRack could not write the library file: the disk is full.");
+					Dispatcher.UIThread.RunJobs();
+					AlertWindow found = owner.OwnedWindows.OfType<AlertWindow>().SingleOrDefault();
+					Assert.NotNull(found);
+					Capture(found, "message-1");
+					Assert.Contains(Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(found).OfType<TextBlock>(), t => t.Text == "The library was not saved");
+					Assert.Contains(Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(found).OfType<TextBlock>(), t => (t.Text ?? "").Contains("the disk is full"));
+					found.AlertButtons[0].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+					await shown;
+					owner.Close();
+				}
+				finally
+				{
+					ComicRack.Mac.Platform.MacAlert.UseNative = native;
+				}
 			});
 		}
 	}

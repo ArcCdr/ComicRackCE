@@ -20,7 +20,7 @@ namespace ComicRack.Mac.Services
 
 	/// <summary>
 	/// The dialogs of the library commands, behind an interface so that view models and tests do not need a window. The app's
-	/// implementation (<see cref="AvaloniaLibraryDialogs"/>) uses the Avalonia StorageProvider and two small windows; tests use a fake.
+	/// implementation (<see cref="AvaloniaLibraryDialogs"/>) uses the Avalonia StorageProvider, the system alert and the Import window; tests use a fake.
 	/// </summary>
 	public interface ILibraryDialogs
 	{

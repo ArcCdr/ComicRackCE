@@ -24,6 +24,9 @@ namespace ComicRack.Mac.ViewModels
 	{
 		private static readonly string[] sortNames = { "Series", "Title", "Date added" };
 
+		private long shownSize;
+		private int shownCount;
+
 		/// <summary>Names for the sort box; the index is <see cref="SortIndex"/>.</summary>
 		public static string[] SortNames => sortNames;
 
@@ -45,6 +48,18 @@ namespace ComicRack.Mac.ViewModels
 			SummaryText = string.Empty;
 		}
 
+		partial void OnListNameChanged(string value) => UpdateSummary();
+
+		partial void OnSelectedIndexChanged(int value) => UpdateSummary();
+
+		// Writes the status text from the books shown and the selected book (UI thread).
+		private void UpdateSummary()
+		{
+			BookItem selected = SelectedItem;
+			string path = selected?.Book != null && selected.Book.IsLinked ? selected.Book.FilePath : null;
+			SummaryText = SelectionInfo.Build(ListName, shownCount, TotalCount, shownSize, selected == null ? 0 : 1, path, selected?.Book?.FileSize ?? 0);
+		}
+
 		/// <summary>How long a typed search waits for the next keystroke before a query starts.</summary>
 		public TimeSpan SearchDelay { get; set; } = TimeSpan.FromMilliseconds(120);
 
@@ -57,7 +72,11 @@ namespace ComicRack.Mac.ViewModels
 
 		/// <summary>Index into <see cref="SortNames"/>.</summary>
 		[ObservableProperty]
+		[NotifyPropertyChangedFor(nameof(SortName))]
 		public partial int SortIndex { get; set; }
+
+		/// <summary>The text of the Arrange button: the name of the column the list is arranged by (<c>tbbSort.Text</c>).</summary>
+		public string SortName => SortNames[Math.Clamp(SortIndex, 0, SortNames.Length - 1)];
 
 		/// <summary>Height of a cover in device independent pixels.</summary>
 		[ObservableProperty]
@@ -67,9 +86,16 @@ namespace ComicRack.Mac.ViewModels
 		[ObservableProperty]
 		public partial int SelectedIndex { get; set; } = -1;
 
-		/// <summary>"14,706 books" or "312 of 14,706 books".</summary>
+		/// <summary>
+		/// The status bar text of the browser, as the original writes it (<see cref="SelectionInfo"/>): "Library: 312 Books (14394 filtered) / 1.20 GB -
+		/// /Users/me/Comics/a.cbz".
+		/// </summary>
 		[ObservableProperty]
 		public partial string SummaryText { get; set; }
+
+		/// <summary>The name of the list that is shown (the first part of <see cref="SummaryText"/>), or null.</summary>
+		[ObservableProperty]
+		public partial string ListName { get; set; }
 
 		[ObservableProperty]
 		public partial bool IsLoading { get; set; }
@@ -194,10 +220,15 @@ namespace ComicRack.Mac.ViewModels
 					await Task.Delay(SearchDelay, token).ConfigureAwait(true);
 				}
 				var sw = Stopwatch.StartNew();
-				(BookItem[] items, int selectedIndex) = await Task.Run(() =>
+				(BookItem[] items, int selectedIndex, long size) = await Task.Run(() =>
 				{
 					BookItem[] result = cat.Query(sort, text, token);
-					return (result, selected == null ? -1 : Array.IndexOf(result, selected));
+					long total = 0;
+					foreach (BookItem item in result)
+					{
+						total += item.Book?.FileSize ?? 0;
+					}
+					return (result, selected == null ? -1 : Array.IndexOf(result, selected), total);
 				}, token).ConfigureAwait(true);
 				if (mine != Volatile.Read(ref version))
 				{
@@ -207,8 +238,10 @@ namespace ComicRack.Mac.ViewModels
 				scrollReset |= resetScroll;
 				SelectedIndex = -1; // the old index means another book in the new list
 				Items = items;
+				shownCount = items.Length;
+				shownSize = size;
 				SelectedIndex = selectedIndex;
-				SummaryText = Describe(items.Length, cat.Count);
+				UpdateSummary();
 			}
 			catch (OperationCanceledException)
 			{
@@ -219,13 +252,6 @@ namespace ComicRack.Mac.ViewModels
 			}
 		}
 
-		internal static string Describe(int shown, int total)
-		{
-			string books = total == 1 ? " book" : " books";
-			return shown == total
-				? total.ToString("N0", CultureInfo.CurrentCulture) + books
-				: shown.ToString("N0", CultureInfo.CurrentCulture) + " of " + total.ToString("N0", CultureInfo.CurrentCulture) + books;
-		}
 
 		/// <summary>Opens the selected book (double click, Enter). Raises <see cref="OpenBookRequested"/>.</summary>
 		[RelayCommand]

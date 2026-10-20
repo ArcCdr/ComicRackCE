@@ -143,7 +143,7 @@ namespace ComicRack.Cli.Tests
 		}
 
 		[Fact]
-		public void The_real_main_window_card_is_built_from_the_original_designer()
+		public void The_real_main_window_card_is_built_from_the_view_spec_of_the_main_form()
 		{
 			string card = Path.Combine(temp, "main.json");
 			var r = Py("card", "MainWindow", "--out", card);
@@ -151,8 +151,8 @@ namespace ComicRack.Cli.Tests
 			using (var doc = JsonDocument.Parse(File.ReadAllText(card)))
 			{
 				var lines = doc.RootElement.GetProperty("lines").EnumerateArray().Select(e => e.GetString()).ToArray();
-				Assert.Contains(lines, l => l.Contains("MenuStrip mainMenuStrip"));
-				Assert.Contains(lines, l => l.Contains("StatusStrip statusStrip"));
+				Assert.Contains(lines, l => l.Contains("mainMenuStrip"));
+				Assert.Contains(lines, l => l.Contains("statusStrip"));
 			}
 		}
 

@@ -98,7 +98,7 @@ shoot() {
 	out=$(UI_DRIVE_NO_BUILD=1 "$UI" launch --dev --data-dir "$data" -- --theme "$theme" --show "$view" --fixture-library "$FIXTURES" 2>&1); rc=$?
 	[ $rc -eq 0 ] || { echo "chrome-sheet: launch for $view ($theme) failed (exit $rc): $out" >&2; return $rc; }
 	if [ "$view" = MainWindow ]; then
-		regex='^ComicRack CE .MVP.$'
+		regex='^ComicRack$'
 		"$UI" expect-log 'Fixture library: .* scanned' 120 >/dev/null 2>&1 || echo "chrome-sheet: note: the fixture library did not finish scanning in time" >&2
 		sleep 3 # covers decode after the scan
 	else

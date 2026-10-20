@@ -5,7 +5,7 @@
 BD="$FIXTURES/BD"; need "$BD"
 
 launch_app
-press cmd+o
+press cmd+shift+a
 must wait-window "Choose" 15
 must choose-path "$BD"
 expect_log "Scan of .*BD/? started" 15

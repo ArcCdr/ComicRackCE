@@ -81,7 +81,7 @@ namespace ComicRack.Mac.Tests.Diagnostics
 				Assert.False(ticker.IsRunning);
 
 				// Option+Cmd+P through the window
-				window.KeyPress(Key.P, RawInputModifiers.Meta | RawInputModifiers.Alt, PhysicalKey.P, null);
+				window.KeyPress(Key.P, RawInputModifiers.Meta | RawInputModifiers.Alt | RawInputModifiers.Control, PhysicalKey.P, null);
 				Tick(window);
 				Assert.True(perf.IsVisible);
 				Assert.True(overlay.IsVisible);
@@ -102,7 +102,7 @@ namespace ComicRack.Mac.Tests.Diagnostics
 				WriteableBitmap on = Capture(window, "perf-main-1-on");
 				Assert.True(Distinct(on, new Avalonia.Rect(on.PixelSize.Width - 330, 10, 320, 130)) > 8, "the overlay is not drawn");
 
-				window.KeyPress(Key.P, RawInputModifiers.Meta | RawInputModifiers.Alt, PhysicalKey.P, null);
+				window.KeyPress(Key.P, RawInputModifiers.Meta | RawInputModifiers.Alt | RawInputModifiers.Control, PhysicalKey.P, null);
 				Tick(window);
 				Assert.False(perf.IsVisible);
 				Assert.False(overlay.IsVisible);
@@ -141,7 +141,7 @@ namespace ComicRack.Mac.Tests.Diagnostics
 				Assert.False(overlay.IsVisible);
 				Assert.False(overlay.IsPumping);
 
-				window.KeyPress(Key.P, RawInputModifiers.Meta | RawInputModifiers.Alt, PhysicalKey.P, null);
+				window.KeyPress(Key.P, RawInputModifiers.Meta | RawInputModifiers.Alt | RawInputModifiers.Control, PhysicalKey.P, null);
 				Tick(window);
 				Assert.True(perf.IsVisible);
 				Assert.True(overlay.IsPumping);

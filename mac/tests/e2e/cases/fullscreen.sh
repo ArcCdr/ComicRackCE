@@ -38,8 +38,8 @@ press ctrl+cmd+f
 if wait_geom "$MAIN" covers "$orig"; then ok "library window covers a screen in full screen: $GEOM"; else bad "library window did not cover a screen after Ctrl+Cmd+F: $GEOM"; fi
 sleep 1
 shot library-fullscreen "$MAIN"
-item=$(menu_line View "Exit Full Screen"); [ -n "$item" ] || item=$(menu_line View "Enter Full Screen")
-info "View menu item while in full screen: ${item%%$'\t'*}"
+item=$(menu_line Display "Full Screen")
+info "Display > Full Screen while in full screen (mark): $(printf '%s' "$item" | awk -F'\t' '{print $3}')"
 press ctrl+cmd+f
 if wait_geom "$MAIN" normal "$orig"; then ok "library window is back to its size: $GEOM"; else bad "library window did not return to its size ($orig): $GEOM"; fi
 quit_app

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# open-folder: File > Open Folder (Cmd+O) with the native picker, a real scan of mac/fixtures/small, the saved count after a restart.
+# open-folder: File > Add Folder to Library... (Cmd+Shift+A) with the native picker, a real scan of mac/fixtures/small, the saved count after a restart.
 . "$(dirname "$0")/../lib.sh"; e2e_begin
 SMALL="$FIXTURES/small"; need "$SMALL"
 expected=$(find "$SMALL" -type f \( -iname '*.cbz' -o -iname '*.cbr' -o -iname '*.cb7' -o -iname '*.cbt' -o -iname '*.pdf' \) | wc -l | tr -d ' ')
 
 launch_app
-press cmd+o
+press cmd+shift+a
 must wait-window "Choose" 15
 ok "the native folder picker opened: $LAST_OUT"
 shot picker "$(window_id_by_title Choose 5)"

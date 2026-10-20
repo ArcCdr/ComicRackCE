@@ -22,7 +22,7 @@
              PlaceholderText="S:\media\BD\=/Users/you/Comics/BD/" />
     <TextBlock Text="The first part of every book path that matches is replaced. Without a mapping the books keep their Windows paths and cannot be opened." TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
 
-    <TextBlock Name="ErrorLabel" Text="{Binding ErrorText}" Foreground="#D13438" TextWrapping="Wrap" />
+    <TextBlock Name="ErrorLabel" Text="{Binding ErrorText}" Foreground="{DynamicResource Cr.SmartQueryNegationBrush}" TextWrapping="Wrap" />
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0">
       <Button Name="CancelButton" Content="Cancel" />

@@ -37,6 +37,30 @@ namespace ComicRack.Mac.ViewModels
 
 		public bool RequiresScripts => Node.RequiresScripts;
 
+		/// <summary>
+		/// The resource name of the row's image in the original: <c>ComicListItem.ImageKey</c> picks the entry of the tree's image list
+		/// (<c>ComicListLibraryBrowser.OnLoad</c>: Library, Folder = SearchFolder, Search = SearchDocument, List, TempFolder).
+		/// </summary>
+		public string IconName => IconNameOf(Node.Item?.ImageKey);
+
+		/// <summary>The image of a list item key (<c>ComicListItem.ImageKey</c>); an unknown key shows the plain list image.</summary>
+		public static string IconNameOf(string imageKey)
+		{
+			switch (imageKey)
+			{
+				case "Library":
+					return "Library";
+				case "Folder":
+					return "SearchFolder";
+				case "Search":
+					return "SearchDocument";
+				case "TempFolder":
+					return "TempFolder";
+				default:
+					return "List";
+			}
+		}
+
 		/// <summary>The badge under the name of a list that needs scripts, or null.</summary>
 		public string Badge => Node.RequiresScripts ? ScriptsBadge : null;
 
@@ -45,10 +69,14 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>Number of books, or -1 while it is not known yet (the counts are computed in the background).</summary>
 		[ObservableProperty]
 		[NotifyPropertyChangedFor(nameof(CountText))]
+		[NotifyPropertyChangedFor(nameof(HasCount))]
 		public partial int Count { get; set; } = -1;
 
 		// A list that needs scripts has no number to show (its result is empty because it is not evaluated).
 		public string CountText => Count < 0 || Node.RequiresScripts ? string.Empty : Count.ToString("N0", CultureInfo.CurrentCulture);
+
+		/// <summary>True when the counter shows: the original draws none for a list without books (<c>LibraryTreeSkin.DrawMarkers</c>).</summary>
+		public bool HasCount => Count > 0 && !Node.RequiresScripts;
 
 		[ObservableProperty]
 		public partial bool IsExpanded { get; set; }

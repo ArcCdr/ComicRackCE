@@ -15,7 +15,7 @@ namespace ComicRack.Mac.ViewModels
 	/// State and commands of the main window. Every command is wired to a menu item (<see cref="MainMenu"/>); those that
 	/// later tasks implement report that they are not available yet.
 	///
-	/// File > Open Folder and File > Import Windows Library (M2.1) live here: the dialogs come from <see cref="ILibraryDialogs"/>,
+	/// File > Add Folder to Library and File > Import Windows Library (M2.1) live here: the dialogs come from <see cref="ILibraryDialogs"/>,
 	/// the work from <see cref="FolderScanner"/> and <see cref="HostService"/>, and progress comes back through
 	/// <see cref="UiProgress{T}"/>. One long operation runs at a time (<see cref="IsBusy"/>); it can be cancelled.
 	/// </summary>
@@ -36,6 +36,13 @@ namespace ComicRack.Mac.ViewModels
 			StatusText = "Starting the library engine...";
 			BookCountText = "Starting the library engine...";
 			Browser.OpenBookRequested += OnOpenBookRequested;
+			Browser.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(BrowserViewModel.SummaryText))
+				{
+					OnPropertyChanged(nameof(StatusLine));
+				}
+			};
 			Sidebar.SelectionChanged += (sender, e) => _ = ShowSelectedListAsync();
 			hostService.Closing += (sender, e) => Browser.Thumbnails = null; // the cover service is about to be disposed (import)
 		}
@@ -125,6 +132,7 @@ namespace ComicRack.Mac.ViewModels
 		private async Task ShowSelectedListAsync(bool resetScroll = true)
 		{
 			SidebarNode node = Sidebar.SelectedNode;
+			Browser.ListName = node?.Name;
 			string notice = null;
 			Sidebar.Notice = null;
 			Task load = Browser.LoadAsync(Sidebar.LoaderFor(node, text => notice = text), resetScroll);
@@ -137,8 +145,33 @@ namespace ComicRack.Mac.ViewModels
 
 		public string AppName => "ComicRack CE (MVP)";
 
+		/// <summary>The title of the window: the form's text of the original (<c>MainForm.xml</c> key MainForm), "ComicRack".</summary>
+		public string WindowTitle => UiText.Get("MainForm", "MainForm", "ComicRack");
+
+		/// <summary>
+		/// A message of the app (starting, the engine did not start, a failed operation). The status bar shows it until a library is open; after that
+		/// it shows <see cref="BrowserViewModel.SummaryText"/> like the original (<c>MainForm.OnUpdateGui</c> writes <c>SelectionInfo</c> into <c>tsText</c>).
+		/// </summary>
 		[ObservableProperty]
+		[NotifyPropertyChangedFor(nameof(StatusLine))]
 		public partial string StatusText { get; set; }
+
+		/// <summary>The text of the status bar's first segment (<c>tsText</c>).</summary>
+		public string StatusLine => BookCount < 0 || string.IsNullOrEmpty(Browser.SummaryText) ? StatusText : Browser.SummaryText;
+
+		// The segments of the open book (tsBook, tsCurrentPage, tsPageCount). The library window shows no book, so they read as the original does
+		// without one: "None", "NA", "NA" (MainForm.OnUpdateGui, TotalPageInformation). The reader is a separate window until P5.32a.
+		public string BookSegmentText => UiText.Default("None", "None");
+
+		public string PageSegmentText => UiText.Default("NotAvailable", "NA");
+
+		public string PageCountSegmentText => UiText.Default("NotAvailable", "NA");
+
+		public string BookSegmentTip => UiText.Tooltip("MainForm", "tsBook") ?? "Name of the opened Book";
+
+		public string PageSegmentTip => UiText.Tooltip("MainForm", "tsCurrentPage") ?? "Current Page of the open Book";
+
+		public string PageCountSegmentTip => UiText.Tooltip("MainForm", "tsPageCount") ?? "Page count of the open Book";
 
 		[ObservableProperty]
 		public partial string HostText { get; set; }
@@ -150,12 +183,13 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>Books in the library, or -1 while there is no open library engine.</summary>
 		[ObservableProperty]
 		[NotifyPropertyChangedFor(nameof(ShowEmptyMessage))]
+		[NotifyPropertyChangedFor(nameof(StatusLine))]
 		public partial int BookCount { get; set; } = -1;
 
 		/// <summary>True while there is no book to show: the window then shows the title and the book count message instead of the grid.</summary>
 		public bool ShowEmptyMessage => BookCount <= 0;
 
-		/// <summary>True from the start of Open Folder / Import until it ends, including while its dialog is open. Disables both commands.</summary>
+		/// <summary>True from the start of Add Folder to Library / Import until it ends, including while its dialog is open. Disables both commands.</summary>
 		[ObservableProperty]
 		[NotifyCanExecuteChangedFor(nameof(OpenFolderCommand))]
 		[NotifyCanExecuteChangedFor(nameof(ImportWindowsLibraryCommand))]
@@ -201,11 +235,17 @@ namespace ComicRack.Mac.ViewModels
 			StatusText = $"Library engine ready. {BookCount} books. Data: {host.Paths.DataFolder}";
 		}
 
+		/// <summary>The title of the folder question in the original (<c>Messages.xml</c> key AddFolderLibraryTitle).</summary>
+		public static string AddFolderTitle => UiText.Message("AddFolderLibraryTitle", "Add Folder to Library");
+
+		/// <summary>"File › Add Folder to Library..." with the original's menu texts.</summary>
+		public static string AddFolderMenuPath => UiText.Get("MainForm", "fileMenu", "&File") + " › " + UiText.Get("MainForm", "miAddFolderToLibrary", "&Add Folder to Library...");
+
 		private void SetBookCount(int count)
 		{
 			BookCount = count;
 			BookCountText = count == 0
-				? "The library is empty. Use File › Open Folder… (⌘O) to add comics."
+				? "The library is empty. Use " + AddFolderMenuPath + " (⇧⌘A) to add comics."
 				: count.ToString("N0", CultureInfo.CurrentCulture) + (count == 1 ? " book" : " books") + " in the library";
 		}
 
@@ -221,7 +261,7 @@ namespace ComicRack.Mac.ViewModels
 				string folder = await dialogs.PickFolderAsync("Choose a folder of comics to add to the library");
 				if (folder == null)
 				{
-					StatusText = "Open Folder cancelled.";
+					StatusText = AddFolderTitle + " cancelled.";
 					return;
 				}
 				await ScanFolderCore(folder);
@@ -243,7 +283,7 @@ namespace ComicRack.Mac.ViewModels
 			});
 		}
 
-		/// <summary>Scans a folder and adds its books, as File > Open Folder does after the picker. For tests and scripted use.</summary>
+		/// <summary>Scans a folder and adds its books, as File > Add Folder to Library does after the picker. For tests and scripted use.</summary>
 		public Task<ScanResult> ScanFolderAsync(string folder)
 		{
 			return RunExclusive(() => ScanFolderCore(folder));
@@ -327,7 +367,7 @@ namespace ComicRack.Mac.ViewModels
 			var host = hostService.Host;
 			if (host == null)
 			{
-				await ReportProblem("Open Folder", "The library engine is not running, so a folder cannot be added.");
+				await ReportProblem(AddFolderTitle, "The library engine is not running, so a folder cannot be added.");
 				return null;
 			}
 			CancellationToken token = BeginProgress("Scanning " + Path.GetFileName(folder.TrimEnd('/')) + "...");
@@ -340,7 +380,7 @@ namespace ComicRack.Mac.ViewModels
 			catch (Exception ex)
 			{
 				AppLog.Error("The scan failed.", ex);
-				await ReportProblem("Open Folder", "The folder could not be scanned: " + ex.Message);
+				await ReportProblem(AddFolderTitle, "The folder could not be scanned: " + ex.Message);
 				return null;
 			}
 
@@ -460,13 +500,17 @@ namespace ComicRack.Mac.ViewModels
 			}
 		}
 
-		// View
+		// Browse and Display
 
 		[RelayCommand]
 		private void ToggleSidebar() => Sidebar.IsVisible = !Sidebar.IsVisible;
 
 		[RelayCommand]
 		private void ToggleFullScreen() => shell.ToggleFullScreen();
+
+		/// <summary>True while the window is full screen (Display > Full Screen is checked); the window keeps it up to date.</summary>
+		[ObservableProperty]
+		public partial bool IsFullScreen { get; set; }
 
 		// Window
 
@@ -479,7 +523,7 @@ namespace ComicRack.Mac.ViewModels
 		// Help
 
 		[RelayCommand]
-		private void ShowHelp() => NotYet("ComicRack CE Help", "M2.5");
+		private void ShowHelp() => NotYet(UiText.Get("MainForm", "miWebHelp", "ComicRack Documentation..."), "P5.31");
 
 		// App
 

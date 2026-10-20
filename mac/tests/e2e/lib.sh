@@ -71,7 +71,7 @@ launch_app() {
 	fi
 	ui launch "--$E2E_MODE" --data-dir "$E2E_DATA" -- "$@" || { bad "launch failed: $LAST_OUT"; e2e_end; }
 	E2E_LAUNCHED=1
-	must wait-window "^ComicRack CE .MVP.$" 60
+	must wait-window "^ComicRack$" 60
 	WINDOW_LINE=$LAST_OUT
 	must front
 }
@@ -156,9 +156,9 @@ menu_line() {
 # Number of books recorded in the saved library file (after the app quit).
 saved_book_count() { grep -c '<Book ' "$E2E_DATA/Data/ComicDb.xml" 2>/dev/null || echo 0; }
 
-# scan_folder <folder> <seconds>: File > Open Folder (Cmd+O), picker, waits for "Scan finished". Leaves the log line in LAST_OUT.
+# scan_folder <folder> <seconds>: File > Add Folder to Library... (Cmd+Shift+A), picker, waits for "Scan finished". Leaves the log line in LAST_OUT.
 scan_folder() {
-	press cmd+o
+	press cmd+shift+a
 	must wait-window "Choose" 15
 	must choose-path "$1"
 	expect_log "Scan finished" "${2:-60}"
@@ -169,9 +169,10 @@ check_log() {
 	if log_has "$1"; then ok "$2"; else bad "$2: no log line matching /$1/"; fi
 }
 
-# shown_book_count: the number in the "N books" label of the library window (read through the accessibility tree); empty if absent.
+# shown_book_count: the number of books in the status bar text of the library window (read through the accessibility tree); empty if absent.
+# The text is the original's SelectionInfo: "Library: 14706 Books (12 filtered) / 1.20 GB - 1 selected"; the number before " Book(s)".
 shown_book_count() {
-	"$UI" texts 2>/dev/null | awk -F'\t' '$2 ~ /^[0-9][^a-zA-Z]* books$/ { t = $2; sub(/ books$/, "", t); gsub(/[^0-9]/, "", t); print t; exit }'
+	"$UI" texts 2>/dev/null | awk -F'\t' '{ if (match($2, /(^|: )[0-9][0-9.,]* Books?( |$)/)) { t = substr($2, RSTART, RLENGTH); sub(/^: /, "", t); sub(/ Books?.*$/, "", t); gsub(/[^0-9]/, "", t); print t; exit } }'
 }
 
 # expect_shown_count <n> <what> [seconds]: waits until the window shows exactly n books.
