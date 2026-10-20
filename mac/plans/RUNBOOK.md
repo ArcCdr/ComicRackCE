@@ -111,7 +111,7 @@ mac/tools/verify.sh --full
 mac/tools/e2e.sh                                          # after P0.6b; exit 4 (locked) = skipped, retried at the next gate
 dotnet run --project mac/tools/census -- --pass B          # 0 errors
 dotnet run --project mac/tools/drawing-coverage            # PASS
-mac/tools/upstream-sync-check.sh --no-merge                # after P0.5c
+mac/tools/upstream-sync-check.sh --no-merge                # previews upstream/master, checks the current tree (about 5 minutes: it runs verify --full and both census passes itself)
 git status --porcelain                                     # census rewrites mac/reports/*.md: commit only if totals changed,
 git restore mac/reports                                    #   otherwise discard the timing-only changes
 ```
@@ -126,7 +126,7 @@ Review the macOS port changes in /Users/vince/dev/ComicRackCE between commit {FR
 ## 5. After an upstream merge (orchestrator side of `mac/UPSTREAM-SYNC.md`)
 
 1. Preflight as in §2 step 0 (the merge must be finished and committed by the owner).
-2. Run `mac/tools/upstream-sync-check.sh` (before P0.5c exists: `mac/tools/verify.sh --full`, both census passes, `dotnet run --project mac/tools/drawing-coverage`, and `dotnet test mac/tests/ComicRack.Mac.Host.Tests --filter FullyQualifiedName~Drift`). Read `mac/artifacts/upstream-sync/report.md`.
+2. Run `mac/tools/upstream-sync-check.sh` (about 5 minutes; exit 0 clean, 1 action items, 2 build or tests broken, 3 precondition). Read `mac/artifacts/upstream-sync/report.md`: one line per step (preconditions, files, packages, ui-parity, drift, build, tests, census-A/B, new-api, drawing), the detail lines under each FAIL and WARN, `NEXT:` and `EXIT:`. The scan output is `scan.txt`, the drift output `drift.txt`, the build and test logs are in `mac/artifacts/verify/`.
 3. For every FAIL and WARN create a task `U<yyyymmdd>.<n>` in `full-port.md` §7 "Upstream sync tasks" and at the front of §6, with the template. Typical tasks:
    - *Replacement drift, patched copy*: `mac/tools/replacement-sync.sh <original>`; check the merged copy; `--accept`; tests. Effort medium.
    - *Replacement drift, rewrite or stub*: port the upstream diff by hand into the replacement; `--accept`. Effort high.
