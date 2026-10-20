@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Characterization ("golden") tests of the shared Core on net10 (P0.7a): database round trip, list counts, file name parsing, matchers.
+  <!-- Characterization ("golden") tests of the shared Core on net10 (P0.7a, P0.7b): database round trip, list counts, file name parsing, matchers, archives, pages and thumbnails.
        The goldens are committed in Golden/; UPDATE_GOLDENS=1 rewrites them (see Goldens.cs). -->
   <PropertyGroup>
     <IsPackable>false</IsPackable>
@@ -18,5 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
+    <!-- FixtureCommands: the archives of ArchiveGoldenTests are generated at test time (crcli fixtures make / cb7 / pdf). -->
+    <ProjectReference Include="..\..\ComicRack.Cli\ComicRack.Cli.csproj" />
   </ItemGroup>
 </Project>

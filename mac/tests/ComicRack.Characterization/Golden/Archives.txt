@@ -1,0 +1,20 @@
+# book, format, page count; then per page: entry name, entry size, sha:<first 16 hex of SHA-256 of the page bytes> (- for PDF), decoded size, ah:<64-bit average hash>, thumbnail size, ah:<thumbnail hash>
+Fixture Series 01 001.cbz	eComic (ZIP)	4 pages (provider 4)
+	1	001.jpg	83488	sha:fc74a72267f6f02c	1510x2431	ah:0f0e7e7cfc780000	318x512	ah:0f0e7e7c7c780000
+	2	002.png	48273	sha:46adc560f2cab871	1166x1853	ah:1f1e1c2e3e3c1c00	322x512	ah:1f1e1e3e3e3c1c00
+	3	003.webp	37506	sha:f5964e8729c851e7	1780x2707	ah:1f387e7e7c000000	336x511	ah:1fb77e7e7c000000
+	4	004.jpg	59945	sha:5e312724a748b27e	1123x1794	ah:00707e363a3f0f00	320x512	ah:00707e363a3f0f00
+Fixture Series 01 002.cbz	eComic (ZIP)	4 pages (provider 4)
+	1	001.png	74684	sha:18b68997a79f7a16	1935x2975	ah:fffff8763f1e0000	333x512	ah:fffff8723f1e0000
+	2	002.webp	36614	sha:937cbee2cc6927c5	1796x2761	ah:ffff3c00183e1e00	333x512	ah:ffff3e00183e1e00
+	3	003.jpg	79010	sha:1eb0ee5d56fecb60	1301x2017	ah:ffff78f67e3e3e00	330x512	ah:dfff7c767e3e3e00
+	4	004.png	60871	sha:6c8cb4143b414314	1604x2372	ah:ffffff103c001e00	346x512	ah:ffffff103c001e00
+Fixture Series 01 001.cb7	eComic (7z)	4 pages (provider 4)
+	1	001.jpg	83488	sha:fc74a72267f6f02c	1510x2431	ah:0f0e7e7cfc780000	318x512	ah:0f0e7e7c7c780000
+	2	002.png	48273	sha:46adc560f2cab871	1166x1853	ah:1f1e1c2e3e3c1c00	322x512	ah:1f1e1e3e3e3c1c00
+	3	003.webp	37506	sha:f5964e8729c851e7	1780x2707	ah:1f387e7e7c000000	336x511	ah:1fb77e7e7c000000
+	4	004.jpg	59945	sha:5e312724a748b27e	1123x1794	ah:00707e363a3f0f00	320x512	ah:00707e363a3f0f00
+Fixture Series 01 003.pdf	PDF Document (PDF)	3 pages (provider 3)
+	1		0	sha:-	1920x2720	ah:007e7e667e007e00	361x512	ah:007e7e667e007e00
+	2		0	sha:-	1920x2720	ah:007e7e667e007e00	361x512	ah:007e7e667e007e00
+	3		0	sha:-	1920x2720	ah:007e7e007e007e00	361x512	ah:007e7e007e007e00
