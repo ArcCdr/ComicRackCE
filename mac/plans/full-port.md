@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: P5.R2)
 | P5 Screens (main window parity) | 66 | 6 | P5.R2 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 6 | 6 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **163** | **31** | | estimate in §10 |
+| RV Review fixes and upstream sync | 7 | 6 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **164** | **31** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -498,6 +498,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **Front of the list:** every `todo` task named `RV<n>[a-z]` or `U<yyyymmdd>.<n>` (their Status lines say which; `mac/tools/plan-status.sh` prints the next runnable task).
 - **P3.H** (HiDPI 1x/2x test harness) runs right after P0.7b and before any P5 task.
 - **RV5** (chrome isolation) runs right after P5.R1 and before P5.R2/P5.R3 and all further screens.
+- **RV5b** runs at the end of wave B, before C2.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`RV<n>`, formerly `R<n>`; renamed because R1 to R9 are the owner requirements of §1.1) go to the **front** of the list.
 
 ---
@@ -552,6 +553,12 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Do: (1) Audit the current code (`mac/ComicRack.Mac/Controls/`, `Themes/`, `Views/`, `Browser/`, `Reader/` views) and write `mac/plans/chrome-architecture.md`: the layers (tokens -> control themes/templates -> `Controls/` wrappers (Cr* controls) -> views), the public surface views may use (Cr* controls, style classes like `cr-toolbar`, `Cr.*` tokens via ThemeTokens, `Icons.Get(name)`), and the swap mechanism. (2) Implement a per-element chrome variant switch in one place: `ChromeVariants` (e.g. Toolbar, TabBar, StatusBar, Tree, ListHeader, Buttons, ComboBox, Dialogs, Menus...) each `Original` (default) | `Native`, set from one file/setting (`mac/ComicRack.Mac/Themes/ChromeVariants.cs` + optional env/pref override), resolved by control themes (e.g. ControlTheme selection by variant class on the root) so a variant can be flipped without editing any view. Implement at least one real `Native` variant end-to-end as proof (e.g. the status bar or the buttons use stock Fluent/macOS-leaning look) and a test proving the flip changes only the theme, not the view tree. (3) Move any chrome leaking in views (inline styles, templates, fonts, icon paths, sizes constants that are look-only) into the layer; views reference style classes/Cr* controls only. (4) Enforcement tests (architecture tests): views/viewmodels assemblies' sources contain no colour literals/FontFamily literals/inline `<Style>`/`<ControlTemplate>`; Views may reference only the allowed namespaces; every Cr* control resolves through a ControlTheme keyed by variant; `Icons` is the only way to load icons; failing test lists offenders. (5) Add the rule to full-port.md §2.11 and to the subagent prompt in RUNBOOK §3 ('chrome only in the chrome layer'); add a 'how to switch an element to native' section to `chrome-guidelines.md`.
 - Out of scope: new visual designs; changing the default look.
 - Accept: architecture tests pass and fail when an inline colour/template is added to a view (show once); variant flip test passes; `mac/tools/verify.sh`; the e2e `chrome-gallery` case unchanged (default look identical: compare screenshots before/after within a tolerance via `crcli image`).
+
+#### RV5b Chrome isolation, part 2: Buttons, ComboBox, Menus and the remaining elements switchable
+- Depends: RV5, P5.R3 · Effort: high · Unattended: yes · Status: todo
+- Goal: finish what RV5 left: every element listed in `ChromeVariants` is switchable Original|Native without editing views (Buttons, ComboBox, Menus have global base-theme overrides today; toolbar, tab bar, header, group box, side panel and tree have no Native variant). Native = a reasonable macOS-leaning look built from stock Fluent/native controls, not pixel-perfect AppKit.
+- Do: convert the global overrides into per-control ControlThemes selected by variant; add Native variants for the remaining elements per `chrome-guidelines.md` §10; tests: flip each element, view tree unchanged, default look unchanged (snapshot baselines), light and dark, 1x and 2x.
+- Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter "ChromeVariant|ChromeArchitecture|ChromeSnapshot"`; `mac/tools/verify.sh`; contact sheet with all-Native next to all-Original in `mac/artifacts/chrome/RV5b/`.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
