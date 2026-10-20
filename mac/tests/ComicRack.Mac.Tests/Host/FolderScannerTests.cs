@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
 using cYo.Common.Threading;
+using cYo.Projects.ComicRack.Engine;
 using Xunit;
 
 namespace ComicRack.Mac.Tests.Host
@@ -114,6 +115,101 @@ namespace ComicRack.Mac.Tests.Host
 					Assert.Equal(60 - first, rest.BooksAdded);
 					Assert.Equal(60, host.DatabaseManager.Database.Books.Count);
 					Assert.Equal(60, host.DatabaseManager.Database.Books.Select(b => b.FilePath).Distinct().Count());
+				}
+			}
+		}
+
+		[Fact]
+		public async Task A_scan_does_not_wait_for_a_thread_with_the_scanner_name_that_it_did_not_start()
+		{
+			using (var temp = new TempDir())
+			using (var release = new ManualResetEventSlim())
+			{
+				string books = temp.Combine("books");
+				Synthetic.CreateCbzFolder(books, 3);
+				// Another host or a test can run a thread with the same name; the old code waited up to 15 s for it.
+				Thread foreign = ThreadUtility.CreateWorkerThread("Book Scanner", () => release.Wait(), ThreadPriority.Lowest);
+				foreign.Start();
+				try
+				{
+					SpinWait.SpinUntil(() => ThreadUtility.ActiveThreads.Any(t => t.Name == "Book Scanner"), 5000);
+					using (MacHost host = OpenHost(temp))
+					{
+						var watch = System.Diagnostics.Stopwatch.StartNew();
+						ScanResult r = await new FolderScanner(host).ScanAsync(books, null, CancellationToken.None);
+						Assert.Equal(3, r.BooksAdded);
+						Assert.True(watch.Elapsed < TimeSpan.FromSeconds(10), "the scan waited for a thread of another owner: " + watch.Elapsed);
+					}
+				}
+				finally
+				{
+					release.Set();
+					foreign.Join(5000);
+				}
+			}
+		}
+
+		private sealed class OnReport : IProgress<ScanProgress>
+		{
+			private readonly Action<ScanProgress> action;
+
+			public OnReport(Action<ScanProgress> action)
+			{
+				this.action = action;
+			}
+
+			public void Report(ScanProgress value) => action(value);
+		}
+
+		[Fact]
+		public async Task A_second_scan_waits_for_the_previous_scanner_thread_of_the_same_scanner_to_exit()
+		{
+			using (var temp = new TempDir())
+			{
+				string books = temp.Combine("books");
+				Synthetic.CreateCbzFolder(books, 5);
+				using (MacHost host = OpenHost(temp))
+				{
+					ComicScanner coreScanner = host.QueueManager.Scanner;
+					var scanner = new FolderScanner(host) { ReportInterval = TimeSpan.Zero };
+					Assert.Null(coreScanner.LastScanThread);
+
+					// A handler that runs after the one of the FolderScanner and keeps the scanner thread alive for a while after the
+					// final notification (the thread still has its queue to clear then). It is added during the first scan, so that it comes later in the invocation list.
+					EventHandler<ComicScanNotifyEventArgs> linger = (s, e) =>
+					{
+						if (e.File.Length == 0)
+						{
+							Thread.Sleep(700);
+						}
+					};
+					bool added = false;
+					await scanner.ScanAsync(books, new OnReport(p =>
+					{
+						if (!added)
+						{
+							added = true;
+							coreScanner.ScanNotify += linger;
+						}
+					}), CancellationToken.None);
+					coreScanner.ScanNotify -= linger;
+					Thread first = coreScanner.LastScanThread;
+					Assert.NotNull(first);
+					Assert.True(first.IsAlive, "the first scanner thread is still on its way out when its scan has been reported complete");
+
+					bool firstAliveWhenSecondScanStarted = true;
+					bool seen = false;
+					await scanner.ScanAsync(books, new OnReport(p =>
+					{
+						if (!seen && p.FilesSeen > 0)
+						{
+							seen = true;
+							firstAliveWhenSecondScanStarted = first.IsAlive;
+						}
+					}), CancellationToken.None);
+					Assert.True(seen);
+					Assert.False(firstAliveWhenSecondScanStarted, "the second scan started while the thread of the first one was still running");
+					Assert.NotSame(first, coreScanner.LastScanThread);
 				}
 			}
 		}

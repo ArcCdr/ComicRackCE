@@ -31,6 +31,9 @@ namespace ComicRack.Characterization
 						return 3;
 					}
 					Console.WriteLine("COUNT " + rows[0].Count);
+					// ComicBook.languages (private, filled by GetIsoCulture) must hold every code the host warms before the first list runs.
+					var languages = (System.Collections.IDictionary)typeof(ComicBook).GetField("languages", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?.GetValue(null);
+					Console.WriteLine("LANGUAGES " + (languages == null ? -1 : languages.Count));
 					return 0;
 				}
 			}

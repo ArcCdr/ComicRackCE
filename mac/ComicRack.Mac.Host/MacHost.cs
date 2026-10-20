@@ -33,6 +33,7 @@ namespace ComicRack.Mac.Host
 
 		private readonly bool readOnly;
 		private int booksAtFinalSave = -1;
+		private string finalSaveNote;
 		private bool disposed;
 
 		public MacPaths Paths { get; }
@@ -267,9 +268,29 @@ namespace ComicRack.Mac.Host
 			{
 				closeError = ex;
 			}
+			// A scanner thread that outlived the close may still add books: the file cannot be compared with a book count then.
+			string note = finalSaveNote;
 			SaveVerification v = readOnly
 				? new SaveVerification { File = DatabaseFile, Ok = true, Skipped = true }
-				: SaveVerification.Check(DatabaseFile, startedUtc, countBooks ? booksAtFinalSave : -1);
+				: SaveVerification.Check(DatabaseFile, startedUtc, countBooks && note == null ? booksAtFinalSave : -1);
+			if (note != null && !readOnly)
+			{
+				v.Unchecked = true;
+				v.Note = note;
+				if (v.Ok)
+				{
+					// still well formed, with whatever books it holds
+					try
+					{
+						v.BooksInFile = SaveVerification.CountBooks(DatabaseFile);
+					}
+					catch (Exception ex)
+					{
+						v.Ok = false;
+						v.Problem = "The database file could not be read back: " + ex.Message;
+					}
+				}
+			}
 			v.CloseError = closeError;
 			return v;
 		}
@@ -307,6 +328,15 @@ namespace ComicRack.Mac.Host
 			Log?.Info("Closing host.");
 
 			// Program.cs CleanUp (:1043): QueueManager, ImagePool, DatabaseManager (which saves). The CacheManager has nothing to dispose.
+			// The scanner is read before the QueueManager is disposed (its getter creates the scanner on first use and the QueueManager is gone afterwards).
+			ComicScanner scanner = null;
+			try
+			{
+				scanner = QueueManager?.Scanner;
+			}
+			catch (Exception)
+			{
+			}
 			Step(errors, "QueueManager", QueueManager);
 			Step(errors, "ImagePool", CacheManager?.ImagePool);
 			// The queues (a running scan) have stopped, so this is the number of books the final save writes.
@@ -316,6 +346,13 @@ namespace ComicRack.Mac.Host
 			}
 			catch (Exception)
 			{
+			}
+			// ComicScanner.Stop gives up on a scanning thread after 10 s (the pass B replacement of Thread.Abort). That thread can still add a
+			// book after the count above and after the final save, so the save cannot be checked against a count and the loss is not silent.
+			if (scanner != null && scanner.HasAbandonedThread)
+			{
+				finalSaveNote = "A book scanner thread did not stop and was abandoned; books it adds after the final save are not in the database file, so the book count was not checked.";
+				Log?.Write("WARN", finalSaveNote);
 			}
 			Step(errors, "DatabaseManager", DatabaseManager);
 

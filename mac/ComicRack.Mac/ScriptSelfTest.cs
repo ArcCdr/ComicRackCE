@@ -25,6 +25,62 @@ namespace ComicRack.Mac
 		public const string ScriptsDirVariable = "COMICRACK_SCRIPTS_DIR";
 
 		/// <summary>
+		/// Set to 1 to enable <c>--script-selftest</c> in a release build (the signed bundle). A debug build (a developer's
+		/// <c>dotnet run</c>) has it always; the bundle that users get does not run it, because it executes arbitrary Python from a path
+		/// on the command line.
+		/// </summary>
+		public const string EnableVariable = "COMICRACK_ENABLE_SELFTEST";
+
+		/// <summary>True if the self test may run in this build: always in a debug build, in a release build only with <see cref="EnableVariable"/>=1.</summary>
+		public static bool IsEnabled
+		{
+			get
+			{
+#if DEBUG
+				return true;
+#else
+				return Environment.GetEnvironmentVariable(EnableVariable) == "1";
+#endif
+			}
+		}
+
+		/// <summary>
+		/// True if <paramref name="path"/> is inside the folders where ComicRack keeps the user's own scripts and data (a folder below
+		/// ~/Library/Application Support or ~/Library/Caches whose name starts with ComicRack or cYo, and any folder named Scripts below them).
+		/// The self test reads the scripts of the folder it is given and runs their top levels, so it must never be pointed at those.
+		/// </summary>
+		public static bool IsRealScriptsFolder(string path)
+		{
+			string full = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+			string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+			var roots = new List<string>
+			{
+				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+			};
+			if (!string.IsNullOrEmpty(home))
+			{
+				roots.Add(Path.Combine(home, "Library", "Application Support"));
+				roots.Add(Path.Combine(home, "Library", "Caches"));
+			}
+			foreach (string root in roots.Where(r => !string.IsNullOrEmpty(r)))
+			{
+				string prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+				if (!full.StartsWith(prefix, StringComparison.Ordinal))
+				{
+					continue;
+				}
+				string first = full.Substring(prefix.Length).Split(Path.DirectorySeparatorChar)[0];
+				if (first.StartsWith("ComicRack", StringComparison.OrdinalIgnoreCase) || first.StartsWith("cYo", StringComparison.OrdinalIgnoreCase)
+					|| full.Substring(prefix.Length).Split(Path.DirectorySeparatorChar).Any(part => string.Equals(part, "Scripts", StringComparison.OrdinalIgnoreCase)))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// Set to 1 to run a copy of Sample.py (and Sample.xml) whose two clr.AddReferenceByPartialName lines name the stand-in assemblies
 		/// (cYo.Compat.Forms, cYo.Compat.Drawing). It simulates the best case of the identity question: the names that scripts use resolve.
 		/// </summary>
@@ -86,6 +142,11 @@ namespace ComicRack.Mac
 			if (string.IsNullOrEmpty(scriptsDir))
 			{
 				scriptsDir = Path.GetDirectoryName(full);
+			}
+			if (IsRealScriptsFolder(scriptsDir) || IsRealScriptsFolder(Path.GetDirectoryName(full)))
+			{
+				report.Fail("scripts folder", "refused: " + scriptsDir + " is where ComicRack keeps the user's scripts and data; copy the scripts to a temporary folder first");
+				return 1;
 			}
 			if (Environment.GetEnvironmentVariable(ResolverVariable) == "1")
 			{
@@ -248,27 +309,50 @@ namespace ComicRack.Mac
 
 		private static void SampleChecks(Report report, PluginEnvironment env, string sample)
 		{
-			if (Environment.GetEnvironmentVariable(RewriteRefsVariable) == "1")
+			string temp = null;
+			try
 			{
-				string temp = Path.Combine(Path.GetTempPath(), "comicrack-s4-" + Guid.NewGuid().ToString("N"));
-				Directory.CreateDirectory(temp);
-				foreach (string source in Directory.GetFiles(Path.GetDirectoryName(sample)))
+				if (Environment.GetEnvironmentVariable(RewriteRefsVariable) == "1")
 				{
-					string target = Path.Combine(temp, Path.GetFileName(source));
-					if (source.EndsWith(".py", StringComparison.OrdinalIgnoreCase))
+					temp = Path.Combine(Path.GetTempPath(), "comicrack-s4-" + Guid.NewGuid().ToString("N"));
+					Directory.CreateDirectory(temp);
+					foreach (string source in Directory.GetFiles(Path.GetDirectoryName(sample)))
 					{
-						File.WriteAllText(target, File.ReadAllText(source)
-							.Replace("AddReferenceByPartialName(\"System.Windows.Forms\")", "AddReference(\"cYo.Compat.Forms\")")
-							.Replace("AddReferenceByPartialName(\"System.Drawing\")", "AddReferenceByPartialName(\"System.Drawing\"); clr.AddReference(\"cYo.Compat.Drawing\")"));
+						string target = Path.Combine(temp, Path.GetFileName(source));
+						if (source.EndsWith(".py", StringComparison.OrdinalIgnoreCase))
+						{
+							File.WriteAllText(target, File.ReadAllText(source)
+								.Replace("AddReferenceByPartialName(\"System.Windows.Forms\")", "AddReference(\"cYo.Compat.Forms\")")
+								.Replace("AddReferenceByPartialName(\"System.Drawing\")", "AddReferenceByPartialName(\"System.Drawing\"); clr.AddReference(\"cYo.Compat.Drawing\")"));
+						}
+						else if (!source.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+						{
+							File.Copy(source, target);
+						}
 					}
-					else if (!source.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+					report.Info("Sample.py", "run from a copy of the scripts folder with the two AddReferenceByPartialName lines rewritten to the stand-in names");
+					sample = Path.Combine(temp, "Sample.py");
+				}
+				SampleChecksIn(report, env, sample);
+			}
+			finally
+			{
+				if (temp != null)
+				{
+					try
 					{
-						File.Copy(source, target);
+						Directory.Delete(temp, true);
+					}
+					catch (Exception e)
+					{
+						report.Info("Sample.py", "the temporary copy " + temp + " could not be deleted: " + e.Message);
 					}
 				}
-				report.Info("Sample.py", "run from a copy of the scripts folder with the two AddReferenceByPartialName lines rewritten to the stand-in names");
-				sample = Path.Combine(temp, "Sample.py");
 			}
+		}
+
+		private static void SampleChecksIn(Report report, PluginEnvironment env, string sample)
+		{
 			Command[] commands = new PythonPluginInitializer().GetCommands(sample).ToArray();
 			report.Check("Sample.py commands found", commands.Length >= 10, commands.Length + " commands: " + string.Join(", ", commands.Select(c => ((PythonCommand)c).Method)));
 			string xml = Path.ChangeExtension(sample, ".xml");

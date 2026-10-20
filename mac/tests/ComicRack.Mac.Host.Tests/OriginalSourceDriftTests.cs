@@ -15,6 +15,12 @@ namespace ComicRack.Mac.Host.Tests
 	{
 		// SHA-256 of ComicRack.Engine/CacheManager.cs without a byte order mark and with LF line endings, recorded in mac/replacements.json
 		// (ReplacementManifestTests checks every entry; this test keeps the CacheManager message and the line-exact test below next to each other).
+		//
+		// There is deliberately no second copy of the hash in this file. The manifest is the single record that replacement-sync.sh updates
+		// after it has merged an upstream change into the copy, and a literal here would turn every legitimate sync into a failing test that
+		// has to be edited by hand, which in practice means the literal is bumped together with the manifest and guards nothing. The independent
+		// guard is the line-exact test below: it compares the copy with the current original (not with a hash), so a change of the original
+		// that the copy does not follow fails it even if someone edits the manifest hash to make the test above pass.
 		private static string CacheManagerHash()
 		{
 			ManifestEntry entry = ReplacementManifest.Load(ReplacementManifest.ManifestPath(RepoRoot(), allowOverride: false))

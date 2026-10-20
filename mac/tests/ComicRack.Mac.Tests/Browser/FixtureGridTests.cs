@@ -264,6 +264,11 @@ namespace ComicRack.Mac.Tests.Browser
 						// GC: a leak of one cover in twenty adds more than 500 MB in the last 70% of the scroll, and the same code measured between
 						// -100 and +90 MB, so one cache bound (256 MB) leaves the noise out and keeps every real leak in.
 						Assert.True(footEnd - footWarm <= bound, $"after the scroll and a GC the footprint is {Mb(footEnd - footWarm):0} MB above the one with the cache full; allowed {Mb(bound):0} MB");
+						// The peak between the two points is sampled every 25 positions without a GC, so it also holds garbage that is not collected yet
+						// (the unflushed peak above ranged from +190 to +520 MB over the baseline). A leak that is later hidden by a lucky GC at the end
+						// still shows up here; two cache bounds (512 MB) leave the garbage out.
+						Assert.True(footWarm >= 0, "the cache never filled up (the warm point was not taken)");
+						Assert.True(peakAfterWarm - footWarm <= 2 * bound, $"between the cache being full and the end the footprint peaked {Mb(peakAfterWarm - footWarm):0} MB above the full-cache point; allowed {Mb(2 * bound):0} MB");
 						Assert.True(end.DecodesCompleted > 10000, "the scroll must have decoded most covers: " + end.DecodesCompleted);
 						Assert.True(maxRealized < 100);
 						Assert.True(end.PeakInFlight <= 4);

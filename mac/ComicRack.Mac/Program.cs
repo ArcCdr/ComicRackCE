@@ -18,6 +18,11 @@ namespace ComicRack.Mac
 			}
 			if (options.ScriptSelfTest != null)
 			{
+				if (!ScriptSelfTest.IsEnabled)
+				{
+					Console.Error.WriteLine("--script-selftest is a developer option and is off in this build. Set " + ScriptSelfTest.EnableVariable + "=1 to use it.");
+					return 2;
+				}
 				return ScriptSelfTest.Run(options.ScriptSelfTest, Console.Out);
 			}
 			App.StartupOptions = options;

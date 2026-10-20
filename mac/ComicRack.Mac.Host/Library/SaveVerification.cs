@@ -18,6 +18,15 @@ namespace ComicRack.Mac.Host.Library
 		/// <summary>True if no save was attempted (the host is read only).</summary>
 		public bool Skipped { get; internal set; }
 
+		/// <summary>
+		/// True if the file was written and is well formed but the number of books in it was not compared with the library, because books could
+		/// still be added while the host closed (an abandoned scanner thread). <see cref="Note"/> says why.
+		/// </summary>
+		public bool Unchecked { get; internal set; }
+
+		/// <summary>Why the save is <see cref="Unchecked"/>, or null.</summary>
+		public string Note { get; internal set; }
+
 		/// <summary>What is wrong, or null.</summary>
 		public string Problem { get; set; }
 
@@ -40,6 +49,10 @@ namespace ComicRack.Mac.Host.Library
 			if (Skipped)
 			{
 				return "Save skipped (read only).";
+			}
+			if (Ok && Unchecked)
+			{
+				return $"Saved {File}: {Length} bytes, {BooksInFile} books, {Elapsed.TotalSeconds:0.0} s. UNCHECKED: {Note}";
 			}
 			return Ok
 				? $"Saved {File}: {Length} bytes, {BooksInFile} books, {Elapsed.TotalSeconds:0.0} s."

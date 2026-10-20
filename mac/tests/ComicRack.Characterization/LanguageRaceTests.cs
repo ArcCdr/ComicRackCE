@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -23,6 +24,8 @@ namespace ComicRack.Characterization
 				.Where(f => f.Length > 3 && f[0] == ListName)
 				.Select(f => int.Parse(f[2]))
 				.Single();
+			int warmCodes = CultureInfo.GetCultures(CultureTypes.NeutralCultures).Select(c => c.TwoLetterISOLanguageName).Distinct().Count();
+			Assert.True(warmCodes > 100, "the neutral cultures of this runtime: " + warmCodes);
 			string dll = typeof(LanguageRaceTests).Assembly.Location;
 			string database = Goldens.PathOf("SmallDb.xml");
 			for (int i = 0; i < Processes; i++)
@@ -38,7 +41,11 @@ namespace ComicRack.Characterization
 					string error = p.StandardError.ReadToEnd();
 					Assert.True(p.WaitForExit(120000), "child process " + i + " timed out");
 					Assert.True(p.ExitCode == 0, "child process " + i + " failed: " + error + output);
-					Assert.Equal("COUNT " + expected, output.Trim());
+					string[] lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+					Assert.Equal("COUNT " + expected, lines[0]);
+					// The count above is the symptom. The cause is checked directly: the dictionary was filled completely before the list ran,
+					// so no evaluation thread ever writes to it.
+					Assert.Equal("LANGUAGES " + warmCodes, lines.Single(l => l.StartsWith("LANGUAGES ", StringComparison.Ordinal)));
 				}
 			}
 		}

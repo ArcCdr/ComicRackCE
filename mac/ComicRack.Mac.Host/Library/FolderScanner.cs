@@ -1,10 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using cYo.Common.Threading;
 using cYo.Projects.ComicRack.Engine;
 
 namespace ComicRack.Mac.Host.Library
@@ -121,8 +119,10 @@ namespace ComicRack.Mac.Host.Library
 			int booksBefore = books.Count;
 			long interval = (long)(ReportInterval.TotalSeconds * Stopwatch.Frequency);
 
-			// An earlier (cancelled) scan thread may still be on its way out: its final notification must not end this scan.
-			await WaitForScannerThreadToExit().ConfigureAwait(false);
+			// An earlier (cancelled) scan thread of this scanner may still be on its way out: its final notification must not end this
+			// scan and its queue clearing must not remove this scan's folder. Only the thread this scanner started is awaited; another
+			// thread that happens to carry the same name (another host, a test) is not ours.
+			await WaitForThreadToExit(scanner.LastScanThread).ConfigureAwait(false);
 
 			var finished = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 			int files = 0;
@@ -184,10 +184,14 @@ namespace ComicRack.Mac.Host.Library
 			};
 		}
 
-		private static async Task WaitForScannerThreadToExit()
+		private static async Task WaitForThreadToExit(Thread thread)
 		{
+			if (thread == null)
+			{
+				return;
+			}
 			var deadline = DateTime.UtcNow.AddSeconds(15);
-			while (ThreadUtility.ActiveThreads.Any(t => t.Name == "Book Scanner") && DateTime.UtcNow < deadline)
+			while (thread.IsAlive && DateTime.UtcNow < deadline)
 			{
 				await Task.Delay(10).ConfigureAwait(false);
 			}

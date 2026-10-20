@@ -95,6 +95,24 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
+		public void Patched_copy_budgets_are_not_looser_than_the_actual_change()
+		{
+			// A budget far above the real change would let a patched copy grow into a rewrite unnoticed. Two lines of slack, no more.
+			var loose = new List<string>();
+			foreach (ManifestEntry e in Entries().Where(e => e.Kind == "patched-copy"))
+			{
+				string[] original = ReplacementManifest.BodyLines(ReplacementManifest.ToPath(Root, e.Original));
+				string[] copy = ReplacementManifest.BodyLines(ReplacementManifest.ToPath(Root, e.Replacement));
+				int changed = ReplacementManifest.ChangedLines(original, copy);
+				if (e.MaxChangedLines > changed + 2)
+				{
+					loose.Add(e.Replacement + ": budget " + e.MaxChangedLines + ", actual " + changed);
+				}
+			}
+			Assert.True(loose.Count == 0, "set maxChangedLines in mac/replacements.json to the actual count:\n" + string.Join("\n", loose));
+		}
+
+		[Fact]
 		public void ChangedLines_counts_removed_and_added_lines()
 		{
 			Assert.Equal(0, ReplacementManifest.ChangedLines(new[] { "a", "b" }, new[] { "a", "b" }));

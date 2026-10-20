@@ -109,10 +109,27 @@ namespace ComicRack.Characterization
 		[Fact]
 		public void The_default_parser_follows_the_engine_setting()
 		{
-			string path = "/comics/Batman/Batman 012 (1940).cbz";
+			// A name the two parsers read differently (the new one: series Batman, number 12, year 1940; the legacy one: series "Batman 012",
+			// number 1940), so that ignoring the setting, or swapping the two parsers, cannot pass.
+			string path = "/comics/Batman/Batman.012.1940.cbz";
+			string neu = Serialize(ComicNameInfo.FromFilePath(path, legacy: false));
+			string old = Serialize(ComicNameInfo.FromFilePath(path, legacy: true));
+			Assert.NotEqual(neu, old);
 			bool legacy = EngineConfiguration.Default.LegacyFilenameParser;
-			Assert.Equal(ComicNameInfo.FromFilePath(path, legacy), ComicNameInfo.FromFilePath(path));
+			try
+			{
+				EngineConfiguration.Default.LegacyFilenameParser = false;
+				Assert.Equal(neu, Serialize(ComicNameInfo.FromFilePath(path)));
+				EngineConfiguration.Default.LegacyFilenameParser = true;
+				Assert.Equal(old, Serialize(ComicNameInfo.FromFilePath(path)));
+			}
+			finally
+			{
+				EngineConfiguration.Default.LegacyFilenameParser = legacy;
+			}
 		}
+
+		private static string Serialize(ComicNameInfo info) => WithCulture(CultureInfo.InvariantCulture, () => JsonSerializer.Serialize(Describe(info), Json));
 
 		[Theory]
 		[InlineData("/comics/Batman/Batman 012 (1940).cbz", "Batman", "12", 1940, -1, -1)]

@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-20, orchestrator; next task: RV4b)
+Run state: RUNNING (2026-10-20, orchestrator; next task: P5.0)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: RV4b)
 | P5 Screens (main window parity) | 66 | 0 | P5.0 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 5 | 4 | RV4b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **162** | **22** | | estimate in §10 |
+| RV Review fixes and upstream sync | 5 | 5 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **162** | **23** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -333,6 +333,14 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - `upstream-sync-check.sh`: `ui-parity` is WARN (INFO in a preview) for every changed Windows UI file that `mac/plans/upstream-ui-log.md` does not list with the upstream commit that changed it; the U-task adds the rows, which makes the next run INFO. `UPSTREAM-SYNC.md` and RUNBOOK section 5 say the same.
 - `verify.sh` unsets `UPDATE_GOLDENS` (and prints a notice); `run-plan.sh` takes the model from `--model`, `COMICRACK_PLAN_MODEL` or the `Loop model:` line of RUNBOOK section 7, and no script under `mac/tools` or `mac/tests/e2e` holds a tier name (test).
 
+
+**Facts from RV4b (2026-10-20)**
+- Scanner teardown: the pass B `ComicScanner` (budget now 13 changed lines) keeps `LastScanThread` (the thread of the most recent scan, never reset) and `HasAbandonedThread` (a thread that `Stop` gave up on and that is still alive). An abandoned thread does not raise its final `ScanNotify` once the scanner is disposed, so nothing reaches `QueueManager.ComicScanned` after `MacHost.IsDisposed`. `MacHost.Teardown` reads the scanner before it disposes the `QueueManager`; with an abandoned thread it logs a `[WARN]` line and `DisposeAndVerify` returns a `SaveVerification` with `Ok` (file written and well formed), `Unchecked = true` and a `Note`; the book count is not compared (`ToString` ends with `UNCHECKED: ...`). Books that thread adds after the final save are still not in the file; the warning is the record.
+- `FolderScanner` waits at the start of a scan for `scanner.LastScanThread` (up to 15 s), not for every thread named "Book Scanner": a thread of another owner no longer delays a scan.
+- Manifest budgets are the actual counts (ThreadUtility 3, BackgroundRunner 6, ComicScanner 13, others unchanged); `Patched_copy_budgets_are_not_looser_than_the_actual_change` allows 2 lines of slack, so a merge that shrinks a patch asks for a new budget. No second hash of `CacheManager.cs` in `OriginalSourceDriftTests` on purpose (the comment there says why): the line-exact test compares the copy with the original itself.
+- Test strength: `FixtureGridTests` also bounds `peakAfterWarm - footWarm` by two cache bounds (measured +193 MB, bound 512 MB); `GridHiDpiTests` reduced-lines test counts periods with contrast (51 of 63 rows at 2x, 25 of 31 at 1x, needs 60 percent) and the 1x case of the frame comparison asserts two renders are identical; `The_default_parser_follows_the_engine_setting` uses `Batman.012.1940.cbz`, which the two parsers read differently, and switches the setting both ways; the language race child process also prints `LANGUAGES <n>` (the private `ComicBook.languages` count by reflection, test only) and the test requires every neutral-culture ISO code.
+- `--script-selftest` is a developer option: `ScriptSelfTest.IsEnabled` is true in a Debug build and, in a Release build (the bundle), only with `COMICRACK_ENABLE_SELFTEST=1`; otherwise `Program.Main` prints a message and exits 2. `Run` refuses (FAIL, exit 1, before any script runs) a scripts folder or probe file below `~/Library/Application Support` or `~/Library/Caches` whose first folder starts with `ComicRack` or `cYo` or that has a `Scripts` folder in its path (`IsRealScriptsFolder`), and deletes its `comicrack-s4-*` temp copy (`COMICRACK_SELFTEST_REWRITE_REFS`). To run the check in the bundle: `COMICRACK_ENABLE_SELFTEST=1 .../Contents/MacOS/ComicRack.Mac --script-selftest FILE`.
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -455,7 +463,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: `mac/tools/plan-status.sh --check` exits 0 and the table equals the Status lines; new/updated script tests pass; `mac/tools/verify.sh`.
 
 #### RV4b Review fixes: teardown, scanner wait, memory test, test strength (wave A review, Medium 7-9, Low 1, 5, 6, 7)
-- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Depends: none · Effort: high · Unattended: yes · Status: done 2026-10-20
 - Goal: fix product/test findings. (1) MacHost teardown after an abandoned scanner thread (MacHost.cs ~312-315, PassB/ComicScanner.cs ~100-106): detect a live 'Book Scanner' thread, warn, mark save verification 'unchecked' instead of false failure/silent loss, do not raise ScanNotify on a disposed QueueManager. (2) FolderScanner.WaitForScannerThreadToExit waits on the Thread object this host started, not the global name. (3) FixtureGridTests memory test: assert `peakAfterWarm - footWarm` against a bound as well. (4) Drift guards: keep an independent hash for CacheManager in the test or document why not; set manifest line budgets to actual counts. (5) Strengthen weak tests: GridHiDpiTests `dark > 0`, MainData 1.0 self-compare, NameInfo golden name that the parsers read differently (e.g. 'Batman.012.1940.cbz'), deterministic check of ComicBook.languages in the language race test. (6) `ScriptSelfTest.cs`: dev-only (not reachable in release bundle unless env var), refuse the real Scripts folder, delete its temp folder. Add tests for each fix (mutation-check where feasible).
 - Accept: new tests fail without the fix (show once) and pass with it; `mac/tools/verify.sh --full` once.
 

@@ -1,7 +1,8 @@
 // Pass B patched copy of ComicRack.Engine/ComicScanner.cs (the original is removed from the pass B compile in Sources.props).
-// Only Stop differs: a scanning thread that does not stop within 10 s is reported and abandoned instead of Thread.Abort (not
-// supported on .NET 10); abortScanning stays set as in the original. A test in ComicRack.Mac.Host.Tests compares the original
-// with a recorded hash.
+// Stop differs: a scanning thread that does not stop within 10 s is reported and abandoned instead of Thread.Abort (not
+// supported on .NET 10); abortScanning stays set as in the original. The host reads LastScanThread and HasAbandonedThread; an
+// abandoned thread does not raise its final ScanNotify once the scanner is disposed (the QueueManager behind it is gone by
+// then). A test in ComicRack.Mac.Host.Tests compares the original with a recorded hash.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +18,7 @@ namespace cYo.Projects.ComicRack.Engine
 	public class ComicScanner : DisposableObject
 	{
 		private Thread scanningThread;
+		private volatile Thread lastScanThread, abandonedThread; private volatile bool disposeRequested;
 
 		private readonly ComicBookFactory factory;
 
@@ -43,6 +45,9 @@ namespace cYo.Projects.ComicRack.Engine
 		}
 
 		public SmartList<ScanItem> ScanQueue => scanQueue;
+
+		public Thread LastScanThread => lastScanThread;
+		public bool HasAbandonedThread => abandonedThread != null && abandonedThread.IsAlive;
 
 		public ComicScanOptions ScanOptions
 		{
@@ -71,6 +76,7 @@ namespace cYo.Projects.ComicRack.Engine
 			{
 				scanCompleted = false;
 				scanningThread = ThreadUtility.CreateWorkerThread("Book Scanner", ScanFolderQueue, ThreadPriority.Lowest);
+				lastScanThread = scanningThread;
 				scanningThread.Start();
 			}
 		}
@@ -99,6 +105,7 @@ namespace cYo.Projects.ComicRack.Engine
 				abortScanning = true;
 				if (!scanningThread.Join(10000))
 				{
+					abandonedThread = scanningThread;
 					Trace.TraceWarning("Thread '" + scanningThread.Name + "' did not stop within 10000 ms and is abandoned (Thread.Abort is not supported).");
 				}
 			}
@@ -193,7 +200,7 @@ namespace cYo.Projects.ComicRack.Engine
 			finally
 			{
 				scanCompleted = true;
-				OnScanNotify(new ComicScanNotifyEventArgs(string.Empty));
+				if (!(disposeRequested && abandonedThread == Thread.CurrentThread)) OnScanNotify(new ComicScanNotifyEventArgs(string.Empty));
 				if (flag)
 				{
 					scanQueue.Clear();
@@ -233,6 +240,7 @@ namespace cYo.Projects.ComicRack.Engine
 		{
 			if (disposing)
 			{
+				disposeRequested = true;
 				Stop(clearQueue: true);
 			}
 			base.Dispose(disposing);

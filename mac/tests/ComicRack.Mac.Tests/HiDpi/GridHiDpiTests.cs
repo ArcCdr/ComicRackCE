@@ -184,14 +184,38 @@ namespace ComicRack.Mac.Tests.HiDpi
 						Rect fit = CoverView.Fit(box.Width, box.Height, w, hh);
 						RectInt area = RectInt.Snapped(new Rect(box.X + fit.X, box.Y + fit.Y, fit.Width, fit.Height), scale);
 						Raster inside = frame.Crop(area.Inflate(-3));
-						// black lines of the picture: reduced by 2 they are still dark (not averaged away) somewhere in every 4 pixel period
-						int dark = 0;
+						// The picture has a black column every 8 pixels (and a black row every 10); reduced by 2 that is a period of 4 device pixels
+						// in which the line must still be darker than the picture around it. A reduction that skips pixels (nearest neighbour) or
+						// averages over too wide a window loses the contrast in most periods. Rows on a horizontal line are all dark and are left out.
+						int rowsChecked = 0, rowsWithLines = 0;
 						for (int y = 0; y < inside.Height; y += 7)
 						{
-							dark += inside.CountInRow(y, 0, inside.Width, c => c.Red < 70 && c.Green < 70 && c.Blue < 70);
+							int periods = 0, contrasty = 0;
+							for (int x0 = 0; x0 + 4 <= inside.Width; x0 += 4)
+							{
+								int min = 255, max = 0;
+								for (int x = x0; x < x0 + 4; x++)
+								{
+									SKColor c = inside[x, y];
+									int luma = (c.Red * 3 + c.Green * 6 + c.Blue) / 10;
+									min = Math.Min(min, luma);
+									max = Math.Max(max, luma);
+								}
+								periods++;
+								if (max - min >= 40)
+								{
+									contrasty++;
+								}
+							}
+							rowsChecked++;
+							if (periods > 0 && contrasty >= periods * 3 / 4)
+							{
+								rowsWithLines++;
+							}
 						}
-						output.WriteLine($"scale {scale}: {dark} dark pixels in the sampled rows of {inside.Width} x {inside.Height}");
-						Assert.True(dark > 0, "the 1 pixel lines survive a reduction by 2");
+						output.WriteLine($"scale {scale}: {rowsWithLines} of {rowsChecked} sampled rows keep the lines in 3 of 4 periods ({inside.Width} x {inside.Height})");
+						Assert.True(rowsChecked >= 10, "enough rows were sampled: " + rowsChecked);
+						Assert.True(rowsWithLines * 10 >= rowsChecked * 6, $"the 1 pixel lines survive a reduction by 2: {rowsWithLines} of {rowsChecked} rows");
 					}
 				}
 			});
@@ -216,6 +240,13 @@ namespace ComicRack.Mac.Tests.HiDpi
 					Raster back = frame.Downscale(reference.Width, reference.Height);
 					Difference d = back.Compare(reference, 64);
 					output.WriteLine($"scale {scale} reduced to 1x against the 1x frame: {d}");
+					if (scale == 1.0)
+					{
+						// Here the frame is compared with a second frame of the same layout: the only thing it proves is that a render is
+						// deterministic (no animation, no random placeholder), which is what makes the comparisons at the other scales meaningful.
+						Assert.True(d.Max == 0 && d.Mean == 0, "two renders of the same layout at 1x differ: " + d);
+						return;
+					}
 					// the text is drawn with other pixels at 2x (it is not a scaled picture), the covers and the cells are the same
 					Assert.True(d.Mean < 1.0, d.ToString());
 					Assert.True(d.Bad < 0.01, d.ToString());

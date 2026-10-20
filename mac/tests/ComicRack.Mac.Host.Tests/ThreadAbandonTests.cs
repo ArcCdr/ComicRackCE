@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using ComicRack.Mac.Host.Library;
 using cYo.Common.Threading;
 using cYo.Projects.ComicRack.Engine;
 using Xunit;
@@ -188,6 +189,86 @@ namespace ComicRack.Mac.Host.Tests
 				Assert.DoesNotContain("error(s)", log);
 				Assert.True(File.Exists(temp.Paths.DatabaseFile), "the later steps ran: the database was saved");
 				WaitUntil(() => !ThreadUtility.ActiveThreads.Any(t => t.Name == "Book Scanner"), 10000, "the abandoned scanner thread ends once the handler returns");
+			}
+		}
+
+		[Fact]
+		public void A_scanner_that_outlives_the_close_marks_the_final_save_unchecked_and_its_last_notification_is_not_raised()
+		{
+			using (var temp = new TempFolder())
+			using (var release = new ManualResetEventSlim())
+			using (var inHandler = new ManualResetEventSlim())
+			{
+				string books = Path.Combine(temp.Path, "books");
+				Directory.CreateDirectory(books);
+				File.WriteAllBytes(Path.Combine(books, "a.cbz"), new byte[] { 1, 2, 3, 4 });
+
+				MacHost host = MacHost.Open(new MacHostOptions { Paths = temp.Paths });
+				try
+				{
+					bool first = true;
+					var scanner = host.QueueManager.Scanner;
+					scanner.ScanNotify += (s, e) =>
+					{
+						if (first)
+						{
+							first = false;
+							inHandler.Set();
+							release.Wait(20000);
+						}
+						e.IgnoreFile = true;
+					};
+					// what the QueueManager forwards to the application: nothing may arrive after the host has been closed
+					int afterClose = 0;
+					host.QueueManager.ComicScanned += (s, e) =>
+					{
+						if (host.IsDisposed)
+						{
+							Interlocked.Increment(ref afterClose);
+						}
+					};
+					host.DatabaseManager.Database.IsDirty = true;
+					scanner.ScanFileOrFolder(books, true, false);
+					Assert.True(inHandler.Wait(10000), "the scan reached the handler");
+
+					SaveVerification v = host.DisposeAndVerify();
+					Assert.True(scanner.HasAbandonedThread, "the scanning thread was abandoned");
+					Assert.True(v.Ok, v.ToString());
+					Assert.True(v.Unchecked, "the book count cannot be compared while a scanner thread may still add books");
+					Assert.Contains("abandoned", v.Note);
+					Assert.Contains("UNCHECKED", v.ToString());
+					Assert.Contains("[WARN]", File.ReadAllText(temp.Paths.LogFile));
+
+					release.Set();
+					WaitUntil(() => !scanner.HasAbandonedThread, 10000, "the abandoned scanner thread ends once the handler returns");
+					Assert.Equal(0, Volatile.Read(ref afterClose));
+				}
+				finally
+				{
+					release.Set();
+					host.Dispose();
+				}
+			}
+		}
+
+		[Fact]
+		public void A_normal_close_is_checked_against_the_book_count()
+		{
+			using (var temp = new TempFolder())
+			{
+				MacHost host = MacHost.Open(new MacHostOptions { Paths = temp.Paths });
+				try
+				{
+					host.DatabaseManager.Database.IsDirty = true;
+				}
+				finally
+				{
+					SaveVerification v = host.DisposeAndVerify();
+					Assert.True(v.Ok, v.ToString());
+					Assert.False(v.Unchecked);
+					Assert.Null(v.Note);
+					Assert.Equal(0, v.BooksInFile);
+				}
 			}
 		}
 	}

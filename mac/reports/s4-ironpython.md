@@ -55,7 +55,7 @@ Observed with the patched engine; the unpatched engine gives the same rows. "Sta
 
 ## Bundle (hardened runtime)
 
-`mac/tools/make-app.sh` bundle (ad-hoc signature, `runtime` flag, entitlements of `mac/tools/mvp.entitlements`), run through its own process: `Contents/MacOS/ComicRack.Mac --script-selftest mac/spikes/S4-ironpython/selftest.py` (no window; prints the lines of the table and exits 0 or 1).
+`mac/tools/make-app.sh` bundle (ad-hoc signature, `runtime` flag, entitlements of `mac/tools/mvp.entitlements`), run through its own process (since RV4b a release build needs `COMICRACK_ENABLE_SELFTEST=1`): `Contents/MacOS/ComicRack.Mac --script-selftest mac/spikes/S4-ironpython/selftest.py` (no window; prints the lines of the table and exits 0 or 1).
 
 | Bundle | Result |
 |---|---|
