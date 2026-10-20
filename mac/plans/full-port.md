@@ -394,7 +394,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: `dotnet test mac/tests/ComicRack.Characterization --filter FullyQualifiedName~Archive`; `verify.sh`.
 
 #### P0.8 Unattended loop `mac/tools/run-plan.sh`
-- Depends: none · Effort: medium · Unattended: yes · Status: todo
+- Depends: none · Effort: medium · Unattended: yes · Status: done 2026-10-20
 - Goal: §5.4: run the orchestrator one task per headless run, until STOP.
 - Add: `mac/tools/run-plan.sh`, `mac/tools/claude-allowlist.json` (the permission allowlist of `RUNBOOK.md` §7 as a ready-to-merge settings fragment).
 - Accept: `mac/tools/run-plan.sh --dry-run --max-tasks 2` prints the two commands it would run and the task each would pick (it reads §6 and the Status lines itself, no headless run), exit 0; `bash -n mac/tools/run-plan.sh`; `verify.sh`.

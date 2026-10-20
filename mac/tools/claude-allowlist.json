@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git stash*)",
+      "Bash(git fetch upstream*)",
+      "Bash(git rev-parse*)",
+      "Bash(git merge-file*)",
+      "Bash(mac/tools/*)",
+      "Bash(mac/native/*)",
+      "Bash(mac/packaging/*)",
+      "Bash(osascript *)",
+      "Bash(screencapture *)",
+      "Bash(swiftc *)",
+      "Bash(codesign *)",
+      "Bash(hdiutil *)",
+      "Bash(plutil *)",
+      "Bash(sips *)",
+      "Bash(df *)",
+      "Bash(du *)",
+      "Bash(find mac *)",
+      "Bash(rm -rf mac/*)",
+      "Edit",
+      "Write",
+      "Read"
+    ]
+  }
+}
