@@ -30,6 +30,17 @@
     <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="$(SkiaSharpVersion)" />
   </ItemGroup>
+  <!-- P2.6: the payload of ComicRack/Output (never edited) is copied next to the entry assembly, where TRDictionary looks for Languages/, and
+       into the publish folder (and so into Contents/MacOS of the bundle). The Windows binaries in Resources/ and Resources/x64 are not named here.
+       Help: only the *.ini links (the DjVu introduction is deferred). -->
+  <ItemGroup>
+    <None Include="..\..\ComicRack\Output\Languages\**" Link="Languages\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\ComicRack\Output\Scripts\**" Link="Scripts\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\ComicRack\Output\Help\*.ini" Link="Help\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\ComicRack\Output\DefaultLists.txt" Link="DefaultLists.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\ComicRack\Output\Resources\Icons\**" Link="Resources\Icons\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\ComicRack\Output\Resources\Textures\**" Link="Resources\Textures\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
   </ItemGroup>

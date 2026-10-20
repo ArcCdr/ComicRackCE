@@ -32,6 +32,19 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp -R "$PUBLISH/." "$APP/Contents/MacOS/"
 rm -rf "$PUBLISH"
 
+# P2.6: the payload of ComicRack/Output (Languages, Scripts, Help links, DefaultLists.txt, Icons, Textures) is published by the project next to the
+# entry assembly, where the Core's TRDictionary looks for Languages/. The Windows binaries of Resources/ are never part of it.
+for payload in Languages/de/Default.xml Scripts/Sample.py "Help/ComicRack Online Manual.ini" DefaultLists.txt Resources/Icons Resources/Textures; do
+	if [ ! -e "$APP/Contents/MacOS/$payload" ]; then
+		echo "FAIL: the payload item '$payload' is missing from the bundle." >&2
+		exit 1
+	fi
+done
+if [ -e "$APP/Contents/MacOS/Resources/x64" ] || [ -e "$APP/Contents/MacOS/Resources/c44.exe" ]; then
+	echo "FAIL: Windows binaries from ComicRack/Output/Resources are in the bundle." >&2
+	exit 1
+fi
+
 # Icon: sips resizes the 256 px source (the 512 and 1024 px entries are upscaled; use a larger source for a sharper icon).
 mkdir -p "$ICONSET"
 for s in 16 32 64 128 256 512 1024; do

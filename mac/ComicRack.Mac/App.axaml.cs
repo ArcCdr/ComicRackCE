@@ -39,6 +39,8 @@ namespace ComicRack.Mac
 		public override void OnFrameworkInitializationCompleted()
 		{
 			options = StartupOptions;
+			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
+			Localization.Apply(options.Language);
 			if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 			{
 				// An exception on the UI thread is logged through the host log and the app keeps running.

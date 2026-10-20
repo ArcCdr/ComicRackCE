@@ -5,20 +5,20 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-20, orchestrator; next task: P5.0)
+Run state: RUNNING (2026-10-20, orchestrator; next task: P5.T1)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
 | P0 Safety net and tooling | 12 | 12 | - | fast gate, replacement manifest, upstream harness, UI automation, goldens, unattended loop |
 | P1 Core runtime gaps | 3 | 3 | - | zero-edit fixes through pass B replacements |
-| P2 Platform pieces | 9 | 0 | P2.6 | shell, codecs, ComicInfo write, payload, TR |
+| P2 Platform pieces | 9 | 1 | P2.1 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 66 | 0 | P5.0 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 66 | 1 | P5.T1 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
 | RV Review fixes and upstream sync | 5 | 5 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **162** | **23** | | estimate in §10 |
+| **Total** | **162** | **25** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -341,6 +341,16 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Test strength: `FixtureGridTests` also bounds `peakAfterWarm - footWarm` by two cache bounds (measured +193 MB, bound 512 MB); `GridHiDpiTests` reduced-lines test counts periods with contrast (51 of 63 rows at 2x, 25 of 31 at 1x, needs 60 percent) and the 1x case of the frame comparison asserts two renders are identical; `The_default_parser_follows_the_engine_setting` uses `Batman.012.1940.cbz`, which the two parsers read differently, and switches the setting both ways; the language race child process also prints `LANGUAGES <n>` (the private `ComicBook.languages` count by reflection, test only) and the test requires every neutral-culture ISO code.
 - `--script-selftest` is a developer option: `ScriptSelfTest.IsEnabled` is true in a Debug build and, in a Release build (the bundle), only with `COMICRACK_ENABLE_SELFTEST=1`; otherwise `Program.Main` prints a message and exits 2. `Run` refuses (FAIL, exit 1, before any script runs) a scripts folder or probe file below `~/Library/Application Support` or `~/Library/Caches` whose first folder starts with `ComicRack` or `cYo` or that has a `Scripts` folder in its path (`IsRealScriptsFolder`), and deletes its `comicrack-s4-*` temp copy (`COMICRACK_SELFTEST_REWRITE_REFS`). To run the check in the bundle: `COMICRACK_ENABLE_SELFTEST=1 .../Contents/MacOS/ComicRack.Mac --script-selftest FILE`.
 
+
+**Facts from P2.6 (2026-10-20)**
+- Payload: `mac/ComicRack.Mac/ComicRack.Mac.csproj` has six `None` items (`CopyToOutputDirectory` and `CopyToPublishDirectory` PreserveNewest, `Link` keeps the folder layout): `Languages/**` (19 cultures, 72 files for `de`), `Scripts/**`, `Help/*.ini` (the two links; no `.djvu`, no `readme.txt`), `DefaultLists.txt`, `Resources/Icons/**` (827 files, 24 MB) and `Resources/Textures/**` (18 files). The Windows binaries (`Resources/*.exe|dll`, `x64`, `x86`) are not named. The test assembly gets the same files through the project reference (`AppContext.BaseDirectory/Languages`). The published folder, and so `Contents/MacOS` of the bundle, has them next to the entry assembly; `make-app.sh` fails if a payload item is missing or a Windows binary is present; `codesign --verify --deep --strict` accepts the bundle (198 MB).
+- `mac/ComicRack.Mac/Localization/Localization.cs` (public static `Localization`): `Apply(setting, languagesFolder = null, preferred = null)` sets `TR.ResourceFolder`, `TR.DefaultCulture` (always, also for English, because an unset default makes the Core use `CultureInfo.CurrentUICulture`) and, for a translation, `CultureInfo.DefaultThreadCurrentUICulture` and the thread's UI culture; it drops the texts the Core had loaded. `App.OnFrameworkInitializationCompleted` calls it first, with `AppOptions.Language` (`--language CULTURE` or `COMICRACK_MAC_LANGUAGE`; until P5.1 has a settings object this is the only setting). `Choose`, `Match`, `AvailableCultures` and `MacPreferredLanguages` (`CFLocaleCopyPreferredLanguages`) are public for tests and later callers (a language picker in Preferences, P5.15).
+- Choice rule: the setting if the app can show it, else the first preferred macOS language the app can show, else English. English counts as shown: the first `en*` tag stops the search with English (decision; the literal wording "exists in Languages/" would skip `en-BE` on this Mac, whose list is en-BE, fr-BE, nl-BE, and show French). A tag is matched as it is, then with subtags removed from the right (`zh-Hans-CN` to `zh-Hans` to `zh`), then English for `en*`, then the first folder of the same language (`pt-PT` to `pt-BR`, `nl-NL` to `nl-BE`, `cs` to `cs-CZ`). A setting without a translation is logged and the macOS list decides. The log line is `Language: <culture>; N translations in <folder>.`
+- English has no folder in `Languages/`: `TR` returns the text the code passes as default (`TR.Load("Default")["Clear", "Clear"]`), so every UI string keeps its English default in code and the key; `this[key]` alone returns the key.
+- **Encoding:** 8 Croatian files declare `encoding="windows-1250"`. .NET (unlike .NET Framework) cannot read them without `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)`; without it `TRDictionary.LoadFile` swallows the exception and returns an empty `TR`, so `hr` silently showed English. `Localization.Apply` registers the provider; any other entry point that reads `Languages/` (a tool, crcli) must do the same.
+- The cached statics of the Core `TR` (`TR.Default`, `TR.Messages`, `TRDictionary.Info`) cannot be reset; `Apply` is meant to run once at start. Tests (`LocalizationTests`, 32) restore `TR.LanguageResources`, `ResourceFolder`, `DefaultCulture` and the cultures and load only through `TR.Load(name)`.
+- Smoke runs of the signed bundle: `--language de` logs `Language: de; 19 translations ...`, no argument on this Mac logs `Language: en (no translation)`; both exit 0.
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -626,7 +636,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: tests; a 300-page generated PDF read end to end with RSS growth recorded in §3; `verify.sh`.
 
 #### P2.6 Bundle payload and TR bootstrap
-- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Depends: none · Effort: high · Unattended: yes · Status: done 2026-10-20
 - Goal: Languages, Scripts, Help, default lists and textures from `ComicRack/Output/` ship with the app (copied at build time, never edited), and the Core's TR uses them.
 - Edit: `mac/ComicRack.Mac/ComicRack.Mac.csproj` (`None Include="../../ComicRack/Output/Languages/**" CopyToOutputDirectory`, same for `Scripts`, `Help` (the `*.ini` links; not the `.djvu` introduction, DjVu is deferred), `DefaultLists.txt`, `Resources/Icons` and `Resources/Textures`; never the Windows binaries in `Resources/` and `Resources/x64`), `mac/tools/make-app.sh` (they end up in `Contents/MacOS` next to the entry assembly, where `TRDictionary` looks), `mac/ComicRack.Mac/App.axaml.cs` (language: setting, else the first macOS preferred language that exists in `Languages/`, else English).
 - Add: `mac/tests/ComicRack.Mac.Tests/LocalizationTests.cs` (a German TR string resolves; English fallback).
@@ -1629,6 +1639,8 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 - [P4.2] After P4.8 the S4 diagnostics `COMICRACK_SELFTEST_REWRITE_REFS` and `COMICRACK_SELFTEST_RESOLVER` in `mac/ComicRack.Mac/ScriptSelfTest.cs` and `mac/spikes/S4-ironpython/run.sh` (`patched-rewrite`, `patched-resolver`) are obsolete: remove them in P4.8.
 - [RV4a] The first unattended loop run (owner, after installing the allowlist) should confirm that the scoped `Edit(/mac/**)` and `Write(/mac/**)` rules do not prompt; if the installed version reads the pattern differently, fix the one pattern in `mac/tools/claude-allowlist.json` (`AllowlistTests` keep the scope check).
 - [RV4a] `crcli image stats --require-nonblank` is now variance based (threshold 2 of 255): a contact-sheet or e2e check that expects a near-uniform view (an empty list pane) must read the `deviation:` line of `stats` instead of using `--require-nonblank`.
+- [P2.6] The language setting is only `--language` / `COMICRACK_MAC_LANGUAGE` for now; P5.1 (settings) stores `CultureName` as the original does (`ExtendedSettings.Language ?? Settings.CultureName`, `ComicRack/Program.cs:792`) and passes it to `Localization.Apply`; the language choice in Preferences (original Preferences, `Settings.CultureName`) needs a restart as in the original and offers `AvailableCultures` plus English.
+- [P2.6] `crcli` and the tools that load the Core's `TR` find no `Languages/` (the entry assembly is `crcli`); only the app and the bundle have the payload. A task that needs translated Core texts in the CLI calls `Localization.Apply` with the app's `Languages` folder (and must register the code page provider).
 
 ## 10. Estimates (low confidence)
 

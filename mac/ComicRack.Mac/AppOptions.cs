@@ -13,6 +13,7 @@ namespace ComicRack.Mac
 	public sealed class AppOptions
 	{
 		public const string DataDirVariable = "COMICRACK_MAC_DATA_DIR";
+		public const string LanguageVariable = "COMICRACK_MAC_LANGUAGE";
 
 		public bool SmokeTest { get; private set; }
 
@@ -38,6 +39,13 @@ namespace ComicRack.Mac
 		/// </summary>
 		public string ScriptSelfTest { get; private set; }
 
+		/// <summary>
+		/// <c>--language CULTURE</c> (or the environment variable COMICRACK_MAC_LANGUAGE): the language setting of <see cref="Localization"/>
+		/// (a folder name of <c>Languages/</c>, <c>en</c> for English). Until the settings of P5.1 exist this is the only setting; without it the
+		/// macOS preferred languages decide.
+		/// </summary>
+		public string Language { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -51,6 +59,7 @@ namespace ComicRack.Mac
 		{
 			var options = new AppOptions();
 			string dataDir = Environment.GetEnvironmentVariable(DataDirVariable);
+			options.Language = Environment.GetEnvironmentVariable(LanguageVariable);
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg = args[i];
@@ -95,6 +104,14 @@ namespace ComicRack.Mac
 				else if (arg.StartsWith("--data-dir=", StringComparison.Ordinal))
 				{
 					dataDir = arg.Substring("--data-dir=".Length);
+				}
+				else if (arg == "--language" && i + 1 < args.Length)
+				{
+					options.Language = args[++i];
+				}
+				else if (arg.StartsWith("--language=", StringComparison.Ordinal))
+				{
+					options.Language = arg.Substring("--language=".Length);
 				}
 				else if (arg.StartsWith("-psn_", StringComparison.Ordinal))
 				{
