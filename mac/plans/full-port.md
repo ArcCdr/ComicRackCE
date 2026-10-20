@@ -107,6 +107,7 @@ Every replacement gets a manifest entry in `mac/replacements.json` (P0.4) in the
 
 ### 2.5 Test categories
 - Default (no trait) = fast; must stay deterministic (no timing races: assert sets, not orders, for parallel work; see the P0.1 facts).
+- **No timing-dependent assertion without a controllable clock or gate** (R2). A test never relies on work being slower or faster than its own polling: park the worker on an event the test releases (example: `WindowTests.Pressing_Cancel_...` holds the scanner in front of its 6th file), advance a `ManualTime`, or wait for a condition with a deadline that only bounds a hang. A count of process-wide resources (pixel blocks, live images) is compared with a baseline taken after `Gc.SettleLive()` and checked after `Gc.WaitForLive(baseline)`; a memory check compares points of the same run (cache full against end), never the process with a start value that earlier tests influence.
 - `[Trait("Category", "Slow")]` for tests over 20 s (today: the full scroll over the fixture library, 76 s).
 - `[Trait("Category", "E2E")]` for .NET tests that need the real window server (rare; most e2e checks are shell cases under `mac/tests/e2e/cases/`, §5.3).
 - Tests that need `mac/fixtures/*` or owner samples skip themselves when the files are missing (existing `FixtureFact` pattern in `mac/tests/ComicRack.Mac.Tests/Support.cs`).
@@ -316,6 +317,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **Wave E, Script UI layer** (runs only if P4.2 is GO, else C3): P4.7, P4.8, P4.9a, P4.9b, P4.9c, P4.9d, P4.9e, P4.9f, P4.9g, P4.10a, P4.10b, P4.10c, P4.10d, P4.10e, P4.10f, P4.10g, P4.11a, P4.11b, P4.11c, P4.11d, P4.11e, P4.12a, P4.12b, P4.13a, P4.13b, P4.13c, P4.14, P4.15 → **C4**; P4.16 (optional).
 - **Wave F, packaging, hardening and parity audits:** P6.1, P6.5, P6.2, P6.3, P6.4, P6.6, P7.1, P7.2, P7.3, P7.4, P7.5, P7.6, P7.7, P7.A1, P7.A2, P7.A3, P7.A4, P6.7 (needs **C5**), P7.8 → **C6**.
 - **Front of the list now:** nothing (R1 done 2026-10-17).
+- **P3.H** (HiDPI 1x/2x test harness) runs right after P0.7b and before any P5 task.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`R<n>`) go to the **front** of the list.
 
 ---
@@ -338,6 +340,13 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Goal: no flaky test in the fast gate or `--full`. Known: `WindowTests.Pressing_Cancel_in_the_window_cancels_the_running_scan` (progress-panel check races with a 200-book scan that finishes early; make the scan deterministic, e.g. a fake or a large/slow scan source, or gate it with a controllable scanner), `ReaderWindowTests.The_arrow_keys_space_home_and_end_turn_the_pages_and_the_frame_follows` (failed once in `--full`, `Dispose` assertion expected 2, actual 1; find the race), plus anything the repeated runs reveal.
 - Do: run `mac/tools/verify.sh --full` 15 times, collect failures, fix the causes in tests/test infrastructure (or product code if a real race), never weaken assertions. Add the rule "no timing-dependent assertions without a controllable clock/gate" to full-port.md §2 if not present.
 - Accept: 15 consecutive `mac/tools/verify.sh --full` runs PASS.
+
+#### P3.H HiDPI test harness: 1x and 2x (Retina) rendering
+- Depends: P0.6b · Effort: high · Unattended: yes · Status: todo
+- Goal: rendering is tested at 1.0x and 2.0x (also 1.5x/3.0x where cheap), because DPI handling is a classic weak spot. Requirement added by the owner 2026-10-20.
+- Do: (1) A headless test fixture that renders windows/controls at a chosen render scaling (Avalonia.Headless: set the screen/window scaling; if headless cannot, add a test-only scaling wrapper), capturing frames to PNG at device pixels. (2) Tests, run at 1x and 2x for: grid cells and thumbnails (covers sharp, not upscaled/blurred; the 512 px cap vs 2x cells is evaluated and a decision recorded), reader page drawing (pixel snapping, no seams in spreads, correct fit at both scales, zoom), custom draw operations (`CoverDrawOperation`, `ReaderView`), text/icon sizes (logical size constant, device size doubles), 1px lines/borders crisp, hit-testing and pan/zoom math in logical vs device units, and the Compat.Drawing/Graphics shim paths that use DPI (`DpiX/DpiY`, `Graphics.PageUnit`, resolution of Bitmap). Property: the same logical layout yields identical logical geometry at every scale; device-pixel frames differ only by the scale factor (compare downscaled 2x with 1x within a tolerance). (3) Real-screen e2e case in `mac/tests/e2e/cases/`: screenshot of the running app on this Retina display and a check of the window scale; if a non-Retina or scaled display mode can be set via public tools, run once at 1x, else record as SKIPPED and rely on (1)/(2). (4) A rule in full-port.md §2 and the subagent prompt: every new custom-drawn control must add a 1x/2x test using this harness. Existing MVP custom controls get tests now.
+- Out of scope: restyling (P5.R*).
+- Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter Category=HiDpi` passes (state the count, both scales covered per control); `mac/tools/verify.sh`.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
