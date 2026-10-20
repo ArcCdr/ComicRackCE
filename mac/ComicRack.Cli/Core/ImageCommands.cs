@@ -17,6 +17,9 @@ namespace ComicRack.Cli.Core
 		private const string StatsUsage = "image stats <png> [--require-nonblank]";
 		private const int DistinctCap = 65536;
 
+		/// <summary>An image whose R, G and B channels all have a standard deviation below this (of 255) counts as blank.</summary>
+		private const double BlankDeviation = 2.0;
+
 		public static int Run(string[] args, TextWriter output, TextWriter error)
 		{
 			if (args.Length == 0 || (args[0] != "probe" && args[0] != "stats"))
@@ -76,7 +79,7 @@ namespace ComicRack.Cli.Core
 			return 0;
 		}
 
-		/// <summary>`image stats <png>`: mean, min and max of R, G, B, A; the number of distinct colours (counted up to 65536); whether the image is blank (all pixels the same colour). --require-nonblank turns a blank image into exit code 1.</summary>
+		/// <summary>`image stats <png>`: mean, min and max of R, G, B, A; the number of distinct colours (counted up to 65536); whether the image is blank: the largest standard deviation of the R, G and B channels is below <see cref="BlankDeviation"/> (a flat colour, or a flat colour with compression or dithering noise). --require-nonblank turns a blank image into exit code 1.</summary>
 		private static int Stats(Options o, TextWriter output, TextWriter error)
 		{
 			string file = o.Positional(0, StatsUsage);
@@ -84,11 +87,11 @@ namespace ComicRack.Cli.Core
 			{
 				string[] names = { "R", "G", "B", "A" };
 				double[] sum = new double[4];
+				double[] sumSquares = new double[4];
 				int[] min = { 255, 255, 255, 255 };
 				int[] max = { 0, 0, 0, 0 };
 				var distinct = new HashSet<uint>();
 				uint first = 0;
-				bool differs = false;
 				for (int y = 0; y < bitmap.Height; y++)
 				{
 					for (int x = 0; x < bitmap.Width; x++)
@@ -98,6 +101,7 @@ namespace ComicRack.Cli.Core
 						for (int i = 0; i < 4; i++)
 						{
 							sum[i] += v[i];
+							sumSquares[i] += (double)v[i] * v[i];
 							if (v[i] < min[i])
 							{
 								min[i] = v[i];
@@ -112,10 +116,6 @@ namespace ComicRack.Cli.Core
 						{
 							first = packed;
 						}
-						else if (packed != first)
-						{
-							differs = true;
-						}
 						if (distinct.Count < DistinctCap)
 						{
 							distinct.Add(packed);
@@ -123,6 +123,13 @@ namespace ComicRack.Cli.Core
 					}
 				}
 				double pixels = (double)bitmap.Width * bitmap.Height;
+				double deviation = 0;
+				for (int i = 0; i < 3; i++)
+				{
+					double mean = sum[i] / pixels;
+					deviation = Math.Max(deviation, Math.Sqrt(Math.Max(0, sumSquares[i] / pixels - mean * mean)));
+				}
+				bool blank = deviation < BlankDeviation;
 				output.WriteLine("stats: " + file);
 				output.WriteLine("  size: " + bitmap.Width + "x" + bitmap.Height);
 				for (int i = 0; i < 4; i++)
@@ -130,10 +137,11 @@ namespace ComicRack.Cli.Core
 					output.WriteLine("  " + names[i] + ": mean " + (sum[i] / pixels).ToString("F2", CultureInfo.InvariantCulture) + " min " + min[i] + " max " + max[i]);
 				}
 				output.WriteLine("  distinct colours: " + distinct.Count + (distinct.Count >= DistinctCap ? "+" : ""));
-				output.WriteLine("  blank: " + (differs ? "no" : "yes"));
-				if (!differs && o.Flag("require-nonblank"))
+				output.WriteLine("  deviation: " + deviation.ToString("F2", CultureInfo.InvariantCulture) + " (largest standard deviation of R, G, B)");
+				output.WriteLine("  blank: " + (blank ? "yes" : "no"));
+				if (blank && o.Flag("require-nonblank"))
 				{
-					error.WriteLine("The image is blank (every pixel is #" + (first & 0xFFFFFF).ToString("X6") + ").");
+					error.WriteLine("The image is blank (largest channel deviation " + deviation.ToString("F2", CultureInfo.InvariantCulture) + ", first pixel #" + (first & 0xFFFFFF).ToString("X6") + ").");
 					return 1;
 				}
 			}

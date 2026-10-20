@@ -10,7 +10,8 @@
 #
 # Steps (each prints PASS, WARN, FAIL, INFO or SKIP):
 #   1 preconditions   on macos, no merge in progress, clean tree (mac/artifacts and .DS_Store ignored), 3 GB free, state file
-#   2 upstream files  mac/tools/upstream-scan: linked, replaced, excluded, UI not linked, project files, payload, build/CI, other
+#   2 upstream files  mac/tools/upstream-scan: linked, replaced, excluded, UI not linked (ui-parity WARN: R9 needs a ledger row and a
+#                     U-task per new or changed Windows UI file), project files, payload, build/CI, other
 #   3 drift           mac/tools/replacement-sync.sh --all: replaced, stubbed or excluded originals that changed
 #   4 build and tests mac/tools/verify.sh --full (drift tests that fail only because an original changed count as drift)
 #   5 census          mac/tools/census, pass A and pass B: 0 errors
@@ -32,7 +33,7 @@ while [ $# -gt 0 ]; do
 		--no-merge) NOMERGE=1 ;;
 		--record) RECORD=1 ;;
 		--skip-verify) SKIPVERIFY=1 ;;
-		-h|--help) sed -n '2,27p' "$0"; exit 0 ;;
+		-h|--help) sed -n '2,28p' "$0"; exit 0 ;;
 		*) echo "upstream-sync-check: unknown option $1" >&2; exit 2 ;;
 	esac
 	shift
@@ -145,12 +146,27 @@ else
 			pn=$(jq -r '[.Packages[]] | length' "$SCAN_JSON")
 			[ "$pn" = 0 ] || verdict packages INFO "$pn reference change(s), all mirrored, replaced or dropped on the Mac (details in mac/artifacts/upstream-sync/scan.txt)"
 		fi
-		ui=$(jq -r '.Files[] | select(.Category == "UI not linked") | "\(.Status) \(.Path)"' "$SCAN_JSON")
+		ui=$(jq -r '.Files[] | select(.Category == "UI not linked") | "\(.Status)\t\(.Path)"' "$SCAN_JSON")
 		if [ -n "$ui" ]; then
+			# R9: every changed Windows UI file needs a U-task and ledger rows. The U-task records the file here with the upstream
+			# commit that changed it (mac/plans/upstream-ui-log.md), which is what lets the check pass again after the fix-up.
 			n=$(printf '%s\n' "$ui" | grep -c .)
-			verdict ui-parity INFO "$n changed Windows UI file(s): parity candidates for the Mac app (mac/plans/parity-ledger.md; a U-task adds a ledger row per new or changed feature)"
-			while IFS= read -r l; do detail ui-parity "$l"; done < <(printf '%s\n' "$ui" | head -25)
-			[ "$n" -le 25 ] || detail ui-parity "... and $((n - 25)) more (mac/artifacts/upstream-sync/scan.txt)"
+			uilog=mac/plans/upstream-ui-log.md
+			unrecorded=""
+			while IFS=$'\t' read -r ust upath; do
+				uh=$(git log -1 --format=%h "$FROM..$TO" -- "$upath" 2>/dev/null)
+				if [ -z "$uh" ] || ! grep -F -- "$upath" "$uilog" 2>/dev/null | grep -qF -- "$uh"; then
+					unrecorded="$unrecorded$ust $upath (${uh:-?})"$'\n'
+				fi
+			done <<<"$ui"
+			if [ -n "$unrecorded" ]; then
+				k=$(printf '%s' "$unrecorded" | grep -c .)
+				range_verdict ui-parity WARN "$k of $n changed Windows UI file(s) not recorded in $uilog: R9 needs a ledger row per new or changed feature (mac/plans/parity-ledger.md) and a U-task that implements it or names the task that owns the area; the U-task records the file and the upstream commit in $uilog"
+				while IFS= read -r l; do detail ui-parity "$l"; done < <(printf '%s' "$unrecorded" | head -25)
+				[ "$k" -le 25 ] || detail ui-parity "... and $((k - 25)) more (mac/artifacts/upstream-sync/scan.txt)"
+			else
+				verdict ui-parity INFO "$n changed Windows UI file(s), all recorded in $uilog (their ledger rows and U-tasks carry the work)"
+			fi
 		fi
 		pl=$(jq -r '[.Files[] | select(.Category == "payload")] | length' "$SCAN_JSON")
 		[ "$pl" = 0 ] || verdict payload INFO "$pl changed file(s) under ComicRack/Output (Languages, Scripts, Help, Resources): nothing to do unless the bundle copies them wrongly"

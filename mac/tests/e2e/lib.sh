@@ -1,7 +1,8 @@
 # Shared helpers of the e2e cases (mac/tools/e2e.sh). Source it from a case:  . "$(dirname "$0")/../lib.sh"; e2e_begin
 #
 # A case prints "  ok ..." and "  FAIL ..." lines and ends with e2e_end, which prints PASS, FAIL or SKIP and exits with
-# 0 (pass), 1 (fail), 3 (skipped: a fixture is missing) or 4 (skipped: screen locked, no GUI or Accessibility access).
+# 0 (pass), 1 (fail), 3 (skipped: a fixture is missing), 4 (skipped: screen locked, no GUI or Accessibility access) or
+# 6 (skipped: ui-drive refused to launch because an owner-run copy of the app is running).
 # Everything that touches the app goes through ui-drive (safety rules: mac/tools/ui-drive/README.md). Never call osascript
 # to type or click from here.
 
@@ -41,20 +42,21 @@ e2e_end() {
 	say "FAIL $E2E_CASE: $E2E_FAILS check(s) failed"; exit 1
 }
 
-# skip_case <3|4> <reason>
+# skip_case <3|4|6> <reason>
 skip_case() { say "SKIP $E2E_CASE: $2"; exit "$1"; }
 
 # Case needs a fixture: skip (exit 3) when it is missing.
 need() { [ -e "$1" ] || skip_case 3 "fixture missing: ${1#$E2E_ROOT/}"; }
 
 # ui <ui-drive args>: runs ui-drive, output in LAST_OUT, exit code in LAST_RC (and returned).
-# Exit 4 (locked screen, no GUI access) skips the whole case; exit 5 (the safety check refused to send input) fails it.
+# Exit 4 (locked screen, no GUI access) skips the whole case; exit 6 (launch refused) skips it with its own code, so a run in which
+# nothing could start is not mistaken for a missing fixture; exit 5 (the safety check refused to send input) fails it.
 ui() {
 	LAST_OUT=$("$UI" "$@" 2>&1); LAST_RC=$?
 	case $LAST_RC in
 		4) skip_case 4 "screen locked or no GUI/Accessibility access: $LAST_OUT" ;;
 		5) bad "ui-drive refused (the app was not frontmost), nothing was sent: ui-drive $*: $LAST_OUT"; e2e_end ;;
-		6) skip_case 3 "launch refused: $LAST_OUT" ;;
+		6) skip_case 6 "launch refused: $LAST_OUT" ;;
 	esac
 	return $LAST_RC
 }

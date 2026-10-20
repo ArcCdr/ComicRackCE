@@ -4,7 +4,9 @@
 #   mac/tools/run-plan.sh [--max-tasks N] [--dry-run] [--model M] [--effort E]
 #
 # Starts one headless orchestrator run per task:
-#   claude -p "<normal run prompt> Do one task only, then end the session." --model sonnet --effort high
+#   claude -p "<normal run prompt> Do one task only, then end the session." --model <model> --effort <effort>
+# Model: --model, else the environment variable COMICRACK_PLAN_MODEL, else the "Loop model:" line of mac/plans/RUNBOOK.md
+# section 7 (the plan files, not this script, name the tier). Effort: --effort, else high.
 # After each run it reads the "Run state:" line of full-port.md and stops on STOPPED, after --max-tasks runs,
 # when no task is runnable, or after two runs in a row that committed nothing.
 # --dry-run prints the commands and the task each would pick (simulating that every picked task ends done);
@@ -14,14 +16,14 @@
 # 2 bad arguments or unexpected repository state, 3 claude CLI missing.
 set -uo pipefail
 
-MAX=0; DRY=0; MODEL=sonnet; EFFORT=high
+MAX=0; DRY=0; MODEL="${COMICRACK_PLAN_MODEL:-}"; EFFORT=high
 while [ $# -gt 0 ]; do
 	case "$1" in
 		--max-tasks) shift; MAX="${1:-}"; case "$MAX" in ''|*[!0-9]*) echo "run-plan: --max-tasks needs a number" >&2; exit 2 ;; esac ;;
 		--dry-run) DRY=1 ;;
 		--model) shift; MODEL="${1:-}"; [ -n "$MODEL" ] || { echo "run-plan: --model needs a value" >&2; exit 2; } ;;
 		--effort) shift; EFFORT="${1:-}"; [ -n "$EFFORT" ] || { echo "run-plan: --effort needs a value" >&2; exit 2; } ;;
-		-h|--help) sed -n '2,14p' "$0"; exit 0 ;;
+		-h|--help) sed -n '2,16p' "$0"; exit 0 ;;
 		*) echo "run-plan: unknown option $1" >&2; exit 2 ;;
 	esac
 	shift
@@ -31,85 +33,19 @@ ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel 2>/dev/null) || { echo
 cd "$ROOT" || exit 2
 PLAN=mac/plans/full-port.md
 LOG=mac/plans/run-log.md
+RUNBOOK=mac/plans/RUNBOOK.md
+
+if [ -z "$MODEL" ]; then
+	# "Loop model: `<name>`" in RUNBOOK.md section 7.
+	MODEL=$(sed -n 's/^\**Loop model:\**[[:space:]]*`\{0,1\}\([A-Za-z0-9._-]\{1,\}\)`\{0,1\}.*/\1/p' "$RUNBOOK" 2>/dev/null | head -1)
+fi
+[ -n "$MODEL" ] || { echo "run-plan: no model: pass --model, set COMICRACK_PLAN_MODEL or add a 'Loop model:' line to $RUNBOOK section 7" >&2; exit 2; }
 
 PROMPT="You are the orchestrator of the ComicRack CE macOS port in $ROOT, branch macos. Read mac/plans/RUNBOOK.md completely and follow it exactly: apply the owner's answers in mac/plans/OWNER-ACTIONS.md, then run the tasks of mac/plans/full-port.md one at a time, each in a fresh subagent, verify and commit each, until a checkpoint or a STOP condition. Never push, merge or switch branches. Do one task only, then end the session."
 
-# Prints the IDs of the next N runnable tasks, one per line, assuming each picked task ends done.
-# Output "NONE" when nothing is runnable. Reads §6 (order) and the Status/Depends lines of §7 itself.
-pick() {
-	python3 -I - "$PLAN" mac/plans/OWNER-ACTIONS.md "$1" <<'PY'
-import re, sys
-plan, oa, count = sys.argv[1], sys.argv[2], int(sys.argv[3])
-text = open(plan, encoding="utf-8").read()
-# Section 6 order: wave bullets, in order.
-m6 = re.search(r"^## 6\. .*?(?=^## 7\.)", text, re.S | re.M)
-order = []
-for line in m6.group(0).splitlines():
-    if line.startswith("- **Wave"):
-        body = line.split(":**", 1)[1] if ":**" in line else line
-        body = re.split(r"→|->", body)[0] if False else body
-        for tid in re.findall(r"\b(P\d+\.(?:T)?\d+[a-z]?|P\d+\.[RT]\d+|P5\.R\d+|P5\.T\d+)\b", body):
-            if tid not in order:
-                order.append(tid)
-# Task blocks in section 7.
-m7 = re.search(r"^## 7\. Tasks.*?(?=^## 8\.)", text, re.S | re.M)
-blocks = re.split(r"^#### ", m7.group(0), flags=re.M)[1:]
-tasks = {}
-seq = []
-for b in blocks:
-    tid = b.split(None, 1)[0]
-    dep = re.search(r"^- Depends:\s*(.*?)\s*·", b, re.M)
-    st = re.search(r"Status:\*{0,2}\s*(.*?)\*{0,2}\s*$", b.split("\n", 3)[1] if False else "\n".join(b.splitlines()[:6]), re.M)
-    if not dep or not st:
-        continue
-    st_line = [l for l in b.splitlines()[:6] if "Status:" in l]
-    s = re.search(r"Status:\*{0,2}\s*(.*)$", st_line[0]).group(1).strip().strip("*").strip() if st_line else ""
-    deps = [] if dep.group(1).strip().lower() == "none" else [d.strip() for d in re.split(r",", re.sub(r"\(.*?\)", lambda mm: mm.group(0), dep.group(1))) if d.strip()]
-    tasks[tid] = {"status": s, "deps": deps}
-    seq.append(tid)
-# Front of the list: R and U tasks, then the wave order, then anything else in file order.
-front = [t for t in seq if re.match(r"^(R\d+|U\d{8}\.\d+)$", t)]
-full = front + [t for t in order if t in tasks and t not in front] + [t for t in seq if t not in front and t not in order]
-# Checkpoints answered: an OWNER-ACTIONS block "### ... Cn ..." with Status DONE (or ANSWERED applied).
-done_cp = set()
-try:
-    oat = open(oa, encoding="utf-8").read()
-    for blk in re.split(r"^### ", oat, flags=re.M)[1:]:
-        head = blk.splitlines()[0]
-        if re.search(r"Status:\*{0,2}\s*DONE", blk):
-            for c in re.findall(r"\b(C\d+)\b", head):
-                done_cp.add(c)
-except OSError:
-    pass
-def is_done(s):
-    return s.startswith("done") or s.startswith("skipped") or s.startswith("split")
-state = {t: tasks[t]["status"] for t in tasks}
-def dep_ok(d):
-    mm = re.match(r"^(\S+?)\s*(\(GO\))?$", d)
-    did, go = mm.group(1), mm.group(2)
-    if re.match(r"^C\d+$", did):
-        return did in done_cp
-    if did not in state:
-        return False
-    s = state[did]
-    if not (s.startswith("done")):
-        return False
-    return ("verdict GO" in s) if go else True
-picked = []
-for _ in range(count):
-    nxt = None
-    for t in full:
-        if state[t].startswith("todo") and all(dep_ok(d) for d in tasks[t]["deps"]):
-            nxt = t
-            break
-    if nxt is None:
-        break
-    picked.append(nxt)
-    state[nxt] = "done (simulated)"
-    # a simulated spike done does not satisfy "(GO)" deps; that is intended
-print("\n".join(picked) if picked else "NONE")
-PY
-}
+# Prints the IDs of the next N runnable tasks, one per line, assuming each picked task ends done ("NONE" when nothing is runnable).
+# The logic (section 6 order, Depends, checkpoints answered in OWNER-ACTIONS.md) lives in mac/tools/plan-status.sh.
+pick() { mac/tools/plan-status.sh --pick "$1"; }
 
 run_state() { grep -m1 '^Run state:' "$PLAN" | sed 's/^Run state: *//'; }
 

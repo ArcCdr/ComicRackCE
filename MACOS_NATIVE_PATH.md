@@ -777,13 +777,13 @@ Revised 2026-10-16 (D7): every implementation and review task runs on **Sonnet**
 | Role | Who | Use for |
 |---|---|---|
 | **Planner** | A planning session | Expanding a phase into Sonnet-sized tasks in the `mvp-track.md` format, with an effort level per task (`medium` for mechanical work, `high` by default, `xhigh` for subtle semantics) |
-| **Implementer** | Sonnet, one session per task | Every task, launched with `--model sonnet --effort <level>` (`mvp-track.md` §10) |
-| **Reviewer** | Sonnet, a fresh session, effort `high` | `/code-review high` on the task branch, plus the mechanical no-edit check (`full-port.md` §2.2) |
+| **Implementer** | Sonnet, one session per task | Every task, launched with `--model sonnet --effort <level>` (`mac/plans/RUNBOOK.md` §2 and §3; `mvp-track.md` §10 is superseded by `full-port.md` §2) |
+| **Reviewer** | Sonnet, a fresh session, effort `high` | `/code-review high` on the task's commit on `macos` (`git diff <commit>^ <commit>`; D8: one long-lived branch, no per-task branches), plus the mechanical no-edit check (`full-port.md` §2.2) |
 | **Human (owner)** | — | Gate decisions (G0–G2) and §10 questions; STOP findings; approving any edit to existing files; on-Mac acceptance testing; signing credentials; upstream relations |
 
 Sessions run on the owner's Mac (Apple M4), so they can build, benchmark and launch the app there. The owner still judges UX.
 
-Parallelism: use separate git worktrees/branches per task. Phases P2/P3/P4 can run in parallel after P1. P5 views can be split per screen.
+Parallelism: none on the working tree. D8 fixes one long-lived branch `macos` and one task at a time (`mac/plans/RUNBOOK.md` §2); phases P2/P3/P4 are independent after P1 but run one after the other, and P5 views are separate tasks.
 
 ### 9.2 Guardrails (every session must follow)
 

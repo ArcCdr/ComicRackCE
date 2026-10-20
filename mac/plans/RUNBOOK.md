@@ -24,12 +24,12 @@ The flags matter: `--model` and `--effort` on the command line apply to that ses
 
 **0. Preflight (once per session, and again after any STOP-like surprise)**
 1. `git rev-parse --abbrev-ref HEAD` is `macos`; `test ! -e .git/MERGE_HEAD` (no merge in progress; if there is one: STOP, owner block "finish or abort the merge").
-2. `git status --porcelain`: only `mac/` changes or nothing. Leftovers of a crashed task (a task with `Status: doing`): run `mac/tools/verify.sh` and the task's acceptance; if both pass, commit them as that task; else `git stash push -u -m "<ID> abandoned $(date +%F)"` and set the task back to `todo` with a note in the run log.
-3. Disk: `df -h ~`. Below 8 GB free: `find mac -type d \( -name bin -o -name obj \) -prune -exec rm -rf {} +` and `rm -rf mac/artifacts/verify mac/artifacts/ui-drive mac/artifacts/upstream-sync`. Still below 3 GB: STOP (owner block "free disk space").
+2. `git status --porcelain`: only `mac/` changes or nothing. Leftovers of a crashed task (a task with `Status: doing`): run `mac/tools/verify.sh` and the task's acceptance; if both pass, commit them as that task; else `git stash push -u -m "<ID> abandoned <YYYY-MM-DD>"` and set the task back to `todo` with a note in the run log.
+3. Disk: `df -h ~`. Below 8 GB free: `find mac -type d -name bin -prune -exec rm -rf {} +`, `find mac -type d -name obj -prune -exec rm -rf {} +`, `rm -rf mac/artifacts/verify`, `rm -rf mac/artifacts/ui-drive` and `rm -rf mac/artifacts/upstream-sync` (one command each: the allowlist of §7 lists exactly these). Still below 3 GB: STOP (owner block "free disk space").
 4. Read `mac/plans/OWNER-ACTIONS.md`. For every block with `Status: ANSWERED`: apply the answer (update §1.2 decisions, the affected tasks' Status from `blocked (Cn)` to `todo`, facts in §3), set the block to `DONE`, move it to "Done", commit `mac: apply owner answers OA-<n>`.
 5. Set the `Run state:` line of `full-port.md` to `RUNNING (<date>, orchestrator)`.
 
-**1. Pick** the first task in `full-port.md` §6 whose `Status:` is `todo` and whose `Depends` are all `done` or `done-with-caveat` (a checkpoint ID in Depends, like `C5`, counts as done only when its OWNER-ACTIONS block is DONE; a dependency written `P4.1 (GO)` needs the spike's Status to say `verdict GO`). U-tasks and R-tasks come first. If none is left: go to §8 "STOP: checkpoint reached".
+**1. Pick** the first task in `full-port.md` §6 whose `Status:` is `todo` and whose `Depends` are all `done` or `done-with-caveat` (a checkpoint ID in Depends, like `C5`, counts as done only when its OWNER-ACTIONS block is DONE; a dependency written `P4.1 (GO)` needs the spike's Status to say `verdict GO`). U-tasks and RV-tasks come first. If none is left: go to §8 "STOP: checkpoint reached".
 
 **2. Start**: set its Status to `doing (started <date>)` (no commit).
 
@@ -43,7 +43,7 @@ git show HEAD --format= | grep -E '^\+' | grep -nEi 'claude-[a-z0-9.-]*[0-9]|(so
 mac/tools/verify.sh                                           # must end with RESULT: PASS
 grep -n -A4 '^#### {TASK_ID} ' mac/plans/full-port.md | grep 'Status:'   # updated
 ```
-Then run the task's own Accept commands (all of them; e2e commands too; exit 4 = screen locked = SKIPPED, not FAIL).
+Then run the task's own Accept commands (all of them; e2e commands too; `mac/tools/e2e.sh` exit 4 = screen locked, 5 = no case passed (fixtures or bundle missing), 6 = a launch was refused because another copy of the app runs: all three are SKIPPED, never PASS, and not FAIL).
 
 **5. Decide**
 - All pass: if the subagent did not commit, commit now (§2.1 of `full-port.md`). Status `done <date>` (or `done-with-caveat <date> (<what>)` when an acceptance part was SKIPPED or is an owner check; add the owner part to the checkpoint's list in `OWNER-ACTIONS.md` "Collected for C<n>").
@@ -51,7 +51,7 @@ Then run the task's own Accept commands (all of them; e2e commands too; exit 4 =
 - Fails a second time: stash (`git stash push -u -m "<ID> attempt 2"`), set Status `blocked (two failures: <one line>)`, add the subagent's split proposal (or your own: two or three smaller tasks with the same template) to `full-port.md` §9 and, if the split is clear, as new tasks `<ID>.1`, `<ID>.2` in §7 and §6 replacing it (Status of the original: `split -> <ID>.1, <ID>.2`). Continue with the next task.
 - Subagent reports `blocked` (STOP rule, owner input, needs an edit): check the reason is real; record it; write or extend the owner block; continue with the next independent task.
 
-**6. Record**: update the status table at the top of `full-port.md` (Done count, Next todo), append one line to `mac/plans/run-log.md`, commit `mac: run log <ID>` together with any status changes (or amend nothing: a separate small commit is fine).
+**6. Record**: run `mac/tools/plan-status.sh --write --backfill-log` (it rewrites the status table and the `next task:` part of the `Run state:` line of `full-port.md` from the Status lines, and appends a row to `mac/plans/run-log.md` for every `mac: <task id>` commit that has none), check the new row (fill in minutes and a note if useful; a spike or a caveat deserves one), run `mac/tools/plan-status.sh --check` (exit 0), and commit `mac: run log <ID>` together with any status changes (or amend nothing: a separate small commit is fine). Never edit the table by hand.
 
 **7. Gates**: after every 5 completed tasks and at the end of each wave run the full gate and a review (§4).
 
@@ -109,20 +109,23 @@ Previous attempt: it failed with the output below. The working tree contains tha
 Every 5 completed tasks and at each wave end (`full-port.md` §6):
 ```bash
 mac/tools/verify.sh --full
-mac/tools/e2e.sh                                          # after P0.6b; exit 4 (locked) = skipped, retried at the next gate
+mac/tools/e2e.sh                                          # after P0.6b; exit 4 (locked), 5 (no case passed) or 6 (launch refused) = skipped, retried at the next gate
 dotnet run --project mac/tools/census -- --pass B          # 0 errors
 dotnet run --project mac/tools/drawing-coverage            # PASS
-mac/tools/upstream-sync-check.sh --no-merge                # previews upstream/master, checks the current tree (about 5 minutes: it runs verify --full and both census passes itself)
 git status --porcelain                                     # census rewrites mac/reports/*.md: commit only if totals changed,
-git restore mac/reports                                    #   otherwise discard the timing-only changes
+git restore mac/reports                                    #   otherwise discard the timing-only changes (before the next line: its
+                                                           #   precondition is a clean tree)
+mac/tools/upstream-sync-check.sh --no-merge                # previews upstream/master, checks the current tree (about 5 minutes: it runs verify --full and both census passes itself)
+git status --porcelain                                     # the check's own census runs rewrite mac/reports/*.md again:
+git restore mac/reports                                    #   restore them once more unless the totals changed
 ```
-A failure here that no single task explains becomes task `R<n>` at the front of the order.
+A failure here that no single task explains becomes task `RV<n>` at the front of the order.
 
 **Review**: one subagent with `subagent_type: general-purpose`, `model: opus`, `effort: high`, prompt:
 ```
 Review the macOS port changes in /Users/vince/dev/ComicRackCE between commit {FROM} and HEAD (git diff {FROM}..HEAD -- mac MACOS_NATIVE_PATH.md .github/workflows). Read mac/plans/full-port.md section 2 first. Look for correctness bugs, threading violations (Core events not marshalled through UiDispatch, UI work off the UI thread, blocking calls on the UI thread), pixel ownership violations (drawing Core-owned bitmaps), resource leaks, tests that cannot fail or depend on timing, replacements without a manifest entry, changes outside mac/, and parity breaks (R9, section 2.11: UI that differs from the WinForms original or its view spec without a recorded ledger deviation, retyped strings instead of original TR keys, literal colours, invented menu items or shortcuts). Do not change any file. Report findings ranked by severity (high, medium, low), each with file:line, the failure scenario and a one-line fix. Report at most 15 findings; report none rather than speculative ones.
 ```
-`{FROM}` is the commit of the previous review (in `run-log.md`). High findings become `R<n>` tasks (template of §7, Effort high) at the front of the order; medium ones go to §9; low ones are dropped unless cheap to fold into a later task.
+`{FROM}` is the commit of the previous review (in `run-log.md`). High findings become `RV<n>` tasks (template of §7, Effort high) at the front of the order; medium ones go to §9; low ones are dropped unless cheap to fold into a later task.
 
 ## 5. After an upstream merge (orchestrator side of `mac/UPSTREAM-SYNC.md`)
 
@@ -136,7 +139,7 @@ Review the macOS port changes in /Users/vince/dev/ComicRackCE between commit {FR
    - *Build error from a new linked file*: exclusion plus stub, or replacement. Effort high.
    - *Package change*: mirror it in `mac/*/Sources.props` (same version) unless Windows-only. Effort medium.
    - *Payload change* (`ComicRack/Output/**`): nothing to do unless the build copies it wrongly. INFO only.
-   - *UI parity candidates* (new or changed WinForms UI; `ledger-check` fails on new menu items): R9 requires parity, so add a row to `mac/plans/parity-ledger.md` (status `todo`) per new or changed feature and a U-task that implements it (or names the existing task that owns the area); a change to behaviour the Mac app already mirrors is fixed in the U-task. A changed original colour (token test) is a U-task too.
+   - *UI parity* (`ui-parity` WARN: new or changed WinForms UI; `ledger-check` fails on new menu items): R9 requires parity, so add a row to `mac/plans/parity-ledger.md` (status `todo`) per new or changed feature and a U-task that implements it (or names the existing task that owns the area); a change to behaviour the Mac app already mirrors is fixed in the U-task. The U-task also adds one row per changed file to `mac/plans/upstream-ui-log.md` (file as the check prints it, the upstream commit hash it prints in parentheses, the U-task ID, the ledger row IDs); that record is what turns the `ui-parity` WARN into INFO on the next run. A changed original colour (token test) is a U-task too.
 4. Run the U-tasks through the normal loop (§2 steps 2 to 6). Then re-run the check until it exits 0, then `mac/tools/upstream-sync-check.sh --record` (it updates and commits `mac/upstream-sync.json`).
 5. Continue with the normal loop.
 
@@ -164,8 +167,10 @@ Block template:
 
 ## 7. Unattended loop mode and permissions
 
+Loop model: `sonnet` (read by `mac/tools/run-plan.sh`; the environment variable `COMICRACK_PLAN_MODEL` or `--model` overrides it; the scripts hold no tier name).
+
 Interactive mode (§1) asks for permission prompts unless the tools are allowed. For long unattended runs:
-1. Install an allowlist once (owner action; P0.8 writes the ready file `mac/tools/claude-allowlist.json`): merge its `permissions.allow` list into `.claude/settings.local.json` in the repository (the user's global git ignore already excludes that file, so rule 1 is not affected). It allows: `Bash(dotnet *)`, `Bash(git status*)`, `Bash(git diff*)`, `Bash(git log*)`, `Bash(git show*)`, `Bash(git add*)`, `Bash(git commit*)`, `Bash(git stash*)`, `Bash(git fetch upstream*)`, `Bash(git rev-parse*)`, `Bash(git merge-file*)`, `Bash(mac/tools/*)`, `Bash(mac/native/*)`, `Bash(mac/packaging/*)`, `Bash(osascript *)`, `Bash(screencapture *)`, `Bash(swiftc *)`, `Bash(codesign *)`, `Bash(hdiutil *)`, `Bash(plutil *)`, `Bash(sips *)`, `Bash(df *)`, `Bash(du *)`, `Bash(find mac *)`, `Bash(rm -rf mac/*)`, `Edit`, `Write`, `Read`. Nothing that pushes, merges or deletes outside `mac/`.
+1. Install an allowlist once (owner action; `mac/tools/claude-allowlist.json` is the ready file, and the file, not this text, is the list): merge its `permissions.allow` list into `.claude/settings.local.json` in the repository (the user's global git ignore already excludes that file, so rule 1 is not affected). It allows `dotnet`, the read-only git commands, `git add` and `git restore` only for paths under `mac/` (plus `MACOS_NATIVE_PATH.md` and `.github/workflows/mac-*`), `git commit`, `git stash push -u -m`, `git stash list`, `git stash show`, `git fetch upstream`, `git rev-parse`, `git merge-file`, the scripts under `mac/tools`, `mac/native` and `mac/packaging`, `python3 mac/tools/...`, the packaging helpers (`screencapture`, `swiftc`, `codesign`, `hdiutil`, `plutil`, `sips`), read-only `df`, `du`, `test`, `grep`, `jq`, `wc`, `ls`, the exact cleanup commands of §2 step 0 (the `bin` and `obj` finds and `rm -rf` of the three `mac/artifacts` folders), `Read`, and `Edit` and `Write` scoped to `mac/**`, `MACOS_NATIVE_PATH.md` and `.github/workflows/mac-*.yml`. It does not allow `osascript` (the UI scripts call it themselves, behind their frontmost-process check), a bare `rm`, `git add` outside `mac/`, `git stash drop`, `git reset`, `git checkout`, `git clean`, `git merge`, `git rebase` or `git push`. A test (`ComicRack.Cli.Tests`, `AllowlistTests`) checks that every command the RUNBOOK and `run-plan.sh` use is covered and that none of these is allowed.
 2. Start `mac/tools/run-plan.sh` from the VS Code terminal. It runs `claude -p "<Normal run prompt> Do one task only, then end the session." --model sonnet --effort high` in a loop, reads the `Run state:` line after each run and ends on STOPPED, after `--max-tasks`, or after two runs that committed nothing.
 3. `--dangerously-skip-permissions` would also work but removes every guard; it is the owner's decision and is not used by the scripts.
 

@@ -46,7 +46,8 @@ About 4 to 5 minutes. It refuses to start (exit 3) unless you are on `macos` wit
 
 | Line | What it checks |
 |---|---|
-| `files`, `new-files`, `ui-parity`, `payload` | Every changed file of the range, sorted by `mac/tools/upstream-scan`: linked into the Mac build, replaced, excluded, Windows UI that the Mac build does not compile (candidates for the Mac app), project files, payload, build settings. `WARN` for a file that needs a follow-up. |
+| `files`, `new-files`, `payload` | Every changed file of the range, sorted by `mac/tools/upstream-scan`: linked into the Mac build, replaced, excluded, Windows UI that the Mac build does not compile, project files, payload, build settings. `WARN` for a file that needs a follow-up. |
+| `ui-parity` | `WARN` for each changed Windows UI file (one that the Mac build does not compile) that `mac/plans/upstream-ui-log.md` does not list with the upstream commit that changed it. The Mac app must keep the features of the Windows app (requirement R9), so each one needs ledger rows in `mac/plans/parity-ledger.md` and a U-task, which records the file in that log (see section 5). Once recorded the line is `INFO`. |
 | `packages` | `PackageReference` and `Reference` changes of the original `.csproj` files against the Mac mirrors (`mac/*/Sources.props`). `WARN` when the Mac side lacks or differs. |
 | `drift` | Every replaced, stubbed or excluded original against its recorded hash (`mac/replacements.json`). `FAIL` names the originals that changed and the exact `replacement-sync.sh` command (a patched copy says whether upstream's change merges cleanly). |
 | `rule-1`, `build`, `tests` | `mac/tools/verify.sh --full`: nothing outside `mac/` changed, the solution builds, all tests pass. If only the drift guards fail because an original changed, `tests` says so and the exit code stays 1. |
@@ -68,9 +69,8 @@ In a preview (the end of the range is not merged) the `files`, `packages` and `d
 upstream-sync-check 990a164 on macos: 7fd9fd3..d0fedcf, 1 upstream commit(s), merged, 253 s
 PASS  preconditions  on macos, clean tree, 15.9 GB free
 INFO  upstream       7fd9fd3..d0fedcf: 1 upstream commit(s) (merged)
-INFO  files          linked 1, replaced 1, UI not linked 1, project files 1
+INFO  files          linked 1, replaced 1, project files 1
 INFO  new-files      1 new file(s) that the shadow projects compile (the build and the census below confirm they compile)
-INFO  ui-parity      1 changed Windows UI file(s): parity candidates for the Mac app (...)
 PASS  drift          0 of 39 entries need action, no original changed since its recorded hash
 PASS  rule-1         nothing outside mac/ changed against upstream/master
 PASS  build          Debug, 0 errors, 26 warnings, 4 s
@@ -86,6 +86,8 @@ EXIT: 0
 **Sample, findings** (exit 1; the same merge before the fix-ups):
 ```
 INFO  new-files      1 new file(s) that the shadow projects compile (...)
+WARN  ui-parity      1 of 1 changed Windows UI file(s) not recorded in mac/plans/upstream-ui-log.md: R9 needs a ledger row per new or changed feature ...
+                       A ComicRack/Dialogs/NewDialog.cs (d0fedcf)
 WARN  packages       1 package or assembly reference change(s) that the mac project files do not mirror
                        PackageReference Newtonsoft.Json added (- -> 13.0.3) in ComicRack.Engine/ComicRack.Engine.csproj: mac absent; mirror it in mac/ComicRack.Engine.Core/Sources.props
 FAIL  drift          1 replaced, stubbed or excluded original(s) changed
@@ -103,7 +105,7 @@ EXIT: 1
 | Result | Meaning | What you do |
 |---|---|---|
 | Exit 0, no FAIL or WARN line | The Mac build takes the upstream changes as they are | Done. With the harness: `mac/tools/upstream-sync-check.sh --record` (stores the synced upstream commit and commits `mac/upstream-sync.json`). Push if you want: `git push origin macos`. |
-| Exit 1, FAIL or WARN lines (INFO lines never change the exit code) | Upstream changed something the Mac build mirrors: a replaced file changed, new Windows-only API in linked code, a new package, a new file that does not compile on macOS. Also INFO lines listing new Windows UI features (candidates for the Mac app) | Paste the **"After you merged upstream"** prompt of `mac/plans/RUNBOOK.md` §1. A session turns each item into a task, fixes it, re-runs the check until it passes, records the sync, and continues the plan. You do nothing else. |
+| Exit 1, FAIL or WARN lines (INFO lines never change the exit code) | Upstream changed something the Mac build mirrors: a replaced file changed, new Windows-only API in linked code, a new package, a new file that does not compile on macOS, a changed Windows UI file (`ui-parity`: a feature the Mac app must get too). INFO lines never change the exit code | Paste the **"After you merged upstream"** prompt of `mac/plans/RUNBOOK.md` §1. A session turns each item into a task, fixes it, re-runs the check until it passes, records the sync, and continues the plan. You do nothing else. |
 | Exit 2 | The Mac build or its tests are broken by the merge (for example a new linked file that does not compile with the shims), or a tool of the check could not run | Same prompt. Do not build a release until it passes. |
 | Exit 3 | Precondition: uncommitted changes, a merge in progress, or less than 3 GB free | The message says which; fix it (commit or stash, finish the merge, free space) and run the check again. |
 
@@ -114,7 +116,7 @@ EXIT: 1
 - **New Windows-only API in linked code** (WinForms, System.Drawing, P/Invoke): the shim gets the member, or the file gets a Mac replacement or is excluded.
 - **A new linked file does not compile**: exclusion plus stub, or a replacement.
 - **A package changed** in an original `.csproj`: mirrored in `mac/*/Sources.props`.
-- **New Windows UI features**: listed in `mac/plans/full-port.md` §9 as candidates; not implemented automatically.
+- **New or changed Windows UI** (`ui-parity` WARN): the Mac app keeps the features of the Windows app (requirement R9). The session adds a row to `mac/plans/parity-ledger.md` (status `todo`) per new or changed feature and a U-task that implements it, or names the existing task that owns the area, and records each file with its upstream commit in `mac/plans/upstream-ui-log.md`. Nothing is implemented automatically, but the check does not pass until every changed file is recorded; a change to behaviour that the Mac app already mirrors is fixed in the U-task.
 
 ## 6. How often
 

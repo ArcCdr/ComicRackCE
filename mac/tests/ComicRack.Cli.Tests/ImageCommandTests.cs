@@ -136,6 +136,23 @@ namespace ComicRack.Cli.Tests
 		}
 
 		[Fact]
+		public void Blank_means_low_variance_not_identical_pixels()
+		{
+			// A flat colour with noise of one level (what a compressed or dithered empty window looks like) is blank.
+			string noisy = Png("noisy.png", 40, 40, (x, y) => new SKColor((byte)(200 + ((x + y) % 2)), 200, (byte)(200 - (x % 2))));
+			var noisyStats = Crcli("image", "stats", noisy);
+			Assert.Contains("blank: yes", noisyStats.output);
+			Assert.True(noisyStats.output.Contains("distinct colours: 4") || noisyStats.output.Contains("distinct colours: 3"), noisyStats.output);
+			Assert.Equal(1, Crcli("image", "stats", noisy, "--require-nonblank").code);
+
+			// A flat window with a small high-contrast element (about 1 percent of the pixels) is not blank.
+			string small = Png("small.png", 100, 100, (x, y) => x < 10 && y < 10 ? new SKColor(0, 0, 0) : new SKColor(240, 240, 240));
+			var smallStats = Crcli("image", "stats", small);
+			Assert.Contains("blank: no", smallStats.output);
+			Assert.Equal(0, Crcli("image", "stats", small, "--require-nonblank").code);
+		}
+
+		[Fact]
 		public void Image_without_a_valid_subcommand_is_a_usage_error()
 		{
 			Assert.Equal(2, Crcli("image").code);

@@ -3,8 +3,8 @@
 # Read mac/tools/ui-drive/README.md for the commands and the safety rules.
 #
 # Exit codes: 0 ok, 1 failed or timed out, 2 bad arguments or no session, 4 screen locked or no GUI access (record the check as
-# SKIPPED), 5 safety check failed (the app is not frontmost: nothing was typed or clicked), 6 launch refused (another copy of the
-# app is running).
+# SKIPPED), 5 safety check failed (the app is not frontmost, or the session's pid is no longer the app this tool launched:
+# nothing was typed, clicked or killed), 6 launch refused (another copy of the app is running).
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
@@ -35,6 +35,7 @@ usage: ui-drive.sh <command> [args]
   texts                                                  the static texts of the app's windows (status bar, counts, labels): window title <TAB> text
   expect-log <regex> [seconds=10]                        wait for a line of the app log (or its output) that matches
   status                                                 print the session
+  check-data-dir <path>                                  print the physical path if launch would accept it as --data-dir, else exit 2
   check                                                  exit 0 if the GUI session is usable, 4 if locked or no GUI
   quit                                                   Cmd+Q, wait for the exit, print the exit code
   kill                                                   terminate the launched app
@@ -64,13 +65,33 @@ check_gui() {
 	[ "$state" = unlocked ] || die 4 "screen locked or no GUI session ($state): UI check skipped"
 }
 
-# Loads the session written by launch; exit 2 without one, exit 1 if the app is gone.
+# pid_owner_state <pid> <exe> <exitfile>: prints "ok" when the pid is the app this tool started, else why not:
+# "gone" (no such process), "exited" (the launch wrapper recorded an exit code) or "foreign:<command line>" (the pid now belongs to
+# another program: the app exited and the pid was reused). Input, quit and kill act on the pid only when this says "ok".
+pid_owner_state() {
+	local pid=$1 exe=$2 exitfile=$3 cmd
+	kill -0 "$pid" 2>/dev/null || { echo gone; return; }
+	if [ -s "$exitfile" ]; then echo exited; return; fi
+	cmd=$(ps -p "$pid" -o command= 2>/dev/null) || { echo gone; return; }
+	case "$cmd" in
+		"$exe"|"$exe "*|*" $exe"|*" $exe "*) echo ok ;;
+		*) echo "foreign:$cmd" ;;
+	esac
+}
+
+# Loads the session written by launch; exit 2 without one, exit 1 if the app is gone, exit 5 if its pid belongs to another program.
 load_session() {
 	[ -f "$SESSION" ] || die 2 "no session: run 'ui-drive.sh launch' first"
 	# shellcheck disable=SC1090
 	. "$SESSION"
 	[ -n "${UD_PID:-}" ] || die 2 "broken session file $SESSION"
-	kill -0 "$UD_PID" 2>/dev/null || die 1 "the launched app (pid $UD_PID) is not running (see $UD_STDOUT)"
+	local state
+	state=$(pid_owner_state "$UD_PID" "${UD_EXE:-}" "${UD_EXITFILE:-/nonexistent}")
+	case "$state" in
+		ok) ;;
+		gone|exited) die 1 "the launched app (pid $UD_PID) is not running (see $UD_STDOUT)" ;;
+		*) die 5 "refused: pid $UD_PID is no longer the app this tool launched (${state#foreign:}); nothing was sent" ;;
+	esac
 }
 
 # Runs AppleScript read from stdin with arguments; maps the failures to exit codes.
@@ -119,6 +140,20 @@ prepare_input() {
 	if [ "$REACTIVATE" = 1 ]; then
 		do_front || true
 	fi
+}
+
+# type_checked <text>: types the text in chunks of 8 characters, each chunk through its own frontmost check (the check and the
+# keystrokes of one chunk are one System Events script), so focus lost in the middle of a long text stops the typing (exit 5)
+# after at most one chunk instead of sending the rest to another app.
+type_checked() {
+	local text=$1 i=0 n=${#1}
+	while [ $i -lt $n ]; do
+		run_as "$FRONT_CHECK
+		keystroke (item 2 of argv)
+	end tell
+end run" "$UD_PID" "${text:$i:8}" >/dev/null
+		i=$((i + 8))
+	done
 }
 
 do_front() {
@@ -236,6 +271,48 @@ send_key() { # kind value mods
 end run" "$UD_PID" "$value" >/dev/null
 }
 
+# ---------------------------------------------------------------- data folder rules
+
+# physical_path <path>: absolute physical path of a path that may not exist yet (symlinks of the existing part resolved, "~"
+# expanded). Fails when a missing part contains "..".
+physical_path() {
+	local p=$1 tail="" base name
+	case "$p" in "~") p=$HOME ;; "~/"*) p="$HOME/${p#"~/"}" ;; esac
+	case "$p" in /*) ;; *) p="$PWD/$p" ;; esac
+	while [ ! -d "$p" ]; do
+		name=$(basename "$p")
+		[ "$name" != .. ] || return 1
+		tail="/$name$tail"
+		p=$(dirname "$p")
+		[ "$p" != / ] || break
+	done
+	base=$(cd "$p" 2>/dev/null && pwd -P) || return 1
+	p="${base%/}$tail"
+	printf '%s\n' "${p:-/}"
+}
+
+# validate_data_dir <path>: prints the physical path, or dies with exit 2 when the folder must not hold the app's data: the
+# filesystem root, /Users, the home folder, ~/Library and its Application Support, Caches, Logs and Preferences folders, anything
+# in ~/Documents, ~/Desktop or ~/Downloads (macOS privacy prompts in the owner's session), the owner's ComicRack folders and
+# ComicRackAPI. Temporary folders and folders under the repository are fine.
+validate_data_dir() {
+	local d home reason=""
+	d=$(physical_path "$1") || die 2 "refused: cannot resolve the data folder '$1'"
+	home=$(cd "$HOME" 2>/dev/null && pwd -P || printf '%s' "$HOME")
+	case "$d" in
+		/|/Users|"$home"|"$home/Library"|"$home/Library/Application Support"|"$home/Library/Caches"|"$home/Library/Logs"|"$home/Library/Preferences"|"$home/dev"|"$home/Library/Containers")
+			reason="a system or home folder" ;;
+		"$home/Documents"|"$home/Documents/"*|"$home/Desktop"|"$home/Desktop/"*|"$home/Downloads"|"$home/Downloads/"*)
+			reason="a protected user folder (privacy prompts)" ;;
+		*/Library/Application\ Support/ComicRack*|*/Library/Caches/ComicRack*|*/Library/Logs/ComicRack*|*/dev/ComicRackAPI|*/dev/ComicRackAPI/*)
+			reason="one of the owner's folders" ;;
+		/Volumes/*|/System/*|/Library|/Library/*|/usr/*|/bin/*|/sbin/*|/etc/*|/Applications|/Applications/*)
+			reason="a system or external volume folder" ;;
+	esac
+	[ -z "$reason" ] || die 2 "refused: $d is $reason; use a temporary --data-dir (a new folder under \$TMPDIR or the repository)"
+	printf '%s\n' "$d"
+}
+
 # ---------------------------------------------------------------- commands
 
 cmd_check() {
@@ -258,6 +335,8 @@ cmd_launch() {
 		esac
 		shift
 	done
+	# A --data-dir is checked before anything is built, created or started.
+	[ -z "$data" ] || data=$(validate_data_dir "$data") || exit $?
 	if [ -n "${UI_DRIVE_EXE:-}" ]; then
 		# Another Avalonia app of this repository (a spike): same guards, no build.
 		mode=custom
@@ -277,7 +356,7 @@ cmd_launch() {
 
 	if [ -f "$SESSION" ]; then
 		# shellcheck disable=SC1090
-		( . "$SESSION"; kill -0 "$UD_PID" 2>/dev/null ) && die 2 "a launched app is still running (see 'status'); run 'quit' or 'kill' first"
+		( . "$SESSION"; [ "$(pid_owner_state "${UD_PID:-0}" "${UD_EXE:-}" "${UD_EXITFILE:-/nonexistent}")" = ok ] ) && die 2 "a launched app is still running (see 'status'); run 'quit' or 'kill' first"
 		rm -f "$SESSION"
 	fi
 	check_gui
@@ -290,12 +369,8 @@ cmd_launch() {
 	if [ -z "$data" ]; then
 		data=$(mktemp -d "${TMPDIR:-/tmp}/ui-drive-data.XXXXXX") || die 1 "cannot create a temporary data folder"
 	fi
+	data=$(validate_data_dir "$data") || exit $?
 	mkdir -p "$data"
-	data=$(cd "$data" && pwd -P)
-	case "$data" in
-		*/Library/Application\ Support/ComicRack*|*/Library/Caches/ComicRack*|*/Library/Logs/ComicRack*|*/dev/ComicRackAPI|*/dev/ComicRackAPI/*)
-			die 2 "refused: $data is one of the owner's folders; use a temporary --data-dir" ;;
-	esac
 
 	mkdir -p "$ART" "$SHOTS"
 	local pidfile="$ART/app.pid" exitfile="$ART/app.exit" out="$ART/app.out"
@@ -317,14 +392,15 @@ cmd_launch() {
 	local pid
 	pid=$(cat "$pidfile")
 	{
-		printf "UD_PID='%s'\n" "$pid"
-		printf "UD_MODE='%s'\n" "$mode"
-		printf "UD_EXE='%s'\n" "$exe"
-		printf "UD_DATA='%s'\n" "$data"
-		printf "UD_LOG='%s'\n" "$data/Logs/ComicRack.log"
-		printf "UD_STDOUT='%s'\n" "$out"
-		printf "UD_EXITFILE='%s'\n" "$exitfile"
-		printf "UD_STARTED='%s'\n" "$(date +%s)"
+		# %q: the file is sourced later, so a value with a quote, a space or a $ must not run or break anything
+		printf 'UD_PID=%q\n' "$pid"
+		printf 'UD_MODE=%q\n' "$mode"
+		printf 'UD_EXE=%q\n' "$exe"
+		printf 'UD_DATA=%q\n' "$data"
+		printf 'UD_LOG=%q\n' "$data/Logs/ComicRack.log"
+		printf 'UD_STDOUT=%q\n' "$out"
+		printf 'UD_EXITFILE=%q\n' "$exitfile"
+		printf 'UD_STARTED=%q\n' "$(date +%s)"
 	} >"$SESSION"
 	sleep 0.5
 	kill -0 "$pid" 2>/dev/null || { cat "$out" >&2 2>/dev/null; rm -f "$SESSION"; die 1 "the app exited right after the start (exit $(cat "$exitfile" 2>/dev/null || echo ?))"; }
@@ -335,7 +411,7 @@ cmd_status() {
 	[ -f "$SESSION" ] || { echo "no session"; return 0; }
 	cat "$SESSION"
 	# shellcheck disable=SC1090
-	( . "$SESSION"; if kill -0 "$UD_PID" 2>/dev/null; then echo "running: yes"; else echo "running: no"; fi )
+	( . "$SESSION"; if [ "$(pid_owner_state "${UD_PID:-0}" "${UD_EXE:-}" "${UD_EXITFILE:-/nonexistent}")" = ok ]; then echo "running: yes"; else echo "running: no"; fi )
 }
 
 cmd_windows() {
@@ -352,7 +428,7 @@ cmd_wait_window() {
 	load_session; check_gui
 	local deadline=$(( $(date +%s) + timeout )) line
 	while :; do
-		kill -0 "$UD_PID" 2>/dev/null || die 1 "the app exited while waiting for a window (see $UD_STDOUT)"
+		[ "$(pid_owner_state "$UD_PID" "$UD_EXE" "$UD_EXITFILE")" = ok ] || die 1 "the app exited while waiting for a window (see $UD_STDOUT)"
 		line=$("$WT" windows --pid "$UD_PID" | awk -F'\t' -v re="$regex" '$4 == 0 && $5 == 1 && $8 >= 100 && $9 >= 100 && $10 ~ re { printf "%s\t%s\t%sx%s\t%s\n", $1, $6 "," $7, $8, $9, $10; exit }')
 		if [ -n "$line" ]; then printf '%s\n' "$line"; return 0; fi
 		[ "$(date +%s)" -lt "$deadline" ] || die 1 "no window matching '$regex' after ${timeout}s"
@@ -507,10 +583,7 @@ cmd_type() {
 	[ $# -ge 1 ] || die 2 "type needs the text"
 	local text="$*"
 	prepare_input
-	run_as "$FRONT_CHECK
-		keystroke (item 2 of argv)
-	end tell
-end run" "$UD_PID" "$text" >/dev/null
+	type_checked "$text"
 	echo "typed ${#text} characters"
 }
 
@@ -588,10 +661,7 @@ cmd_choose_path() {
 	REACTIVATE=0
 	send_key char g "command down, shift down"
 	sleep 0.8
-	run_as "$FRONT_CHECK
-		keystroke (item 2 of argv)
-	end tell
-end run" "$UD_PID" "$path" >/dev/null
+	type_checked "$path"
 	sleep 0.6
 	send_key code 36 ""
 	sleep 0.8
@@ -648,7 +718,7 @@ cmd_expect_log() {
 	while :; do
 		line=$(cat "$UD_LOG" "$UD_STDOUT" 2>/dev/null | grep -E -m1 -- "$regex" || true)
 		if [ -n "$line" ]; then printf '%s\n' "$line"; return 0; fi
-		kill -0 "$UD_PID" 2>/dev/null || die 1 "the app exited before '$regex' appeared in $UD_LOG"
+		[ "$(pid_owner_state "$UD_PID" "$UD_EXE" "$UD_EXITFILE")" = ok ] || die 1 "the app exited before '$regex' appeared in $UD_LOG"
 		[ "$(date +%s)" -lt "$deadline" ] || die 1 "no log line matching '$regex' after ${timeout}s in $UD_LOG"
 		sleep 0.3
 	done
@@ -677,14 +747,24 @@ cmd_kill() {
 	[ -f "$SESSION" ] || { echo "no session"; return 0; }
 	# shellcheck disable=SC1090
 	. "$SESSION"
-	if kill -0 "$UD_PID" 2>/dev/null; then
-		kill -TERM "$UD_PID" 2>/dev/null || true
-		local i=0
-		while kill -0 "$UD_PID" 2>/dev/null && [ $i -lt 50 ]; do sleep 0.1; i=$((i + 1)); done
-		kill -0 "$UD_PID" 2>/dev/null && kill -KILL "$UD_PID" 2>/dev/null
-	fi
-	mv -f "$SESSION" "$ART/session.last" 2>/dev/null || true
-	echo "killed pid $UD_PID"
+	local state
+	state=$(pid_owner_state "${UD_PID:-0}" "${UD_EXE:-}" "${UD_EXITFILE:-/nonexistent}")
+	case "$state" in
+		ok)
+			kill -TERM "$UD_PID" 2>/dev/null || true
+			local i=0
+			while [ "$(pid_owner_state "$UD_PID" "$UD_EXE" "$UD_EXITFILE")" = ok ] && [ $i -lt 50 ]; do sleep 0.1; i=$((i + 1)); done
+			# KILL only a pid that is still the app: after the app is gone its pid may belong to another program
+			[ "$(pid_owner_state "$UD_PID" "$UD_EXE" "$UD_EXITFILE")" = ok ] && kill -KILL "$UD_PID" 2>/dev/null
+			mv -f "$SESSION" "$ART/session.last" 2>/dev/null || true
+			echo "killed pid $UD_PID" ;;
+		foreign:*)
+			mv -f "$SESSION" "$ART/session.last" 2>/dev/null || true
+			echo "pid $UD_PID is no longer the launched app (${state#foreign:}); nothing was killed" ;;
+		*)
+			mv -f "$SESSION" "$ART/session.last" 2>/dev/null || true
+			echo "the launched app (pid $UD_PID) had already exited" ;;
+	esac
 }
 
 [ $# -ge 1 ] || { usage >&2; exit 2; }
@@ -708,6 +788,7 @@ case "$command_name" in
 	texts) cmd_texts "$@" ;;
 	expect-log) cmd_expect_log "$@" ;;
 	status) cmd_status "$@" ;;
+	check-data-dir) [ $# -eq 1 ] || die 2 "check-data-dir needs one path"; validate_data_dir "$1" ;;
 	check) cmd_check "$@" ;;
 	quit) cmd_quit "$@" ;;
 	kill) cmd_kill "$@" ;;

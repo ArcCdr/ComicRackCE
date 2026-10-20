@@ -10,7 +10,15 @@
 #
 # Exit codes: 0 all steps passed, 1 a step failed, 2 bad arguments, 3 STOP: less than 3 GB free on the home volume.
 # Logs: mac/artifacts/verify/ (git-ignored): build.log, test.log and one .trx per test assembly.
+# UPDATE_GOLDENS is unset for the run (goldens are rewritten only by an explicit dotnet test, never by the gate).
 set -uo pipefail
+
+# The gate never rewrites goldens: a stray UPDATE_GOLDENS=1 in the environment would make the golden tests pass by overwriting
+# the expected files. Unset it for the whole run (and say so).
+if [ -n "${UPDATE_GOLDENS:-}" ]; then
+	echo "verify: UPDATE_GOLDENS is set in the environment; ignoring it (the gate never rewrites goldens)" >&2
+fi
+unset UPDATE_GOLDENS
 
 FULL=0; BUILD=1; TEST=1; CONFIG=Debug
 while [ $# -gt 0 ]; do

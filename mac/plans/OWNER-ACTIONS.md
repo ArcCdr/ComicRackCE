@@ -79,7 +79,7 @@
 
 _(Owner-only checks gathered from finished tasks; they become one block when their checkpoint is reached.)_
 
-- **C2:** trackpad two-finger swipe (one swipe = one page, direction, momentum), pinch zoom speed, scroll feel, Retina sharpness, Metal frame rate, an SMB share scan, TCC prompts (Documents, Downloads, Desktop, removable and network volumes), one real CBR, one push of `macos` to see the CI run.
+- **C2:** trackpad two-finger swipe (one swipe = one page, direction, momentum), pinch zoom speed, scroll feel, Retina sharpness, Metal frame rate, an SMB share scan, TCC prompts (Documents, Downloads, Desktop, removable and network volumes), one real CBR, one push of `macos` to see the CI run; the real-window checks that were SKIPPED on a locked screen: `mac/tools/e2e.sh hidpi` (the 1x/2x ratio line; a real 1x run needs a non-Retina display or a scaled mode) and `mac/spikes/S6-modal/real.sh all` (copy its shots to `mac/reports/s6-modal/`; owner blocked, Return/Escape, the Python-drawn rectangle in a real window, shutdown during a dialog). Any session may run both on an unlocked screen earlier, at a gate.
 - **C5:** Developer ID certificate, notarization profile, final bundle id and name, optional 1024 px icon, optional GitHub secrets.
 
 ## Done

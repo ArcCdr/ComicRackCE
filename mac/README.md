@@ -11,6 +11,7 @@ Plans and procedures:
 Fast gate (every change): `mac/tools/verify.sh` (disk guard, no file outside `mac/` changed, build, fast tests; `--full` adds the slow tests). One branch, `macos`; work commits directly on it.
 
 Real-window checks: `mac/tools/ui-drive/ui-drive.sh` launches, drives and screenshots the app safely (`mac/tools/ui-drive/README.md`); `crcli image probe|stats` checks the screenshots.
+Plan bookkeeping: `mac/tools/plan-status.sh` (`--check` / `--write` the status table and next task of `mac/plans/full-port.md` from the Status lines; `--backfill-log` fills `mac/plans/run-log.md` from `git log`).
 
 ## Prerequisites
 
