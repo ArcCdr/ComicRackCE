@@ -320,6 +320,36 @@
       "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
       "sha256": "74b9b0908f902b6d42481c6d2c064bb204844c13a1df1f4661936d681a2c942f",
       "reason": "IPluginEnvironment.Theme, IThemePlugin and Command.GetThemedImage use it"
+    },
+    {
+      "original": "cYo.Common/Threading/ThreadUtility.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/ThreadUtility.cs",
+      "kind": "patched-copy",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "8a36e22457c30e68c21ed63780e2c0f3960a7acdab23de71dcedc4501f3394ab",
+      "maxChangedLines": 8,
+      "reason": "Abort reports and abandons a thread that ignores the timeout instead of Thread.Abort (P1.1)"
+    },
+    {
+      "original": "cYo.Common/Threading/BackgroundRunner.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/BackgroundRunner.cs",
+      "kind": "patched-copy",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "84b0ad2e2eb248771d0e10db5dbd2a7872128454e5142b4356e99d46416a833e",
+      "maxChangedLines": 12,
+      "reason": "Dispose abandons a thread that ignores the timeout instead of Thread.Abort (P1.1)"
+    },
+    {
+      "original": "ComicRack.Engine/ComicScanner.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/PassB/ComicScanner.cs",
+      "kind": "patched-copy",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "fa6855ce936357003df65f016d6d6b59bed992c733181b6a5368f20c494e84b9",
+      "maxChangedLines": 10,
+      "reason": "Stop abandons a scanning thread that ignores the timeout instead of Thread.Abort (P1.1)"
     }
   ]
 }

@@ -85,16 +85,18 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
-		public void Thread_Abort_throws_PlatformNotSupportedException_on_net10()
+		public void Thread_Abort_throws_PlatformNotSupportedException_on_net10_but_the_Core_no_longer_calls_it()
 		{
-			// The Core aborts a worker only after a Join timeout (ThreadUtility.Abort, BackgroundRunner.Dispose, ComicScanner.Stop).
-			// On .NET 10 that call throws instead of ending the thread; MacHost logs it and goes on with the other close steps.
+			// Why the three Core sites (ThreadUtility.Abort, BackgroundRunner.Dispose, ComicScanner.Stop) are pass B replacements (P1.1):
+			// Thread.Abort itself throws on .NET 10, while ThreadUtility.Abort reports a thread that ignores its timeout and returns.
 			var release = new ManualResetEventSlim(false);
 			var thread = new Thread(() => release.Wait()) { IsBackground = true };
 			thread.Start();
 			try
 			{
-				Assert.Throws<PlatformNotSupportedException>(() => ThreadUtility.Abort(thread, 50));
+				Assert.Throws<PlatformNotSupportedException>(() => thread.Abort());
+				ThreadUtility.Abort(thread, 50);
+				Assert.True(thread.IsAlive);
 			}
 			finally
 			{

@@ -1,0 +1,145 @@
+// Pass B patched copy of cYo.Common/Threading/BackgroundRunner.cs (the original is removed from the pass B compile in Sources.props).
+// Only Dispose differs: a thread that does not stop within the timeout is reported and abandoned instead of Thread.Abort (not
+// supported on .NET 10); its wait handles are then left to the finalizer, because the thread still waits on them.
+// A test in ComicRack.Mac.Host.Tests compares the original with a recorded hash.
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace cYo.Common.Threading
+{
+	public class BackgroundRunner : Component
+	{
+		private readonly ManualResetEvent exitEvent = new ManualResetEvent(initialState: false);
+
+		private readonly ManualResetEvent runEvent = new ManualResetEvent(initialState: false);
+
+		private readonly ManualResetEvent intervalEvent = new ManualResetEvent(initialState: false);
+
+		private Thread thread;
+
+		private volatile bool enabled;
+
+		[DefaultValue(null)]
+		public ISynchronizeInvoke Synchronize
+		{
+			get;
+			set;
+		}
+
+		[DefaultValue(0)]
+		public int Interval
+		{
+			get;
+			set;
+		}
+
+		[DefaultValue(false)]
+		public bool Enabled
+		{
+			get
+			{
+				return enabled;
+			}
+			set
+			{
+				if (value == enabled)
+				{
+					return;
+				}
+				enabled = value;
+				if (enabled)
+				{
+					if (thread == null)
+					{
+						thread = ThreadUtility.RunInBackground("BackgroundRunner Thread", BackgroundMethod);
+					}
+					runEvent.Set();
+					intervalEvent.Reset();
+				}
+				else
+				{
+					runEvent.Reset();
+					intervalEvent.Set();
+				}
+			}
+		}
+
+		public event EventHandler Tick;
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				runEvent.Reset();
+				exitEvent.Set();
+				intervalEvent.Set();
+				Thread thread = this.thread;
+				if (thread != null && !thread.Join(5000))
+				{
+					Trace.TraceWarning("Thread '" + thread.Name + "' did not stop within 5000 ms and is abandoned (Thread.Abort is not supported).");
+					base.Dispose(disposing);
+					return;
+				}
+				runEvent.Dispose();
+				exitEvent.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		protected virtual void OnTick()
+		{
+			if (this.Tick != null)
+			{
+				this.Tick(this, EventArgs.Empty);
+			}
+		}
+
+		public void Start()
+		{
+			Enabled = true;
+		}
+
+		public void Stop()
+		{
+			Enabled = false;
+		}
+
+		private void BackgroundMethod()
+		{
+			ManualResetEvent[] waitHandles = new ManualResetEvent[2]
+			{
+				exitEvent,
+				runEvent
+			};
+			while (WaitHandle.WaitAny(waitHandles) != 0)
+			{
+				if (Synchronize == null)
+				{
+					InvokeTick();
+				}
+				else
+				{
+					try
+					{
+						Synchronize.Invoke(new MethodInvoker(InvokeTick), null);
+					}
+					catch (InvalidOperationException)
+					{
+					}
+				}
+				intervalEvent.WaitOne(Interval);
+			}
+		}
+
+		private void InvokeTick()
+		{
+			if (enabled)
+			{
+				OnTick();
+			}
+		}
+	}
+}

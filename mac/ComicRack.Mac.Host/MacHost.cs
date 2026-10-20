@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -59,6 +60,8 @@ namespace ComicRack.Mac.Host
 
 		public bool IsDisposed => disposed;
 
+		private HostTraceListener traceListener;
+
 		private MacHost(MacPaths paths, MacSettings settings, string databaseFile, bool readOnly)
 		{
 			Paths = paths;
@@ -112,6 +115,9 @@ namespace ComicRack.Mac.Host
 			Paths.CreateFolders();
 			Log = new HostLog(Paths.LogFile);
 			NativeLibraryResolver.Log = Log;
+			// The Core reports an abandoned worker thread (the pass B replacements of Thread.Abort, P1.1) through Trace.
+			traceListener = new HostTraceListener(Log);
+			Trace.Listeners.Add(traceListener);
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 			TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 			Log.Info($"Opening host. Data {Paths.DataFolder}, cache {Paths.CacheFolder}, database {DatabaseFile}{(readOnly ? " (read only)" : "")}, {RuntimeInformation.FrameworkDescription}, {RuntimeInformation.OSDescription}");
@@ -279,6 +285,11 @@ namespace ComicRack.Mac.Host
 			}
 			Step(errors, "DatabaseManager", DatabaseManager);
 
+			if (traceListener != null)
+			{
+				Trace.Listeners.Remove(traceListener);
+				traceListener = null;
+			}
 			AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
 			TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
 			Log?.Info(errors.Count == 0 ? "Host closed." : $"Host closed with {errors.Count} error(s).");

@@ -230,6 +230,11 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Test: `WindowsTripwireTests` in `ComicRack.Mac.Host.Tests` (name table, installed assemblies, a deliberate `cYo.Common.Win32.Keyboard` call logged once with its stack, and the v1 flow: `FixtureCommands` books, scan, thumbnail, page, smart lists, save, close, reopen). The flow lists two known findings in `KnownUntilP13`; any other Windows call fails it. P1.3 fixes the two and then deletes that list so the test requires zero. The test project now references `ComicRack.Cli` (for `FixtureCommands`).
 - The app smoke run (`--smoke-test=3 --headless`, empty library) logs no tripwire line.
 
+**Facts from P1.1 (2026-10-20)**
+- Three patched copies in pass B (`Compile Remove` of the originals in the two `Sources.props`; manifest entries with budgets 8, 12 and 10 changed lines): `cYo.Common.Core/Replacements/PassB/ThreadUtility.cs` (`Abort(thread, timeOut)`: `Join(timeOut)`, then `Trace.TraceWarning("Thread '<name>' did not stop within <ms> ms and is abandoned ...")` and return), `.../BackgroundRunner.cs` (`Dispose`: same after 5 s; the wait handles `runEvent` and `exitEvent` are then **not** disposed, because the abandoned thread still waits on them and would die with an unhandled `ObjectDisposedException`), `ComicRack.Engine.Core/Replacements/PassB/ComicScanner.cs` (`Stop`: same after 10 s; `abortScanning` stays set as in the original). All Core worker threads are background threads, so an abandoned one cannot keep the process alive. Only `ThreadUtility.Abort` (called from `ImageProvider.Dispose`, 30 s) and `ComicScanner.Stop` (called from `QueueManager.Dispose` and the "Abort Scanning" task) were reachable; `BackgroundRunner` has no user in the linked Core. `ProcessingQueue.Stop`/`Dispose` in this tree only join with a timeout and never abort.
+- `MacHost` adds a `HostTraceListener` (new file `mac/ComicRack.Mac.Host/HostTraceListener.cs`) while it is open: `Trace.TraceWarning`/`TraceError` from the Core go to the host log as `[WARN]`/`[ERROR]` lines; plain `Trace.Write` and `Debug` output is ignored. `MacHost.Dispose` had no Abort special case (nothing to remove).
+- Tests: `ThreadAbandonTests` (4: `ThreadUtility.Abort` stops in time / ignores the timeout, `BackgroundRunner.Dispose` abandons a blocked tick and the thread ends quietly later, `MacHost.Dispose` with a scanner whose `ScanNotify` handler blocks 15 s: completes in about 10 s, the log has the abandon line and "Host closed.", the database is saved). Takes about 15 s. The old `Thread_Abort_throws...` characterization in `CoreRuntimeTests` now asserts that `thread.Abort()` itself still throws while `ThreadUtility.Abort` does not.
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -409,7 +414,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 ### P1 Core runtime gaps (zero-edit)
 
 #### P1.1 Replace `Thread.Abort` at its three Core sites
-- Depends: P0.4 · Effort: high · Unattended: yes · Status: todo
+- Depends: P0.4 · Effort: high · Unattended: yes · Status: done 2026-10-20
 - Goal: no `PlatformNotSupportedException` on close or cancel paths (`mvp-track.md` M1.5a facts), Windows semantics otherwise unchanged.
 - Add (patched copies, pass B only, manifest entries): `mac/cYo.Common.Core/Replacements/PassB/ThreadUtility.cs` (`Abort(thread, timeout)`: `Join(timeout)`, then log and abandon the thread instead of `Thread.Abort`), `mac/cYo.Common.Core/Replacements/PassB/BackgroundRunner.cs` (same in `Dispose`), `mac/ComicRack.Engine.Core/Replacements/PassB/ComicScanner.cs` (same in `Stop`; `abortScanning` behaviour unchanged). `Compile Remove` lines in the two `Sources.props`.
 - Edit: `mac/ComicRack.Mac.Host/MacHost.cs` only if `Dispose` needs no special case any more (remove the catch documented in M1.5a).
