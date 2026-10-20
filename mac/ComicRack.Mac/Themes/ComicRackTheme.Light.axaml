@@ -1,0 +1,187 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Generated once from the original sources named in mac/plans/chrome-guidelines.md section 2 and then maintained by hand;
+       ThemeTokenTests re-reads those sources and compares every value. Each token is a Color (Cr.Name) and a SolidColorBrush (Cr.NameBrush).
+       Format is #AARRGGBB. Light theme. -->
+
+  <!-- System colours (KnownColorTableEx.cs) -->
+  <Color x:Key="Cr.ActiveBorder">#FFB4B4B4</Color><SolidColorBrush x:Key="Cr.ActiveBorderBrush" Color="#FFB4B4B4" />
+  <Color x:Key="Cr.ActiveCaption">#FF99B4D1</Color><SolidColorBrush x:Key="Cr.ActiveCaptionBrush" Color="#FF99B4D1" />
+  <Color x:Key="Cr.ActiveCaptionText">#FF000000</Color><SolidColorBrush x:Key="Cr.ActiveCaptionTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.AppWorkspace">#FFABABAB</Color><SolidColorBrush x:Key="Cr.AppWorkspaceBrush" Color="#FFABABAB" />
+  <Color x:Key="Cr.Control">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ControlBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ControlDark">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.ControlDarkBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.ControlDarkDark">#FF696969</Color><SolidColorBrush x:Key="Cr.ControlDarkDarkBrush" Color="#FF696969" />
+  <Color x:Key="Cr.ControlLight">#FFE3E3E3</Color><SolidColorBrush x:Key="Cr.ControlLightBrush" Color="#FFE3E3E3" />
+  <Color x:Key="Cr.ControlLightLight">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ControlLightLightBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ControlText">#FF000000</Color><SolidColorBrush x:Key="Cr.ControlTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.Desktop">#FF000000</Color><SolidColorBrush x:Key="Cr.DesktopBrush" Color="#FF000000" />
+  <Color x:Key="Cr.GrayText">#FF6D6D6D</Color><SolidColorBrush x:Key="Cr.GrayTextBrush" Color="#FF6D6D6D" />
+  <Color x:Key="Cr.Highlight">#FF0078D7</Color><SolidColorBrush x:Key="Cr.HighlightBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.HighlightText">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.HighlightTextBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.HotTrack">#FF0066CC</Color><SolidColorBrush x:Key="Cr.HotTrackBrush" Color="#FF0066CC" />
+  <Color x:Key="Cr.InactiveBorder">#FFF4F7FC</Color><SolidColorBrush x:Key="Cr.InactiveBorderBrush" Color="#FFF4F7FC" />
+  <Color x:Key="Cr.InactiveCaption">#FFBFCBDD</Color><SolidColorBrush x:Key="Cr.InactiveCaptionBrush" Color="#FFBFCBDD" />
+  <Color x:Key="Cr.InactiveCaptionText">#FF000000</Color><SolidColorBrush x:Key="Cr.InactiveCaptionTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.Info">#FFFFFFE1</Color><SolidColorBrush x:Key="Cr.InfoBrush" Color="#FFFFFFE1" />
+  <Color x:Key="Cr.InfoText">#FF000000</Color><SolidColorBrush x:Key="Cr.InfoTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.Menu">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.MenuBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.MenuText">#FF000000</Color><SolidColorBrush x:Key="Cr.MenuTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.ScrollBar">#FFC8C8C8</Color><SolidColorBrush x:Key="Cr.ScrollBarBrush" Color="#FFC8C8C8" />
+  <Color x:Key="Cr.Window">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.WindowBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.WindowFrame">#FF646464</Color><SolidColorBrush x:Key="Cr.WindowFrameBrush" Color="#FF646464" />
+  <Color x:Key="Cr.WindowText">#FF000000</Color><SolidColorBrush x:Key="Cr.WindowTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.ButtonFace">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ButtonFaceBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ButtonHighlight">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ButtonHighlightBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ButtonShadow">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.ButtonShadowBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.GradientActiveCaption">#FFB9D1EA</Color><SolidColorBrush x:Key="Cr.GradientActiveCaptionBrush" Color="#FFB9D1EA" />
+  <Color x:Key="Cr.GradientInactiveCaption">#FFD7E4F2</Color><SolidColorBrush x:Key="Cr.GradientInactiveCaptionBrush" Color="#FFD7E4F2" />
+  <Color x:Key="Cr.MenuBar">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.MenuBarBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.WhiteSmoke">#FFF5F5F5</Color><SolidColorBrush x:Key="Cr.WhiteSmokeBrush" Color="#FFF5F5F5" />  <!-- dark: BlackSmoke remap, Theme/ThemeManager.cs -->
+
+  <!-- App colours (ThemeColorTable.cs / DarkThemeColorTable.cs) -->
+  <Color x:Key="Cr.ComicBookLink">#FF4682B4</Color><SolidColorBrush x:Key="Cr.ComicBookLinkBrush" Color="#FF4682B4" />
+  <Color x:Key="Cr.ComicBookVisitedLink">#FFBA55D3</Color><SolidColorBrush x:Key="Cr.ComicBookVisitedLinkBrush" Color="#FFBA55D3" />
+  <Color x:Key="Cr.ComicBookPageViewerText">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ComicBookPageViewerTextBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ComicBookPanelBack">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.ComicBookPanelBackBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.ComicBookWhereSeparator">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.ComicBookWhereSeparatorBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.FavViewBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.FavViewBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.CollapsibleGroupBoxBack">#00FFFFFF</Color><SolidColorBrush x:Key="Cr.CollapsibleGroupBoxBackBrush" Color="#00FFFFFF" />
+  <Color x:Key="Cr.CollapsibleGroupBoxHeaderStart">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.CollapsibleGroupBoxHeaderStartBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.CollapsibleGroupBoxHeaderEnd">#FFE3E3E3</Color><SolidColorBrush x:Key="Cr.CollapsibleGroupBoxHeaderEndBrush" Color="#FFE3E3E3" />
+  <Color x:Key="Cr.CollapsibleGroupBoxHeaderText">#FF000000</Color><SolidColorBrush x:Key="Cr.CollapsibleGroupBoxHeaderTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.DeviceEditControlBack">#00FFFFFF</Color><SolidColorBrush x:Key="Cr.DeviceEditControlBackBrush" Color="#00FFFFFF" />
+  <Color x:Key="Cr.SmallPreviewPageViewerBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.SmallPreviewPageViewerBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.SmallPreviewPageViewerText">#FFD3D3D3</Color><SolidColorBrush x:Key="Cr.SmallPreviewPageViewerTextBrush" Color="#FFD3D3D3" />
+  <Color x:Key="Cr.ThumbTileEmboss">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ThumbTileEmbossBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ThumbTileTitle">#FF000000</Color><SolidColorBrush x:Key="Cr.ThumbTileTitleBrush" Color="#FF000000" />
+  <Color x:Key="Cr.ThumbTileBody">#FF808080</Color><SolidColorBrush x:Key="Cr.ThumbTileBodyBrush" Color="#FF808080" />
+  <Color x:Key="Cr.SelectionFocused">#FF0078D7</Color><SolidColorBrush x:Key="Cr.SelectionFocusedBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.SelectionUnfocused">#FF808080</Color><SolidColorBrush x:Key="Cr.SelectionUnfocusedBrush" Color="#FF808080" />
+  <Color x:Key="Cr.ThumbnailViewItemBack">#FFD3D3D3</Color><SolidColorBrush x:Key="Cr.ThumbnailViewItemBackBrush" Color="#FFD3D3D3" />
+  <Color x:Key="Cr.ThumbnailViewItemHighlightText">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ThumbnailViewItemHighlightTextBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ThumbnailViewItemBorder">#30A0A0A0</Color><SolidColorBrush x:Key="Cr.ThumbnailViewItemBorderBrush" Color="#30A0A0A0" />
+  <Color x:Key="Cr.MagnifySetupBack">#00FFFFFF</Color><SolidColorBrush x:Key="Cr.MagnifySetupBackBrush" Color="#00FFFFFF" />
+  <Color x:Key="Cr.PrefsOverlayPanelBack">#FFF5F5F5</Color><SolidColorBrush x:Key="Cr.PrefsOverlayPanelBackBrush" Color="#FFF5F5F5" />
+  <Color x:Key="Cr.PrefsServerEditBack">#00FFFFFF</Color><SolidColorBrush x:Key="Cr.PrefsServerEditBackBrush" Color="#00FFFFFF" />
+  <Color x:Key="Cr.ItemViewMainBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ItemViewMainBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ItemViewDefaultBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ItemViewDefaultBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ItemViewGroupText">#FF00008B</Color><SolidColorBrush x:Key="Cr.ItemViewGroupTextBrush" Color="#FF00008B" />
+  <Color x:Key="Cr.ItemViewGroupSeparator">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.ItemViewGroupSeparatorBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.ItemViewMarker">#FF000000</Color><SolidColorBrush x:Key="Cr.ItemViewMarkerBrush" Color="#FF000000" />
+  <Color x:Key="Cr.DetailRowHighlight">#FFD3D3D3</Color><SolidColorBrush x:Key="Cr.DetailRowHighlightBrush" Color="#FFD3D3D3" />
+  <Color x:Key="Cr.ItemDrawInfoText">#FF000000</Color><SolidColorBrush x:Key="Cr.ItemDrawInfoTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.TreeDragSeparator">#FF000000</Color><SolidColorBrush x:Key="Cr.TreeDragSeparatorBrush" Color="#FF000000" />
+  <Color x:Key="Cr.GaugeTotal">#FF008000</Color><SolidColorBrush x:Key="Cr.GaugeTotalBrush" Color="#FF008000" />
+  <Color x:Key="Cr.GaugeTotalText">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.GaugeTotalTextBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.GaugeUnread">#FFFFA500</Color><SolidColorBrush x:Key="Cr.GaugeUnreadBrush" Color="#FFFFA500" />
+  <Color x:Key="Cr.GaugeUnreadText">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.GaugeUnreadTextBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.GaugeNew">#FFFF0000</Color><SolidColorBrush x:Key="Cr.GaugeNewBrush" Color="#FFFF0000" />
+  <Color x:Key="Cr.GaugeNewText">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.GaugeNewTextBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.SmartQueryBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.SmartQueryBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.SmartQueryException">#FFD3D3D3</Color><SolidColorBrush x:Key="Cr.SmartQueryExceptionBrush" Color="#FFD3D3D3" />
+  <Color x:Key="Cr.SmartQueryText">#FF000000</Color><SolidColorBrush x:Key="Cr.SmartQueryTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.SmartQueryKeyword">#FF008000</Color><SolidColorBrush x:Key="Cr.SmartQueryKeywordBrush" Color="#FF008000" />
+  <Color x:Key="Cr.SmartQueryQualifier">#FF0000FF</Color><SolidColorBrush x:Key="Cr.SmartQueryQualifierBrush" Color="#FF0000FF" />
+  <Color x:Key="Cr.SmartQueryNegation">#FF8B0000</Color><SolidColorBrush x:Key="Cr.SmartQueryNegationBrush" Color="#FF8B0000" />
+  <Color x:Key="Cr.SmartQueryString">#FFFF0000</Color><SolidColorBrush x:Key="Cr.SmartQueryStringBrush" Color="#FFFF0000" />
+  <Color x:Key="Cr.TabBarBack">#00FFFFFF</Color><SolidColorBrush x:Key="Cr.TabBarBackBrush" Color="#00FFFFFF" />
+  <Color x:Key="Cr.TabBarDefaultBorder">#FFABABAB</Color><SolidColorBrush x:Key="Cr.TabBarDefaultBorderBrush" Color="#FFABABAB" />
+  <Color x:Key="Cr.TabBarSelectedBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.TabBarSelectedBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ToolTipText">#FF000000</Color><SolidColorBrush x:Key="Cr.ToolTipTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.ComboBoxSeparator">#FFE3E3E3</Color><SolidColorBrush x:Key="Cr.ComboBoxSeparatorBrush" Color="#FFE3E3E3" />
+  <Color x:Key="Cr.CaptionBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.CaptionBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.CaptionText">#FF000000</Color><SolidColorBrush x:Key="Cr.CaptionTextBrush" Color="#FF000000" />
+  <Color x:Key="Cr.HeaderBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.HeaderBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.HeaderSeparator">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.HeaderSeparatorBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.RatingUnrated">#FFD3D3D3</Color><SolidColorBrush x:Key="Cr.RatingUnratedBrush" Color="#FFD3D3D3" />
+  <Color x:Key="Cr.RatingRated">#FF000000</Color><SolidColorBrush x:Key="Cr.RatingRatedBrush" Color="#FF000000" />
+  <Color x:Key="Cr.SplitButtonSeparatorLeft">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.SplitButtonSeparatorLeftBrush" Color="#FFA0A0A0" />
+  <Color x:Key="Cr.SplitButtonSeparatorRight">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.SplitButtonSeparatorRightBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.StackFill">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.StackFillBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.StackBorder">#FF000000</Color><SolidColorBrush x:Key="Cr.StackBorderBrush" Color="#FF000000" />
+  <Color x:Key="Cr.ReaderBackground">#FFF5F5F5</Color><SolidColorBrush x:Key="Cr.ReaderBackgroundBrush" Color="#FFF5F5F5" />  <!-- DisplayWorkspace.BackgroundColor default WhiteSmoke -->
+  <Color x:Key="Cr.VistaColor">#FF99DEFD</Color><SolidColorBrush x:Key="Cr.VistaColorBrush" Color="#FF99DEFD" />
+
+  <!-- Control colours (light: chrome-guidelines 2.5, assumed; dark: DarkColors.cs) -->
+  <Color x:Key="Cr.ButtonBack">#FFE1E1E1</Color><SolidColorBrush x:Key="Cr.ButtonBackBrush" Color="#FFE1E1E1" />
+  <Color x:Key="Cr.ButtonBorder">#FFADADAD</Color><SolidColorBrush x:Key="Cr.ButtonBorderBrush" Color="#FFADADAD" />
+  <Color x:Key="Cr.ButtonHoverBack">#FFE5F1FB</Color><SolidColorBrush x:Key="Cr.ButtonHoverBackBrush" Color="#FFE5F1FB" />
+  <Color x:Key="Cr.ButtonHoverBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ButtonHoverBorderBrush" Color="#FF0078D7" />  <!-- dark: no original value, the dark button keeps its border -->
+  <Color x:Key="Cr.ButtonPressedBack">#FFCCE4F7</Color><SolidColorBrush x:Key="Cr.ButtonPressedBackBrush" Color="#FFCCE4F7" />
+  <Color x:Key="Cr.ButtonPressedBorder">#FF005499</Color><SolidColorBrush x:Key="Cr.ButtonPressedBorderBrush" Color="#FF005499" />  <!-- dark: no original value, the dark button keeps its border -->
+  <Color x:Key="Cr.ButtonDefaultBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ButtonDefaultBorderBrush" Color="#FF0078D7" />  <!-- dark: no original value, the dark button keeps its border -->
+  <Color x:Key="Cr.CheckBoxBack">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.CheckBoxBackBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.CheckBoxBorder">#FF333333</Color><SolidColorBrush x:Key="Cr.CheckBoxBorderBrush" Color="#FF333333" />
+  <Color x:Key="Cr.CheckBoxHoverBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.CheckBoxHoverBorderBrush" Color="#FF0078D7" />  <!-- dark: accent, no original hover value -->
+  <Color x:Key="Cr.CheckBoxCheck">#FF000000</Color><SolidColorBrush x:Key="Cr.CheckBoxCheckBrush" Color="#FF000000" />
+  <Color x:Key="Cr.CheckBoxAccent">#FF0078D7</Color><SolidColorBrush x:Key="Cr.CheckBoxAccentBrush" Color="#FF0078D7" />  <!-- light: no original value, the hover border colour -->
+  <Color x:Key="Cr.EditFrame">#FF7A7A7A</Color><SolidColorBrush x:Key="Cr.EditFrameBrush" Color="#FF7A7A7A" />  <!-- dark: no original value, Border.Default -->
+  <Color x:Key="Cr.EditHoverFrame">#FF171717</Color><SolidColorBrush x:Key="Cr.EditHoverFrameBrush" Color="#FF171717" />  <!-- dark: no original value, Border.Light -->
+  <Color x:Key="Cr.EditFocusFrame">#FF0078D7</Color><SolidColorBrush x:Key="Cr.EditFocusFrameBrush" Color="#FF0078D7" />  <!-- dark: Focus -->
+  <Color x:Key="Cr.TrackBarTrack">#FFE7EAEA</Color><SolidColorBrush x:Key="Cr.TrackBarTrackBrush" Color="#FFE7EAEA" />  <!-- dark: no original value -->
+  <Color x:Key="Cr.TrackBarTrackBorder">#FFD6D6D6</Color><SolidColorBrush x:Key="Cr.TrackBarTrackBorderBrush" Color="#FFD6D6D6" />  <!-- dark: no original value -->
+  <Color x:Key="Cr.TrackBarThumb">#FF007AD9</Color><SolidColorBrush x:Key="Cr.TrackBarThumbBrush" Color="#FF007AD9" />  <!-- dark: no original value, the accent -->
+  <Color x:Key="Cr.TabPageSelected">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.TabPageSelectedBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.TabPageOther">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.TabPageOtherBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.TabPageBorder">#FFD9D9D9</Color><SolidColorBrush x:Key="Cr.TabPageBorderBrush" Color="#FFD9D9D9" />  <!-- dark: no original value, Border.Default -->
+
+  <!-- Toolstrip and menu colours (ProfessionalColorTable, computed by ProfessionalColors.cs) -->
+  <Color x:Key="Cr.ToolButtonSelectedHighlight">#FFB5D7F3</Color><SolidColorBrush x:Key="Cr.ToolButtonSelectedHighlightBrush" Color="#FFB5D7F3" />
+  <Color x:Key="Cr.ToolButtonSelectedHighlightBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ToolButtonSelectedHighlightBorderBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.ToolButtonPressedHighlight">#FF7EBAEA</Color><SolidColorBrush x:Key="Cr.ToolButtonPressedHighlightBrush" Color="#FF7EBAEA" />
+  <Color x:Key="Cr.ToolButtonPressedHighlightBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ToolButtonPressedHighlightBorderBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.ToolButtonCheckedHighlight">#FFB5D7F3</Color><SolidColorBrush x:Key="Cr.ToolButtonCheckedHighlightBrush" Color="#FFB5D7F3" />
+  <Color x:Key="Cr.ToolButtonCheckedHighlightBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ToolButtonCheckedHighlightBorderBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.ToolButtonPressedBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ToolButtonPressedBorderBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.ToolButtonSelectedBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ToolButtonSelectedBorderBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.ToolButtonCheckedGradientBegin">#00000000</Color><SolidColorBrush x:Key="Cr.ToolButtonCheckedGradientBeginBrush" Color="#00000000" />
+  <Color x:Key="Cr.ToolButtonCheckedGradientMiddle">#00000000</Color><SolidColorBrush x:Key="Cr.ToolButtonCheckedGradientMiddleBrush" Color="#00000000" />
+  <Color x:Key="Cr.ToolButtonCheckedGradientEnd">#00000000</Color><SolidColorBrush x:Key="Cr.ToolButtonCheckedGradientEndBrush" Color="#00000000" />
+  <Color x:Key="Cr.ToolButtonSelectedGradientBegin">#FFB3D7F3</Color><SolidColorBrush x:Key="Cr.ToolButtonSelectedGradientBeginBrush" Color="#FFB3D7F3" />
+  <Color x:Key="Cr.ToolButtonSelectedGradientMiddle">#FFB3D7F3</Color><SolidColorBrush x:Key="Cr.ToolButtonSelectedGradientMiddleBrush" Color="#FFB3D7F3" />
+  <Color x:Key="Cr.ToolButtonSelectedGradientEnd">#80B3D7F3</Color><SolidColorBrush x:Key="Cr.ToolButtonSelectedGradientEndBrush" Color="#80B3D7F3" />
+  <Color x:Key="Cr.ToolButtonPressedGradientBegin">#FF80BCEB</Color><SolidColorBrush x:Key="Cr.ToolButtonPressedGradientBeginBrush" Color="#FF80BCEB" />
+  <Color x:Key="Cr.ToolButtonPressedGradientMiddle">#FF80BCEB</Color><SolidColorBrush x:Key="Cr.ToolButtonPressedGradientMiddleBrush" Color="#FF80BCEB" />
+  <Color x:Key="Cr.ToolButtonPressedGradientEnd">#FF80BCEB</Color><SolidColorBrush x:Key="Cr.ToolButtonPressedGradientEndBrush" Color="#FF80BCEB" />
+  <Color x:Key="Cr.ToolCheckBackground">#FFB5D7F3</Color><SolidColorBrush x:Key="Cr.ToolCheckBackgroundBrush" Color="#FFB5D7F3" />
+  <Color x:Key="Cr.ToolCheckSelectedBackground">#FF80BCEB</Color><SolidColorBrush x:Key="Cr.ToolCheckSelectedBackgroundBrush" Color="#FF80BCEB" />
+  <Color x:Key="Cr.ToolCheckPressedBackground">#FF80BCEB</Color><SolidColorBrush x:Key="Cr.ToolCheckPressedBackgroundBrush" Color="#FF80BCEB" />
+  <Color x:Key="Cr.ToolGripDark">#FFB8B8B8</Color><SolidColorBrush x:Key="Cr.ToolGripDarkBrush" Color="#FFB8B8B8" />
+  <Color x:Key="Cr.ToolGripLight">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ToolGripLightBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ToolImageMarginGradientBegin">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolImageMarginGradientBeginBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolImageMarginGradientMiddle">#FFF8F8F8</Color><SolidColorBrush x:Key="Cr.ToolImageMarginGradientMiddleBrush" Color="#FFF8F8F8" />
+  <Color x:Key="Cr.ToolImageMarginGradientEnd">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolImageMarginGradientEndBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolImageMarginRevealedGradientBegin">#FFF9F9F9</Color><SolidColorBrush x:Key="Cr.ToolImageMarginRevealedGradientBeginBrush" Color="#FFF9F9F9" />
+  <Color x:Key="Cr.ToolImageMarginRevealedGradientMiddle">#FFF5F5F5</Color><SolidColorBrush x:Key="Cr.ToolImageMarginRevealedGradientMiddleBrush" Color="#FFF5F5F5" />
+  <Color x:Key="Cr.ToolImageMarginRevealedGradientEnd">#FFF2F2F2</Color><SolidColorBrush x:Key="Cr.ToolImageMarginRevealedGradientEndBrush" Color="#FFF2F2F2" />
+  <Color x:Key="Cr.ToolMenuStripGradientBegin">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolMenuStripGradientBeginBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolMenuStripGradientEnd">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolMenuStripGradientEndBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolMenuItemSelected">#FFB5D7F3</Color><SolidColorBrush x:Key="Cr.ToolMenuItemSelectedBrush" Color="#FFB5D7F3" />
+  <Color x:Key="Cr.ToolMenuItemBorder">#FF0078D7</Color><SolidColorBrush x:Key="Cr.ToolMenuItemBorderBrush" Color="#FF0078D7" />
+  <Color x:Key="Cr.ToolMenuBorder">#FF808080</Color><SolidColorBrush x:Key="Cr.ToolMenuBorderBrush" Color="#FF808080" />
+  <Color x:Key="Cr.ToolMenuItemSelectedGradientBegin">#FFB3D7F3</Color><SolidColorBrush x:Key="Cr.ToolMenuItemSelectedGradientBeginBrush" Color="#FFB3D7F3" />
+  <Color x:Key="Cr.ToolMenuItemSelectedGradientEnd">#80B3D7F3</Color><SolidColorBrush x:Key="Cr.ToolMenuItemSelectedGradientEndBrush" Color="#80B3D7F3" />
+  <Color x:Key="Cr.ToolMenuItemPressedGradientBegin">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolMenuItemPressedGradientBeginBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolMenuItemPressedGradientMiddle">#FFF5F5F5</Color><SolidColorBrush x:Key="Cr.ToolMenuItemPressedGradientMiddleBrush" Color="#FFF5F5F5" />
+  <Color x:Key="Cr.ToolMenuItemPressedGradientEnd">#FFF8F8F8</Color><SolidColorBrush x:Key="Cr.ToolMenuItemPressedGradientEndBrush" Color="#FFF8F8F8" />
+  <Color x:Key="Cr.ToolRaftingContainerGradientBegin">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolRaftingContainerGradientBeginBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolRaftingContainerGradientEnd">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolRaftingContainerGradientEndBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolSeparatorDark">#FFBDBDBD</Color><SolidColorBrush x:Key="Cr.ToolSeparatorDarkBrush" Color="#FFBDBDBD" />
+  <Color x:Key="Cr.ToolSeparatorLight">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ToolSeparatorLightBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ToolStatusStripBorder">#FFFFFFFF</Color><SolidColorBrush x:Key="Cr.ToolStatusStripBorderBrush" Color="#FFFFFFFF" />
+  <Color x:Key="Cr.ToolStatusStripGradientBegin">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolStatusStripGradientBeginBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolStatusStripGradientEnd">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolStatusStripGradientEndBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolToolStripBorder">#FFF2F2F2</Color><SolidColorBrush x:Key="Cr.ToolToolStripBorderBrush" Color="#FFF2F2F2" />
+  <Color x:Key="Cr.ToolToolStripDropDownBackground">#FFFDFDFD</Color><SolidColorBrush x:Key="Cr.ToolToolStripDropDownBackgroundBrush" Color="#FFFDFDFD" />
+  <Color x:Key="Cr.ToolToolStripGradientBegin">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolToolStripGradientBeginBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolToolStripGradientMiddle">#FFF8F8F8</Color><SolidColorBrush x:Key="Cr.ToolToolStripGradientMiddleBrush" Color="#FFF8F8F8" />
+  <Color x:Key="Cr.ToolToolStripGradientEnd">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolToolStripGradientEndBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolToolStripContentPanelGradientBegin">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolToolStripContentPanelGradientBeginBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolToolStripContentPanelGradientEnd">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolToolStripContentPanelGradientEndBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolToolStripPanelGradientBegin">#FFF0F0F0</Color><SolidColorBrush x:Key="Cr.ToolToolStripPanelGradientBeginBrush" Color="#FFF0F0F0" />
+  <Color x:Key="Cr.ToolToolStripPanelGradientEnd">#FFFCFCFC</Color><SolidColorBrush x:Key="Cr.ToolToolStripPanelGradientEndBrush" Color="#FFFCFCFC" />
+  <Color x:Key="Cr.ToolOverflowButtonGradientBegin">#FFF5F5F5</Color><SolidColorBrush x:Key="Cr.ToolOverflowButtonGradientBeginBrush" Color="#FFF5F5F5" />
+  <Color x:Key="Cr.ToolOverflowButtonGradientMiddle">#FFF2F2F2</Color><SolidColorBrush x:Key="Cr.ToolOverflowButtonGradientMiddleBrush" Color="#FFF2F2F2" />
+  <Color x:Key="Cr.ToolOverflowButtonGradientEnd">#FFA0A0A0</Color><SolidColorBrush x:Key="Cr.ToolOverflowButtonGradientEndBrush" Color="#FFA0A0A0" />
+</ResourceDictionary>

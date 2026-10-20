@@ -74,10 +74,73 @@ The Mac theme is one Avalonia resource dictionary per variant, `mac/ComicRack.Ma
 
 Dark-only colours (`cYo.Common.Windows/Forms/Theme/DarkMode/Resources/DarkColors.cs:23-163`): SidePanel #191919, Content #202020, Window #323232, ListBack #282828, EditBack #2E2E2E (hover #222222, focused #1A1A1A), Button #323232 (pressed #666666, hover #464646, border #9B9B9B), CheckBoxAccent #60CDFF, borders #101010 / #333333 / #5D5D5D / #9B9B9B, SelectionHighlight #344356, Focus #2864B4.
 
+Mac token names (P5.T1): `Cr.<Token>` is the name in the tables above; the system colours keep their `SystemColors` names (`Cr.Control`, `Cr.Window`, ... all 32 of `KnownColorTableEx`); an app token that merges several original properties is checked against all of them (`SelectionFocused` = `StyledSelectionFocusedBack` and `ThumbRendererSelectionBack`; `FavViewBack` = the two `FavViewBack` properties); the others are `ThemeColorTable` properties with the class prefix dropped (`GaugeTotal` = `LibraryTreeTotalBookCountBack`, `TreeDragSeparator` = `NiceTreeSkinDragSeparator`, `MagnifySetupBack`, `PrefsServerEditBack`). Control tokens (`Button*`, `CheckBox*`, `Edit*`, `TrackBar*`, `TabPage*`) take the light values of §2.5 (assumed) and the dark values of `DarkColors.cs` where it has one; the dark values without an original source are marked in the dictionary. The dark-only colours exist in the dark dictionary only. Not mapped: `PreferencesLabelOverlays` (the dark value `ThemeColors.Lossboro` depends on class initialisation order; P5.22c decides).
+
 ### 2.3 Toolbar and menu-strip colours
 
-- **Dark** (`.../Theme/DarkMode/Resources/DarkProfessionalColors.cs:14-63`): MenuItemPressed #606060, MenuItemSelected #344356, MenuItemSelectedGradient #404040, MenuStrip #1F1F1F, StatusStrip #323232, DropDown #2B2B2B, ImageMargin #323232, ToolStripBorder #333333, ToolStrip gradient #2E2E2E; item text and arrows white (`ThemeToolStripProRenderer.cs:22-86`).
-- **Light**: the stock .NET `ProfessionalColorTable` computed from the Windows 10 system colours (Windows 10 is not one of the Luna/Royale schemes the table knows, so it uses its system-colour formulas), with the `OptimizedProfessionalColorTable` changes: MenuStrip gradient end = begin, MenuItemSelected / ButtonSelected gradient end = begin at alpha 128. **P5.T1 computes these values** by porting the formulas of `ProfessionalColorTable.InitSystemColors`/`InitCommonColors` from dotnet/winforms (MIT; licence header kept in the test helper) applied to §2.1 light colours, writes them into the light dictionary (`Cr.Tool*` tokens) and records them in this table (replace this paragraph with the values).
+- **Dark**: `Program.cs:844-847` gives the dark theme a plain `ThemeToolStripProRenderer()`, which builds a `ProfessionalColorTableEx` (`cYo.Common/Drawing/ExtendedColors/ProfessionalColorTableEx.cs`: the same formulas as the stock table, started from the dark system colours of §2.1, without the Aero exception). Item text and arrows are white (`ThemeToolStripProRenderer.cs:22-86`). `DarkProfessionalColors.cs` (MenuItemPressed #606060, MenuStrip #1F1F1F, StatusStrip #323232, ...) **is not used by any code**; the dark column below is therefore the computed one, and `ThemeTokenTests.The_dark_professional_color_table_of_the_original_is_still_unused` fails when upstream starts using that class.
+- **Light** (`ComicRack/Program.cs:853-866`, `ComicRack/OptimizedProfessionalColorTable.cs`): the stock .NET `ProfessionalColorTable` on Windows 10, whose theme file is `aero.msstyles`: `InitSystemColors` and `InitCommonColors` applied to the §2.1 light colours, plus the Aero exception (the menu item and check background use the "selected highlight" blend) and the three changes of `OptimizedProfessionalColorTable` (MenuStrip gradient end = begin, MenuItemSelected and ButtonSelected gradient end = begin at alpha 128). **Computed by P5.T1** (`mac/ComicRack.Mac/Themes/ProfessionalColors.cs`, a port of the dotnet/winforms formulas, MIT; the tokens are `Cr.Tool<Property>`; values `#RRGGBB`, `#AARRGGBB` where the alpha is not 255):
+
+| Property | Light | Dark |
+|---|---|---|
+| ButtonSelectedHighlight | #B5D7F3 | #2E3F56 |
+| ButtonSelectedHighlightBorder | #0078D7 | #2864B4 |
+| ButtonPressedHighlight | #7EBAEA | #2C4A73 |
+| ButtonPressedHighlightBorder | #0078D7 | #2864B4 |
+| ButtonCheckedHighlight | #B5D7F3 | #2E3F56 |
+| ButtonCheckedHighlightBorder | #0078D7 | #2864B4 |
+| ButtonPressedBorder | #0078D7 | #2864B4 |
+| ButtonSelectedBorder | #0078D7 | #2864B4 |
+| ButtonCheckedGradientBegin | #00000000 | #00000000 |
+| ButtonCheckedGradientMiddle | #00000000 | #00000000 |
+| ButtonCheckedGradientEnd | #00000000 | #00000000 |
+| ButtonSelectedGradientBegin | #B3D7F3 | #2F4159 |
+| ButtonSelectedGradientMiddle | #B3D7F3 | #2F4159 |
+| ButtonSelectedGradientEnd | #80B3D7F3 | #2F4159 |
+| ButtonPressedGradientBegin | #80BCEB | #2D4B73 |
+| ButtonPressedGradientMiddle | #80BCEB | #2D4B73 |
+| ButtonPressedGradientEnd | #80BCEB | #2D4B73 |
+| CheckBackground | #B5D7F3 | #2864B4 |
+| CheckSelectedBackground | #80BCEB | #2D4B73 |
+| CheckPressedBackground | #80BCEB | #2D4B73 |
+| GripDark | #B8B8B8 | #414141 |
+| GripLight | #FFFFFF | #323232 |
+| ImageMarginGradientBegin | #FCFCFC | #2E2E2E |
+| ImageMarginGradientMiddle | #F8F8F8 | #292929 |
+| ImageMarginGradientEnd | #F0F0F0 | #202020 |
+| ImageMarginRevealedGradientBegin | #F9F9F9 | #2B2B2B |
+| ImageMarginRevealedGradientMiddle | #F5F5F5 | #252525 |
+| ImageMarginRevealedGradientEnd | #F2F2F2 | #222222 |
+| MenuStripGradientBegin | #F0F0F0 | #202020 |
+| MenuStripGradientEnd | #F0F0F0 | #2E2E2E |
+| MenuItemSelected | #B5D7F3 | #323232 |
+| MenuItemBorder | #0078D7 | #2864B4 |
+| MenuBorder | #808080 | #6B6B6B |
+| MenuItemSelectedGradientBegin | #B3D7F3 | #2F4159 |
+| MenuItemSelectedGradientEnd | #80B3D7F3 | #2F4159 |
+| MenuItemPressedGradientBegin | #FCFCFC | #2E2E2E |
+| MenuItemPressedGradientMiddle | #F5F5F5 | #252525 |
+| MenuItemPressedGradientEnd | #F8F8F8 | #292929 |
+| RaftingContainerGradientBegin | #F0F0F0 | #202020 |
+| RaftingContainerGradientEnd | #FCFCFC | #2E2E2E |
+| SeparatorDark | #BDBDBD | #404040 |
+| SeparatorLight | #FFFFFF | #101010 |
+| StatusStripBorder | #FFFFFF | #101010 |
+| StatusStripGradientBegin | #F0F0F0 | #202020 |
+| StatusStripGradientEnd | #FCFCFC | #2E2E2E |
+| ToolStripBorder | #F2F2F2 | #232323 |
+| ToolStripDropDownBackground | #FDFDFD | #2F2F2F |
+| ToolStripGradientBegin | #FCFCFC | #2E2E2E |
+| ToolStripGradientMiddle | #F8F8F8 | #292929 |
+| ToolStripGradientEnd | #F0F0F0 | #202020 |
+| ToolStripContentPanelGradientBegin | #F0F0F0 | #202020 |
+| ToolStripContentPanelGradientEnd | #FCFCFC | #2E2E2E |
+| ToolStripPanelGradientBegin | #F0F0F0 | #202020 |
+| ToolStripPanelGradientEnd | #FCFCFC | #2E2E2E |
+| OverflowButtonGradientBegin | #F5F5F5 | #252525 |
+| OverflowButtonGradientMiddle | #F2F2F2 | #222222 |
+| OverflowButtonGradientEnd | #A0A0A0 | #464646 |
+
 - `-ftcs` tan scheme (`cYo.Common.Windows/Forms/TanColorTable.cs:676-710`): not ported (Windows XP fallback; deviation `native`, never reachable on macOS).
 
 ### 2.4 Selection style (`StyledRenderer`, Windows 8+ "Windows8" style, `StyledRenderer.cs:110-233`)

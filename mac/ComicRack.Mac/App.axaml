@@ -4,6 +4,24 @@
              Name="ComicRack CE (MVP)"
              RequestedThemeVariant="Default">
   <!-- Default = follow the system light/dark setting. -->
+  <!-- C-APP-1: the Cr.* tokens of the original (Default theme = Light, Dark theme = Dark) follow the macOS appearance; the theme option (light or dark) forces one.
+       Fluent stays the base control theme until P5.T4. -->
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/ComicRackTheme.Light.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/ComicRackTheme.Dark.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>

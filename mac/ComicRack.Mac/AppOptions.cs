@@ -14,6 +14,7 @@ namespace ComicRack.Mac
 	{
 		public const string DataDirVariable = "COMICRACK_MAC_DATA_DIR";
 		public const string LanguageVariable = "COMICRACK_MAC_LANGUAGE";
+		public const string ThemeVariable = "COMICRACK_MAC_THEME";
 
 		public bool SmokeTest { get; private set; }
 
@@ -46,6 +47,13 @@ namespace ComicRack.Mac
 		/// </summary>
 		public string Language { get; private set; }
 
+		/// <summary>
+		/// <c>--theme light|dark</c> (or the environment variable COMICRACK_MAC_THEME): shows the original's Default (light) or Dark theme
+		/// whatever the macOS appearance is (decision C-APP-1; used by contact sheets and e2e cases, like <c>-dark</c> of the original).
+		/// Null follows the macOS appearance.
+		/// </summary>
+		public string Theme { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -60,6 +68,7 @@ namespace ComicRack.Mac
 			var options = new AppOptions();
 			string dataDir = Environment.GetEnvironmentVariable(DataDirVariable);
 			options.Language = Environment.GetEnvironmentVariable(LanguageVariable);
+			string theme = Environment.GetEnvironmentVariable(ThemeVariable);
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg = args[i];
@@ -113,6 +122,14 @@ namespace ComicRack.Mac
 				{
 					options.Language = arg.Substring("--language=".Length);
 				}
+				else if (arg == "--theme" && i + 1 < args.Length)
+				{
+					theme = args[++i];
+				}
+				else if (arg.StartsWith("--theme=", StringComparison.Ordinal))
+				{
+					theme = arg.Substring("--theme=".Length);
+				}
 				else if (arg.StartsWith("-psn_", StringComparison.Ordinal))
 				{
 					// Launch Services passes a process serial number to apps it starts.
@@ -121,6 +138,21 @@ namespace ComicRack.Mac
 				{
 					options.Error = "Unknown argument: " + arg;
 					return options;
+				}
+			}
+			if (!string.IsNullOrWhiteSpace(theme))
+			{
+				switch (theme.Trim().ToLowerInvariant())
+				{
+					case "light":
+						options.Theme = "light";
+						break;
+					case "dark":
+						options.Theme = "dark";
+						break;
+					default:
+						options.Error = "--theme expects light or dark.";
+						return options;
 				}
 			}
 			if (!string.IsNullOrWhiteSpace(dataDir))

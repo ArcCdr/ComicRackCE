@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using cYo.Projects.ComicRack.Engine;
 using ComicRack.Mac.Diagnostics;
@@ -39,6 +40,8 @@ namespace ComicRack.Mac
 		public override void OnFrameworkInitializationCompleted()
 		{
 			options = StartupOptions;
+			// C-APP-1: follow the macOS appearance unless --theme forces the original's light or dark theme.
+			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
 			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
 			Localization.Apply(options.Language);
 			if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
