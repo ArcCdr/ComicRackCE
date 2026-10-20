@@ -25,7 +25,7 @@ namespace ComicRack.Mac.Tests.HiDpi
 	[Trait("Category", "HiDpi")]
 	public class ReaderHiDpiTests
 	{
-		private static readonly SKColor Paper = new SKColor(0x1E, 0x1E, 0x1E);
+		private static readonly SKColor Paper = new SKColor(0xF5, 0xF5, 0xF5);
 		private readonly ITestOutputHelper output;
 
 		// The pixel blocks of the pages are released when the window closes; the assembly's TestGuard waits for the count to return, so no
@@ -37,10 +37,11 @@ namespace ComicRack.Mac.Tests.HiDpi
 
 		/// <summary>An opened reader of solid coloured pages at the given scale.</summary>
 		private static async Task<ReaderHarness> Open(double scale, Func<int, (int, int)> size = null, PageLayoutMode mode = PageLayoutMode.Single, int pages = 8,
-			double width = 800, double height = 600, int resume = 0, bool numbers = false)
+			double width = 800, double height = 600, int resume = 0, bool numbers = false, bool ornaments = false)
 		{
 			ReaderOptions options = ReaderHarness.DefaultOptions();
 			options.Mode = mode;
+			options.RealisticPages = ornaments;
 			var decoder = new FakePageDecoder { PageCount = pages, Size = size ?? (p => (800, 1200)), DrawNumbers = numbers };
 			var session = new FakeSession(decoder) { ResumePage = resume };
 			ReaderHarness h = await ReaderHarness.Open(session, width, height, options);
@@ -53,6 +54,15 @@ namespace ComicRack.Mac.Tests.HiDpi
 		private static RectInt[] DevicePages(ReaderHarness h, double scale)
 		{
 			return h.PageRects().Select(r => RectInt.Snapped(r, scale)).ToArray();
+		}
+
+		/// <summary>The same rectangle to within a unit (the chrome around the reading area has heights that are not whole device pixels at 1.5x).</summary>
+		private static void AssertNear(Rect expected, Rect actual)
+		{
+			Assert.InRange(actual.X, expected.X - 1, expected.X + 1);
+			Assert.InRange(actual.Y, expected.Y - 1, expected.Y + 1);
+			Assert.InRange(actual.Width, expected.Width - 1, expected.Width + 1);
+			Assert.InRange(actual.Height, expected.Height - 1, expected.Height + 1);
 		}
 
 		private static bool IsPage(SKColor c, int page) => Raster.Near(c, FakePageDecoder.ColorFor(page), 3);
@@ -99,11 +109,12 @@ namespace ComicRack.Mac.Tests.HiDpi
 				{
 					PageArrangement a = h.Vm.Arrangement;
 					Assert.Equal(reference.Pages.Length, a.Pages.Length);
-					Assert.Equal(reference.Pages[0], a.Pages[0]);
-					Assert.Equal(reference.Scale, a.Scale, 9);
-					Assert.Equal(reference.Content, a.Content);
+					// the layout rounds the heights of the tab strip and the status bar to whole device pixels, so the reading area differs by up to a unit
+					AssertNear(reference.Pages[0], a.Pages[0]);
+					Assert.InRange(a.Scale, reference.Scale - 0.002, reference.Scale + 0.002);
+					AssertNear(reference.Content, a.Content);
 					// the same number of page pixels is behind every logical unit: the device scale is the logical one times the display's
-					Assert.Equal(a.Scale * scale, DevicePages(h, scale).Single().Width / 800.0, 2);
+					Assert.InRange(DevicePages(h, scale).Single().Width / 800.0, a.Scale * scale - 0.005, a.Scale * scale + 0.005);
 				}
 			});
 		}
@@ -154,7 +165,7 @@ namespace ComicRack.Mac.Tests.HiDpi
 					h.Vm.PanBy(new Vector(30, 17));
 					h.Tick();
 					PageArrangement a = h.Vm.Arrangement;
-					Assert.Equal(reference.Pages[0], a.Pages[0]);
+					AssertNear(reference.Pages[0], a.Pages[0]);
 					Assert.Equal(reference.ScrollX, a.ScrollX, 9);
 					Assert.Equal(reference.Scroll, a.Scroll, 9);
 					Assert.Equal(2.5, h.Vm.Zoom, 9);
@@ -260,7 +271,7 @@ namespace ComicRack.Mac.Tests.HiDpi
 
 		private static (Avalonia.Rect box, int ink) MeasureLabel(ReaderHarness h, double scale)
 		{
-			var label = h.Window.FindControl<TextBlock>("PageLabel");
+			var label = h.Window.FindControl<TextBlock>("BookSegment");
 			Avalonia.Rect box = Dpi.Area(label, h.Window);
 			Raster frame = Dpi.Capture(h.Window, "reader-label");
 			RectInt region = RectInt.Snapped(box, scale);

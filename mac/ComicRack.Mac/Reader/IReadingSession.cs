@@ -44,5 +44,13 @@ namespace ComicRack.Mac.Reader
 		void ReportFurthest(int page)
 		{
 		}
+
+		/// <summary>The user's rating of the book, 0 (none) to 5 stars (<c>ComicBook.Rating</c>).</summary>
+		float Rating => 0f;
+
+		/// <summary>Sets the rating of the book (the page menu's My Rating).</summary>
+		void SetRating(float rating)
+		{
+		}
 	}
 }

@@ -46,6 +46,41 @@ namespace ComicRack.Mac.Reader
 		/// <summary>The fraction of the window that Space scrolls before it turns the page.</summary>
 		public double SpaceScrollFraction { get; set; } = 0.9;
 
+		/// <summary>
+		/// Draw the outline of each page and the shadow around the pages (<c>DisplayWorkspace.DrawRealisticPages</c>, true by default in the original;
+		/// the toggle, Shift+D, comes with P5.23f).
+		/// </summary>
+		public bool RealisticPages { get; set; } = true;
+
+		// ---- the overlays and the cursor: the defaults of Settings.cs and EngineConfiguration (Preferences > Reader > Overlays is P5.22a, saving them P5.1)
+
+		/// <summary><c>ShowCurrentPageOverlay</c> (true): the page number fades in at the top right when the page changes.</summary>
+		public bool ShowCurrentPageOverlay { get; set; } = true;
+
+		/// <summary><c>CurrentPageShowsName</c> (false): the page overlay also shows the names of the page files. Not shown yet (P5.22a).</summary>
+		public bool CurrentPageShowsName { get; set; }
+
+		/// <summary><c>ShowVisiblePagePartOverlay</c> (true): the miniature of the page with the visible part, when the page is larger than the window.</summary>
+		public bool ShowVisiblePagePartOverlay { get; set; } = true;
+
+		/// <summary><c>HideVisiblePartOverlayClose</c> (false): the miniature has a close button.</summary>
+		public bool HideVisiblePartOverlayClose { get; set; }
+
+		/// <summary><c>ShowStatusOverlay</c> (true): "Loading Page N..." and the messages in the middle of the page.</summary>
+		public bool ShowStatusOverlay { get; set; } = true;
+
+		/// <summary><c>ShowNavigationOverlay</c> (true): the navigation overlay slides in when the pointer comes to the edge.</summary>
+		public bool ShowNavigationOverlay { get; set; } = true;
+
+		/// <summary><c>NavigationOverlayOnTop</c> (false): the navigation overlay sits at the top edge.</summary>
+		public bool NavigationOverlayOnTop { get; set; }
+
+		/// <summary><c>HideCursorFullScreen</c> (true): in full screen the cursor is hidden after <see cref="AutoHideCursorDelay"/> without movement.</summary>
+		public bool HideCursorFullScreen { get; set; } = true;
+
+		/// <summary><c>ExtendedSettings.AutoHideCursorDuration</c> (5000 ms).</summary>
+		public int AutoHideCursorDelay { get; set; } = 5000;
+
 		/// <summary>The two-finger swipe detector.</summary>
 		public SwipeRecognizer Swipe { get; set; } = new SwipeRecognizer();
 

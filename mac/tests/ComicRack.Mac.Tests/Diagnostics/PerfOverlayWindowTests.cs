@@ -156,8 +156,8 @@ namespace ComicRack.Mac.Tests.Diagnostics
 				Assert.Contains("Page turn   7.5 ms", overlay.Text);
 				Assert.NotEqual(Distinct(off, new Avalonia.Rect(480, 10, 310, 130)), Distinct(on, new Avalonia.Rect(480, 10, 310, 130)));
 
-				// the overlay does not take the keys: arrows still turn the page
-				window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
+				// the overlay does not take the keys: PageDown still turns the page
+				window.KeyPress(Key.PageDown, RawInputModifiers.None, PhysicalKey.PageDown, null);
 				await vm.WhenSettled;
 				Assert.Equal(1, vm.CurrentPage);
 

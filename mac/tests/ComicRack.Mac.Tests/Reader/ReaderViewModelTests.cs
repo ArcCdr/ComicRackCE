@@ -100,7 +100,7 @@ namespace ComicRack.Mac.Tests.Reader
 				Assert.True(vm.HasNotice);
 				Assert.Null(vm.Pages);
 				vm.NextPage();
-				vm.HandleKey(Key.Right, KeyModifiers.None);
+				vm.HandleKey(Key.PageDown, KeyModifiers.None);
 				Assert.Empty(session.Reported);
 				vm.Dispose();
 				Assert.True(session.IsDisposed);
@@ -190,21 +190,29 @@ namespace ComicRack.Mac.Tests.Reader
 				vm.CloseRequested += (s, e) => closes++;
 				try
 				{
-					Assert.True(vm.HandleKey(Key.Right, KeyModifiers.None));
-					Assert.Equal(11, vm.CurrentPage);
-					Assert.True(vm.HandleKey(Key.Left, KeyModifiers.None));
-					Assert.Equal(10, vm.CurrentPage);
 					Assert.True(vm.HandleKey(Key.PageDown, KeyModifiers.None));
 					Assert.Equal(11, vm.CurrentPage);
 					Assert.True(vm.HandleKey(Key.PageUp, KeyModifiers.None));
+					Assert.Equal(10, vm.CurrentPage);
+					Assert.True(vm.HandleKey(Key.Right, KeyModifiers.Alt)); // Alt+Right: Next Page
+					Assert.Equal(11, vm.CurrentPage);
+					Assert.True(vm.HandleKey(Key.Left, KeyModifiers.Alt));
+					Assert.Equal(10, vm.CurrentPage);
+					Assert.True(vm.HandleKey(Key.N, KeyModifiers.Meta)); // the Read menu: Cmd+N, Cmd+P, Cmd+B, Cmd+E
+					Assert.Equal(11, vm.CurrentPage);
+					Assert.True(vm.HandleKey(Key.P, KeyModifiers.Meta));
 					Assert.Equal(10, vm.CurrentPage);
 					Assert.True(vm.HandleKey(Key.Space, KeyModifiers.None)); // the page fits the window: Space turns the page
 					Assert.Equal(11, vm.CurrentPage);
 					Assert.True(vm.HandleKey(Key.Space, KeyModifiers.Shift));
 					Assert.Equal(10, vm.CurrentPage);
-					Assert.True(vm.HandleKey(Key.End, KeyModifiers.None));
+					Assert.True(vm.HandleKey(Key.End, KeyModifiers.Meta));
 					Assert.Equal(19, vm.CurrentPage);
-					Assert.True(vm.HandleKey(Key.Home, KeyModifiers.None));
+					Assert.True(vm.HandleKey(Key.Home, KeyModifiers.Meta));
+					Assert.Equal(0, vm.CurrentPage);
+					Assert.True(vm.HandleKey(Key.E, KeyModifiers.Meta));
+					Assert.Equal(19, vm.CurrentPage);
+					Assert.True(vm.HandleKey(Key.B, KeyModifiers.Meta));
 					Assert.Equal(0, vm.CurrentPage);
 
 					Assert.True(vm.HandleKey(Key.D3, KeyModifiers.Meta));
@@ -213,11 +221,15 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(ImageFitMode.FitHeight, vm.Fit);
 					Assert.True(vm.HandleKey(Key.D2, KeyModifiers.Meta));
 					Assert.Equal(ImageFitMode.Fit, vm.Fit);
-					Assert.Equal("Best Fit", vm.FitText);
+					Assert.Equal("Fit All", vm.FitText);
+					Assert.True(vm.HandleKey(Key.D3, KeyModifiers.None)); // the single keys 2, 3 and 5 as well
+					Assert.Equal(ImageFitMode.FitWidth, vm.Fit);
+					Assert.True(vm.HandleKey(Key.D2, KeyModifiers.None));
+					Assert.Equal(ImageFitMode.Fit, vm.Fit);
 
 					Assert.False(vm.HandleKey(Key.A, KeyModifiers.None));
 					Assert.False(vm.HandleKey(Key.Right, KeyModifiers.Control)); // not ours
-					Assert.False(vm.HandleKey(Key.Right, KeyModifiers.Alt));
+					Assert.False(vm.HandleKey(Key.Up, KeyModifiers.Alt));
 					Assert.False(vm.HandleKey(Key.Q, KeyModifiers.Meta)); // Cmd+Q belongs to the menu
 					Assert.Equal(0, closes);
 					Assert.True(vm.HandleKey(Key.Escape, KeyModifiers.None));
@@ -249,6 +261,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(2, changes);
 					Assert.Equal("Fit Width", ReaderViewModel.FitName(ImageFitMode.FitWidth));
 					Assert.Equal("Fit Height", ReaderViewModel.FitName(ImageFitMode.FitHeight));
+					Assert.Equal("Fit All", ReaderViewModel.FitName(ImageFitMode.Fit));
 				}
 				finally
 				{
@@ -407,14 +420,16 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(29, vm.CurrentPage);
 					Assert.Equal("30 / 30", vm.PageText); // the counter is ahead, the picture is the old one
 					Assert.Equal(0, vm.Scene.Position);
-					Assert.False(vm.HasNotice);
-					await WaitFor(() => vm.HasNotice, "loading notice");
-					Assert.Equal("Loading page 30...", vm.Notice);
+					Assert.False(vm.HasLoading);
+					await WaitFor(() => vm.HasLoading, "loading notice");
+					Assert.Equal("Loading Page 30...", vm.LoadingText);
+					Assert.False(vm.HasNotice); // the message overlay is for the book, not for a page that takes its time
 					Assert.Equal(0, vm.Scene.Position);
 
 					session.FakeDecoder.Open();
 					await vm.WhenSettled;
 					Assert.Equal(29, vm.Scene.Position);
+					Assert.False(vm.HasLoading);
 					Assert.False(vm.HasNotice);
 				}
 				finally
@@ -514,7 +529,7 @@ namespace ComicRack.Mac.Tests.Reader
 				var session = new FakeSession(openImmediately: false);
 				var vm = new ReaderViewModel(session, Options());
 				Task opening = vm.OpenAsync();
-				Assert.Equal("Opening...", vm.Notice);
+				Assert.Equal("Opening the book 'Fake Book'...", vm.Notice);
 				vm.Dispose();
 				await opening; // returns quietly
 				Assert.False(vm.IsOpen);

@@ -79,7 +79,7 @@ namespace ComicRack.Mac.Tests.Reader
 
 		private static void Press(Window window, Key key)
 		{
-			window.KeyPress(key, RawInputModifiers.None, key == Key.Right ? PhysicalKey.ArrowRight : key == Key.Escape ? PhysicalKey.Escape : PhysicalKey.None, null);
+			window.KeyPress(key, RawInputModifiers.None, key == Key.PageDown ? PhysicalKey.PageDown : key == Key.Escape ? PhysicalKey.Escape : PhysicalKey.None, null);
 			Dispatcher.UIThread.RunJobs();
 		}
 
@@ -120,7 +120,7 @@ namespace ComicRack.Mac.Tests.Reader
 
 						for (int i = 0; i < 4; i++)
 						{
-							Press(window, Key.Right);
+							Press(window, Key.PageDown);
 						}
 						await window.Model.WhenSettled;
 						Assert.Equal(4, window.Model.CurrentPage);
@@ -169,8 +169,8 @@ namespace ComicRack.Mac.Tests.Reader
 					{
 						await first.ViewModel.ScanFolderAsync(library);
 						ReaderWindow window = await OpenFirstBook(first, 3);
-						Press(window, Key.Right);
-						Press(window, Key.Right);
+						Press(window, Key.PageDown);
+						Press(window, Key.PageDown);
 						await window.Model.WhenSettled;
 						Assert.Equal(1, Manager(first).OpenCount);
 						Assert.True(first.Quit().Ok); // Cmd+Q with the reader still open
@@ -229,7 +229,7 @@ namespace ComicRack.Mac.Tests.Reader
 					{
 						await launch.ViewModel.ScanFolderAsync(MakeLibrary(temp));
 						ReaderWindow window = await OpenFirstBook(launch, 3);
-						Press(window, Key.Right);
+						Press(window, Key.PageDown);
 						await window.Model.WhenSettled;
 						ComicBook book = ((CoreReadingSession)window.Model.Session).Book;
 

@@ -49,6 +49,8 @@ namespace ComicRack.Mac
 			Localization.Apply(options.Language);
 			// FadeInThumbnails: covers fade in only in a running desktop app; a headless test session shows the finished frame at once.
 			Controls.CoverView.FadeEnabled = ApplicationLifetime is IClassicDesktopStyleApplicationLifetime && !options.Headless;
+			// The fades and the slide of the reader overlays run on the same condition; a test moves them by hand (ReaderOverlayClock.Advance).
+			Controls.ReaderOverlayClock.Enabled = Controls.CoverView.FadeEnabled;
 			if (options.Headless)
 			{
 				// The system alert runs a modal loop of its own: not on the headless platform (the alert window answers instead).
@@ -107,7 +109,20 @@ namespace ComicRack.Mac
 				}
 				if (options.Show != null && options.Show != ViewRegistry.MainWindowName)
 				{
-					window.Opened += (sender, e) => ShowRequestedView(window, options.Show);
+					// after the fixture library is scanned (a view that shows books, such as Reader, needs them); a view that needs none opens at once
+					Task ready = commandLineBook;
+					window.Opened += async (sender, e) =>
+					{
+						try
+						{
+							await ready;
+						}
+						catch (Exception)
+						{
+							// the failure is logged by the task itself
+						}
+						await ShowRequestedViewAsync(window, options.Show);
+					};
 				}
 				if (options.SmokeTest)
 				{
@@ -117,17 +132,29 @@ namespace ComicRack.Mac
 			base.OnFrameworkInitializationCompleted();
 		}
 
-		/// <summary><c>--show NAME</c>: opens the registered view over the library window; a failure is logged as an error.</summary>
-		private static void ShowRequestedView(Window owner, string name)
+		/// <summary>
+		/// <c>--show NAME</c> after the fixture scan: a view that needs the books (Reader) says so with an <see cref="InvalidOperationException"/> while the
+		/// grid is still loading; it is tried again for up to 20 seconds.
+		/// </summary>
+		private static async Task ShowRequestedViewAsync(Window owner, string name)
 		{
-			try
+			for (int attempt = 0; attempt < 100; attempt++)
 			{
-				Window shown = ViewRegistry.Show(name, owner);
-				AppLog.Info("Showing the view " + name + (shown != null ? " (\"" + shown.Title + "\")." : "."));
-			}
-			catch (Exception ex)
-			{
-				AppLog.Error("The view " + name + " did not open.", ex);
+				try
+				{
+					Window shown = ViewRegistry.Show(name, owner);
+					AppLog.Info("Showing the view " + name + (shown != null ? " (\"" + shown.Title + "\")." : "."));
+					return;
+				}
+				catch (InvalidOperationException) when (attempt < 99)
+				{
+					await Task.Delay(200);
+				}
+				catch (Exception ex)
+				{
+					AppLog.Error("The view " + name + " did not open.", ex);
+					return;
+				}
 			}
 		}
 
@@ -175,7 +202,7 @@ namespace ComicRack.Mac
 				readers.Open(book);
 				ReaderWindow reader = readers.Windows.FirstOrDefault(w => ReferenceEquals(((CoreReadingSession)w.Model.Session).Book, book));
 				var watch = System.Diagnostics.Stopwatch.StartNew();
-				while (reader != null && !(reader.Model.Scene != null || (reader.Model.HasNotice && reader.Model.Notice != "Opening..." && !reader.Model.IsOpen)) && watch.Elapsed < TimeSpan.FromSeconds(30))
+				while (reader != null && !(reader.Model.Scene != null || reader.Model.OpenFailed) && watch.Elapsed < TimeSpan.FromSeconds(30))
 				{
 					await Task.Delay(20);
 				}

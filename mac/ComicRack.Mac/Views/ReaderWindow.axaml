@@ -2,28 +2,56 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ComicRack.Mac.ViewModels"
         xmlns:views="using:ComicRack.Mac.Views"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
         x:Class="ComicRack.Mac.Views.ReaderWindow"
         x:DataType="vm:ReaderViewModel"
         Title="{Binding Title}"
         Width="900" Height="1000" MinWidth="360" MinHeight="300"
-        Classes="cr-reader"
+        Classes="cr-window"
         WindowStartupLocation="CenterScreen">
+  <!-- The reader as the original shows it (MainForm.Designer.cs, ComicDisplayControl): the book tab strip (31 high, one tab until P5.32a docks the reader)
+       with the reader toolbar at its right, the page on the reader background with its overlays, the status bar (Book, Page, Page count). Hidden in full
+       screen: the tab strip and the status bar. Chrome only through the Cr controls and the cr-* classes (chrome-architecture.md); the menu is the native
+       menu bar (ReaderMenu.cs), the drop-downs and the page menu are built by ReaderPopupMenus. -->
   <DockPanel>
-    <!-- Page number, layout, direction, zoom and fit mode. Hidden in full screen. -->
-    <Border Name="StatusStrip" Classes="cr-reader-status" DockPanel.Dock="Bottom" IsVisible="{Binding ShowStatus}">
-      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="16">
-        <TextBlock Name="TitleLabel" Classes="cr-reader-status-title" Grid.Column="0" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
-        <TextBlock Name="ModeLabel" Classes="cr-reader-status-dim" Grid.Column="1" Text="{Binding ModeText}" />
-        <TextBlock Name="FitLabel" Classes="cr-reader-status-dim" Grid.Column="2" Text="{Binding FitText}" />
-        <TextBlock Name="PageLabel" Classes="cr-reader-status-page" Grid.Column="3" Text="{Binding PageText}" />
-      </Grid>
-    </Border>
-    <Grid Name="ContentArea">
+    <!-- tsBook, tsCurrentPage, tsPageCount (SB.04) -->
+    <c:CrStatusBar Name="StatusBar" DockPanel.Dock="Bottom" IsVisible="{Binding ShowStatus}">
+      <TextBlock Name="PageCountSegment" DockPanel.Dock="Right" Text="{Binding PageCountSegmentText}" VerticalAlignment="Center" Margin="4,0" />
+      <TextBlock Name="PageSegment" DockPanel.Dock="Right" Text="{Binding PageSegmentText}" VerticalAlignment="Center" Margin="4,0" />
+      <TextBlock Name="BookSegment" DockPanel.Dock="Right" Text="{Binding BookSegmentText}" VerticalAlignment="Center" Margin="4,0" />
+      <TextBlock Name="StatusLabel" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="4,0" />
+    </c:CrStatusBar>
+
+    <!-- fileTabs with mainToolStrip at its right (TB.01 to TB.09, TC.01) -->
+    <c:CrTabBar Name="TabBar" DockPanel.Dock="Top" IsVisible="{Binding ShowStatus}">
+      <c:CrTabBar.ToolbarSlot>
+        <c:CrToolBar Name="ReaderToolBar" Transparent="True">
+          <c:CrSplitButton Name="PreviousPageButton" IconName="GoPrevious" Command="{Binding PreviousPageCommand}" />
+          <c:CrSplitButton Name="NextPageButton" IconName="GoNext" Command="{Binding NextPageCommand}" />
+          <c:CrToolSeparator />
+          <c:CrSplitButton Name="PageLayoutButton" IconName="{Binding LayoutIconName}" Command="{Binding TogglePageLayoutCommand}" />
+          <c:CrSplitButton Name="FitButton" IconName="{Binding FitIconName}" Command="{Binding ToggleFitCommand}" />
+          <c:CrSplitButton Name="ZoomButton" IconName="ZoomIn" Text="{Binding ZoomText}" Command="{Binding CycleZoomCommand}" />
+          <c:CrToolSeparator />
+          <c:CrToolButton Name="FullScreenButton" IconName="FullScreen" IsChecked="{Binding IsFullScreen, Mode=OneWay}" Command="{Binding ToggleFullScreenCommand}" />
+          <c:CrToolSeparator />
+          <c:CrToolButton Name="ToolsButton" IconName="Tools" />
+        </c:CrToolBar>
+      </c:CrTabBar.ToolbarSlot>
+    </c:CrTabBar>
+
+    <Grid Name="ContentArea" ClipToBounds="True">
       <views:ReaderView Name="PageView" />
-      <!-- Opening, Loading page N, or why a page could not be shown. -->
-      <Border Name="NoticeBox" Classes="cr-reader-notice" IsVisible="{Binding HasNotice}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="560">
-        <TextBlock Name="NoticeLabel" Classes="cr-reader-notice-text" Text="{Binding Notice}" TextWrapping="Wrap" TextAlignment="Center" />
-      </Border>
+      <!-- the overlays that align inside the reader's 16 unit padding: the page number (top right), the miniature of the visible part (bottom right),
+           "Loading Page N..." and the message (middle). Transparent areas of the grid take no pointer events. -->
+      <Grid Name="OverlayLayer" Margin="16">
+        <c:CrTextOverlay Name="PageInfoOverlay" FadeOnly="True" MinSize="150,25" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <c:CrPartOverlay Name="PartOverlay" FadeOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+        <c:CrTextOverlay Name="LoadingOverlay" MinSize="200,30" IsVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <c:CrTextOverlay Name="MessageOverlay" MinSize="300,30" IsVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      </Grid>
+      <!-- NavigationOverlay: 0.9 of the width, 200 high, 3 above the bottom edge (the margin of the display control) -->
+      <c:CrNavigationOverlay Name="NavigationOverlay" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,3" />
     </Grid>
   </DockPanel>
 </Window>

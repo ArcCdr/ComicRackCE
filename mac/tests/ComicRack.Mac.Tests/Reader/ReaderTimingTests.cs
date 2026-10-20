@@ -86,7 +86,7 @@ namespace ComicRack.Mac.Tests.Reader
 						{
 							int next = vm.CurrentPage + 1;
 							await WaitFor(() => PrefetchReady(vm, next, 2), "prefetch of the next pages");
-							h.Press(Key.Right);
+							h.Press(Key.PageDown);
 						}
 						PageTurnRecord[] cached = vm.Meter.Records.Where(r => r.Cached && r.Position > 0).ToArray();
 						Report("cached page turns (headless platform, Skia draws on the CPU)", cached);

@@ -99,7 +99,8 @@ namespace ComicRack.Mac.Services
 			var model = new ReaderViewModel(session, new ReaderOptions { Fit = fit, Mode = layoutMode });
 			model.FitChanged += (sender, e) => fit = model.Fit;
 			model.LayoutChanged += (sender, e) => layoutMode = model.LayoutMode;
-			var window = new ReaderWindow(model, false, perf);
+			var thumbnails = hostService.Thumbnails != null ? new CorePageThumbnails(book, hostService.Thumbnails) : null;
+			var window = new ReaderWindow(model, false, perf, thumbnails);
 			window.Activated += (sender, e) => recent = window;
 			recent = window;
 			windows[book] = window;
@@ -109,6 +110,7 @@ namespace ComicRack.Mac.Services
 				try
 				{
 					model.Dispose();
+					thumbnails?.Dispose();
 				}
 				catch (Exception ex)
 				{

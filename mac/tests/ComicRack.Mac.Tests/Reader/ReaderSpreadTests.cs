@@ -354,7 +354,7 @@ namespace ComicRack.Mac.Tests.Reader
 		// ---- Right to left
 
 		[Fact]
-		public async Task A_book_that_says_it_reads_right_to_left_turns_with_the_left_arrow_and_mirrors_its_spreads()
+		public async Task A_book_that_says_it_reads_right_to_left_mirrors_its_spreads_and_turns_with_the_same_keys_as_any_other()
 		{
 			await Ui.Run(async () =>
 			{
@@ -363,21 +363,21 @@ namespace ComicRack.Mac.Tests.Reader
 				{
 					Assert.True(vm.RightToLeft);
 					Assert.Equal("Two pages · Right to left", vm.ModeText);
-					vm.HandleKey(Key.Left, KeyModifiers.None);
+					vm.HandleKey(Key.PageDown, KeyModifiers.None);
 					await vm.WhenSettled;
 					Assert.Equal(new[] { 1, 2 }, Shown(vm));
 					PageArrangement a = vm.Arrangement;
 					Assert.True(a.Pages[0].X > a.Pages[1].X, "the first page of the spread is on the right");
-					vm.HandleKey(Key.Left, KeyModifiers.None);
-					await vm.WhenSettled;
-					Assert.Equal(new[] { 3, 4 }, Shown(vm));
-					vm.HandleKey(Key.Right, KeyModifiers.None);
-					await vm.WhenSettled;
-					Assert.Equal(new[] { 1, 2 }, Shown(vm));
-					vm.HandleKey(Key.PageDown, KeyModifiers.None); // these do not depend on the direction
+					vm.HandleKey(Key.PageDown, KeyModifiers.None);
 					await vm.WhenSettled;
 					Assert.Equal(new[] { 3, 4 }, Shown(vm));
 					vm.HandleKey(Key.PageUp, KeyModifiers.None);
+					await vm.WhenSettled;
+					Assert.Equal(new[] { 1, 2 }, Shown(vm));
+					vm.HandleKey(Key.Right, KeyModifiers.Alt); // Option+Right and Option+Left do not depend on the direction either
+					await vm.WhenSettled;
+					Assert.Equal(new[] { 3, 4 }, Shown(vm));
+					vm.HandleKey(Key.Left, KeyModifiers.Alt);
 					await vm.WhenSettled;
 					Assert.Equal(new[] { 1, 2 }, Shown(vm));
 				}
@@ -403,7 +403,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.False(none.RightToLeft);
 					int raised = 0;
 					none.PropertyChanged += (s, e) => raised += e.PropertyName == nameof(ReaderViewModel.RightToLeft) ? 1 : 0;
-					none.HandleKey(Key.R, KeyModifiers.Meta | KeyModifiers.Alt);
+					none.HandleKey(Key.D0, KeyModifiers.Meta);
 					Assert.True(none.RightToLeft);
 					Assert.Equal(1, raised);
 					Assert.Equal("Two pages · Right to left", none.ModeText);
@@ -511,9 +511,10 @@ namespace ComicRack.Mac.Tests.Reader
 						vm.ZoomIn();
 					}
 					Assert.Equal(8.0, vm.Zoom, 9); // the limit
-					vm.HandleKey(Key.D0, KeyModifiers.Meta);
+					vm.Zoom100Command.Execute(null);
 					Assert.Equal(1.0, vm.Zoom);
 					Assert.Equal("One page", vm.ModeText);
+					Assert.Equal("100%", vm.ZoomText);
 					vm.SetZoom(100);
 					Assert.Equal(8.0, vm.Zoom);
 					vm.SetZoom(0.2);
@@ -683,26 +684,45 @@ namespace ComicRack.Mac.Tests.Reader
 		// ---- Layout keys and full screen
 
 		[Fact]
-		public async Task The_option_command_keys_choose_the_layout()
+		public async Task The_digit_keys_choose_the_layout_and_t_cycles_it()
 		{
 			await Ui.Run(async () =>
 			{
 				(ReaderViewModel vm, FakeSession session) = await Open(8, resume: 3, options: Options(PageLayoutMode.Single));
 				try
 				{
-					var cmdAlt = KeyModifiers.Meta | KeyModifiers.Alt;
-					Assert.True(vm.HandleKey(Key.D2, cmdAlt));
+					Assert.True(vm.HandleKey(Key.D8, KeyModifiers.Meta)); // Display > Page Layout > Two Pages
 					await vm.WhenSettled;
 					Assert.Equal(PageLayoutMode.Double, vm.LayoutMode);
 					Assert.Equal(new[] { 3, 4 }, Shown(vm));
-					Assert.True(vm.HandleKey(Key.D3, cmdAlt));
+					Assert.Equal("TwoPageForced", vm.LayoutIconName);
+					Assert.True(vm.HandleKey(Key.D9, KeyModifiers.Meta));
 					Assert.Equal(PageLayoutMode.DoubleAdaptive, vm.LayoutMode);
-					Assert.True(vm.HandleKey(Key.D1, cmdAlt));
+					Assert.Equal("TwoPage", vm.LayoutIconName);
+					Assert.True(vm.HandleKey(Key.D7, KeyModifiers.Meta));
 					await vm.WhenSettled;
 					Assert.Equal(PageLayoutMode.Single, vm.LayoutMode);
 					Assert.Equal(new[] { 3 }, Shown(vm));
-					Assert.False(vm.HandleKey(Key.D4, cmdAlt));
-					Assert.False(vm.HandleKey(Key.D2, KeyModifiers.Alt)); // an option key alone is not a command
+					Assert.Equal("SinglePage", vm.LayoutIconName);
+					Assert.True(vm.HandleKey(Key.D0, KeyModifiers.Meta));
+					Assert.True(vm.RightToLeft);
+					Assert.Equal("SinglePageRtl", vm.LayoutIconName);
+					Assert.True(vm.HandleKey(Key.D0, KeyModifiers.Meta));
+					// the single keys of the original: 8, 9, 7 and T (ToggleTwoPages: one page, two pages, two pages (adaptive), one page)
+					Assert.True(vm.HandleKey(Key.D8, KeyModifiers.None));
+					Assert.Equal(PageLayoutMode.Double, vm.LayoutMode);
+					Assert.True(vm.HandleKey(Key.D9, KeyModifiers.None));
+					Assert.Equal(PageLayoutMode.DoubleAdaptive, vm.LayoutMode);
+					Assert.True(vm.HandleKey(Key.D7, KeyModifiers.None));
+					Assert.Equal(PageLayoutMode.Single, vm.LayoutMode);
+					Assert.True(vm.HandleKey(Key.T, KeyModifiers.None));
+					Assert.Equal(PageLayoutMode.Double, vm.LayoutMode);
+					Assert.True(vm.HandleKey(Key.T, KeyModifiers.None));
+					Assert.Equal(PageLayoutMode.DoubleAdaptive, vm.LayoutMode);
+					Assert.True(vm.HandleKey(Key.T, KeyModifiers.None));
+					Assert.Equal(PageLayoutMode.Single, vm.LayoutMode);
+					Assert.False(vm.HandleKey(Key.D4, KeyModifiers.Meta)); // Fit Width (adaptive) comes with P5.23e
+					Assert.False(vm.HandleKey(Key.D2, KeyModifiers.Alt | KeyModifiers.Meta)); // the old Option+Cmd keys are gone
 					Assert.Equal(ImageFitMode.Fit, vm.Fit);
 				}
 				finally

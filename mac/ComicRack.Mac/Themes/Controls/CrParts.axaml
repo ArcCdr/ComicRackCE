@@ -52,4 +52,16 @@
   <Style Selector="TextBlock.cr-error">
     <Setter Property="Foreground" Value="{DynamicResource Cr.SmartQueryNegationBrush}" />
   </Style>
+
+  <!-- The performance overlay (MA.05): a translucent block in the corner with monospaced text -->
+  <Style Selector=":is(Border).cr-overlay">
+    <Setter Property="Padding" Value="10,6" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Background" Value="{DynamicResource Cr.Perf.BackBrush}" />
+  </Style>
+  <Style Selector="TextBlock.cr-overlay-text">
+    <Setter Property="FontFamily" Value="{DynamicResource Cr.Perf.FontFamily}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource Cr.Perf.TextBrush}" />
+  </Style>
 </Styles>

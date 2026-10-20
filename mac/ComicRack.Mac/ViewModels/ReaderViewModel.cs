@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.Display;
 using ComicRack.Mac.Browser;
 using ComicRack.Mac.Reader;
@@ -77,7 +78,7 @@ namespace ComicRack.Mac.ViewModels
 			fit = this.options.Fit;
 			Title = session.Title;
 			PageText = string.Empty;
-			Notice = "Opening...";
+			Notice = string.Format(UiText.Message("OpeningComic", "Opening the book '{0}'..."), session.Title);
 		}
 
 		/// <summary>Timing of the page turns of this reader.</summary>
@@ -105,6 +106,75 @@ namespace ComicRack.Mac.ViewModels
 
 		public bool HasNotice => !string.IsNullOrEmpty(Notice);
 
+		/// <summary>"Loading Page 12..." while a page takes longer than <see cref="ReaderOptions.LoadingDelay"/> (the small overlay in the middle; the message overlay is <see cref="Notice"/>). Null when there is none.</summary>
+		[ObservableProperty]
+		[NotifyPropertyChangedFor(nameof(HasLoading))]
+		public partial string LoadingText { get; set; }
+
+		public bool HasLoading => !string.IsNullOrEmpty(LoadingText);
+
+		/// <summary>The settings of the overlays and the cursor this reader started with (the defaults of <c>Settings.cs</c>).</summary>
+		public ReaderOptions Options => options;
+
+		/// <summary>The text of the page info overlay, "12 (of 24)" or "12/13 (of 24)" (<c>UpdateCurrentPageOverlay</c>; empty before the first page is shown).</summary>
+		public string PageInfoText { get; private set; } = string.Empty;
+
+		/// <summary>Raised when a new page or spread is shown: the page info overlay fades in (<c>ShowCurrentPageOverlay</c>).</summary>
+		public event EventHandler PageInfoChanged;
+
+		/// <summary>The book name of the status bar (<c>tsBook</c>, 60 characters at most) and of the tab.</summary>
+		public string BookSegmentText => string.IsNullOrEmpty(Title) ? UiText.Default("None", "None") : (Title.Length > 60 ? Title.Substring(0, 57) + "..." : Title);
+
+		/// <summary>The current page of the status bar (<c>tsCurrentPage</c>): "NA" before the book is open.</summary>
+		public string PageSegmentText => opened ? (CurrentPage + 1).ToString(CultureInfo.CurrentCulture) : UiText.Default("NotAvailable", "NA");
+
+		/// <summary>The page count of the status bar (<c>tsPageCount</c>).</summary>
+		public string PageCountSegmentText => opened ? PageCount.ToString(CultureInfo.CurrentCulture) : UiText.Default("NotAvailable", "NA");
+
+		/// <summary>The zoom button's text, "100%" (<c>tbZoom.Text</c>: the zoom times 100, whole).</summary>
+		public string ZoomText => ((int)(zoom * 100)).ToString(CultureInfo.CurrentCulture) + "%";
+
+		/// <summary>The picture of the page layout button (<c>GetLayoutImage</c>): the layout, and its mirror image when reading right to left.</summary>
+		public string LayoutIconName
+		{
+			get
+			{
+				switch (mode)
+				{
+					case PageLayoutMode.Double:
+						return rightToLeft ? "TwoPageForcedRtl" : "TwoPageForced";
+					case PageLayoutMode.DoubleAdaptive:
+						return rightToLeft ? "TwoPageRtl" : "TwoPage";
+					default:
+						return rightToLeft ? "SinglePageRtl" : "SinglePage";
+				}
+			}
+		}
+
+		/// <summary>The picture of the fit button (<c>GetFitModeImage</c>): the item of the fit menu that is in force.</summary>
+		public string FitIconName
+		{
+			get
+			{
+				switch (fit)
+				{
+					case ImageFitMode.FitWidth:
+						return "FitWidth";
+					case ImageFitMode.FitHeight:
+						return "FitHeight";
+					default:
+						return "FitAll";
+				}
+			}
+		}
+
+		/// <summary>True while the navigation overlay is shown whatever the pointer does (<c>NavigationOverlayVisible</c>, toggled by the two-finger tap).</summary>
+		[ObservableProperty]
+		public partial bool NavigationOverlayVisible { get; set; }
+
+		/// <summary>The rating of the book (0 to 5), or 0 when the session has none.</summary>
+		public float Rating => session.Rating;
+
 		/// <summary>The current position (0-based): the number of the first page on screen.</summary>
 		public int CurrentPage { get; private set; }
 
@@ -112,6 +182,9 @@ namespace ComicRack.Mac.ViewModels
 
 		/// <summary>True once the book is open and has pages.</summary>
 		public bool IsOpen => opened;
+
+		/// <summary>True when the book could not be opened (the notice says why).</summary>
+		public bool OpenFailed { get; private set; }
 
 		/// <summary>True after <see cref="Dispose"/>.</summary>
 		public bool IsDisposed => disposed;
@@ -143,6 +216,33 @@ namespace ComicRack.Mac.ViewModels
 				viewport = value;
 				ClampScroll();
 				OnPropertyChanged(nameof(ViewportSize));
+			}
+		}
+
+		/// <summary>The geometry of the visible-part overlay for the scene on screen, or null before there is one.</summary>
+		public ReaderPartInfo PartInfo
+		{
+			get
+			{
+				ReaderScene current = scene;
+				if (current == null)
+				{
+					return null;
+				}
+				PageArrangement a = Arrangement;
+				if (!(a.Scale > 0) || a.Content.Width <= 0 || a.Content.Height <= 0)
+				{
+					return null;
+				}
+				double s = a.Scale;
+				var pages = new Rect[a.Pages.Length];
+				for (int i = 0; i < pages.Length; i++)
+				{
+					pages[i] = new Rect((a.Pages[i].X - a.Content.X) / s, (a.Pages[i].Y - a.Content.Y) / s, a.Pages[i].Width / s, a.Pages[i].Height / s);
+				}
+				var content = new Size(a.Content.Width / s, a.Content.Height / s);
+				var window = new Rect(-a.Content.X / s, -a.Content.Y / s, viewport.Width / s, viewport.Height / s);
+				return new ReaderPartInfo(content, pages, window.Intersect(new Rect(content)), a.MaxScroll > 0.5 || a.MaxScrollX > 0.5);
 			}
 		}
 
@@ -276,11 +376,11 @@ namespace ComicRack.Mac.ViewModels
 			switch (mode)
 			{
 				case ImageFitMode.FitWidth:
-					return "Fit Width";
+					return UiText.Get("MainForm", "miFitWidth", "Fit &Width");
 				case ImageFitMode.FitHeight:
-					return "Fit Height";
+					return UiText.Get("MainForm", "miFitHeight", "Fit &Height");
 				default:
-					return "Best Fit";
+					return UiText.Get("MainForm", "miFitAll", "Fit &All");
 			}
 		}
 
@@ -305,6 +405,7 @@ namespace ComicRack.Mac.ViewModels
 			{
 				if (!disposed)
 				{
+					OpenFailed = true;
 					Notice = ex.Message;
 					Log("Opening the book failed: " + ex.Message);
 				}
@@ -317,6 +418,7 @@ namespace ComicRack.Mac.ViewModels
 			PageCount = session.PageCount;
 			if (PageCount <= 0)
 			{
+				OpenFailed = true;
 				Notice = "The book has no pages.";
 				return;
 			}
@@ -330,6 +432,9 @@ namespace ComicRack.Mac.ViewModels
 			service = new PageService(session.Decoder, options.Pages) { Decoded = (page, width, height) => catalog.Learn(page, width, height) };
 			opened = true;
 			Notice = null;
+			OnPropertyChanged(nameof(PageCountSegmentText));
+			OnPropertyChanged(nameof(PageSegmentText));
+			OnPropertyChanged(nameof(LayoutIconName));
 			await GoToAsync(session.ResumePage, ScrollAnchor.Top);
 		}
 
@@ -357,6 +462,7 @@ namespace ComicRack.Mac.ViewModels
 			int[] pages = layout.PagesAt(position, PageCount);
 			PageText = PageNumbers(pages);
 			OnPropertyChanged(nameof(CurrentPage));
+			OnPropertyChanged(nameof(PageSegmentText));
 			session.ReportPage(position);
 
 			service.SetWindow(layout.Window(position, PageCount, options.Ahead, options.Behind));
@@ -454,6 +560,7 @@ namespace ComicRack.Mac.ViewModels
 						string text = "Page " + (position + 1) + " could not be loaded: " + reason;
 						Log(text);
 						SetScene(null);
+						LoadingText = null;
 						Notice = text;
 					}
 					return;
@@ -535,7 +642,7 @@ namespace ComicRack.Mac.ViewModels
 			}
 			if (!disposed && turn == currentTurn && (scene == null || scene.Turn != turn))
 			{
-				Notice = "Loading page " + (position + 1) + "...";
+				LoadingText = string.Format(UiText.Message("LoadingPage", "Loading Page {0}..."), position + 1);
 			}
 		}
 
@@ -552,7 +659,10 @@ namespace ComicRack.Mac.ViewModels
 			sceneLayout = layout;
 			AnchorScroll(anchor);
 			Notice = null;
+			LoadingText = null;
 			PageText = PageNumbers(pages);
+			PageInfoText = PageInfoFor(pages);
+			OnPropertyChanged(nameof(PageInfoText));
 			OnPropertyChanged(nameof(Scene));
 			old?.Release();
 			if (pages.Length > 1)
@@ -560,6 +670,18 @@ namespace ComicRack.Mac.ViewModels
 				session.ReportFurthest(pages[pages.Length - 1]);
 			}
 			meter.Published(turn, cached, cached ? 0 : service?.GetStats().LastDecodeMilliseconds ?? 0);
+			PageInfoChanged?.Invoke(this, EventArgs.Empty);
+		}
+
+		// "12 (of 24)" or "12/13 (of 24)": ComicBook.FormatNumber of the page number (or the two numbers of a spread) and the page count.
+		private string PageInfoFor(int[] pages)
+		{
+			if (pages.Length == 0)
+			{
+				return string.Empty;
+			}
+			string number = pages.Length == 1 ? (pages[0] + 1).ToString(CultureInfo.CurrentCulture) : (pages[0] + 1).ToString(CultureInfo.CurrentCulture) + "/" + (pages[1] + 1).ToString(CultureInfo.CurrentCulture);
+			return ComicBook.FormatNumber(number, PageCount);
 		}
 
 		private void SetScene(ReaderScene next)
@@ -658,6 +780,21 @@ namespace ComicRack.Mac.ViewModels
 			}
 		}
 
+		/// <summary>Scrolls sideways by <paramref name="delta"/> device independent pixels (positive = right), within the page (<c>ScrollLeft</c> and <c>ScrollRight</c>).</summary>
+		public void ScrollSideways(double delta)
+		{
+			PanBy(new Vector(delta, 0));
+		}
+
+		/// <summary>The start or the end of the page (<c>DisplayPart(PartPageToDisplay.First)</c> and <c>.Last</c>, the keys Home and End).</summary>
+		public void ScrollToPageEdge(bool end)
+		{
+			if (scene != null)
+			{
+				AnchorScroll(end ? ScrollAnchor.Bottom : ScrollAnchor.Top);
+			}
+		}
+
 		/// <summary>Scrolls the content by <paramref name="delta"/> device independent pixels (positive = down), within the page.</summary>
 		public void ScrollBy(double delta)
 		{
@@ -701,7 +838,47 @@ namespace ComicRack.Mac.ViewModels
 		[RelayCommand]
 		public void ZoomOut() => ZoomBy(1.0 / options.ZoomStep);
 
-		/// <summary>Back to the fit and to the start of the page (Cmd+0).</summary>
+		/// <summary>The presets of the zoom menu (<c>miZoom100</c> to <c>miZoom400</c>): the zoom is 1, 1.25, 1.5, 2 or 4 times the fit.</summary>
+		[RelayCommand]
+		public void Zoom100() => SetZoom(1.0);
+
+		[RelayCommand]
+		public void Zoom125() => SetZoom(1.25);
+
+		[RelayCommand]
+		public void Zoom150() => SetZoom(1.5);
+
+		[RelayCommand]
+		public void Zoom200() => SetZoom(2.0);
+
+		[RelayCommand]
+		public void Zoom400() => SetZoom(4.0);
+
+		/// <summary>The zoom button itself (<c>tbZoom</c>): the next of 100, 125, 150 and 200 percent above the current zoom, after 200 percent 100 again.</summary>
+		[RelayCommand]
+		public void CycleZoom()
+		{
+			foreach (double preset in new[] { 1.0, 1.25, 1.5, 2.0 })
+			{
+				if (preset > zoom + 1e-6)
+				{
+					SetZoom(preset);
+					return;
+				}
+			}
+			SetZoom(1.0);
+		}
+
+		/// <summary>
+		/// Command+wheel (the original's Ctrl+wheel, <c>ZoomIn</c> and <c>ZoomOut</c> of the keyboard map): one notch of <paramref name="notches"/> changes the
+		/// zoom by 0.1, never below the fit or above <see cref="ReaderOptions.ZoomMax"/>, about <paramref name="focal"/>.
+		/// </summary>
+		public void ZoomByWheel(double notches, Point? focal = null)
+		{
+			SetZoom(zoom + 0.1 * notches, focal);
+		}
+
+		/// <summary>Back to the fit and to the start of the page.</summary>
 		[RelayCommand]
 		public void ZoomReset()
 		{
@@ -754,6 +931,7 @@ namespace ComicRack.Mac.ViewModels
 		private void OnZoomChanged()
 		{
 			OnPropertyChanged(nameof(Zoom));
+			OnPropertyChanged(nameof(ZoomText));
 			OnPropertyChanged(nameof(ModeText));
 		}
 
@@ -769,6 +947,24 @@ namespace ComicRack.Mac.ViewModels
 					return twoPagesAdaptive ?? (IPageLayout)SinglePageLayout.Instance;
 				default:
 					return SinglePageLayout.Instance;
+			}
+		}
+
+		/// <summary>The button of the page layout menu (<c>TogglePageLayout</c>): one page, two pages, two pages (adaptive), one page.</summary>
+		[RelayCommand]
+		public void TogglePageLayout()
+		{
+			switch (mode)
+			{
+				case PageLayoutMode.Single:
+					SetLayoutMode(PageLayoutMode.Double);
+					break;
+				case PageLayoutMode.Double:
+					SetLayoutMode(PageLayoutMode.DoubleAdaptive);
+					break;
+				default:
+					SetLayoutMode(PageLayoutMode.Single);
+					break;
 			}
 		}
 
@@ -795,6 +991,7 @@ namespace ComicRack.Mac.ViewModels
 			mode = wanted;
 			layout = LayoutFor(mode);
 			OnPropertyChanged(nameof(LayoutMode));
+			OnPropertyChanged(nameof(LayoutIconName));
 			OnPropertyChanged(nameof(ModeText));
 			LayoutChanged?.Invoke(this, EventArgs.Empty);
 			if (opened && !disposed)
@@ -825,20 +1022,40 @@ namespace ComicRack.Mac.ViewModels
 				AnchorScroll(ScrollAnchor.Top);
 			}
 			OnPropertyChanged(nameof(RightToLeft));
+			OnPropertyChanged(nameof(LayoutIconName));
 			OnPropertyChanged(nameof(ModeText));
 		}
 
 		[RelayCommand]
 		public void ToggleFullScreen() => IsFullScreen = !IsFullScreen;
 
+		/// <summary>Fit All (<c>miFitAll</c>): the whole page in the window. The Core's <c>ImageFitMode.Fit</c>.</summary>
 		[RelayCommand]
-		public void FitBest() => SetFit(ImageFitMode.Fit);
+		public void FitAll() => SetFit(ImageFitMode.Fit);
 
 		[RelayCommand]
 		public void FitWidth() => SetFit(ImageFitMode.FitWidth);
 
 		[RelayCommand]
 		public void FitHeight() => SetFit(ImageFitMode.FitHeight);
+
+		/// <summary>The button of the fit menu (<c>TogglePageFit</c>): the next fit mode of the ones the reader has (Fit All, Fit Width, Fit Height).</summary>
+		[RelayCommand]
+		public void ToggleFit()
+		{
+			switch (fit)
+			{
+				case ImageFitMode.Fit:
+					SetFit(ImageFitMode.FitWidth);
+					break;
+				case ImageFitMode.FitWidth:
+					SetFit(ImageFitMode.FitHeight);
+					break;
+				default:
+					SetFit(ImageFitMode.Fit);
+					break;
+			}
+		}
 
 		public void SetFit(ImageFitMode mode)
 		{
@@ -854,67 +1071,131 @@ namespace ComicRack.Mac.ViewModels
 			AnchorScroll(ScrollAnchor.Top);
 			OnPropertyChanged(nameof(Fit));
 			OnPropertyChanged(nameof(FitText));
+			OnPropertyChanged(nameof(FitIconName));
 			FitChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		[RelayCommand]
 		public void Close() => CloseRequested?.Invoke(this, EventArgs.Empty);
 
+		/// <summary>The navigation overlay is shown or hidden whatever the pointer does (<c>ToggleNavigationOverlay</c>).</summary>
+		[RelayCommand]
+		public void ToggleNavigationOverlay() => NavigationOverlayVisible = !NavigationOverlayVisible;
+
+		/// <summary>Raised when the Tools menu asks for the About window.</summary>
+		public event EventHandler AboutRequested;
+
+		/// <summary>Raised when the reader asks to quit the application (the key Q and the Exit item of the Tools menu, <c>ControlExit</c>).</summary>
+		public event EventHandler ExitRequested;
+
+		/// <summary>Raised when the page menu asks for the Info dialog of the book.</summary>
+		public event EventHandler InfoRequested;
+
+		[RelayCommand]
+		public void ShowAbout() => AboutRequested?.Invoke(this, EventArgs.Empty);
+
+		[RelayCommand]
+		public void Exit() => ExitRequested?.Invoke(this, EventArgs.Empty);
+
+		[RelayCommand]
+		public void ShowInfo() => InfoRequested?.Invoke(this, EventArgs.Empty);
+
+		/// <summary>Sets the rating of the book (the page menu's My Rating: None, 1 to 5 stars).</summary>
+		public void SetRating(float rating)
+		{
+			session.SetRating(Math.Max(0, Math.Min(5, rating)));
+			OnPropertyChanged(nameof(Rating));
+		}
+
+		/// <summary>Answers the browse request of the navigation overlay.</summary>
+		public void BrowseTo(int page)
+		{
+			if (opened && !disposed)
+			{
+				_ = GoToAsync(page);
+			}
+		}
+
 		// ---- Input
 
 		/// <summary>
-		/// The reader's keys: Right, Left, Space, Shift+Space, Home, End, Page Down, Page Up, Up, Down, Esc (leaves full screen first);
-		/// Cmd+2, Cmd+3, Cmd+5 for the fit modes (the WinForms app uses Ctrl+2/3/5 for Fit All, Fit Width and Fit Height); Cmd+= and
-		/// Cmd+- zoom, Cmd+0 resets the zoom; Ctrl+Cmd+F full screen; Option+Cmd+1, 2, 3 one page, two pages, two pages (adaptive) and
-		/// Option+Cmd+R the reading direction; Cmd+W closes. Reading right to left, Left turns forward and Right back. Returns true if
-		/// the key was used.
+		/// The reader's keys, as <c>MainForm.cs</c> maps them (parity ledger RK and MR/MD rows; Ctrl becomes Cmd, Alt Option):
+		/// PageDown and PageUp, Option+Right and Option+Left turn the page, Shift+PageDown and Shift+PageUp the same by single pages, Cmd+Home and
+		/// Cmd+End go to the first and last page; Space and Shift+Space step through the page, Home and End go to the start and end of it; the
+		/// arrows scroll; F, F11 and Ctrl+Cmd+F toggle full screen; T cycles the page layout; 7, 8, 9 and 0 choose one page, two pages, two pages
+		/// (adaptive) and right to left, 2, 3 and 5 Fit All, Fit Width and Fit Height; Q quits the application. With Cmd: B, P, N and E first,
+		/// previous, next and last page (the Read menu), 2, 3, 5, 7, 8, 9 and 0 as the Display menu says, Cmd+= and Cmd+- zoom, Cmd+W closes.
+		/// Esc leaves full screen first and then closes the reader. Returns true if the key was used.
 		/// </summary>
 		public bool HandleKey(Key key, KeyModifiers modifiers)
 		{
 			bool meta = (modifiers & KeyModifiers.Meta) != 0;
 			bool control = (modifiers & KeyModifiers.Control) != 0;
 			bool alt = (modifiers & KeyModifiers.Alt) != 0;
+			bool shift = (modifiers & KeyModifiers.Shift) != 0;
 			if (meta && control && !alt && key == Key.F)
 			{
 				ToggleFullScreen();
 				return true;
 			}
-			if (meta && alt && !control)
+			if (control || (meta && alt))
 			{
+				return false;
+			}
+			if (alt)
+			{
+				// Option+Left and Option+Right: Previous Page and Next Page (Alt+Left and Alt+Right of the original)
 				switch (key)
 				{
-					case Key.D1:
-						SingleLayout();
+					case Key.Left:
+						PreviousPage();
 						return true;
-					case Key.D2:
-						TwoPageLayout();
-						return true;
-					case Key.D3:
-						AdaptiveTwoPageLayout();
-						return true;
-					case Key.R:
-						ToggleRightToLeft();
+					case Key.Right:
+						NextPage();
 						return true;
 					default:
 						return false;
 				}
 			}
-			if (control || alt)
-			{
-				return false;
-			}
 			if (meta)
 			{
 				switch (key)
 				{
+					case Key.B:
+					case Key.Home:
+						FirstPage();
+						return true;
+					case Key.P:
+						PreviousPage();
+						return true;
+					case Key.N:
+						NextPage();
+						return true;
+					case Key.E:
+					case Key.End:
+						LastPage();
+						return true;
 					case Key.D2:
-						FitBest();
+						FitAll();
 						return true;
 					case Key.D3:
 						FitWidth();
 						return true;
 					case Key.D5:
 						FitHeight();
+						return true;
+					case Key.D7:
+						SingleLayout();
+						return true;
+					case Key.D8:
+						TwoPageLayout();
+						return true;
+					case Key.D9:
+						AdaptiveTwoPageLayout();
+						return true;
+					case Key.D0:
+					case Key.NumPad0:
+						ToggleRightToLeft();
 						return true;
 					case Key.OemPlus:
 					case Key.Add:
@@ -924,10 +1205,6 @@ namespace ComicRack.Mac.ViewModels
 					case Key.Subtract:
 						ZoomOut();
 						return true;
-					case Key.D0:
-					case Key.NumPad0:
-						ZoomReset();
-						return true;
 					case Key.W:
 						Close();
 						return true;
@@ -935,34 +1212,27 @@ namespace ComicRack.Mac.ViewModels
 						return false;
 				}
 			}
-			bool shift = (modifiers & KeyModifiers.Shift) != 0;
 			switch (key)
 			{
-				case Key.Right:
-					if (rightToLeft)
-					{
-						PreviousPage();
-					}
-					else
-					{
-						NextPage();
-					}
-					return true;
-				case Key.Left:
-					if (rightToLeft)
-					{
-						NextPage();
-					}
-					else
-					{
-						PreviousPage();
-					}
-					return true;
 				case Key.PageDown:
-					NextPage();
+					if (shift)
+					{
+						SinglePageForward();
+					}
+					else
+					{
+						NextPage();
+					}
 					return true;
 				case Key.PageUp:
-					PreviousPage();
+					if (shift)
+					{
+						SinglePageBack();
+					}
+					else
+					{
+						PreviousPage();
+					}
 					return true;
 				case Key.Space:
 					if (shift)
@@ -975,16 +1245,22 @@ namespace ComicRack.Mac.ViewModels
 					}
 					return true;
 				case Key.Home:
-					FirstPage();
+					ScrollToPageEdge(end: false);
 					return true;
 				case Key.End:
-					LastPage();
+					ScrollToPageEdge(end: true);
 					return true;
 				case Key.Down:
 					ScrollBy(options.ArrowScrollStep);
 					return true;
 				case Key.Up:
 					ScrollBy(-options.ArrowScrollStep);
+					return true;
+				case Key.Right:
+					ScrollSideways(options.ArrowScrollStep);
+					return true;
+				case Key.Left:
+					ScrollSideways(-options.ArrowScrollStep);
 					return true;
 				case Key.Escape:
 					if (IsFullScreen)
@@ -996,10 +1272,65 @@ namespace ComicRack.Mac.ViewModels
 						Close();
 					}
 					return true;
+				case Key.F11:
+					ToggleFullScreen();
+					return true;
+			}
+			if (shift)
+			{
+				return false;
+			}
+			switch (key)
+			{
+				case Key.F:
+					ToggleFullScreen();
+					return true;
+				case Key.T:
+					TogglePageLayout();
+					return true;
+				case Key.Q:
+					Exit();
+					return true;
+				case Key.D2:
+				case Key.NumPad2:
+					FitAll();
+					return true;
+				case Key.D3:
+				case Key.NumPad3:
+					FitWidth();
+					return true;
+				case Key.D5:
+				case Key.NumPad5:
+					FitHeight();
+					return true;
+				case Key.D7:
+				case Key.NumPad7:
+					SingleLayout();
+					return true;
+				case Key.D8:
+				case Key.NumPad8:
+					TwoPageLayout();
+					return true;
+				case Key.D9:
+				case Key.NumPad9:
+					AdaptiveTwoPageLayout();
+					return true;
+				case Key.D0:
+				case Key.NumPad0:
+					ToggleRightToLeft();
+					return true;
 				default:
 					return false;
 			}
 		}
+
+		/// <summary>Shift+PageDown (<c>DisplayNextPage(PagingMode.None)</c>): one page forward. In a two-page layout this is the next spread (the pairing is fixed for the book, see full-port.md section 9).</summary>
+		[RelayCommand]
+		public void SinglePageForward() => NextPage();
+
+		/// <summary>Shift+PageUp: one page back, see <see cref="SinglePageForward"/>.</summary>
+		[RelayCommand]
+		public void SinglePageBack() => PreviousPage();
 
 		/// <summary>
 		/// A wheel or trackpad event. While the content is larger than the window (zoomed, or a fit mode that overflows) the event pans

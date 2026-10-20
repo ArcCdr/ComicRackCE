@@ -67,10 +67,10 @@
 | MB.16 | List Layout > Edit Layouts... | Browse `miEditLayouts` | Ctrl+Alt+L → Option+Cmd+L | P5.11b | todo | |
 | MB.17 | List Layout > Set all Lists to current Layout | Browse `miSetAllListsSame` | — | P5.11b | todo | |
 | MB.18 | List Layout > (saved layouts list, apply) | Browse `miListLayouts` | — | P5.11b | todo | |
-| MR.01 | First Page | Read `miFirstPage` | Ctrl+B → Cmd+B | P5.R3 | todo | |
-| MR.02 | Previous Page | Read `miPrevPage` | Ctrl+P → Cmd+P | P5.R3 | todo | no Print in the app, so Cmd+P stays |
-| MR.03 | Next Page | Read `miNextPage` | Ctrl+N → Cmd+N | P5.R3 | todo | |
-| MR.04 | Last Page | Read `miLastPage` | Ctrl+E → Cmd+E | P5.R3 | todo | |
+| MR.01 | First Page | Read `miFirstPage` | Ctrl+B → Cmd+B | P5.R3 | done 2026-10-21 | reader menu bar and key since P5.R3 |
+| MR.02 | Previous Page | Read `miPrevPage` | Ctrl+P → Cmd+P | P5.R3 | done 2026-10-21 | no Print in the app, so Cmd+P stays; reader menu since P5.R3 |
+| MR.03 | Next Page | Read `miNextPage` | Ctrl+N → Cmd+N | P5.R3 | done 2026-10-21 | reader menu bar and key since P5.R3 |
+| MR.04 | Last Page | Read `miLastPage` | Ctrl+E → Cmd+E | P5.R3 | done 2026-10-21 | reader menu bar and key since P5.R3 |
 | MR.05 | Previous Book (from list) | Read `miPrevFromList` | Ctrl+Alt+P → Option+Cmd+P | P5.23a | todo | MVP perf overlay must leave Option+Cmd+P (P5.R3) |
 | MR.06 | Next Book (from list) | Read `miNextFromList` | Ctrl+Alt+N → Option+Cmd+N | P5.23a | todo | |
 | MR.07 | Random Book | Read `miRandomFromList` | Ctrl+Alt+O → Option+Cmd+O | P5.23a | todo | |
@@ -81,22 +81,22 @@
 | MR.12 | Double Page Auto Scrolling | Read `miDoublePageAutoScroll` | Alt+Shift+S → Option+Shift+S | P5.23d | todo | |
 | MR.13 | Track current Page | Read `miTrackCurrentPage` | Alt+Shift+T → Option+Shift+T | P5.32a | todo | |
 | MD.01 | Book Display Settings... | Display `miComicDisplaySettings` | F9 | P5.23c | todo | |
-| MD.02 | Page Layout > Original Size | Display `miOriginal`, `miPageLayout` | Ctrl+1 → Cmd+1 | P5.23e | todo | MVP fit shortcuts are realigned by P5.R3 |
-| MD.03 | Page Layout > Fit All | Display `miFitAll` | Ctrl+2 → Cmd+2 | P5.R3 | todo | |
-| MD.04 | Page Layout > Fit Width | Display `miFitWidth` | Ctrl+3 → Cmd+3 | P5.R3 | todo | |
+| MD.02 | Page Layout > Original Size | Display `miOriginal`, `miPageLayout` | Ctrl+1 → Cmd+1 | P5.23e | todo | Original Size comes with P5.23e; the MVP fit shortcuts are realigned (Cmd+2, 3, 5) |
+| MD.03 | Page Layout > Fit All | Display `miFitAll` | Ctrl+2 → Cmd+2 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
+| MD.04 | Page Layout > Fit Width | Display `miFitWidth` | Ctrl+3 → Cmd+3 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
 | MD.05 | Page Layout > Fit Width (adaptive) | Display `miFitWidthAdaptive` | Ctrl+4 → Cmd+4 | P5.23e | todo | |
-| MD.06 | Page Layout > Fit Height | Display `miFitHeight` | Ctrl+5 → Cmd+5 | P5.R3 | todo | |
+| MD.06 | Page Layout > Fit Height | Display `miFitHeight` | Ctrl+5 → Cmd+5 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
 | MD.07 | Page Layout > Fit Best | Display `miBestFit` | Ctrl+6 → Cmd+6 | P5.23e | todo | |
-| MD.08 | Page Layout > Single Page | Display `miSinglePage` | Ctrl+7 → Cmd+7 | P5.R3 | todo | |
-| MD.09 | Page Layout > Two Pages | Display `miTwoPages` | Ctrl+8 → Cmd+8 | P5.R3 | todo | |
-| MD.10 | Page Layout > Two Pages (adaptive) | Display `miTwoPagesAdaptive` | Ctrl+9 → Cmd+9 | P5.R3 | todo | |
+| MD.08 | Page Layout > Single Page | Display `miSinglePage` | Ctrl+7 → Cmd+7 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
+| MD.09 | Page Layout > Two Pages | Display `miTwoPages` | Ctrl+8 → Cmd+8 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
+| MD.10 | Page Layout > Two Pages (adaptive) | Display `miTwoPagesAdaptive` | Ctrl+9 → Cmd+9 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
 | MD.11 | Page Layout > Continuous | Display `miContinuous` | — | P5.23f | todo | |
-| MD.12 | Page Layout > Right to Left | Display `miRightToLeft` | Ctrl+0 → Cmd+0 | P5.R3 | todo | DD7's Cmd+0 for Window > Library moves (C-MENU-2) |
+| MD.12 | Page Layout > Right to Left | Display `miRightToLeft` | Ctrl+0 → Cmd+0 | P5.R3 | done 2026-10-21 | Cmd+0 and a check mark in the reader menu; DD7's Cmd+0 for Window > Library moved (C-MENU-2) |
 | MD.13 | Page Layout > Only fit if oversized | Display `miOnlyFitOversized` | Ctrl+Shift+0 → Cmd+Shift+0 | P5.23e | todo | original shares the chord with MD.22 |
-| MD.14 | Zoom > Zoom In | Display `miZoomIn`, `miZoom` | Ctrl+Plus → Cmd+= | P5.23e | todo | |
-| MD.15 | Zoom > Zoom Out | Display `miZoomOut` | Ctrl+Minus → Cmd+- | P5.23e | todo | |
+| MD.14 | Zoom > Zoom In | Display `miZoomIn`, `miZoom` | Ctrl+Plus → Cmd+= | P5.23e | done 2026-10-21 | Zoom In in the reader menu, toolbar and Cmd+=; the step is the MVP factor 1.25 (the original adds 0.1: P5.23e) |
+| MD.15 | Zoom > Zoom Out | Display `miZoomOut` | Ctrl+Minus → Cmd+- | P5.23e | done 2026-10-21 | Zoom Out, as MD.14 |
 | MD.16 | Zoom > Toggle Zoom | Display `miToggleZoom` | Ctrl+Alt+Z → Option+Cmd+Z | P5.23e | todo | |
-| MD.17 | Zoom > 100% 125% 150% 200% 400% | Display `miZoom100..400`, `miZoom125`, `miZoom150`, `miZoom200`, `miZoom400` | — | P5.23e | todo | |
+| MD.17 | Zoom > 100% 125% 150% 200% 400% | Display `miZoom100..400`, `miZoom125`, `miZoom150`, `miZoom200`, `miZoom400` | — | P5.23e | done 2026-10-21 | the presets 100, 125, 150, 200 and 400 percent (a zoom is relative to the fit, as in the original) |
 | MD.18 | Zoom > Custom... (Custom Zoom dialog) | Display `miZoomCustom` | Ctrl+Shift+Z → Option+Cmd+Shift+Z | P5.23e | todo | Cmd+Shift+Z is Redo on macOS |
 | MD.19 | Rotation > Rotate Left / Rotate Right | Display `miRotateLeft/Right`, `miRotation`, `miRotateRight` | Ctrl+Shift+Minus/Plus → Cmd+Shift+-/= | P5.23e | todo | |
 | MD.20 | Rotation > No Rotation | Display `miRotate0` | Ctrl+Shift+7 → Cmd+Shift+7 | P5.23e | todo | |
@@ -104,7 +104,7 @@
 | MD.22 | Rotation > 270° | Display `miRotate270` | Ctrl+Shift+0 → Cmd+Shift+0 | P5.23e | todo | |
 | MD.23 | Rotation > Autorotate Double Pages | Display `miAutoRotate` | — | P5.23e | todo | |
 | MD.24 | Minimal User Interface | Display `miMinimalGui` | F10 | P5.23f | todo | |
-| MD.25 | Full Screen | Display `miFullScreen` | F11, alias Ctrl+Cmd+F | P5.R3 | todo | native full screen (C-WIN-2); the item is in the library window's Display menu since P5.R1 (checked while full screen); the reader's menu is P5.R3 |
+| MD.25 | Full Screen | Display `miFullScreen` | F11, alias Ctrl+Cmd+F | P5.R3 | done 2026-10-21 | native full screen (C-WIN-2); F11 and Ctrl+Cmd+F in the library and the reader menus, checked while full screen |
 | MD.26 | Reader in own Window | Display `miReaderUndocked` | F12 | P5.32a | todo | |
 | MD.27 | Magnifier | Display `miMagnify` | Ctrl+M → Option+Cmd+M | P5.23d | todo | Cmd+M is Minimize |
 | MH.01 | Help (internal, hidden) | Help `miHelp` | — | — | deviation | native: hidden in the original too; nothing to port |
@@ -127,15 +127,15 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| TB.01 | Previous Page split button (First Page, Previous Bookmark, Previous Book from List) | `mainToolStrip.tbPrevPage`, `tbFirstPage`, `tbPrevBookmark`, `tbPrevFromList` | as MR/ME rows | P5.R3 | todo | |
-| TB.02 | Next Page split button (Last Page, Next Bookmark, Last Page Read, Next Book from List, Random Book) | `tbNextPage`, `tbLastPage`, `tbNextBookmark`, `tbLastPageRead`, `tbNextFromList`, `tbRandomFromList` | as MR/ME rows | P5.R3 | todo | |
-| TB.03 | Page Layout split button (Single, Two Pages, Two Pages adaptive, Continuous, Right to Left) | `tbPageLayout`, `tbSinglePage`, `tbTwoPages`, `tbTwoPagesAdaptive`, `tbContinuous`, `tbRightToLeft` | as MD rows | P5.R3 | todo | button cycles the layout (`ComicDisplay.TogglePageLayout`) |
-| TB.04 | Fit split button (Original, Fit All, Fit Width, adaptive, Fit Height, Fit Best, Only fit if oversized) | `tbFit`, `tbOriginal`, `tbFitAll`, `tbFitWidth`, `tbFitWidthAdaptive`, `tbFitHeight`, `tbBestFit`, `tbOnlyFitOversized` | as MD rows | P5.R3 | todo | button cycles fit (`TogglePageFit`) |
-| TB.05 | Zoom split button showing "100 %" (Zoom In/Out, presets, Custom...) | `tbZoom`, `tbZoomIn`, `tbZoomOut`, `tbZoom100`, `tbZoom125`, `tbZoom150`, `tbZoom200`, `tbZoom400`, `tbZoomCustom` | as MD rows | P5.R3 | todo | |
+| TB.01 | Previous Page split button (First Page, Previous Bookmark, Previous Book from List) | `mainToolStrip.tbPrevPage`, `tbFirstPage`, `tbPrevBookmark`, `tbPrevFromList` | as MR/ME rows | P5.23a | todo | split button with First Page and the Previous Page button since P5.R3; Previous Bookmark and Previous Book from List arrive with P5.23a |
+| TB.02 | Next Page split button (Last Page, Next Bookmark, Last Page Read, Next Book from List, Random Book) | `tbNextPage`, `tbLastPage`, `tbNextBookmark`, `tbLastPageRead`, `tbNextFromList`, `tbRandomFromList` | as MR/ME rows | P5.23a | todo | split button with Last Page and the Next Page button since P5.R3; the bookmark and book list items arrive with P5.23a |
+| TB.03 | Page Layout split button (Single, Two Pages, Two Pages adaptive, Continuous, Right to Left) | `tbPageLayout`, `tbSinglePage`, `tbTwoPages`, `tbTwoPagesAdaptive`, `tbContinuous`, `tbRightToLeft` | as MD rows | P5.23f | todo | button cycles the layout and the menu has Single, Two Pages, Two Pages (adaptive), Right to Left since P5.R3; Continuous comes with P5.23f |
+| TB.04 | Fit split button (Original, Fit All, Fit Width, adaptive, Fit Height, Fit Best, Only fit if oversized) | `tbFit`, `tbOriginal`, `tbFitAll`, `tbFitWidth`, `tbFitWidthAdaptive`, `tbFitHeight`, `tbBestFit`, `tbOnlyFitOversized` | as MD rows | P5.23e | todo | button cycles Fit All, Fit Width, Fit Height and the menu has them since P5.R3; the other modes and Only fit if oversized come with P5.23e |
+| TB.05 | Zoom split button showing "100 %" (Zoom In/Out, presets, Custom...) | `tbZoom`, `tbZoomIn`, `tbZoomOut`, `tbZoom100`, `tbZoom125`, `tbZoom150`, `tbZoom200`, `tbZoom400`, `tbZoomCustom` | as MD rows | P5.23e | todo | button shows the zoom ("100%") and cycles 100, 125, 150, 200; the menu has Zoom In, Zoom Out and the presets since P5.R3; Custom... comes with P5.23e |
 | TB.06 | Rotate split button showing "0°" (rotation items, Autorotate) | `tbRotate`, `tbRotateLeft`, `tbRotateRight`, `tbRotate0`, `tbRotate90`, `tbRotate180`, `tbRotate270`, `tbAutoRotate` | as MD rows | P5.R3 | todo | |
 | TB.07 | Magnifier split button | `tbMagnify` | — | P5.23d | todo | drop-down holds `MagnifySetupControl` |
-| TB.08 | Full Screen button | `tbFullScreen` | — | P5.R3 | todo | |
-| TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools`, `tbOpenComic`, `tbOpenRemoteLibrary`, `tbShowInfo`, `tsWorkspaces`, `tsSaveWorkspace`, `tsEditWorkspaces`, `tbBookmarks`, `tbSetBookmark`, `tbRemoveBookmark`, `tbAutoScroll`, `tbMinimalGui`, `tbReaderUndocked`, `tbScan`, `tbUpdateAllComicFiles`, `tbUpdateWebComics`, `tbCacheThumbnails`, `tsSynchronizeDevices`, `tbComicDisplaySettings`, `tbPreferences`, `tbAbout`, `tbExit` | items as their menu rows | P5.R3 | todo | remote and device items deferred (D4); Show Main Menu: TB.10 |
+| TB.08 | Full Screen button | `tbFullScreen` | — | P5.R3 | done 2026-10-21 | checked while full screen |
+| TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools`, `tbOpenComic`, `tbOpenRemoteLibrary`, `tbShowInfo`, `tsWorkspaces`, `tsSaveWorkspace`, `tsEditWorkspaces`, `tbBookmarks`, `tbSetBookmark`, `tbRemoveBookmark`, `tbAutoScroll`, `tbMinimalGui`, `tbReaderUndocked`, `tbScan`, `tbUpdateAllComicFiles`, `tbUpdateWebComics`, `tbCacheThumbnails`, `tsSynchronizeDevices`, `tbComicDisplaySettings`, `tbPreferences`, `tbAbout`, `tbExit` | items as their menu rows | P5.22a | todo | the drop-down has About... and Exit since P5.R3; the other items arrive with their tasks (Preferences P5.22a, Open Book P5.10a, Info P5.7a, Book Display Settings P5.23c, workspaces, bookmarks, scan items) |
 | TB.10 | Show Main Menu (toggle menu strip) | `tbShowMainMenu` | Shift+F10 | P5.23f | deviation | impossible: the macOS menu bar cannot be removed from a window; in full screen it auto-hides natively |
 | TC.01 | Book tabs bar (one tab per open book, current tab, close box) | `fileTabs` (`TabBar`) | — | P5.32a | todo | original TabBar look (C-TAB-1) |
 | TC.02 | Tab menu: Close | `cmClose` | as MF.02 | P5.32a | todo | |
@@ -144,12 +144,12 @@
 | TC.05 | Tab menu: Show in Browser | `cmSyncBrowser` | as MR.08 | P5.32a | todo | |
 | TC.06 | Tab menu: Reveal in Explorer | `cmRevealInExplorer` | Ctrl+G → Cmd+G | P5.32a | deviation | native: label "Reveal in Finder" (platform name) |
 | TC.07 | Tab menu: Copy Full Path to Clipboard | `cmCopyPath` | — | P5.32a | todo | |
-| PC.01 | Page menu: Info... | `pageContextMenu.cmShowInfo` | Cmd+I | P5.R3 | todo | |
-| PC.02 | Page menu: My Rating | `cmRating` → `contextRating2`, `cmRate0`, `cmRate1`, `cmRate2`, `cmRate3`, `cmRate4`, `cmRate5`, `cmQuickRating` | — | P5.R3 | todo | |
+| PC.01 | Page menu: Info... | `pageContextMenu.cmShowInfo` | Cmd+I | P5.7a | todo | item and Cmd+I in the page menu since P5.R3; the Info dialog arrives with P5.7a |
+| PC.02 | Page menu: My Rating | `cmRating` → `contextRating2`, `cmRate0`, `cmRate1`, `cmRate2`, `cmRate3`, `cmRate4`, `cmRate5`, `cmQuickRating` | — | P5.5 | todo | None and 1 to 5 stars (Option+Shift+0..5, radio mark, written to the book) since P5.R3; Quick Rating and Review... arrives with P5.5 |
 | PC.03 | Page menu: Page Type, Page Rotation | `cmPageType`, `cmPageRotate` | — | P5.23b | todo | |
 | PC.04 | Page menu: Bookmarks (Set, Remove, Previous, Next, Last Page Read) | `cmBookmarks`, `cmSetBookmark`, `cmRemoveBookmark`, `cmPrevBookmark`, `cmNextBookmark`, `cmLastPageRead` | as ME rows | P5.23a | todo | |
 | PC.05 | Page menu: Books (Open File..., Close, Previous/Next/Random Book) | `cmComics`, `cmOpenComic`, `cmCloseComic`, `cmPrevFromList`, `cmNextFromList`, `cmRandomFromList` | as MF/MR rows | P5.23a | todo | |
-| PC.06 | Page menu: Page Layout (fit, layout, rotation, oversized) | `cmPageLayout`, `cmOriginal`, `cmFitAll`, `cmFitWidth`, `cmFitWidthAdaptive`, `cmFitHeight`, `cmFitBest`, `cmSinglePage`, `cmTwoPages`, `cmTwoPagesAdaptive`, `cmContinuous`, `cmRightToLeft`, `cmRotate0`, `cmRotate90`, `cmRotate180`, `cmRotate270`, `cmOnlyFitOversized` | as MD rows | P5.R3 | todo | |
+| PC.06 | Page menu: Page Layout (fit, layout, rotation, oversized) | `cmPageLayout`, `cmOriginal`, `cmFitAll`, `cmFitWidth`, `cmFitWidthAdaptive`, `cmFitHeight`, `cmFitBest`, `cmSinglePage`, `cmTwoPages`, `cmTwoPagesAdaptive`, `cmContinuous`, `cmRightToLeft`, `cmRotate0`, `cmRotate90`, `cmRotate180`, `cmRotate270`, `cmOnlyFitOversized` | as MD rows | P5.23e | todo | Fit All, Fit Width, Fit Height, the layouts and Right to Left since P5.R3; the other modes and rotation arrive with P5.23e |
 | PC.07 | Page menu: Magnifier, Copy Page, Export Page..., Refresh, Minimal User Interface | `cmMagnify`, `cmCopyPage`, `cmExportPage`, `cmRefreshPage`, `cmMinimalGui` | as their rows | P5.23a | todo | |
 | NT.01 | Notification-area icon with menu (Restore, Exit); Minimize/Close to tray settings | `notifyIcon`, `notfifyContextMenu`, Settings `MinimizeToTray`, `CloseMinimizesToTray`, `cmNotifyRestore`, `cmNotifyExit` | — | P5.33 | todo | macOS equivalent: a menu bar status item (NSStatusItem) with the same menu |
 
@@ -266,32 +266,32 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | RK.02 | Previous Book (`PrevComic`) | P | P | P5.23a | todo | |
 | RK.03 | Random Book (`RandomComic`) | L | L | P5.23a | todo | |
 | RK.04 | Show Browser (`ShowBrowser`) | Mouse left (on the browser grip), Escape | same | P5.32b | todo | |
-| RK.05 | First Page / Last Page (`MoveToFirstPage`, `MoveToLastPage`) | Ctrl+Home, Ctrl+End; double gestures 1/3 | Cmd+Home/End (fn+Cmd+Left/Right on laptops) | P5.R3 | todo | |
-| RK.06 | Previous / Next Page (`MoveToPreviousPage`, `MoveToNextPage`) | PageUp/PageDown, Alt+Left/Right, gestures 1/3, flicks | PageUp/PageDown, Option+Left/Right, two-finger swipe | P5.R3 | todo | MVP has Left/Right; realign |
+| RK.05 | First Page / Last Page (`MoveToFirstPage`, `MoveToLastPage`) | Ctrl+Home, Ctrl+End; double gestures 1/3 | Cmd+Home/End (fn+Cmd+Left/Right on laptops) | P5.R3 | done 2026-10-21 | Cmd+Home and Cmd+End |
+| RK.06 | Previous / Next Page (`MoveToPreviousPage`, `MoveToNextPage`) | PageUp/PageDown, Alt+Left/Right, gestures 1/3, flicks | PageUp/PageDown, Option+Left/Right, two-finger swipe | P5.R3 | done 2026-10-21 | PageUp, PageDown, Option+Left, Option+Right and the two-finger swipe (the arrows scroll now) |
 | RK.07 | Previous / Next Bookmark | Ctrl+PageUp/PageDown | Cmd+PageUp/PageDown | P5.23a | todo | |
 | RK.08 | Previous / Next Tab | Shift+Tab, Tab | same | P5.32a | todo | |
-| RK.09 | Single Page Back / Forward | Shift+PageUp/PageDown | same | P5.R3 | todo | |
-| RK.10 | Previous Part / Next Part | Shift+Space, Space (gestures 7/9) | same | P5.R3 | todo | |
-| RK.11 | Page Start / Page End | Home, End | same | P5.R3 | todo | |
+| RK.09 | Single Page Back / Forward | Shift+PageUp/PageDown | same | P5.23f | todo | Shift+PageUp and Shift+PageDown turn by a spread in the two-page layouts (the pairing is fixed for the book, full-port.md section 9) |
+| RK.10 | Previous Part / Next Part | Shift+Space, Space (gestures 7/9) | same | P5.R3 | done 2026-10-21 | Space and Shift+Space |
+| RK.11 | Page Start / Page End | Home, End | same | P5.R3 | done 2026-10-21 | Home and End go to the start and end of the page |
 | RK.12 | Move Part 10% down / up | V, Ctrl+Down; B, Ctrl+Up | V, Cmd+Down; B, Cmd+Up | P5.23d | todo | |
 | RK.13 | Toggle Auto Scrolling / Double Page Auto Scroll | S; Shift+S | same | P5.23d | todo | |
-| RK.14 | Up / Down / Left / Right (scroll) | arrows, mouse wheel, tilt | arrows, scroll | P5.R3 | todo | |
+| RK.14 | Up / Down / Left / Right (scroll) | arrows, mouse wheel, tilt | arrows, scroll | P5.R3 | done 2026-10-21 | the arrows scroll; turning the page at the edge (ScrollingDoesBrowse, PB.13) is P5.23d |
 | RK.15 | Toggle Undock Reader | D | D | P5.32a | todo | |
-| RK.16 | Toggle Full Screen | F, mouse double click, gesture 2 | F, double click | P5.R3 | todo | |
-| RK.17 | Toggle Two Pages | T | T | P5.R3 | todo | |
+| RK.16 | Toggle Full Screen | F, mouse double click, gesture 2 | F, double click | P5.R3 | done 2026-10-21 | F, F11, Ctrl+Cmd+F and a double click |
+| RK.17 | Toggle Two Pages | T | T | P5.R3 | done 2026-10-21 | T cycles one page, two pages, two pages (adaptive) |
 | RK.18 | Toggle Realistic Display (page ornaments) | Shift+D | Shift+D | P5.23f | todo | §8 item 132 reinstated by R9 |
 | RK.19 | Toggle Magnifier | M, touch press-and-tap | M | P5.23d | todo | |
 | RK.20 | Toggle Menu (minimal UI menu) | K | K | P5.23f | todo | |
-| RK.21 | Toggle Navigation Overlay | gesture 8, two-finger tap | two-finger tap | P5.R3 | todo | |
-| RK.22 | Original / Fit All / Fit Width / Fit Width adaptive / Fit Height / Best Fit | 1 to 6 | 1 to 6 | P5.23e | todo | |
-| RK.23 | Single Page / Two Pages / Two Pages adaptive / Continuous / Right to Left | 7, 8, 9, (none), 0 | same | P5.R3 | todo | |
+| RK.21 | Toggle Navigation Overlay | gesture 8, two-finger tap | two-finger tap | P5.23d | todo | the navigation overlay and its toggle command exist (auto-show, ToggleNavigationOverlay); the two-finger tap gesture needs a native hook: P5.23d |
+| RK.22 | Original / Fit All / Fit Width / Fit Width adaptive / Fit Height / Best Fit | 1 to 6 | 1 to 6 | P5.23e | todo | 2, 3 and 5 work since P5.R3 (Fit All, Fit Width, Fit Height); the rest is P5.23e |
+| RK.23 | Single Page / Two Pages / Two Pages adaptive / Continuous / Right to Left | 7, 8, 9, (none), 0 | same | P5.R3 | done 2026-10-21 | 7, 8, 9 and 0 (Continuous has no key) |
 | RK.24 | Only Fit if oversized | O | O | P5.23e | todo | |
 | RK.25 | Rotate Right / Rotate Left / Autorotate Double Pages | R, Shift+R, A | same | P5.23e | todo | |
-| RK.26 | Zoom In / Zoom Out | Ctrl+wheel | Cmd+scroll, pinch | P5.R3 | todo | |
+| RK.26 | Zoom In / Zoom Out | Ctrl+wheel | Cmd+scroll, pinch | P5.R3 | done 2026-10-21 | Cmd+scroll zooms by 0.1 per notch, the pinch zooms about the pointer |
 | RK.27 | Step Zoom In / Out | Z, Shift+Z | same | P5.23e | todo | |
 | RK.28 | Toggle Zoom | touch double tap | trackpad smart zoom (two-finger double tap) | P5.23e | todo | |
 | RK.29 | Rotate Page Right / Left (permanent, page info) | Y, Shift+Y | same | P5.23b | todo | |
-| RK.30 | Exit | Q | Q | P5.R3 | todo | quits like Cmd+Q |
+| RK.30 | Exit | Q | Q | P5.R3 | done 2026-10-21 | Q quits the application like Cmd+Q |
 | RK.31 | Windows touch gestures without a trackpad equivalent (gestures 4, 6, flick up/down) | `CommandKey.Gesture*` | — | P5.23d | deviation | impossible: no such trackpad gesture on macOS; the commands keep their keys |
 | GK.01 | Focus Quick Search (`FocusQuickSearch`) | Ctrl+F | Cmd+F | P5.15a | todo | |
 | GK.02 | Previous / Next List (`BrowsePrevious`, `BrowseNext`) | mouse buttons 4/5 | same | P5.32b | todo | |
@@ -351,7 +351,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | PR.01 | Window frame | left tab column (Reader, Libraries, Behavior, Scripts, Advanced), collapsible groups, OK / Cancel / Apply | P5.22a | todo | original layout (C-PREF-1) |
 | PR.02 | Reader > Display | contrast, brightness, saturation, gamma, sharpening sliders, Automatic Contrast Enhancement, High Quality, Anamorphic Scaling, Reset | P5.22a | todo | |
 | PR.03 | Reader > Keyboard | shortcut editor, Import... (with Default layout), Export... (`*.xml`), `miDefaultKeyboardLayout` | P5.22c | todo | DD19 overridden by R9 |
-| PR.04 | Reader > Overlays | Show Navigation automatically, visible Page Part, Messages and Status, current Page, page names; sizing; navigation position | P5.22a | todo | |
+| PR.04 | Reader > Overlays | Show Navigation automatically, visible Page Part, Messages and Status, current Page, page names; sizing; navigation position | P5.22a | todo | the overlays work with the original's defaults since P5.R3 (`ReaderOptions`); the check boxes are P5.22a, saving them P5.1 |
 | PR.05 | Reader > Mouse Scrolling | wheel speed slow/fast, Inertial Mouse scrolling, Smooth Auto Scrolling | P5.22a | todo | |
 | PR.06 | Reader > Hardware Acceleration | Animation of Page Display changes, Hardware Acceleration, Software Filters, Hardware Filters | P5.22a | deviation | impossible: partly (no OpenGL/Tao path, §6.4): rendering is always Metal through Skia and "Enable Hardware Acceleration" has no off switch on macOS; animation and filters keep their meaning |
 | PR.07 | Reader > macOS group (swipe at edge, pinch speed, trackpad) | Mac-only additions (DD8) | P5.22a | mac-only | |
@@ -388,7 +388,7 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.07 | Opening a Book | Close the Browser when a new Book is opened (`CloseBrowserOnOpen`) | false | P5.32b | todo | |
 | PB.08 | Opening a Book | Opened Files are added to the Library (`AddToLibraryOnOpen`) | false | P5.10a | todo | |
 | PB.09 | Opening a Book | Open in new Tab (`OpenInNewTab`) | false | P5.32a | todo | |
-| PB.10 | Reading | Hide the mouse cursor in Full Screen (`HideCursorFullScreen`) | true | P5.R3 | todo | |
+| PB.10 | Reading | Hide the mouse cursor in Full Screen (`HideCursorFullScreen`) | true | P5.R3 | done 2026-10-21 | the option works (5 s without movement, the original's `AutoHideCursorDuration`); the check box is P5.22a, saving it P5.1 |
 | PB.11 | Reading | Reading beyond start or end opens the next Book (`AutoNavigateComics`) | true | P5.23a | todo | |
 | PB.12 | Reading | Wheel and cursor key delay on page transitions (`PageChangeDelay`) | true | P5.23d | todo | |
 | PB.13 | Reading | Scrolling to page margin browses to new pages (`ScrollingDoesBrowse`) | true | P5.23d | todo | |

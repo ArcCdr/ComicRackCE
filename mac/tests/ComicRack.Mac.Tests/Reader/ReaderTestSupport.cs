@@ -285,6 +285,13 @@ namespace ComicRack.Mac.Tests.Reader
 			}
 		}
 
+		/// <summary>The rating of the book (the page menu's My Rating).</summary>
+		public float RatingValue { get; set; }
+
+		public float Rating => RatingValue;
+
+		public void SetRating(float rating) => RatingValue = rating;
+
 		public int LastReported => Reported.Count == 0 ? -1 : Reported[Reported.Count - 1];
 
 		/// <summary>Lets <see cref="OpenAsync"/> complete (for a session made with openImmediately: false).</summary>

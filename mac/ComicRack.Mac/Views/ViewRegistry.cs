@@ -28,6 +28,21 @@ namespace ComicRack.Mac.Views
 			factories[MainWindowName] = null;
 			Register("ChromeGallery", () => new ChromeGalleryWindow());
 			Register("BookGrid", () => new BookGridWindow());
+			Register("Reader", OpenFirstBook);
+		}
+
+		/// <summary>
+		/// The reader of the original (<c>--show Reader</c>): the first book of the library in a reader window, opened through the same path as a double
+		/// click. Used by the contact sheet <c>chrome-sheet.sh R3 Reader</c> with a fixture library. The window is open already.
+		/// </summary>
+		private static Window OpenFirstBook()
+		{
+			ViewModels.MainViewModel library = Library ?? throw new InvalidOperationException("The library window is not open.");
+			library.Browser.SelectedIndex = 0;
+			library.Browser.OpenSelected();
+			Services.ReaderManager readers = library.Readers as Services.ReaderManager;
+			Window window = readers?.Windows.LastOrDefault();
+			return window ?? throw new InvalidOperationException("The library has no book to read (use --fixture-library).");
 		}
 
 		/// <summary>Adds (or replaces) a view. The factory runs on the UI thread and returns a window that is not shown yet.</summary>
@@ -70,6 +85,10 @@ namespace ComicRack.Mac.Views
 				return null;
 			}
 			Window window = factory();
+			if (window.IsVisible)
+			{
+				return window; // opened by the factory itself (the reader)
+			}
 			if (owner != null)
 			{
 				window.Show(owner);

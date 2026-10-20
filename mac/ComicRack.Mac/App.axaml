@@ -34,7 +34,7 @@
     <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrChromeThemes.axaml" />
     <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrControls.axaml" />
     <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrParts.axaml" />
-    <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrMvpLook.axaml" />
+    <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrReaderLook.axaml" />
     <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrThumbnailLook.axaml" />
   </Application.Styles>
 </Application>

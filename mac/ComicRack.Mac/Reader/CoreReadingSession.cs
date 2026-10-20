@@ -45,6 +45,13 @@ namespace ComicRack.Mac.Reader
 
 		public ComicBook Book => book;
 
+		public float Rating => book.Rating;
+
+		public void SetRating(float rating)
+		{
+			book.Rating = rating;
+		}
+
 		/// <summary>The Core navigator, once opened (for tests).</summary>
 		public ComicBookNavigator Navigator => navigator;
 

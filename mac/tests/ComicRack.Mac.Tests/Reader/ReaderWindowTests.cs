@@ -164,6 +164,16 @@ namespace ComicRack.Mac.Tests.Reader
 				case Key.R: return PhysicalKey.R;
 				case Key.D0: return PhysicalKey.Digit0;
 				case Key.D1: return PhysicalKey.Digit1;
+				case Key.D7: return PhysicalKey.Digit7;
+				case Key.D8: return PhysicalKey.Digit8;
+				case Key.D9: return PhysicalKey.Digit9;
+				case Key.T: return PhysicalKey.T;
+				case Key.Q: return PhysicalKey.Q;
+				case Key.B: return PhysicalKey.B;
+				case Key.P: return PhysicalKey.P;
+				case Key.N: return PhysicalKey.N;
+				case Key.E: return PhysicalKey.E;
+				case Key.F11: return PhysicalKey.F11;
 				case Key.OemPlus: return PhysicalKey.Equal;
 				case Key.OemMinus: return PhysicalKey.Minus;
 				default: return PhysicalKey.None;
@@ -185,7 +195,7 @@ namespace ComicRack.Mac.Tests.Reader
 
 	public class ReaderWindowTests : IDisposable
 	{
-		private static readonly SKColor Paper = new SKColor(0x1E, 0x1E, 0x1E);
+		private static readonly SKColor Paper = new SKColor(0xF5, 0xF5, 0xF5);
 		private readonly long liveBefore;
 
 		public ReaderWindowTests()
@@ -219,10 +229,11 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)page.Right - 4, (int)page.Bottom - 4), expected), "bottom right corner of the page");
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)(page.X - 10), (int)(page.Y + 100)), Paper, 1), "paper left of the page");
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)(page.Right + 10), (int)(page.Y + 100)), Paper, 1), "paper right of the page");
-					Assert.Equal("3 / 5", h.Window.FindControl<TextBlock>("PageLabel").Text);
-					Assert.Equal("Best Fit", h.Window.FindControl<TextBlock>("FitLabel").Text);
+					Assert.Equal("3", h.Window.FindControl<TextBlock>("PageSegment").Text);
+					Assert.Equal("5", h.Window.FindControl<TextBlock>("PageCountSegment").Text);
+					Assert.Equal("Fit All", h.Vm.FitText);
 					Assert.Equal("Fake Book", h.Window.Title);
-					Assert.False(h.Window.FindControl<Border>("NoticeBox").IsVisible);
+					Assert.False(h.Window.Message.IsVisible);
 				}
 			});
 		}
@@ -242,26 +253,26 @@ namespace ComicRack.Mac.Tests.Reader
 						return ReaderHarness.ColorAt(frame, (int)(r.X + r.Width / 2), (int)(r.Y + r.Height / 2));
 					};
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(0)));
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(1)));
 					h.Press(Key.Space);
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(2)));
-					h.Press(Key.Left);
+					h.Press(Key.PageUp);
 					h.Press(Key.Space, KeyModifiers.Shift);
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(0)));
-					h.Press(Key.End);
+					h.Press(Key.End, KeyModifiers.Meta);
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(7)));
-					h.Press(Key.Right); // past the end: stays
+					h.Press(Key.PageDown); // past the end: stays
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(7)));
 					h.Press(Key.PageUp);
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(6)));
-					h.Press(Key.Home);
+					h.Press(Key.Home, KeyModifiers.Meta);
 					await h.Settled();
 					Assert.True(PageImages.Near(centre(), FakePageDecoder.ColorFor(0)));
 					Assert.Equal(0, session.LastReported);
@@ -278,8 +289,8 @@ namespace ComicRack.Mac.Tests.Reader
 				ReaderHarness h = await ReaderHarness.Open(session);
 				bool closed = false;
 				h.Window.Closed += (s, e) => closed = true;
-				h.Press(Key.Right);
-				h.Press(Key.Right);
+				h.Press(Key.PageDown);
+				h.Press(Key.PageDown);
 				Assert.Equal(3, h.Vm.CurrentPage);
 				h.Press(Key.Escape);
 				Assert.True(closed);
@@ -308,7 +319,7 @@ namespace ComicRack.Mac.Tests.Reader
 				Assert.Equal(h.ReadingArea.Width, widthRect.Width, 1);
 				Assert.True(widthRect.Height > h.ReadingArea.Height);
 				h.Capture("reader-fit-width-top");
-				Assert.Equal("Fit Width", h.Window.FindControl<TextBlock>("FitLabel").Text);
+				Assert.Equal("Fit Width", h.Vm.FitText);
 
 				h.Press(Key.Space); // scrolls instead of turning the page
 				Assert.Equal(0, h.Vm.CurrentPage);
@@ -376,8 +387,8 @@ namespace ComicRack.Mac.Tests.Reader
 				{
 					await vm.OpenAsync();
 					WriteableBitmap frame = h.Capture("reader-open-failed");
-					Assert.True(h.Window.FindControl<Border>("NoticeBox").IsVisible);
-					Assert.Contains("broken.cbz", h.Window.FindControl<TextBlock>("NoticeLabel").Text);
+					Assert.True(h.Window.Message.IsVisible);
+					Assert.Contains("broken.cbz", h.Window.Message.Text);
 					Assert.Empty(vm.Arrangement.Pages);
 				}
 			});
@@ -391,16 +402,16 @@ namespace ComicRack.Mac.Tests.Reader
 				var session = new FakeSession(new FakePageDecoder { PageCount = 5, FailWith = p => p == 2 ? new InvalidDataException("Page 3 could not be read from x.cbz.") : null });
 				using (ReaderHarness h = await ReaderHarness.Open(session))
 				{
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
-					Assert.True(h.Window.FindControl<Border>("NoticeBox").IsVisible);
-					Assert.Contains("Page 3 could not be loaded", h.Window.FindControl<TextBlock>("NoticeLabel").Text);
+					Assert.True(h.Window.Message.IsVisible);
+					Assert.Contains("Page 3 could not be loaded", h.Window.Message.Text);
 					h.Capture("reader-page-failed");
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
-					Assert.False(h.Window.FindControl<Border>("NoticeBox").IsVisible);
+					Assert.False(h.Window.Message.IsVisible);
 					Assert.Equal(3, h.Vm.Scene.Position);
 				}
 			});
@@ -415,7 +426,7 @@ namespace ComicRack.Mac.Tests.Reader
 				ReaderHarness h = await ReaderHarness.Open(session);
 				for (int i = 0; i < 6; i++)
 				{
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					h.Tick();
 				}
 				h.Window.Close();
@@ -459,7 +470,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)(page.X - 8), (int)(page.Y + 50)), Paper, 1));
 					for (int i = 0; i < 5; i++)
 					{
-						h.Press(Key.Right);
+						h.Press(Key.PageDown);
 					}
 					await h.Settled();
 					ExpectPage(h, 5);
@@ -488,7 +499,7 @@ namespace ComicRack.Mac.Tests.Reader
 						ExpectPage(h, page);
 						WriteableBitmap frame = h.Capture("reader-large-page-" + (page + 1));
 						Assert.True(ReaderHarness.DistinctColors(frame, h.PageRects()[0]) > 20);
-						h.Press(Key.Right);
+						h.Press(Key.PageDown);
 					}
 				}
 			});
@@ -506,7 +517,7 @@ namespace ComicRack.Mac.Tests.Reader
 					ExpectPage(h, 0);
 					Assert.Equal("1 / 3", h.Vm.PageText);
 					h.Capture("reader-pdf-page-1");
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
 					ExpectPage(h, 1);
 					WriteableBitmap frame = h.Capture("reader-pdf-page-2");
@@ -527,7 +538,7 @@ namespace ComicRack.Mac.Tests.Reader
 					ExpectPage(h, 0);
 					Assert.Equal("1 / 24", h.Vm.PageText);
 					h.Capture("reader-cb7-page-1");
-					h.Press(Key.End);
+					h.Press(Key.End, KeyModifiers.Meta);
 					await h.Settled();
 					ExpectPage(h, 23);
 					WriteableBitmap frame = h.Capture("reader-cb7-page-24");

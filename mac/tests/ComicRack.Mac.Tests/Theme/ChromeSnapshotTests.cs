@@ -12,6 +12,7 @@ using ComicRack.Mac.Controls;
 using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.Tests.Diagnostics;
 using ComicRack.Mac.Services;
+using ComicRack.Mac.Themes;
 using ComicRack.Mac.Tests.Browser;
 using ComicRack.Mac.Tests.HiDpi;
 using ComicRack.Mac.Tests.Reader;
@@ -111,7 +112,7 @@ namespace ComicRack.Mac.Tests.Theme
 			return frames;
 		}
 
-		/// <summary>The values that were literals in the views and are theme entries now (<c>CrMvpLook.axaml</c>), read back from live controls.</summary>
+		/// <summary>The values that were literals in the views and are theme entries now (<c>CrParts.axaml</c>, <c>CrReaderLook.axaml</c>), read back from live controls.</summary>
 		[Fact]
 		public async Task The_surfaces_that_moved_into_the_theme_keep_the_values_they_had_in_their_views()
 		{
@@ -147,9 +148,14 @@ namespace ComicRack.Mac.Tests.Theme
 				cell.SetSelected(false);
 				Settle(window);
 
-				// the reader paper comes from the MVP look file, by key
-				Assert.Equal(Avalonia.Media.Color.FromRgb(0x1E, 0x1E, 0x1E), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.ReaderPaperBrush")));
-				Assert.Null(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.NoSuchBrush"));
+				// the reader: the paper is the token of the original (WhiteSmoke), the glass text, the icons on the glass, the shadow and the outline of the
+				// pages are the colours the original's renderers write as literals (CrReaderLook.axaml)
+				Assert.Equal(Avalonia.Media.Color.FromRgb(0xF5, 0xF5, 0xF5), Of(Controls.ChromePaint.Brush(cover, ThemeTokens.Names.ReaderBackground)));
+				Assert.Equal(Avalonia.Media.Colors.White, Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Reader.OverlayTextBrush")));
+				Assert.Equal(Avalonia.Media.Colors.Black, Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Reader.GlassIconBrush")));
+				Assert.Equal(Avalonia.Media.Colors.Black, Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Reader.PageFrameBrush")));
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0x99, 0, 0, 0), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Reader.PageShadowBrush")));
+				Assert.Null(Controls.ChromePaint.ResourceBrush(cover, "Cr.Reader.NoSuchBrush"));
 				window.Close();
 				return Task.CompletedTask;
 			});

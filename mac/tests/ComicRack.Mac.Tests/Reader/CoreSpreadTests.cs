@@ -191,7 +191,7 @@ namespace ComicRack.Mac.Tests.Reader
 					{
 						h.Capture("m23b-19-core-cbz-cover");
 						Assert.Single(h.PageRects());
-						h.Press(Avalonia.Input.Key.Left); // right to left: Left is forward
+						h.Press(Avalonia.Input.Key.PageDown); // right to left: PageDown is forward too
 						await h.Settled();
 						WriteableBitmap frame = h.Capture("m23b-20-core-cbz-rtl-spread");
 						Rect[] r = h.PageRects();
@@ -199,9 +199,9 @@ namespace ComicRack.Mac.Tests.Reader
 						Assert.True(r[0].X > r[1].X);
 						Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)r[0].X + 12, (int)r[0].Y + 12), FakePageDecoder.ColorFor(1), 6), "page 2 on the right");
 						Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)r[1].X + 12, (int)r[1].Y + 12), FakePageDecoder.ColorFor(2), 6), "page 3 on the left");
-						h.Press(Avalonia.Input.Key.Left);
+						h.Press(Avalonia.Input.Key.PageDown);
 						await h.Settled();
-						h.Press(Avalonia.Input.Key.Left);
+						h.Press(Avalonia.Input.Key.PageDown);
 						await h.Settled();
 						h.Capture("m23b-21-core-cbz-double-page");
 						Assert.Equal(new[] { 4 }, h.Vm.Scene.Pages.Select(p => p.Index).ToArray());

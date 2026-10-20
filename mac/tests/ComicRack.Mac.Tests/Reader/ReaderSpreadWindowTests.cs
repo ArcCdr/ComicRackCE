@@ -24,7 +24,7 @@ namespace ComicRack.Mac.Tests.Reader
 	/// </summary>
 	public class ReaderSpreadWindowTests : IDisposable
 	{
-		private static readonly SKColor Paper = new SKColor(0x1E, 0x1E, 0x1E);
+		private static readonly SKColor Paper = new SKColor(0xF5, 0xF5, 0xF5);
 		private readonly long liveBefore;
 
 		public ReaderSpreadWindowTests()
@@ -79,8 +79,8 @@ namespace ComicRack.Mac.Tests.Reader
 					Rect[] r = h.PageRects();
 					Assert.Single(r);
 					AssertPage(frame, r[0], 1, "single");
-					Assert.Equal("2 / 9", h.Window.FindControl<TextBlock>("PageLabel").Text);
-					Assert.Equal("One page", h.Window.FindControl<TextBlock>("ModeLabel").Text);
+					Assert.Equal("2 / 9", h.Vm.PageText);
+					Assert.Equal("One page", h.Vm.ModeText);
 				}
 			});
 		}
@@ -99,8 +99,8 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.True(r[0].X >= area.X + area.Width / 2 - 1, "the cover starts at the middle of the spread");
 					AssertPage(frame, r[0], 0, "cover");
 					AssertPaper(frame, area.X + 20, area.Y + area.Height / 2, "left half");
-					Assert.Equal("1 / 9", h.Window.FindControl<TextBlock>("PageLabel").Text);
-					Assert.Equal("Two pages", h.Window.FindControl<TextBlock>("ModeLabel").Text);
+					Assert.Equal("1 / 9", h.Vm.PageText);
+					Assert.Equal("Two pages", h.Vm.ModeText);
 				}
 			});
 		}
@@ -112,7 +112,7 @@ namespace ComicRack.Mac.Tests.Reader
 			{
 				using (ReaderHarness h = await Open(PageLayoutMode.Double))
 				{
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
 					WriteableBitmap frame = h.Capture("m23b-03-spread-2-3");
 					Rect[] r = h.PageRects();
@@ -121,7 +121,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(r[0].Right, r[1].X, 1);
 					AssertPage(frame, r[0], 1, "left");
 					AssertPage(frame, r[1], 2, "right");
-					Assert.Equal("2-3 / 9", h.Window.FindControl<TextBlock>("PageLabel").Text);
+					Assert.Equal("2-3 / 9", h.Vm.PageText);
 				}
 			});
 		}
@@ -140,7 +140,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(new[] { 3 }, h.Vm.Scene.Pages.Select(p => p.Index).ToArray());
 					AssertPage(frame, r[0], 3, "lone page");
 					Assert.True(r[0].X >= h.ReadingArea.X + h.ReadingArea.Width / 2 - 1);
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
 					frame = h.Capture("m23b-05-double-page");
 					r = h.PageRects();
@@ -149,7 +149,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(area.Width, r[0].Width, 1); // the double page fills the width
 					Assert.True(r[0].Width > r[0].Height);
 					AssertPage(frame, r[0], 4, "double page");
-					h.Press(Key.Right);
+					h.Press(Key.PageDown);
 					await h.Settled();
 					frame = h.Capture("m23b-06-after-double");
 					r = h.PageRects();
@@ -157,10 +157,10 @@ namespace ComicRack.Mac.Tests.Reader
 					AssertPage(frame, r[0], 5, "left");
 					AssertPage(frame, r[1], 6, "right");
 					// and back again by the same spreads
-					h.Press(Key.Left);
+					h.Press(Key.PageUp);
 					await h.Settled();
 					Assert.Equal(new[] { 4 }, h.Vm.Scene.Pages.Select(p => p.Index).ToArray());
-					h.Press(Key.Left);
+					h.Press(Key.PageUp);
 					await h.Settled();
 					Assert.Equal(new[] { 3 }, h.Vm.Scene.Pages.Select(p => p.Index).ToArray());
 				}
@@ -179,8 +179,8 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Single(r);
 					Assert.True(r[0].X >= h.ReadingArea.X + h.ReadingArea.Width / 2 - 1, "the cover stays on the right");
 					AssertPage(frame, r[0], 0, "cover");
-					Assert.Equal("Two pages · Right to left", h.Window.FindControl<TextBlock>("ModeLabel").Text);
-					h.Press(Key.Left); // forward
+					Assert.Equal("Two pages · Right to left", h.Vm.ModeText);
+					h.Press(Key.PageDown); // forward
 					await h.Settled();
 					frame = h.Capture("m23b-08-rtl-spread");
 					r = h.PageRects();
@@ -188,10 +188,10 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.True(r[0].X > r[1].X, "the first page is on the right");
 					AssertPage(frame, r[0], 1, "right");
 					AssertPage(frame, r[1], 2, "left");
-					h.Press(Key.Left);
+					h.Press(Key.PageDown);
 					await h.Settled();
 					Assert.Equal(new[] { 3, 4 }.Take(1).Concat(new[] { 3 }).Distinct().ToArray(), new[] { h.Vm.CurrentPage });
-					h.Press(Key.Right); // back
+					h.Press(Key.PageUp); // back
 					await h.Settled();
 					Assert.Equal(1, h.Vm.CurrentPage);
 				}
@@ -245,7 +245,7 @@ namespace ComicRack.Mac.Tests.Reader
 					h.Press(Key.OemPlus, KeyModifiers.Meta);
 					h.Press(Key.OemPlus, KeyModifiers.Meta);
 					Assert.Equal(Math.Pow(1.25, 3), h.Vm.Zoom, 9);
-					Assert.Equal("Two pages · 195 %", h.Window.FindControl<TextBlock>("ModeLabel").Text);
+					Assert.Equal("Two pages · 195 %", h.Vm.ModeText);
 					h.Capture("m23b-12-zoomed-centre");
 					// the wheel pans: first to the top left corner of the content ...
 					h.Window.MouseWheel(new Point(300, 300), new Vector(1000, 1000));
@@ -273,9 +273,11 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(290, h.Vm.ScrollY, 3);
 					h.Capture("m23b-14-zoomed-panned");
 					// dragging far past the edge stops at the edge
-					h.Window.MouseDown(from, MouseButton.Left);
-					h.Window.MouseMove(new Point(from.X - 3000, from.Y - 3000));
-					h.Window.MouseUp(new Point(from.X - 3000, from.Y - 3000), MouseButton.Left);
+					// (a second press near the first one is a double click, which toggles full screen: start elsewhere)
+					Point again = new Point(from.X + 80, from.Y + 60);
+					h.Window.MouseDown(again, MouseButton.Left);
+					h.Window.MouseMove(new Point(again.X - 3000, again.Y - 3000));
+					h.Window.MouseUp(new Point(again.X - 3000, again.Y - 3000), MouseButton.Left);
 					h.Tick();
 					Assert.Equal(h.Vm.Arrangement.MaxScrollX, h.Vm.ScrollX, 3);
 					Assert.Equal(h.Vm.Arrangement.MaxScroll, h.Vm.ScrollY, 3);
@@ -284,8 +286,8 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(area.Right, rf[1].Right, 1);
 					Assert.Equal(area.Bottom, rf[1].Bottom, 1);
 					AssertPage(far, new Rect(Math.Max(rf[1].X, area.X), Math.Max(rf[1].Y, area.Y), Math.Min(rf[1].Right, area.Right) - Math.Max(rf[1].X, area.X), Math.Min(rf[1].Bottom, area.Bottom) - Math.Max(rf[1].Y, area.Y)), 2, "bottom right");
-					// Cmd+0 resets
-					h.Press(Key.D0, KeyModifiers.Meta);
+					// the 100% preset of the zoom menu resets
+					h.Vm.Zoom100Command.Execute(null);
 					Assert.Equal(1.0, h.Vm.Zoom);
 					Assert.Equal(0, h.Vm.ScrollX);
 					Assert.False(h.Vm.CanPan);
@@ -310,9 +312,10 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(0, h.Vm.ScrollY);
 					Assert.Null(h.Window.ReadingArea.Cursor);
 					h.Vm.SetZoom(2);
-					h.Window.MouseDown(from, MouseButton.Left);
+					Point elsewhere = new Point(from.X + 80, from.Y + 60); // a press near the first one would be a double click (full screen)
+					h.Window.MouseDown(elsewhere, MouseButton.Left);
 					Assert.NotNull(h.Window.ReadingArea.Cursor);
-					h.Window.MouseUp(from, MouseButton.Left);
+					h.Window.MouseUp(elsewhere, MouseButton.Left);
 					h.Tick();
 					Assert.Null(h.Window.ReadingArea.Cursor);
 				}
@@ -343,26 +346,30 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task Full_screen_follows_ctrl_cmd_f_hides_the_status_strip_and_escape_leaves_it()
+		public async Task Full_screen_follows_ctrl_cmd_f_hides_the_tab_strip_and_the_status_bar_and_escape_leaves_it()
 		{
 			await Ui.Run(async () =>
 			{
 				using (ReaderHarness h = await Open(PageLayoutMode.Single))
 				{
-					Border strip = h.Window.FindControl<Border>("StatusStrip");
-					Assert.True(strip.IsVisible);
+					Control status = h.Window.FindControl<Control>("StatusBar");
+					Control tabs = h.Window.FindControl<Control>("TabBar");
+					Assert.True(status.IsVisible);
+					Assert.True(tabs.IsVisible);
 					Assert.NotEqual(WindowState.FullScreen, h.Window.WindowState);
 					h.Press(Key.F, KeyModifiers.Meta | KeyModifiers.Control);
 					Assert.True(h.Vm.IsFullScreen);
 					Assert.Equal(WindowState.FullScreen, h.Window.WindowState);
-					Assert.False(strip.IsVisible);
+					Assert.False(status.IsVisible);
+					Assert.False(tabs.IsVisible);
 					h.Capture("m23b-17-full-screen");
 					bool closed = false;
 					h.Window.Closed += (s, e) => closed = true;
 					h.Press(Key.Escape);
 					Assert.False(h.Vm.IsFullScreen);
 					Assert.NotEqual(WindowState.FullScreen, h.Window.WindowState);
-					Assert.True(strip.IsVisible);
+					Assert.True(status.IsVisible);
+					Assert.True(tabs.IsVisible);
 					Assert.False(closed);
 					// the user (or macOS) leaves full screen: the view model follows
 					h.Window.WindowState = WindowState.FullScreen;
@@ -393,32 +400,65 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task The_view_menu_has_the_layout_zoom_direction_and_full_screen_items_with_their_shortcuts()
+		public async Task The_menu_bar_has_the_original_menus_with_the_read_and_display_items_and_their_shortcuts()
 		{
 			await Ui.Run(async () =>
 			{
 				using (ReaderHarness h = await Open(PageLayoutMode.Single))
 				{
 					NativeMenu menu = NativeMenu.GetMenu(h.Window);
-					NativeMenuItem view = menu.Items.OfType<NativeMenuItem>().Single(i => i.Header == "View");
-					var items = view.Menu.Items.OfType<NativeMenuItem>().Where(i => !(i is NativeMenuItemSeparator)).ToDictionary(i => i.Header, i => i);
-					Assert.Equal(new KeyGesture(Key.OemPlus, KeyModifiers.Meta), items["Zoom In"].Gesture);
-					Assert.Equal(new KeyGesture(Key.OemMinus, KeyModifiers.Meta), items["Zoom Out"].Gesture);
-					Assert.Equal(new KeyGesture(Key.D0, KeyModifiers.Meta), items["Actual Fit"].Gesture);
-					Assert.Equal(new KeyGesture(Key.F, KeyModifiers.Meta | KeyModifiers.Control), items["Enter Full Screen"].Gesture);
-					Assert.True(items["One Page"].IsChecked);
-					Assert.False(items["Two Pages"].IsChecked);
-					items["Two Pages"].Command.Execute(null);
+					Assert.Equal(new[] { "File", "Edit", "Browse", "Read", "Display", "Window", "Help" }, menu.Items.OfType<NativeMenuItem>().Select(i => i.Header).ToArray());
+					NativeMenuItem Top(string header) => menu.Items.OfType<NativeMenuItem>().Single(i => i.Header == header);
+					NativeMenuItem Sub(NativeMenuItem parent, string header) => parent.Menu.Items.OfType<NativeMenuItem>().Single(i => i.Header == header);
+					NativeMenuItem read = Top("Read");
+					Assert.Equal(new KeyGesture(Key.B, KeyModifiers.Meta), Sub(read, "First Page").Gesture);
+					Assert.Equal(new KeyGesture(Key.P, KeyModifiers.Meta), Sub(read, "Previous Page").Gesture);
+					Assert.Equal(new KeyGesture(Key.N, KeyModifiers.Meta), Sub(read, "Next Page").Gesture);
+					Assert.Equal(new KeyGesture(Key.E, KeyModifiers.Meta), Sub(read, "Last Page").Gesture);
+					Sub(read, "Next Page").Command.Execute(null);
 					await h.Settled();
-					Assert.True(items["Two Pages"].IsChecked);
-					Assert.False(items["One Page"].IsChecked);
-					Assert.False(items["Read Right to Left"].IsChecked);
-					items["Read Right to Left"].Command.Execute(null);
-					Assert.True(items["Read Right to Left"].IsChecked);
-					items["Enter Full Screen"].Command.Execute(null);
-					Assert.Equal("Exit Full Screen", items["Enter Full Screen"].Header);
-					items["Zoom In"].Command.Execute(null);
+					Assert.Equal(1, h.Vm.CurrentPage);
+
+					NativeMenuItem display = Top("Display");
+					NativeMenuItem layout = Sub(display, "Page Layout");
+					Assert.Equal(new KeyGesture(Key.D2, KeyModifiers.Meta), Sub(layout, "Fit All").Gesture);
+					Assert.Equal(new KeyGesture(Key.D3, KeyModifiers.Meta), Sub(layout, "Fit Width").Gesture);
+					Assert.Equal(new KeyGesture(Key.D5, KeyModifiers.Meta), Sub(layout, "Fit Height").Gesture);
+					Assert.Equal(new KeyGesture(Key.D7, KeyModifiers.Meta), Sub(layout, "Single Page").Gesture);
+					Assert.Equal(new KeyGesture(Key.D8, KeyModifiers.Meta), Sub(layout, "Two Pages").Gesture);
+					Assert.Equal(new KeyGesture(Key.D9, KeyModifiers.Meta), Sub(layout, "Two Pages (adaptive)").Gesture);
+					Assert.Equal(new KeyGesture(Key.D0, KeyModifiers.Meta), Sub(layout, "Right to Left").Gesture);
+					Assert.True(Sub(layout, "Single Page").IsChecked);
+					Assert.True(Sub(layout, "Fit All").IsChecked);
+					Sub(layout, "Two Pages").Command.Execute(null);
+					await h.Settled();
+					Assert.True(Sub(layout, "Two Pages").IsChecked);
+					Assert.False(Sub(layout, "Single Page").IsChecked);
+					Assert.False(Sub(layout, "Right to Left").IsChecked);
+					Sub(layout, "Right to Left").Command.Execute(null);
+					Assert.True(Sub(layout, "Right to Left").IsChecked);
+					Sub(layout, "Fit Width").Command.Execute(null);
+					Assert.True(Sub(layout, "Fit Width").IsChecked);
+					Assert.False(Sub(layout, "Fit All").IsChecked);
+
+					NativeMenuItem zoom = Sub(display, "Zoom");
+					Assert.Equal(new KeyGesture(Key.OemPlus, KeyModifiers.Meta), Sub(zoom, "Zoom In").Gesture);
+					Assert.Equal(new KeyGesture(Key.OemMinus, KeyModifiers.Meta), Sub(zoom, "Zoom Out").Gesture);
+					Sub(zoom, "Zoom In").Command.Execute(null);
 					Assert.Equal(1.25, h.Vm.Zoom, 9);
+					Sub(zoom, "200%").Command.Execute(null);
+					Assert.Equal(2.0, h.Vm.Zoom, 9);
+					Sub(zoom, "100%").Command.Execute(null);
+					Assert.Equal(1.0, h.Vm.Zoom, 9);
+
+					NativeMenuItem fullScreen = Sub(display, "Full Screen");
+					Assert.Equal(new KeyGesture(Key.F11, KeyModifiers.None), fullScreen.Gesture);
+					Assert.False(fullScreen.IsChecked);
+					fullScreen.Command.Execute(null);
+					Assert.True(fullScreen.IsChecked);
+					fullScreen.Command.Execute(null);
+					Assert.False(fullScreen.IsChecked);
+					Assert.Equal(new KeyGesture(Key.W, KeyModifiers.Meta), Sub(Top("File"), "Close").Gesture);
 				}
 			});
 		}

@@ -1,3 +1,5 @@
+using System;
+using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Input;
 using ComicRack.Mac.Diagnostics;
@@ -8,54 +10,76 @@ using cYo.Projects.ComicRack.Engine.Display;
 namespace ComicRack.Mac
 {
 	/// <summary>
-	/// The native menu bar of a reader window (it replaces the library window's bar while the reader is the front window): File >
-	/// Close, View > the fit modes, Go > the page commands. Only the commands that have a Command-key shortcut get one; the arrows,
-	/// Space, Home and End are handled by the window itself, because a menu shortcut without a modifier would take them from every
-	/// text field too.
+	/// The native menu bar of a reader window (it replaces the library window's bar while the reader is the front window): the original's menus
+	/// (<c>MainForm.Designer.cs</c>, C-MENU-1, C-MENU-4) with the items the reader can do. File has Close; Read has the page commands (MR.01 to MR.04,
+	/// Cmd+B, P, N, E); Display has Page Layout (Fit All, Fit Width, Fit Height, Single Page, Two Pages, Two Pages (adaptive), Right to Left: MD.03,
+	/// MD.04, MD.06, MD.08 to MD.10, MD.12 with Cmd+2, 3, 5, 7, 8, 9, 0), Zoom (Zoom In, Zoom Out, 100% to 400%) and Full Screen (F11, alias
+	/// Ctrl+Cmd+F, a window key binding of <see cref="ReaderViewModel.HandleKey"/>); Window is the macOS window menu (C-MENU-2) with the performance
+	/// overlay. Texts are the original's through TR (<see cref="UiText"/>), shortcuts the ledger's. Edit, Browse and Help stay empty in the reader.
 	/// </summary>
 	public static class ReaderMenu
 	{
-		public static NativeMenu Build(ReaderViewModel vm, PerfOverlayController perf = null)
+		public static NativeMenu Build(ReaderViewModel vm, PerfOverlayController perf = null, ICommand minimize = null, ICommand zoom = null)
 		{
 			return new NativeMenu
 			{
-				Submenu("File", new NativeMenu
+				Submenu(Text("fileMenu", "&File"), new NativeMenu
 				{
-					Item("Close Reader", vm.CloseCommand, Key.W),
+					Item(Text("miCloseComic", "&Close"), vm.CloseCommand, Key.W),
 				}),
-				Submenu("View", new NativeMenu
+				Submenu(Text("editMenu", "&Edit"), new NativeMenu()),
+				Submenu(Text("browseMenu", "&Browse"), new NativeMenu()),
+				Submenu(Text("readMenu", "&Read"), new NativeMenu
 				{
-					FitItem(vm, "Best Fit", vm.FitBestCommand, Key.D2, ImageFitMode.Fit),
-					FitItem(vm, "Fit Width", vm.FitWidthCommand, Key.D3, ImageFitMode.FitWidth),
-					FitItem(vm, "Fit Height", vm.FitHeightCommand, Key.D5, ImageFitMode.FitHeight),
-					new NativeMenuItemSeparator(),
-					Item("Zoom In", vm.ZoomInCommand, Key.OemPlus),
-					Item("Zoom Out", vm.ZoomOutCommand, Key.OemMinus),
-					Item("Actual Fit", vm.ZoomResetCommand, Key.D0),
-					new NativeMenuItemSeparator(),
-					LayoutItem(vm, "One Page", vm.SingleLayoutCommand, Key.D1, PageLayoutMode.Single),
-					LayoutItem(vm, "Two Pages", vm.TwoPageLayoutCommand, Key.D2, PageLayoutMode.Double),
-					LayoutItem(vm, "Two Pages (Adaptive)", vm.AdaptiveTwoPageLayoutCommand, Key.D3, PageLayoutMode.DoubleAdaptive),
-					DirectionItem(vm),
+					Item(Text("miFirstPage", "&First Page"), vm.FirstPageCommand, Key.B),
+					Item(Text("miPrevPage", "&Previous Page"), vm.PreviousPageCommand, Key.P),
+					Item(Text("miNextPage", "&Next Page"), vm.NextPageCommand, Key.N),
+					Item(Text("miLastPage", "&Last Page"), vm.LastPageCommand, Key.E),
+				}),
+				Submenu(Text("displayMenu", "&Display"), new NativeMenu
+				{
+					Submenu(Text("miPageLayout", "&Page Layout"), new NativeMenu
+					{
+						FitItem(vm, Text("miFitAll", "Fit &All"), vm.FitAllCommand, Key.D2, ImageFitMode.Fit),
+						FitItem(vm, Text("miFitWidth", "Fit &Width"), vm.FitWidthCommand, Key.D3, ImageFitMode.FitWidth),
+						FitItem(vm, Text("miFitHeight", "Fit &Height"), vm.FitHeightCommand, Key.D5, ImageFitMode.FitHeight),
+						new NativeMenuItemSeparator(),
+						LayoutItem(vm, Text("miSinglePage", "Single Page"), vm.SingleLayoutCommand, Key.D7, PageLayoutMode.Single),
+						LayoutItem(vm, Text("miTwoPages", "Two Pages"), vm.TwoPageLayoutCommand, Key.D8, PageLayoutMode.Double),
+						LayoutItem(vm, Text("miTwoPagesAdaptive", "Two Pages (adaptive)"), vm.AdaptiveTwoPageLayoutCommand, Key.D9, PageLayoutMode.DoubleAdaptive),
+						DirectionItem(vm),
+					}),
+					Submenu(Text("miZoom", "Zoom"), new NativeMenu
+					{
+						Item(Text("miZoomIn", "Zoom &In"), vm.ZoomInCommand, Key.OemPlus),
+						Item(Text("miZoomOut", "Zoom &Out"), vm.ZoomOutCommand, Key.OemMinus),
+						new NativeMenuItemSeparator(),
+						Item(Text("miZoom100", "100%"), vm.Zoom100Command),
+						Item(Text("miZoom125", "125%"), vm.Zoom125Command),
+						Item(Text("miZoom150", "150%"), vm.Zoom150Command),
+						Item(Text("miZoom200", "200%"), vm.Zoom200Command),
+						Item(Text("miZoom400", "400%"), vm.Zoom400Command),
+					}),
 					new NativeMenuItemSeparator(),
 					FullScreenItem(vm),
+				}),
+				Submenu(UiText.Get("MacOnly", "WindowMenu", "Window"), new NativeMenu
+				{
+					Item(UiText.Get("MacOnly", "Minimize", "Minimize"), minimize, Key.M),
+					Item(UiText.Get("MacOnly", "Zoom", "Zoom"), zoom),
+					new NativeMenuItemSeparator(),
 					MainMenu.PerfItem(perf),
 				}),
-				Submenu("Go", new NativeMenu
-				{
-					Item("Next Page", vm.NextPageCommand),
-					Item("Previous Page", vm.PreviousPageCommand),
-					Item("First Page", vm.FirstPageCommand),
-					Item("Last Page", vm.LastPageCommand),
-				}),
+				Submenu(Text("helpMenu", "&Help"), new NativeMenu()),
 			};
 		}
 
-		// A radio-style item whose check mark follows the page layout (Option+Cmd+digit).
+		private static string Text(string key, string english) => UiText.Get("MainForm", key, english);
+
+		// A radio item whose mark follows the page layout (MD.08 to MD.10).
 		private static NativeMenuItem LayoutItem(ReaderViewModel vm, string header, IRelayCommand command, Key key, PageLayoutMode mode)
 		{
-			NativeMenuItem item = Item(header, command);
-			item.Gesture = new KeyGesture(key, KeyModifiers.Meta | KeyModifiers.Alt);
+			NativeMenuItem item = Item(header, command, key);
 			item.ToggleType = MenuItemToggleType.Radio;
 			item.IsChecked = vm.LayoutMode == mode;
 			vm.PropertyChanged += (sender, e) =>
@@ -68,10 +92,10 @@ namespace ComicRack.Mac
 			return item;
 		}
 
+		// Right to Left (MD.12, Cmd+0): a check mark that follows the reading direction.
 		private static NativeMenuItem DirectionItem(ReaderViewModel vm)
 		{
-			NativeMenuItem item = Item("Read Right to Left", vm.ToggleRightToLeftCommand);
-			item.Gesture = new KeyGesture(Key.R, KeyModifiers.Meta | KeyModifiers.Alt);
+			NativeMenuItem item = Item(Text("miRightToLeft", "Right to Left"), vm.ToggleRightToLeftCommand, Key.D0);
 			item.ToggleType = MenuItemToggleType.CheckBox;
 			item.IsChecked = vm.RightToLeft;
 			vm.PropertyChanged += (sender, e) =>
@@ -84,21 +108,24 @@ namespace ComicRack.Mac
 			return item;
 		}
 
+		// Full Screen (MD.25): F11, alias Ctrl+Cmd+F, checked while the window is full screen as the original's item is.
 		private static NativeMenuItem FullScreenItem(ReaderViewModel vm)
 		{
-			NativeMenuItem item = Item(vm.IsFullScreen ? "Exit Full Screen" : "Enter Full Screen", vm.ToggleFullScreenCommand);
-			item.Gesture = new KeyGesture(Key.F, KeyModifiers.Meta | KeyModifiers.Control);
+			NativeMenuItem item = Item(Text("miFullScreen", "&Full Screen"), vm.ToggleFullScreenCommand);
+			item.Gesture = new KeyGesture(Key.F11, KeyModifiers.None);
+			item.ToggleType = MenuItemToggleType.CheckBox;
+			item.IsChecked = vm.IsFullScreen;
 			vm.PropertyChanged += (sender, e) =>
 			{
 				if (e.PropertyName == nameof(ReaderViewModel.IsFullScreen))
 				{
-					item.Header = vm.IsFullScreen ? "Exit Full Screen" : "Enter Full Screen";
+					item.IsChecked = vm.IsFullScreen;
 				}
 			};
 			return item;
 		}
 
-		// A radio-style item whose check mark follows the fit mode.
+		// A radio item whose mark follows the fit mode (MD.03, MD.04, MD.06).
 		private static NativeMenuItem FitItem(ReaderViewModel vm, string header, IRelayCommand command, Key key, ImageFitMode mode)
 		{
 			NativeMenuItem item = Item(header, command, key);
@@ -114,9 +141,13 @@ namespace ComicRack.Mac
 			return item;
 		}
 
-		private static NativeMenuItem Item(string header, IRelayCommand command, Key key = Key.None)
+		private static NativeMenuItem Item(string header, ICommand command, Key key = Key.None)
 		{
-			var item = new NativeMenuItem(header) { Command = command };
+			var item = new NativeMenuItem(header);
+			if (command != null)
+			{
+				item.Command = command;
+			}
 			if (key != Key.None)
 			{
 				item.Gesture = new KeyGesture(key, KeyModifiers.Meta);

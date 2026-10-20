@@ -50,6 +50,9 @@ namespace ComicRack.Mac.Themes
 
 		/// <summary>The browser's item views (thumbnails now; tiles and details later): <c>CrThumbnailItem</c>, <c>CoverView</c>.</summary>
 		ItemView,
+
+		/// <summary>The panels over the reader's page (P5.R3): <c>CrTextOverlay</c> (page info, loading, message), <c>CrPartOverlay</c>, <c>CrNavigationOverlay</c>.</summary>
+		ReaderOverlay,
 	}
 
 	/// <summary>The look of one <see cref="ChromeElement"/>.</summary>
@@ -104,6 +107,7 @@ namespace ComicRack.Mac.Themes
 			[ChromeElement.ComboBox] = ChromeVariant.Original,
 			[ChromeElement.Menus] = ChromeVariant.Original,
 			[ChromeElement.ItemView] = ChromeVariant.Original,
+			[ChromeElement.ReaderOverlay] = ChromeVariant.Original,
 		};
 
 		/// <summary>

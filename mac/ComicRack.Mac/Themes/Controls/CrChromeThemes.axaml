@@ -79,6 +79,11 @@
       <ControlTheme x:Key="CoverView.Original" TargetType="c:CoverView" />
       <ControlTheme x:Key="CrBookToolTip.Original" TargetType="c:CrBookToolTip" />
 
+      <!-- Reader overlays: they draw the glass pictures and the text themselves (CrTextOverlay, CrPartOverlay, CrNavigationOverlay). -->
+      <ControlTheme x:Key="CrTextOverlay.Original" TargetType="c:CrTextOverlay" />
+      <ControlTheme x:Key="CrPartOverlay.Original" TargetType="c:CrPartOverlay" />
+      <ControlTheme x:Key="CrNavigationOverlay.Original" TargetType="c:CrNavigationOverlay" />
+
       <!-- Dialog window: the base window theme (the dialog draws its surface from the Cr.Control token itself). -->
       <ControlTheme x:Key="CrDialogWindow.Original" TargetType="c:CrDialogWindow" BasedOn="{StaticResource {x:Type Window}}" />
 

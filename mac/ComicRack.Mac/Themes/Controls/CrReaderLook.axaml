@@ -1,0 +1,21 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- The colours that the reader of the original writes as literals (ComicDisplayControl, PanelRenderer, NavigationOverlay, PageOrnaments), read by the
+       reader controls through ChromePaint.ResourceBrush. They do not change with the appearance in the original either: the glass panels are black
+       pictures with white text, the shadow and the outline of the pages are black. The colour of the paper behind the page is the token Cr.ReaderBackground. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <!-- PanelRenderer.panels[].ForeColor = Color.White: the text on the glass -->
+      <SolidColorBrush x:Key="Cr.Reader.OverlayTextBrush" Color="#FFFFFFFF" />
+      <!-- NavigationOverlay.adjustment = BitmapAdjustment(-1f): the icons on the gray glass buttons are black -->
+      <SolidColorBrush x:Key="Cr.Reader.GlassIconBrush" Color="#FF000000" />
+      <!-- ComicDisplayControl.DrawPageOrnaments: Color.Black outline of each page; the shadow is black at PageShadowOpacity 0.6 (255 * 0.6 = 153) -->
+      <SolidColorBrush x:Key="Cr.Reader.PageFrameBrush" Color="#FF000000" />
+      <SolidColorBrush x:Key="Cr.Reader.PageShadowBrush" Color="#99000000" />
+      <!-- The performance overlay (a Mac-only developer aid, MA.05): a translucent block with monospaced text -->
+      <SolidColorBrush x:Key="Cr.Perf.BackBrush" Color="#E0101010" />
+      <SolidColorBrush x:Key="Cr.Perf.TextBrush" Color="#FFE8F4E8" />
+      <FontFamily x:Key="Cr.Perf.FontFamily">Menlo, Monaco, Courier New, monospace</FontFamily>
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

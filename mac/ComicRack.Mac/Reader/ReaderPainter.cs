@@ -56,6 +56,22 @@ namespace ComicRack.Mac.Reader
 	public static class ReaderPainter
 	{
 		/// <summary>
+		/// The rectangle <see cref="DrawPage"/> draws for <paramref name="destination"/> on a display with <paramref name="renderScaling"/> device pixels
+		/// per unit, as a rectangle in units again: every edge rounded to a whole device pixel. The shadow and the outline of a page use it so that they
+		/// lie exactly against the picture.
+		/// </summary>
+		public static Rect SnapToDevice(Rect destination, double renderScaling)
+		{
+			if (!(renderScaling > 0))
+			{
+				return destination;
+			}
+			double left = Math.Round(destination.Left * renderScaling), top = Math.Round(destination.Top * renderScaling);
+			double right = Math.Round(destination.Right * renderScaling), bottom = Math.Round(destination.Bottom * renderScaling);
+			return new Rect(left / renderScaling, top / renderScaling, (right - left) / renderScaling, (bottom - top) / renderScaling);
+		}
+
+		/// <summary>
 		/// Draws <paramref name="image"/> into <paramref name="destination"/> (in the canvas's current coordinates). The rectangle is
 		/// mapped to device pixels and rounded, so that a page shown at scale 1 lands on whole pixels and is copied exactly, and the
 		/// edges of the others are sharp. The canvas is left as it was.
