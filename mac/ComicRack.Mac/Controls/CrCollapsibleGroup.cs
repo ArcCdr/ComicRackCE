@@ -15,7 +15,7 @@ namespace ComicRack.Mac.Controls
 	/// in a 24 x 24 square, the header text in bold, and the content below. A click on the toggle square or a double click on the header flips
 	/// <see cref="IsExpanded"/>; collapsed, the control is only the header high (the original does not animate it).
 	/// </summary>
-	public class CrCollapsibleGroup : Avalonia.Controls.Primitives.HeaderedContentControl
+	public class CrCollapsibleGroup : Avalonia.Controls.Primitives.HeaderedContentControl, IChromeElement
 	{
 		public static readonly StyledProperty<bool> IsExpandedProperty = AvaloniaProperty.Register<CrCollapsibleGroup, bool>(nameof(IsExpanded), true);
 
@@ -28,7 +28,10 @@ namespace ComicRack.Mac.Controls
 		{
 			FontSize = ChromeFonts.ControlSize;
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.GroupBox;
 
 		protected override Type StyleKeyOverride => typeof(CrCollapsibleGroup);
 

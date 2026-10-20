@@ -17,7 +17,7 @@ namespace ComicRack.Mac.Controls
 	/// doubles its width while it has the keyboard focus (<c>ComicBrowserControl.tsQuickSearch_Enter</c>). The scope menu on the search image belongs to
 	/// the task that implements the scopes (P5.15a).
 	/// </summary>
-	public class CrSearchBox : Border
+	public class CrSearchBox : Border, IChromeElement
 	{
 		public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<CrSearchBox, string>(nameof(Text), string.Empty, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
@@ -97,7 +97,10 @@ namespace ComicRack.Mac.Controls
 			ActualThemeVariantChanged += (sender, e) => ApplyTokens();
 			AttachedToVisualTree += (sender, e) => ApplyTokens();
 			ApplyCue();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Toolbar;
 
 		static CrSearchBox()
 		{

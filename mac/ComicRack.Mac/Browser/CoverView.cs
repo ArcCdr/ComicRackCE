@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using ComicRack.Mac.Controls;
 
 namespace ComicRack.Mac.Browser
 {
@@ -12,8 +13,9 @@ namespace ComicRack.Mac.Browser
 	/// </summary>
 	public sealed class CoverView : Control
 	{
-		private static readonly IBrush PlaceholderFill = new SolidColorBrush(Color.FromArgb(0x26, 0x80, 0x80, 0x80));
-		private static readonly IPen PlaceholderPen = new Pen(new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)), 1);
+		/// <summary>The theme resources of the quiet tile that shows until the picture arrives (<c>CrMvpLook.axaml</c>).</summary>
+		private const string PlaceholderFillKey = "Cr.Mvp.CoverPlaceholderFillBrush";
+		private const string PlaceholderLineKey = "Cr.Mvp.CoverPlaceholderLineBrush";
 		private CoverImage image;
 
 		/// <summary>True when a picture is set.</summary>
@@ -57,7 +59,8 @@ namespace ComicRack.Mac.Browser
 				Rect tile = Fit(w, h, 2, 3);
 				if (tile.Width > 0)
 				{
-					context.DrawRectangle(PlaceholderFill, PlaceholderPen, tile, 3, 3);
+					IBrush line = ChromePaint.ResourceBrush(this, PlaceholderLineKey);
+					context.DrawRectangle(ChromePaint.ResourceBrush(this, PlaceholderFillKey), line == null ? null : new Pen(line, 1), tile, 3, 3);
 				}
 				return;
 			}

@@ -10,6 +10,7 @@
 #               from the original Designer file). The README banner, downloaded once to mac/artifacts/chrome/reference/readme-hero.png
 #               (https://github.com/maforget/ComicRackCE/assets/11904426/4748925c-662f-4ccd-bfb7-62ec46ae881e), is only shown at the top of
 #               sheet.html: it is a brand banner, not a screenshot.
+#   CHROME_SHEET_ARGS adds app options to every launch (RV5: CHROME_SHEET_ARGS='--chrome StatusBar=Native' shoots a Native variant).
 #   Mac shots = the real window through mac/tools/ui-drive: `launch --dev --data-dir <temp> -- --theme light|dark --show <View>
 #               --fixture-library <folder>` (the folder is mac/fixtures/small, or CHROME_SHEET_FIXTURES, or 24 generated books).
 # Output (git-ignored): mac/artifacts/chrome/<label>/sheet.html and sheet.png, plus the single shots and cards.
@@ -95,7 +96,7 @@ if [ $rc -eq 4 ]; then LOCKED=1; echo "chrome-sheet: the screen is locked or the
 shoot() {
 	local view=$1 theme=$2 png=$3 data out rc title regex id
 	data=$(mktemp -d "${TMPDIR:-/tmp}/chrome-sheet-data.XXXXXX"); CLEANUP_DATA+=("$data")
-	out=$(UI_DRIVE_NO_BUILD=1 "$UI" launch --dev --data-dir "$data" -- --theme "$theme" --show "$view" --fixture-library "$FIXTURES" 2>&1); rc=$?
+	out=$(UI_DRIVE_NO_BUILD=1 "$UI" launch --dev --data-dir "$data" -- --theme "$theme" --show "$view" --fixture-library "$FIXTURES" ${CHROME_SHEET_ARGS:-} 2>&1); rc=$?
 	[ $rc -eq 0 ] || { echo "chrome-sheet: launch for $view ($theme) failed (exit $rc): $out" >&2; return $rc; }
 	if [ "$view" = MainWindow ]; then
 		regex='^ComicRack$'

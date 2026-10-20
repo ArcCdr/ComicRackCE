@@ -5,10 +5,9 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using ComicRack.Mac.Controls;
 using ComicRack.Mac.Platform;
 
-namespace ComicRack.Mac.Views
+namespace ComicRack.Mac.Controls
 {
 	/// <summary>
 	/// The alert as a window: the fallback of <see cref="MacAlert"/> where the system alert cannot run (tests, the headless platform). It is the

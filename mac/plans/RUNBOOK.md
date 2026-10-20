@@ -67,7 +67,7 @@ Read first, completely:
 1. mac/plans/full-port.md: section 2 (Conventions), section 3 (Facts), the task block "#### {TASK_ID}" in section 7, and the blocks of the tasks listed in its "Depends".
 2. MACOS_NATIVE_PATH.md section 0 and section 9.2.
 3. Every file the task block names. Older facts are in mac/plans/mvp-track.md section 3; search it when the task refers to an M-task.
-4. If the task block has a "Parity:" line or changes anything a user sees: full-port.md section 2.11 (parity and chrome policy), mac/plans/chrome-guidelines.md, and the rows of mac/plans/parity-ledger.md that name this task (grep -n "{TASK_ID}" mac/plans/parity-ledger.md) or that the Parity line lists. Behaviour, defaults, menus, labels (original TR keys), shortcuts and layout must match the WinForms original exactly; only the chrome-guidelines section 7 decisions are native.
+4. If the task block has a "Parity:" line or changes anything a user sees: full-port.md section 2.11 (parity and chrome policy), mac/plans/chrome-architecture.md (where chrome lives), mac/plans/chrome-guidelines.md, and the rows of mac/plans/parity-ledger.md that name this task (grep -n "{TASK_ID}" mac/plans/parity-ledger.md) or that the Parity line lists. Behaviour, defaults, menus, labels (original TR keys), shortcuts and layout must match the WinForms original exactly; only the chrome-guidelines section 7 decisions are native.
 
 Binding rules (full-port.md section 2 has the details):
 - Change nothing outside mac/ (MACOS_NATIVE_PATH.md and .github/workflows/mac-*.yml only if the task says so). Original code is changed only through pass B replacements with an entry in mac/replacements.json. If an edit of an original file looks unavoidable: do not make it; write the proposal to mac/upstream-proposals/{TASK_ID}.md and report RESULT: blocked.
@@ -76,6 +76,7 @@ Binding rules (full-port.md section 2 has the details):
 - Never touch ~/Library/Application Support|Caches|Logs/ComicRack*, /Users/vince/dev/ComicRackAPI or the owner's folders; use temporary --data-dir folders and copies.
 - Real-window checks only through mac/tools/ui-drive and mac/tools/e2e.sh (they refuse to type into other apps). Exit code 4 means the screen is locked: record the check as SKIPPED, do not fake it.
 - Tests must be deterministic; new SkiaSharp-using test projects set RuntimeIdentifier osx-arm64 and SelfContained false.
+- Chrome only in the chrome layer (R10): the look of anything lives in mac/ComicRack.Mac/Themes, Controls and Platform; views and view models use Cr* controls, cr-* style classes, tokens and icons by name only, never a colour, font, shape, inline style or template, or a picture path (ChromeArchitectureTests and NoLiteralColorsTests enforce it). A new chrome control implements IChromeElement and has its themes (mac/plans/chrome-architecture.md).
 - Every new custom-drawn control or draw operation adds a 1x/2x test with the HiDPI harness (mac/tests/ComicRack.Mac.Tests/HiDpi, Category=HiDpi; full-port.md section 2.5).
 - No model identifiers or session links in code, comments or docs.
 - If the acceptance still fails after two serious attempts: stop, write a split proposal into full-port.md section 9, report RESULT: failed.

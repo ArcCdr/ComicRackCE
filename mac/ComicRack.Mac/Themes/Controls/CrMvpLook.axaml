@@ -1,0 +1,91 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- The look of the MVP surfaces that the restyle tasks have not reached yet (the book cells and cover tiles of the grid: P5.R2; the reader window
+       and the performance overlay: P5.R3). The values were literals in the views; they are here unchanged so that the views carry none and the
+       restyle of each surface is a change of this file. A restyle task replaces the entries of its surface with Cr tokens and deletes them here. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <!-- grid cells and cover tiles (BookCell, CoverView) -->
+      <SolidColorBrush x:Key="Cr.Mvp.GridSelectionFillBrush" Color="#380A84FF" />
+      <SolidColorBrush x:Key="Cr.Mvp.GridSelectionLineBrush" Color="#FF0A84FF" />
+      <SolidColorBrush x:Key="Cr.Mvp.CoverPlaceholderFillBrush" Color="#26808080" />
+      <SolidColorBrush x:Key="Cr.Mvp.CoverPlaceholderLineBrush" Color="#40808080" />
+      <!-- reader window and its paper -->
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderPaperBrush" Color="#1E1E1E" />
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderStatusBackBrush" Color="#262626" />
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderStatusTitleBrush" Color="#B0B0B0" />
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderStatusDimBrush" Color="#909090" />
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderStatusPageBrush" Color="#E0E0E0" />
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderNoticeBackBrush" Color="#CC000000" />
+      <SolidColorBrush x:Key="Cr.Mvp.ReaderNoticeTextBrush" Color="#F0F0F0" />
+      <!-- performance overlay -->
+      <SolidColorBrush x:Key="Cr.Mvp.OverlayBackBrush" Color="#E0101010" />
+      <SolidColorBrush x:Key="Cr.Mvp.OverlayTextBrush" Color="#E8F4E8" />
+      <FontFamily x:Key="Cr.Mvp.OverlayFontFamily">Menlo, Monaco, Courier New, monospace</FontFamily>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <!-- Book cell: the cover, the title and the subtitle; the selection is a rounded frame with a light fill (BookCell sets the :selected pseudo-class). -->
+  <Style Selector=":is(Border).cr-book-cell">
+    <Setter Property="Padding" Value="6" />
+    <Setter Property="BorderThickness" Value="2" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector=":is(Border).cr-book-cell:selected">
+    <Setter Property="Background" Value="{DynamicResource Cr.Mvp.GridSelectionFillBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Cr.Mvp.GridSelectionLineBrush}" />
+  </Style>
+  <Style Selector="TextBlock.cr-book-title">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.cr-book-subtitle">
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="Opacity" Value="0.65" />
+  </Style>
+
+  <!-- Reader window (MVP): a dark window whatever the appearance, a status strip, a notice box over the page. -->
+  <Style Selector="Window.cr-reader">
+    <Setter Property="Background" Value="{DynamicResource Cr.Mvp.ReaderPaperBrush}" />
+    <Setter Property="RequestedThemeVariant" Value="Dark" />
+  </Style>
+  <Style Selector="Border.cr-reader-status">
+    <Setter Property="Padding" Value="12,4" />
+    <Setter Property="Background" Value="{DynamicResource Cr.Mvp.ReaderStatusBackBrush}" />
+  </Style>
+  <Style Selector="TextBlock.cr-reader-status-title">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.Mvp.ReaderStatusTitleBrush}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.cr-reader-status-dim">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.Mvp.ReaderStatusDimBrush}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.cr-reader-status-page">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.Mvp.ReaderStatusPageBrush}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="Border.cr-reader-notice">
+    <Setter Property="Padding" Value="16,8" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="{DynamicResource Cr.Mvp.ReaderNoticeBackBrush}" />
+  </Style>
+  <Style Selector="TextBlock.cr-reader-notice-text">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.Mvp.ReaderNoticeTextBrush}" />
+  </Style>
+
+  <!-- Performance overlay (MVP): a translucent block with monospaced text. -->
+  <Style Selector=":is(Border).cr-overlay">
+    <Setter Property="Padding" Value="10,6" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Background" Value="{DynamicResource Cr.Mvp.OverlayBackBrush}" />
+  </Style>
+  <Style Selector="TextBlock.cr-overlay-text">
+    <Setter Property="FontFamily" Value="{DynamicResource Cr.Mvp.OverlayFontFamily}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource Cr.Mvp.OverlayTextBrush}" />
+  </Style>
+</Styles>

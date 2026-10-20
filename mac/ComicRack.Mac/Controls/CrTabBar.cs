@@ -93,7 +93,7 @@ namespace ComicRack.Mac.Controls
 	/// geometry is computed by <see cref="ComputeLayout"/> as <c>TabBar.LayoutTabs</c> does (text width + 6 + image + close box, then shrunk to fit).
 	/// Raises <see cref="SelectedTabChanged"/> on a click and <see cref="TabCloseRequested"/> on a click on the close box (the owner removes the tab).
 	/// </summary>
-	public class CrTabBar : Control
+	public class CrTabBar : Control, IChromeElement
 	{
 		public static readonly StyledProperty<int> SelectedIndexProperty = AvaloniaProperty.Register<CrTabBar, int>(nameof(SelectedIndex), -1);
 
@@ -118,7 +118,10 @@ namespace ComicRack.Mac.Controls
 			TextElement.SetFontSize(this, ChromeFonts.ControlSize);
 			tabs.CollectionChanged += OnTabsChanged;
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.TabBar;
 
 		public IList<CrTabItem> Tabs => tabs;
 

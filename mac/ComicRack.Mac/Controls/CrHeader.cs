@@ -36,7 +36,7 @@ namespace ComicRack.Mac.Controls
 	/// (a split line and <c>SmallArrowDown</c>) and the text centred with 3 above and below. The state follows the pointer unless
 	/// <see cref="Active"/> marks the sorted column.
 	/// </summary>
-	public class CrHeader : Control
+	public class CrHeader : Control, IChromeElement
 	{
 		public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<CrHeader, string>(nameof(Text), string.Empty);
 
@@ -59,7 +59,10 @@ namespace ComicRack.Mac.Controls
 			Focusable = false;
 			TextElement.SetFontSize(this, ChromeFonts.ItemSize);
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.ListHeader;
 
 		public string Text
 		{

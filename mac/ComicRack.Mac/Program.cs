@@ -13,7 +13,7 @@ namespace ComicRack.Mac
 			if (options.Error != null)
 			{
 				Console.Error.WriteLine(options.Error);
-				Console.Error.WriteLine("Usage: ComicRack.Mac [--smoke-test[=SECONDS]] [--headless] [--data-dir DIR] [--read-book FILE] [--language CULTURE] [--theme light|dark] [--show VIEW] [--fixture-library DIR] [--list-views]");
+				Console.Error.WriteLine("Usage: ComicRack.Mac [--smoke-test[=SECONDS]] [--headless] [--data-dir DIR] [--read-book FILE] [--language CULTURE] [--theme light|dark] [--chrome Element=Native,...] [--show VIEW] [--fixture-library DIR] [--list-views]");
 				return 2;
 			}
 			if (options.ListViews)

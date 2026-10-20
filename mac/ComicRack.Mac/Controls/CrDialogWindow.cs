@@ -29,7 +29,7 @@ namespace ComicRack.Mac.Controls
 	/// with the texts of the original's translation (<see cref="TrSection"/>: <c>btOK</c>, <c>btCancel</c>, <c>btApply</c>). Return presses the default
 	/// button (OK), Esc the cancel button; the dialog cannot be resized unless the owner allows it. <see cref="ShowDialogAsync"/> returns true after OK.
 	/// </summary>
-	public class CrDialogWindow : Window
+	public class CrDialogWindow : Window, IChromeElement
 	{
 		private readonly ContentControl bodyHost = new ContentControl { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
 		private readonly StackPanel buttonRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = ChromeMetrics.DialogButtonGap, HorizontalAlignment = HorizontalAlignment.Right };
@@ -62,7 +62,10 @@ namespace ComicRack.Mac.Controls
 			Content = root;
 			this.Bind(BackgroundProperty, this.GetResourceObservable(ThemeTokens.BrushKey(ThemeTokens.Names.Control)));
 			RefreshButtons();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Dialogs;
 
 		private static Button CreateButton()
 		{

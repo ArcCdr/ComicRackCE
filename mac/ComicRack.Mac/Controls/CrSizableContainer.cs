@@ -29,7 +29,7 @@ namespace ComicRack.Mac.Controls
 	/// <see cref="KeepGripVisible"/>), and in between while the slide runs. The slide advances through <see cref="AdvanceAnimation"/>;
 	/// a timer calls it in the running app and tests call it with chosen times.
 	/// </summary>
-	public class CrSizableContainer : Decorator
+	public class CrSizableContainer : Decorator, IChromeElement
 	{
 		public static readonly StyledProperty<GripPosition> GripProperty = AvaloniaProperty.Register<CrSizableContainer, GripPosition>(nameof(Grip), GripPosition.Top);
 
@@ -70,7 +70,10 @@ namespace ComicRack.Mac.Controls
 		public CrSizableContainer()
 		{
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.SidePanel;
 
 		public GripPosition Grip
 		{

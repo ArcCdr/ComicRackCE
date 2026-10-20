@@ -6,25 +6,23 @@
         x:DataType="vm:ReaderViewModel"
         Title="{Binding Title}"
         Width="900" Height="1000" MinWidth="360" MinHeight="300"
-        Background="#1E1E1E"
-        RequestedThemeVariant="Dark"
+        Classes="cr-reader"
         WindowStartupLocation="CenterScreen">
   <DockPanel>
     <!-- Page number, layout, direction, zoom and fit mode. Hidden in full screen. -->
-    <Border Name="StatusStrip" DockPanel.Dock="Bottom" Padding="12,4" Background="#262626" IsVisible="{Binding ShowStatus}">
+    <Border Name="StatusStrip" Classes="cr-reader-status" DockPanel.Dock="Bottom" IsVisible="{Binding ShowStatus}">
       <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="16">
-        <TextBlock Name="TitleLabel" Grid.Column="0" Text="{Binding Title}" Foreground="#B0B0B0" FontSize="12" TextTrimming="CharacterEllipsis" />
-        <TextBlock Name="ModeLabel" Grid.Column="1" Text="{Binding ModeText}" Foreground="#909090" FontSize="12" />
-        <TextBlock Name="FitLabel" Grid.Column="2" Text="{Binding FitText}" Foreground="#909090" FontSize="12" />
-        <TextBlock Name="PageLabel" Grid.Column="3" Text="{Binding PageText}" Foreground="#E0E0E0" FontSize="12" FontWeight="SemiBold" />
+        <TextBlock Name="TitleLabel" Classes="cr-reader-status-title" Grid.Column="0" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Name="ModeLabel" Classes="cr-reader-status-dim" Grid.Column="1" Text="{Binding ModeText}" />
+        <TextBlock Name="FitLabel" Classes="cr-reader-status-dim" Grid.Column="2" Text="{Binding FitText}" />
+        <TextBlock Name="PageLabel" Classes="cr-reader-status-page" Grid.Column="3" Text="{Binding PageText}" />
       </Grid>
     </Border>
     <Grid Name="ContentArea">
       <views:ReaderView Name="PageView" />
       <!-- Opening, Loading page N, or why a page could not be shown. -->
-      <Border Name="NoticeBox" IsVisible="{Binding HasNotice}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="16,8" CornerRadius="8"
-              Background="#CC000000" MaxWidth="560">
-        <TextBlock Name="NoticeLabel" Text="{Binding Notice}" Foreground="#F0F0F0" TextWrapping="Wrap" TextAlignment="Center" />
+      <Border Name="NoticeBox" Classes="cr-reader-notice" IsVisible="{Binding HasNotice}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="560">
+        <TextBlock Name="NoticeLabel" Classes="cr-reader-notice-text" Text="{Binding Notice}" TextWrapping="Wrap" TextAlignment="Center" />
       </Border>
     </Grid>
   </DockPanel>

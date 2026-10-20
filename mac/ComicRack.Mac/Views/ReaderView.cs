@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Reader;
 using ComicRack.Mac.ViewModels;
 
@@ -21,8 +22,8 @@ namespace ComicRack.Mac.Views
 	/// </summary>
 	public sealed class ReaderView : Control
 	{
-		/// <summary>The colour around the page: a neutral dark grey, as readers use so that the page is what the eye sees.</summary>
-		public static readonly IBrush PaperBrush = new SolidColorBrush(Color.FromRgb(0x1E, 0x1E, 0x1E));
+		/// <summary>The theme resource of the colour around the page (<c>CrMvpLook.axaml</c>): a neutral dark grey, so that the page is what the eye sees.</summary>
+		private const string PaperKey = "Cr.Mvp.ReaderPaperBrush";
 
 		private ReaderViewModel model;
 		private bool dragging;
@@ -99,7 +100,7 @@ namespace ComicRack.Mac.Views
 		public override void Render(DrawingContext context)
 		{
 			var area = new Rect(Bounds.Size);
-			context.DrawRectangle(PaperBrush, null, area);
+			context.DrawRectangle(ChromePaint.ResourceBrush(this, PaperKey), null, area);
 			ReaderViewModel m = model;
 			ReaderScene scene = m?.Scene;
 			if (m == null || scene == null || scene.Pages.Count == 0 || area.Width <= 0 || area.Height <= 0)

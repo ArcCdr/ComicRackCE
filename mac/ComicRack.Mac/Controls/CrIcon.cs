@@ -15,7 +15,7 @@ namespace ComicRack.Mac.Controls
 	/// units (16 for most), swapped for the dark variant in the dark appearance. The picture is drawn centred and, on Retina, scaled by the
 	/// display with high-quality filtering, as the original does at 200 %. Use it in templates and XAML where code would call <see cref="Icons.Get"/>.
 	/// </summary>
-	public class CrIcon : Control
+	public class CrIcon : Control, IChromeElement
 	{
 		public static readonly StyledProperty<string> IconNameProperty = AvaloniaProperty.Register<CrIcon, string>(nameof(IconName));
 
@@ -29,7 +29,10 @@ namespace ComicRack.Mac.Controls
 		{
 			IsHitTestVisible = false;
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Icons;
 
 		public string IconName
 		{
@@ -57,7 +60,7 @@ namespace ComicRack.Mac.Controls
 	/// selection colour while the owning list or tree has the keyboard focus and in the unfocused grey otherwise. Place it behind the content of
 	/// the item's template; it reads the selection, the pointer and the focus from the item that the template belongs to.
 	/// </summary>
-	public class StyledSelectionVisual : Control
+	public class StyledSelectionVisual : Control, IChromeElement
 	{
 		public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<StyledSelectionVisual, bool>(nameof(IsSelected));
 
@@ -80,7 +83,10 @@ namespace ComicRack.Mac.Controls
 		{
 			IsHitTestVisible = false;
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Tree;
 
 		public bool IsSelected
 		{

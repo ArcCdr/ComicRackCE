@@ -18,7 +18,7 @@ namespace ComicRack.Mac.Controls
 	/// <c>Cr.ToolToolStripGradient*</c> tokens, a one pixel bottom border, flat 16 pixel icon buttons. Children are <see cref="CrToolButton"/>,
 	/// <see cref="CrSplitButton"/>, <see cref="CrToolSeparator"/> or any control (the quick search box). Not focusable, like a toolstrip.
 	/// </summary>
-	public class CrToolBar : Border
+	public class CrToolBar : Border, IChromeElement
 	{
 		private readonly StackPanel items = new StackPanel { Orientation = Orientation.Horizontal };
 		private readonly Border line = new Border { Height = 1, VerticalAlignment = VerticalAlignment.Bottom, IsHitTestVisible = false };
@@ -30,7 +30,10 @@ namespace ComicRack.Mac.Controls
 			Child = new Grid { Children = { items, line } };
 			ActualThemeVariantChanged += (sender, e) => ApplyTokens();
 			AttachedToVisualTree += (sender, e) => ApplyTokens();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Toolbar;
 
 		/// <summary>The buttons, separators and other controls, left to right.</summary>
 		[Avalonia.Metadata.Content]
@@ -63,8 +66,10 @@ namespace ComicRack.Mac.Controls
 	}
 
 	/// <summary>The vertical line between toolbar groups: 6 wide, a dark and a light line in the middle (<c>ToolSeparatorDark</c>, <c>ToolSeparatorLight</c>).</summary>
-	public class CrToolSeparator : Control
+	public class CrToolSeparator : Control, IChromeElement
 	{
+		public ChromeElement Element => ChromeElement.Toolbar;
+
 		public CrToolSeparator()
 		{
 			Width = ChromeMetrics.ToolSeparatorWidth;
@@ -72,6 +77,7 @@ namespace ComicRack.Mac.Controls
 			Margin = new Thickness(0, 1, 0, 2);
 			IsHitTestVisible = false;
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
 
 		public override void Render(DrawingContext context)
@@ -88,7 +94,7 @@ namespace ComicRack.Mac.Controls
 	/// the pressed gradient and border; checked the <c>ToolButtonCheckedHighlight</c> fill with its border. The text of "100 %" and "0°" is shown
 	/// to the right of the image.
 	/// </summary>
-	public class CrToolButton : Button
+	public class CrToolButton : Button, IChromeElement
 	{
 		public static readonly StyledProperty<string> IconNameProperty = AvaloniaProperty.Register<CrToolButton, string>(nameof(IconName));
 
@@ -111,7 +117,10 @@ namespace ComicRack.Mac.Controls
 			Focusable = false;
 			FontSize = ChromeFonts.ControlSize;
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Toolbar;
 
 		protected override Type StyleKeyOverride => typeof(CrToolButton);
 

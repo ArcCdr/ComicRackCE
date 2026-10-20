@@ -7,8 +7,8 @@
         Width="640" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterOwner">
   <StackPanel Margin="20" Spacing="10">
-    <TextBlock Text="Copy a library from a Windows ComicRack" FontSize="16" FontWeight="SemiBold" />
-    <TextBlock TextWrapping="Wrap" Opacity="0.7"
+    <TextBlock Text="Copy a library from a Windows ComicRack" Classes="cr-heading" />
+    <TextBlock TextWrapping="Wrap" Classes="cr-secondary"
                Text="The database is copied into this app's own data folder and the copy is opened. The original file is never changed. A library that is open now is kept as a backup file next to it." />
 
     <TextBlock Text="Database file (ComicDb.xml)" Margin="0,8,0,0" />
@@ -20,9 +20,9 @@
     <TextBlock Text="Path mappings (one per line: Windows prefix = folder on this Mac)" Margin="0,8,0,0" />
     <TextBox Name="MappingsBox" Text="{Binding MappingsText}" AcceptsReturn="True" Height="96" TextWrapping="NoWrap"
              PlaceholderText="S:\media\BD\=/Users/you/Comics/BD/" />
-    <TextBlock Text="The first part of every book path that matches is replaced. Without a mapping the books keep their Windows paths and cannot be opened." TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
+    <TextBlock Text="The first part of every book path that matches is replaced. Without a mapping the books keep their Windows paths and cannot be opened." TextWrapping="Wrap" Classes="cr-secondary cr-small" />
 
-    <TextBlock Name="ErrorLabel" Text="{Binding ErrorText}" Foreground="{DynamicResource Cr.SmartQueryNegationBrush}" TextWrapping="Wrap" />
+    <TextBlock Name="ErrorLabel" Text="{Binding ErrorText}" Classes="cr-error" TextWrapping="Wrap" />
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0">
       <Button Name="CancelButton" Content="Cancel" />

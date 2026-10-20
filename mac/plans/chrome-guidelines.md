@@ -3,7 +3,7 @@
 > **Binding by R9 (b) / D9** (`mac/plans/full-port.md` §1.1 and §2.11, `MACOS_NATIVE_PATH.md` §0). The Mac app keeps ComicRack's own chrome (colours, toolbars, icons, browser and reader look, dialog layouts, status bar, font proportions) and uses macOS natively only where the table in §7 says so. When in doubt, the original look wins; every native-over-original choice is a row in §7.
 > **Facts below were extracted from the original source on 2026-10-20** (planning session). Paths are relative to the repository root; line numbers refer to the base commit `7fd9fd3`. Values marked *assumed* could not be read from this repository (they come from Windows itself) and are confirmed or corrected by P5.T1.
 
-Contents: 1 sources and references · 2 colour tokens · 3 fonts · 4 metrics · 5 icons and images · 6 shortcut rule · 7 chrome decisions (control by control) · 8 view specs · 9 visual parity check procedure.
+Contents: 1 sources and references · 2 colour tokens · 3 fonts · 4 metrics · 5 icons and images · 6 shortcut rule · 7 chrome decisions (control by control) · 8 view specs · 9 visual parity check procedure · 10 how to switch an element to native.
 
 ---
 
@@ -259,6 +259,7 @@ Default = what tasks implement. **O** = original look, **N** = native macOS. "Fl
 | C-SPLASH-1 | Splash and About | `Splash` form (619 × 317 image, fade, version text) | standard About panel | **O** (splash at startup when `ShowSplash`; About shows the same panel) | original feature (PB.01) | low |
 | C-DLG-3 | Alert where the system alert cannot run (tests, headless platform) | `QuestionDialog` | NSAlert | **O** (the window `AlertWindow` on the `CrDialogWindow` frame: bold message, description at most 350 wide, check box, 80 x 24 buttons, first button default, Esc = cancel button); only a fallback, the app uses NSAlert | keeps tests and the headless smoke run independent of AppKit's modal loop | — |
 | C-CTRL-2 | Text size of standard controls | 8.25 pt dialog font | system font | **O sizes**: every control reads 11 px (`ControlContentThemeFontSize`), item views and trees 12, menus 13 (C-MENU-3); the MVP windows follow until P5.R1 to P5.R3 restyle them | one rule for every control, the proportions of the original | low (one resource) |
+| C-ARCH-1 | Where chrome lives, and flipping one element | the original's look everywhere | per-element native look | **O everywhere; per-element Native through `ChromeVariants`** (`mac/plans/chrome-architecture.md`): the chrome is one layer (`Themes/`, `Controls/`, `Platform/`), views use Cr controls and `cr-*` classes only (rule R10, tests in `ChromeArchitectureTests`); `--chrome Element=Native` or the table in `Themes/ChromeVariants.cs` flips one element; Native exists for the status bar (proof) | owner requirement 2026-10-20: elements must be movable to native later without touching views | low per element (a theme per control, section 10) |
 
 New decisions are added here by the task that meets them (same columns) and listed in its report; the owner sees them on the next contact sheet.
 
@@ -275,3 +276,18 @@ New decisions are added here by the task that meets them (same columns) and list
 3. **Contact sheet:** `mac/tools/chrome-sheet.sh <label> <ViewName>...` (P5.T3) writes `mac/artifacts/chrome/<label>/sheet.html` and `sheet.png`: one row per view with the reference (owner or CI screenshot if present, else a reference card rendered from the view spec: layout outline with sizes, token swatches, the icons used), the Mac light shot and the Mac dark shot, plus the §7 decisions that apply. `crcli image sheet` composes the PNG (no browser needed).
 4. **Report:** the task lists the sheet path in its report and in `full-port.md` §3; differences it cannot fix become ledger notes or §9 items; new native-over-original choices become §7 rows.
 5. **Owner checkpoints:** at C2 (after the restyle tasks and wave B) and C6 (after P7.A4) the orchestrator runs `mac/tools/chrome-sheet.sh C2 --all` (C6), copies `sheet.png` and `sheet.html` to `mac/artifacts/chrome/C2/`, and the checkpoint block asks the owner to open one file and answer per row "ok" or what to change, and to confirm or flip the §7 defaults marked with a flip cost. Answers become `R<n>` tasks.
+
+## 10. How to switch an element to native (RV5; architecture in `mac/plans/chrome-architecture.md`)
+
+The look of every part of the chrome is a variant, `Original` (default) or `Native`, per element (`ChromeElement` in `Themes/ChromeVariants.cs`). Moving one element to a native macOS look never touches a view or a view model.
+
+**Try it without code**: `ComicRack.Mac --chrome StatusBar=Native` (or `COMICRACK_MAC_CHROME=StatusBar=Native`; `--chrome native` switches every element that has a Native variant; `--chrome original` is the default). Shot for a sheet: `mac/tools/ui-drive/ui-drive.sh launch --dev --data-dir <tmp> -- --theme light --chrome StatusBar=Native`.
+
+**Make it the shipped look**: change the element's line in `ChromeVariants.Defaults` to `ChromeVariant.Native`, update its row in section 7 (default **N**, rationale) and the ledger rows that name it (`deviation`, `native: <C-id>`), and refresh the contact sheet.
+
+**Give an element a Native variant** (the status bar is the worked example: `CrChromeThemes.axaml`, `Controls/CrStatusBar.cs`, `ChromeVariantTests`):
+1. List the controls of the element (`chrome-architecture.md` section 5). Each needs a theme `<ControlTypeName>.Native` in `Themes/Controls/CrChromeThemes.axaml`, `BasedOn="{StaticResource <ControlTypeName>.Original}"`, that sets what differs: the stock theme's own brushes (`SystemControl*`, `ControlFill*`), sizes, templates, or a template that replaces the self-drawn look. Colours still come from resources, never literals.
+2. A control that sets values by hand (`ApplyTokens`, brushes in `Render`) implements `IChromeElement.OnChromeVariantChanged(variant)` and, for Native, clears those values (`ClearValue`) or skips its own drawing so that the theme's setters win. Self-drawn controls that cannot be themed (their `Render` draws the original) draw the stock look for Native in that method or in a branch on a property that the theme sets.
+3. Add the element to `ChromeVariants.NativeAvailable`.
+4. Extend `ChromeVariantTests` with the flip of that element (same tree, same controls, other elements untouched, pixels differ, flip back restores the frame); `ChromeArchitectureTests` already fails until every control of the element has its `.Native` theme.
+5. Elements made of stock controls (`Buttons`, `ComboBox`, `Menus`) need their global overrides (`CrControls.axaml`, `CrControlThemes.axaml`, `CrControlResources.*`) split into per-variant style sets first (`full-port.md` section 9, RV5).

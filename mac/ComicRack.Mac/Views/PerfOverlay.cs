@@ -32,16 +32,8 @@ namespace ComicRack.Mac.Views
 			HorizontalAlignment = HorizontalAlignment.Right;
 			VerticalAlignment = VerticalAlignment.Top;
 			Margin = new Thickness(10);
-			Padding = new Thickness(10, 6);
-			CornerRadius = new CornerRadius(6);
-			Background = new SolidColorBrush(Color.FromArgb(0xE0, 0x10, 0x10, 0x10));
-			text = new TextBlock
-			{
-				Name = "PerfText",
-				FontFamily = new FontFamily("Menlo, Monaco, Courier New, monospace"),
-				FontSize = 12,
-				Foreground = new SolidColorBrush(Color.FromRgb(0xE8, 0xF4, 0xE8)),
-			};
+			Classes.Add("cr-overlay");
+			text = new TextBlock { Name = "PerfText", Classes = { "cr-overlay-text" } };
 			Child = text;
 			IsVisible = false;
 		}

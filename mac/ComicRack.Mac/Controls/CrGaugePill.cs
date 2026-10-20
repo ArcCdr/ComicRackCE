@@ -21,7 +21,7 @@ namespace ComicRack.Mac.Controls
 	/// <c>GaugeUnread</c> orange, <c>GaugeNew</c> red), text at 0.75 times the item font, the width of the text plus 4. Rounded on the sides that
 	/// have no neighbour (<see cref="RoundLeft"/>, <see cref="RoundRight"/>).
 	/// </summary>
-	public class CrGaugePill : Border
+	public class CrGaugePill : Border, IChromeElement
 	{
 		public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<CrGaugePill, string>(nameof(Text));
 
@@ -43,7 +43,10 @@ namespace ComicRack.Mac.Controls
 			IsHitTestVisible = false;
 			ActualThemeVariantChanged += (sender, e) => ApplyTokens();
 			AttachedToVisualTree += (sender, e) => ApplyTokens();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.Tree;
 
 		static CrGaugePill()
 		{

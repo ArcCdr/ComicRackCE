@@ -10,18 +10,16 @@ namespace ComicRack.Mac.Tests.Theme
 	/// <summary>
 	/// P5.T4, parity policy 2.11 rule 5: colours only come from the <c>Cr.*</c> tokens. No view, custom control or XAML file outside <c>Themes/</c> may
 	/// contain a colour literal (<c>#RRGGBB</c>, <c>Colors.X</c>, <c>Brushes.X</c>, <c>Color.FromRgb</c>, <c>new SolidColorBrush(...)</c>); <c>Transparent</c> is
-	/// not a colour. The MVP files below are known exceptions until P5.R1 to P5.R3 restyle them; the test also fails when a listed file no longer has
-	/// a literal, so the list shrinks as the restyle tasks land.
+	/// not a colour. The test also fails when a file listed as an exception no longer has a literal, so a list can only shrink.
 	/// </summary>
 	public class NoLiteralColorsTests
 	{
-		/// <summary>The MVP files with literal colours, removed by the task named next to them.</summary>
+		/// <summary>
+		/// The MVP files with literal colours, removed by the task named next to them. Empty since RV5: the literals of the grid cells, the reader window and
+		/// the overlay moved into <c>Themes/Controls/CrMvpLook.axaml</c> (where P5.R2 and P5.R3 replace them with tokens).
+		/// </summary>
 		private static readonly Dictionary<string, string> KnownExceptions = new Dictionary<string, string>(StringComparer.Ordinal)
 		{
-			["Views/BookCell.cs"] = "P5.R2 (thumbnail items)",
-			["Views/PerfOverlay.cs"] = "P5.R3 (the performance overlay moves with the reader chrome)",
-			["Views/ReaderView.cs"] = "P5.R3 (reader chrome)",
-			["Views/ReaderWindow.axaml"] = "P5.R3 (reader chrome)",
 		};
 
 		/// <summary>The one file that turns token colours into brushes (its brushes are built from <c>ThemeTokens</c>, never from a literal).</summary>

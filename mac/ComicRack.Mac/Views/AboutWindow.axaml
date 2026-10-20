@@ -5,9 +5,9 @@
         Width="360" Height="200" CanResize="False"
         WindowStartupLocation="CenterOwner">
   <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6">
-    <TextBlock Text="ComicRack CE (MVP)" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
-    <TextBlock x:Name="VersionText" Opacity="0.7" HorizontalAlignment="Center" />
-    <TextBlock Text="macOS preview of ComicRack Community Edition" Opacity="0.7" HorizontalAlignment="Center" />
+    <TextBlock Text="ComicRack CE (MVP)" Classes="cr-title" HorizontalAlignment="Center" />
+    <TextBlock x:Name="VersionText" Classes="cr-secondary" HorizontalAlignment="Center" />
+    <TextBlock Text="macOS preview of ComicRack Community Edition" Classes="cr-secondary" HorizontalAlignment="Center" />
     <Button Content="OK" HorizontalAlignment="Center" Margin="0,12,0,0" Click="OnOk" />
   </StackPanel>
 </Window>

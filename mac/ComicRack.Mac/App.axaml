@@ -31,6 +31,9 @@
   </Application.Resources>
   <Application.Styles>
     <FluentTheme />
+    <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrChromeThemes.axaml" />
     <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrControls.axaml" />
+    <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrParts.axaml" />
+    <StyleInclude Source="avares://ComicRack.Mac/Themes/Controls/CrMvpLook.axaml" />
   </Application.Styles>
 </Application>

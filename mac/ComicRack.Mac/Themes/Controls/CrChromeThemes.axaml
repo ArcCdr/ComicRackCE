@@ -1,0 +1,82 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls">
+  <!-- The control themes of the chrome controls, one per control type and variant, keyed "<ControlTypeName>.<Variant>" (chrome-architecture.md
+       section 4). ChromeVariants.Bind gives every chrome control the theme of its element's variant (Themes/ChromeVariants.cs), so flipping an
+       element is a change of Theme and nothing else. Original is the WinForms look and exists for every control; a control that draws itself in
+       Render has an empty Original theme (its look is in C# from the Cr tokens). Native exists for the elements listed in
+       ChromeVariants.NativeAvailable and leans on the stock theme's own brushes (SystemControl*). Added after the base theme, so the
+       BasedOn lookups of the stock themes work. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+
+      <!-- Toolbar -->
+      <ControlTheme x:Key="CrToolBar.Original" TargetType="c:CrToolBar" />
+      <ControlTheme x:Key="CrToolSeparator.Original" TargetType="c:CrToolSeparator" />
+      <ControlTheme x:Key="CrSearchBox.Original" TargetType="c:CrSearchBox" />
+
+      <!-- Toolbar buttons draw themselves (CrToolButton.Render); the template only has to exist so that the base button theme does not apply. -->
+      <ControlTheme x:Key="CrToolButton.Original" TargetType="c:CrToolButton">
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Panel />
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
+      <ControlTheme x:Key="CrSplitButton.Original" TargetType="c:CrSplitButton" BasedOn="{StaticResource CrToolButton.Original}" />
+
+      <!-- Tab bar -->
+      <ControlTheme x:Key="CrTabBar.Original" TargetType="c:CrTabBar" />
+
+      <!-- Status bar: Native is a flat bar in the stock theme's chrome colours with a one unit top line, and flat segments. -->
+      <ControlTheme x:Key="CrStatusBar.Original" TargetType="c:CrStatusBar" />
+      <ControlTheme x:Key="CrStatusSlot.Original" TargetType="c:CrStatusSlot" />
+      <ControlTheme x:Key="CrStatusBar.Native" TargetType="c:CrStatusBar" BasedOn="{StaticResource CrStatusBar.Original}">
+        <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+      </ControlTheme>
+      <ControlTheme x:Key="CrStatusSlot.Native" TargetType="c:CrStatusSlot" BasedOn="{StaticResource CrStatusSlot.Original}">
+        <Setter Property="Sunken" Value="False" />
+      </ControlTheme>
+
+      <!-- Tree: the rows draw their own selection (StyledSelectionVisual) and counters (CrGaugePill); the tree item theme is CrControlThemes.axaml. -->
+      <ControlTheme x:Key="CrTreeView.Original" TargetType="c:CrTreeView" BasedOn="{StaticResource {x:Type TreeView}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+      </ControlTheme>
+      <ControlTheme x:Key="StyledSelectionVisual.Original" TargetType="c:StyledSelectionVisual" />
+      <ControlTheme x:Key="CrGaugePill.Original" TargetType="c:CrGaugePill" />
+
+      <!-- Column header -->
+      <ControlTheme x:Key="CrHeader.Original" TargetType="c:CrHeader" />
+
+      <!-- Group box: the header is drawn by the control (24 high); the content sits below it and is hidden while collapsed. -->
+      <ControlTheme x:Key="CrCollapsibleGroup.Original" TargetType="c:CrCollapsibleGroup">
+        <Setter Property="Foreground" Value="{DynamicResource Cr.ControlTextBrush}" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Margin="0,24,0,0"
+                              Padding="{TemplateBinding Padding}"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              IsVisible="{TemplateBinding IsExpanded}" />
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
+
+      <!-- Side panel with a grip -->
+      <ControlTheme x:Key="CrSizableContainer.Original" TargetType="c:CrSizableContainer" />
+
+      <!-- Pictures of the original -->
+      <ControlTheme x:Key="CrIcon.Original" TargetType="c:CrIcon" />
+
+      <!-- Dialog window: the base window theme (the dialog draws its surface from the Cr.Control token itself). -->
+      <ControlTheme x:Key="CrDialogWindow.Original" TargetType="c:CrDialogWindow" BasedOn="{StaticResource {x:Type Window}}" />
+
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

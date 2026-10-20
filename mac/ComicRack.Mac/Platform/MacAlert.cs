@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
-using ComicRack.Mac.Views;
+using ComicRack.Mac.Controls;
 
 namespace ComicRack.Mac.Platform
 {

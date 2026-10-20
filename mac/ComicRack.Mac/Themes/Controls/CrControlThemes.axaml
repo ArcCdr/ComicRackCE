@@ -2,34 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:c="clr-namespace:ComicRack.Mac.Controls"
                     xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
-  <!-- Control themes of the custom controls and of the tree item (C-TREE-1). Colours only through Cr resources. -->
-
-  <!-- Toolbar buttons draw themselves (CrToolButton.Render); the template only has to exist so that the base button theme does not apply. -->
-  <ControlTheme x:Key="{x:Type c:CrToolButton}" TargetType="c:CrToolButton">
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Panel />
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>
-
-  <ControlTheme x:Key="{x:Type c:CrSplitButton}" TargetType="c:CrSplitButton" BasedOn="{StaticResource {x:Type c:CrToolButton}}" />
-
-  <!-- Group box: the header is drawn by the control (24 high); the content sits below it and is hidden while collapsed. -->
-  <ControlTheme x:Key="{x:Type c:CrCollapsibleGroup}" TargetType="c:CrCollapsibleGroup">
-    <Setter Property="Foreground" Value="{DynamicResource Cr.ControlTextBrush}" />
-    <Setter Property="MinHeight" Value="24" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <ContentPresenter Name="PART_ContentPresenter"
-                          Margin="0,24,0,0"
-                          Padding="{TemplateBinding Padding}"
-                          Content="{TemplateBinding Content}"
-                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                          IsVisible="{TemplateBinding IsExpanded}" />
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>
+  <!-- Control themes of the stock controls that the original restyles: the tree item (C-TREE-1), check box and radio button (C-CTRL-1). The themes of the
+       custom controls are in CrChromeThemes.axaml, one per variant. Colours only through Cr resources. -->
 
   <!-- The chevron of a tree item: the original's SimpleArrowRight and SimpleArrowDown images. -->
   <ControlTheme x:Key="CrTreeChevron" TargetType="ToggleButton">

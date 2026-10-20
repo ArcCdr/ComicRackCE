@@ -24,11 +24,10 @@ namespace ComicRack.Mac.Views
 	/// </summary>
 	public sealed class BookCell : Border
 	{
-		private static readonly IBrush SelectedFill = new SolidColorBrush(Color.FromArgb(0x38, 0x0A, 0x84, 0xFF));
-		private static readonly IBrush SelectedLine = new SolidColorBrush(Color.FromArgb(0xFF, 0x0A, 0x84, 0xFF));
 		private readonly CoverView cover = new CoverView();
-		private readonly TextBlock title = new TextBlock { FontSize = 12, FontWeight = FontWeight.SemiBold, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, TextWrapping = TextWrapping.NoWrap };
-		private readonly TextBlock subtitle = new TextBlock { FontSize = 11, Opacity = 0.65, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, TextWrapping = TextWrapping.NoWrap };
+		private readonly TextBlock title = new TextBlock { Classes = { "cr-book-title" }, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, TextWrapping = TextWrapping.NoWrap };
+		private readonly TextBlock subtitle = new TextBlock { Classes = { "cr-book-subtitle" }, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, TextWrapping = TextWrapping.NoWrap };
+		private bool selected;
 		private BookGridView owner;
 		private CancellationTokenSource request;
 		private int generation;
@@ -36,11 +35,7 @@ namespace ComicRack.Mac.Views
 
 		public BookCell()
 		{
-			Padding = new Thickness(6);
-			BorderThickness = new Thickness(2);
-			CornerRadius = new CornerRadius(8);
-			BorderBrush = Brushes.Transparent;
-			Background = Brushes.Transparent;
+			Classes.Add("cr-book-cell");
 			var text = new StackPanel { Spacing = 1, Margin = new Thickness(0, 4, 0, 0), Children = { title, subtitle } };
 			var grid = new Grid { RowDefinitions = new RowDefinitions("*,Auto") };
 			grid.Children.Add(cover);
@@ -94,12 +89,13 @@ namespace ComicRack.Mac.Views
 		}
 
 		/// <summary>True if the cell is drawn as selected.</summary>
-		public bool IsSelectedForTest => ReferenceEquals(BorderBrush, SelectedLine);
+		public bool IsSelectedForTest => selected;
 
-		public void SetSelected(bool selected)
+		/// <summary>Sets the <c>:selected</c> state; what a selected cell looks like is the theme's (<c>CrMvpLook.axaml</c>, <c>Border.cr-book-cell:selected</c>).</summary>
+		public void SetSelected(bool value)
 		{
-			Background = selected ? SelectedFill : Brushes.Transparent;
-			BorderBrush = selected ? SelectedLine : Brushes.Transparent;
+			selected = value;
+			PseudoClasses.Set(":selected", value);
 		}
 
 		/// <summary>The size or the service changed: ask again if the step differs (or <paramref name="force"/>).</summary>

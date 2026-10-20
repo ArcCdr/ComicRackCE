@@ -1,0 +1,210 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Styling;
+using ComicRack.Mac.Browser;
+using ComicRack.Mac.Diagnostics;
+using ComicRack.Mac.Tests.Diagnostics;
+using ComicRack.Mac.Services;
+using ComicRack.Mac.Tests.Browser;
+using ComicRack.Mac.Tests.HiDpi;
+using ComicRack.Mac.Tests.Reader;
+using ComicRack.Mac.ViewModels;
+using ComicRack.Mac.Views;
+using SkiaSharp;
+using Xunit;
+
+namespace ComicRack.Mac.Tests.Theme
+{
+	/// <summary>
+	/// RV5: the default look must not change while the chrome moves into its own layer. This test renders a fixed set of views (library window,
+	/// grid with a selected cell, chrome gallery, About, Import, a reader page and the reader notice) in light and dark on the headless platform.
+	/// <c>CRMAC_CHROME_SNAPSHOT_DIR</c> saves the frames as PNG; <c>CRMAC_CHROME_BASELINE_DIR</c> compares every frame with the PNG of the same
+	/// name in that folder (frames taken before a change) and fails above the tolerance. Without either variable the test only checks that every
+	/// frame has content.
+	/// </summary>
+	public class ChromeSnapshotTests
+	{
+		public const string SnapshotVariable = "CRMAC_CHROME_SNAPSHOT_DIR";
+		public const string BaselineVariable = "CRMAC_CHROME_BASELINE_DIR";
+
+		/// <summary>The fraction of pixels that may differ by more than the threshold, and the largest mean difference.</summary>
+		private const double MaxBad = 0.0005;
+		private const double MaxMean = 0.05;
+
+		private static void Settle(Window window) => Dpi.Settle(window);
+
+		private static Raster Frame(Window window)
+		{
+			Settle(window);
+			return Raster.From(window.CaptureRenderedFrame());
+		}
+
+		/// <summary>Renders every view in the appearance; the key is the file name without the extension.</summary>
+		private static async Task<Dictionary<string, Raster>> Render(string variantName)
+		{
+			var frames = new Dictionary<string, Raster>();
+			string suffix = variantName.ToLowerInvariant();
+			await Ui.Run(async () =>
+			{
+				Application app = Application.Current;
+				ThemeVariant before = app.RequestedThemeVariant;
+				app.RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+				try
+				{
+					// the library window as it starts
+					var service = new HostService(AppOptions.Parse(new[] { "--data-dir", Path.Combine(Path.GetTempPath(), "crmac-never-started") }));
+					var vm = new MainViewModel(new NullShell(), service, new FakeDialogs());
+					var main = new MainWindow { DataContext = vm };
+					main.Show();
+					frames["main-" + suffix] = Frame(main);
+					main.Close();
+
+					// the grid with 24 synthetic books, the third one selected
+					using (var h = new GridHarness())
+					{
+						await h.Show(new BookCatalog(SyntheticItems.Make(24)));
+						h.Model.SelectedIndex = 2;
+						h.Layout();
+						frames["grid-" + suffix] = Frame(h.Window);
+					}
+
+					var gallery = (ChromeGalleryWindow)ViewRegistry.Show("ChromeGallery", null);
+					gallery.Height = 1200;
+					frames["gallery-" + suffix] = Frame(gallery);
+					gallery.Close();
+
+					var about = new AboutWindow();
+					about.Show();
+					frames["about-" + suffix] = Frame(about);
+					about.Close();
+
+					var import = new ImportWindow();
+					import.Show();
+					import.ViewModel.ErrorText = "Choose the ComicDb.xml file of the Windows installation.";
+					frames["import-" + suffix] = Frame(import);
+					import.Close();
+
+					var session = new FakeSession(new FakePageDecoder { PageCount = 5, Size = p => (200, 300) }) { ResumePage = 2 };
+					using (ReaderHarness h = await ReaderHarness.Open(session, 700, 500))
+					{
+						frames["reader-" + suffix] = Frame(h.Window);
+					}
+					using (var h = new ReaderHarness(new ReaderViewModel(new FakeSession(new FakePageDecoder { PageCount = 5 }, openImmediately: false), ReaderHarness.DefaultOptions()), 500, 300))
+					{
+						h.Vm.Notice = "Opening...";
+						h.Tick();
+						frames["reader-notice-" + suffix] = Frame(h.Window);
+					}
+				}
+				finally
+				{
+					app.RequestedThemeVariant = before;
+				}
+			});
+			return frames;
+		}
+
+		/// <summary>The values that were literals in the views and are theme entries now (<c>CrMvpLook.axaml</c>), read back from live controls.</summary>
+		[Fact]
+		public async Task The_surfaces_that_moved_into_the_theme_keep_the_values_they_had_in_their_views()
+		{
+			await Ui.Run(() =>
+			{
+				Avalonia.Media.Color Of(object brush) => ((Avalonia.Media.ISolidColorBrush)brush).Color;
+				var controller = new PerfOverlayController(new PerfSources(), new FakeTicker(), StopwatchClock.Now, m => { });
+				var overlay = new PerfOverlay(controller, StopwatchClock.Now);
+				var cell = new BookCell();
+				var cover = new CoverView();
+				var panel = new StackPanel { Children = { overlay, cell, cover } };
+				var window = new Window { Width = 300, Height = 300, Content = panel };
+				window.Show();
+				Settle(window);
+
+				// performance overlay: translucent block, 10 x 6 padding, radius 6, 12 unit Menlo text in pale green
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0xE0, 0x10, 0x10, 0x10), Of(overlay.Background));
+				Assert.Equal(new Thickness(10, 6), overlay.Padding);
+				Assert.Equal(new CornerRadius(6), overlay.CornerRadius);
+				var text = (TextBlock)overlay.Child;
+				Assert.Equal(12, text.FontSize);
+				Assert.StartsWith("Menlo", text.FontFamily.Name);
+				Assert.Equal(Avalonia.Media.Color.FromRgb(0xE8, 0xF4, 0xE8), Of(text.Foreground));
+
+				// book cell: 6 padding, 2 frame, radius 8, transparent; selected = light blue fill and a blue frame
+				Assert.Equal(new Thickness(6), cell.Padding);
+				Assert.Equal(new Thickness(2), cell.BorderThickness);
+				Assert.Equal(new CornerRadius(8), cell.CornerRadius);
+				Assert.Equal(Avalonia.Media.Colors.Transparent, Of(cell.Background));
+				Assert.Equal(Avalonia.Media.Colors.Transparent, Of(cell.BorderBrush));
+				Assert.False(cell.IsSelectedForTest);
+				cell.SetSelected(true);
+				Settle(window);
+				Assert.True(cell.IsSelectedForTest);
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0x38, 0x0A, 0x84, 0xFF), Of(cell.Background));
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0xFF, 0x0A, 0x84, 0xFF), Of(cell.BorderBrush));
+				cell.SetSelected(false);
+				Settle(window);
+				Assert.Equal(Avalonia.Media.Colors.Transparent, Of(cell.Background));
+
+				// cover tile and reader paper come from the same file, by key
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0x26, 0x80, 0x80, 0x80), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.CoverPlaceholderFillBrush")));
+				Assert.Equal(Avalonia.Media.Color.FromArgb(0x40, 0x80, 0x80, 0x80), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.CoverPlaceholderLineBrush")));
+				Assert.Equal(Avalonia.Media.Color.FromRgb(0x1E, 0x1E, 0x1E), Of(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.ReaderPaperBrush")));
+				Assert.Null(Controls.ChromePaint.ResourceBrush(cover, "Cr.Mvp.NoSuchBrush"));
+				window.Close();
+				return Task.CompletedTask;
+			});
+		}
+
+		[Theory]
+		[InlineData("Light")]
+		[InlineData("Dark")]
+		public async Task The_views_render_and_match_the_baseline_frames_when_one_is_given(string variantName)
+		{
+			Dictionary<string, Raster> frames = await Render(variantName);
+			Assert.Equal(7, frames.Count);
+			string save = Environment.GetEnvironmentVariable(SnapshotVariable);
+			string baseline = Environment.GetEnvironmentVariable(BaselineVariable);
+			var problems = new List<string>();
+			foreach (KeyValuePair<string, Raster> frame in frames)
+			{
+				Assert.True(frame.Value.Width > 100 && frame.Value.Height > 100, frame.Key + " is empty");
+				if (!string.IsNullOrEmpty(save))
+				{
+					Directory.CreateDirectory(save);
+					frame.Value.Save(Path.Combine(save, frame.Key + ".png"));
+				}
+				if (!string.IsNullOrEmpty(baseline))
+				{
+					string path = Path.Combine(baseline, frame.Key + ".png");
+					if (!File.Exists(path))
+					{
+						problems.Add(frame.Key + ": no baseline frame");
+						continue;
+					}
+					Raster expected;
+					using (SKImage image = SKImage.FromEncodedData(path))
+					{
+						expected = Raster.From(image);
+					}
+					if (expected.Width != frame.Value.Width || expected.Height != frame.Value.Height)
+					{
+						problems.Add(frame.Key + ": size " + frame.Value.Width + " x " + frame.Value.Height + " against " + expected.Width + " x " + expected.Height);
+						continue;
+					}
+					Difference difference = frame.Value.Compare(expected, 4);
+					if (difference.Bad > MaxBad || difference.Mean > MaxMean)
+					{
+						problems.Add(frame.Key + ": " + difference);
+					}
+				}
+			}
+			Assert.True(problems.Count == 0, "the default look changed: " + string.Join("; ", problems));
+		}
+	}
+}

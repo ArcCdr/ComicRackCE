@@ -55,6 +55,13 @@ namespace ComicRack.Mac
 		public string Theme { get; private set; }
 
 		/// <summary>
+		/// <c>--chrome SPEC</c> (or the environment variable COMICRACK_MAC_CHROME): the look of single chrome elements, <c>Element=Native</c> or
+		/// <c>Element=Original</c> separated by commas, or <c>native</c> for every element that has a Native variant (<see cref="Themes.ChromeVariants"/>).
+		/// Null keeps the defaults of <c>Themes/ChromeVariants.cs</c>.
+		/// </summary>
+		public string Chrome { get; private set; }
+
+		/// <summary>
 		/// Hidden <c>--show NAME</c>: opens the named window, dialog or view after launch (<see cref="Views.ViewRegistry"/> lists the names;
 		/// <c>MainWindow</c> and <c>ChromeGallery</c> exist, every later UI task registers its views). The contact sheets of
 		/// <c>mac/tools/chrome-sheet.sh</c> use it with <c>--theme</c>. Null opens only the library window.
@@ -85,6 +92,7 @@ namespace ComicRack.Mac
 			string dataDir = Environment.GetEnvironmentVariable(DataDirVariable);
 			options.Language = Environment.GetEnvironmentVariable(LanguageVariable);
 			string theme = Environment.GetEnvironmentVariable(ThemeVariable);
+			string chrome = Environment.GetEnvironmentVariable(Themes.ChromeVariants.Variable);
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg = args[i];
@@ -146,6 +154,14 @@ namespace ComicRack.Mac
 				{
 					theme = arg.Substring("--theme=".Length);
 				}
+				else if (arg == "--chrome" && i + 1 < args.Length)
+				{
+					chrome = args[++i];
+				}
+				else if (arg.StartsWith("--chrome=", StringComparison.Ordinal))
+				{
+					chrome = arg.Substring("--chrome=".Length);
+				}
 				else if (arg == "--list-views")
 				{
 					options.ListViews = true;
@@ -190,6 +206,16 @@ namespace ComicRack.Mac
 						options.Error = "--theme expects light or dark.";
 						return options;
 				}
+			}
+			if (!string.IsNullOrWhiteSpace(chrome))
+			{
+				string chromeError = Themes.ChromeVariants.TryParse(chrome, out _);
+				if (chromeError != null)
+				{
+					options.Error = "--chrome: " + chromeError;
+					return options;
+				}
+				options.Chrome = chrome.Trim();
 			}
 			if (!string.IsNullOrWhiteSpace(dataDir))
 			{

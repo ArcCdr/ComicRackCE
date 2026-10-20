@@ -14,7 +14,7 @@ namespace ComicRack.Mac.Controls
 	/// right: 20 x 19 icon slots with sunken borders (<see cref="CrStatusSlot"/>) and a slot for the size slider. Add the segments with
 	/// <see cref="AddRight"/> (the first one added is the rightmost) and <see cref="SetSpring"/>.
 	/// </summary>
-	public class CrStatusBar : Border
+	public class CrStatusBar : Border, IChromeElement
 	{
 		private readonly DockPanel panel = new DockPanel { LastChildFill = true };
 
@@ -27,14 +27,33 @@ namespace ComicRack.Mac.Controls
 			Child = panel;
 			ActualThemeVariantChanged += (sender, e) => ApplyTokens();
 			AttachedToVisualTree += (sender, e) => ApplyTokens();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.StatusBar;
 
 		/// <summary>The segments, in dock order (see <see cref="DockPanel"/>).</summary>
 		[Avalonia.Metadata.Content]
 		public Avalonia.Controls.Controls Children => panel.Children;
 
+		/// <summary>True while the Native variant is in force: the theme <c>CrStatusBar.Native</c> supplies the background and the border.</summary>
+		public bool IsNative { get; private set; }
+
+		void IChromeElement.OnChromeVariantChanged(ChromeVariant variant)
+		{
+			IsNative = variant == ChromeVariant.Native;
+			ApplyTokens();
+		}
+
 		private void ApplyTokens()
 		{
+			if (IsNative)
+			{
+				// the variant's theme sets Background and BorderBrush: drop what the Original look set by hand
+				ClearValue(BackgroundProperty);
+				ClearValue(BorderBrushProperty);
+				return;
+			}
 			Background = ChromePaint.VerticalGradient(this, ThemeTokens.Names.ToolStatusStripGradientBegin, ThemeTokens.Names.ToolStatusStripGradientEnd);
 			BorderBrush = ChromePaint.Brush(this, ThemeTokens.Names.ToolStatusStripBorder);
 		}
@@ -70,7 +89,7 @@ namespace ComicRack.Mac.Controls
 	/// (the default) it has the sunken 3D border of the activity icons: <c>ButtonShadow</c> on the top and left, <c>ButtonHighlight</c> on the
 	/// bottom and right. A slot can host an icon (<see cref="IconName"/>) or any control (the slider).
 	/// </summary>
-	public class CrStatusSlot : Decorator
+	public class CrStatusSlot : Decorator, IChromeElement
 	{
 		public static readonly StyledProperty<bool> SunkenProperty = AvaloniaProperty.Register<CrStatusSlot, bool>(nameof(Sunken), true);
 
@@ -87,7 +106,10 @@ namespace ComicRack.Mac.Controls
 			Height = ChromeMetrics.StatusSlotHeight;
 			Margin = new Thickness(0, 3, 0, 2);
 			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
+			ChromeVariants.Bind(this);
 		}
+
+		public ChromeElement Element => ChromeElement.StatusBar;
 
 		public bool Sunken
 		{

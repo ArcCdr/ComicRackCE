@@ -12,6 +12,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ComicRack.Mac.Host.Library;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Services;
 using ComicRack.Mac.ViewModels;
 using ComicRack.Mac.Views;

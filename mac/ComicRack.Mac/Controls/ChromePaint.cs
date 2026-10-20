@@ -27,6 +27,28 @@ namespace ComicRack.Mac.Controls
 
 		public static Color Color(Control control, string token) => ThemeTokens.Get(token, VariantOf(control));
 
+		private static readonly ConcurrentDictionary<(ThemeVariant, string), IBrush> resourceBrushes = new ConcurrentDictionary<(ThemeVariant, string), IBrush>();
+
+		/// <summary>
+		/// A brush that the theme files define under <paramref name="key"/> (the <c>Cr.Mvp.*</c> entries of <c>CrMvpLook.axaml</c>), for the appearance
+		/// of the control, cached per appearance. For custom-drawn views, which cannot use a style class; null when the key is not defined.
+		/// </summary>
+		public static IBrush ResourceBrush(Control control, string key)
+		{
+			ThemeVariant variant = VariantOf(control);
+			if (resourceBrushes.TryGetValue((variant, key), out IBrush cached))
+			{
+				return cached;
+			}
+			if (Application.Current != null && Application.Current.TryGetResource(key, variant, out object found) && found is IBrush brush)
+			{
+				IBrush frozen = brush.ToImmutable();
+				resourceBrushes[(variant, key)] = frozen;
+				return frozen;
+			}
+			return null;
+		}
+
 		/// <summary>A solid brush in the colour of a token (alpha kept), cached per appearance.</summary>
 		public static IBrush Brush(Control control, string token)
 		{

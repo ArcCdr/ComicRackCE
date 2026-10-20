@@ -1,0 +1,51 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls">
+  <!-- The semantic parts that views and view models may use (chrome-architecture.md section 3): style classes, named for what the element IS,
+       never for how it looks. A view says Classes="cr-hint"; this file says what a hint looks like, and a variant or a later restyle changes it here.
+       Colours only through the Cr tokens; sizes are the metrics of chrome-guidelines sections 3 and 4. -->
+
+  <!-- Surfaces -->
+  <Style Selector="Window.cr-window">
+    <Setter Property="Background" Value="{DynamicResource Cr.ControlBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource Cr.ControlTextBrush}" />
+    <Setter Property="FontSize" Value="{DynamicResource Cr.FontSize.Control}" />
+  </Style>
+  <Style Selector="Border.cr-panel">
+    <Setter Property="Background" Value="{DynamicResource Cr.WindowBrush}" />
+  </Style>
+  <Style Selector="Border.cr-card">
+    <Setter Property="Background" Value="{DynamicResource Cr.WindowBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Cr.ControlDarkBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <!-- Text roles -->
+  <Style Selector="TextBlock.cr-display">
+    <Setter Property="FontSize" Value="28" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.cr-title">
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.cr-heading">
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.cr-bold">
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style Selector="TextBlock.cr-small">
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.cr-secondary">
+    <Setter Property="Opacity" Value="0.7" />
+  </Style>
+  <Style Selector="TextBlock.cr-hint">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.GrayTextBrush}" />
+  </Style>
+  <Style Selector="TextBlock.cr-error">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.SmartQueryNegationBrush}" />
+  </Style>
+</Styles>

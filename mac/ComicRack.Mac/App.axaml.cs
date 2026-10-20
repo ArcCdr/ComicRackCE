@@ -41,6 +41,9 @@ namespace ComicRack.Mac
 		{
 			options = StartupOptions;
 			// C-APP-1: follow the macOS appearance unless --theme forces the original's light or dark theme.
+			// The look of each chrome element: the table in Themes/ChromeVariants.cs, then --chrome or COMICRACK_MAC_CHROME on top.
+			Themes.ChromeVariants.Reset();
+			Themes.ChromeVariants.Configure(options.Chrome);
 			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
 			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
 			Localization.Apply(options.Language);
