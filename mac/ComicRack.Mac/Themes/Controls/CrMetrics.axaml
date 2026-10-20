@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Fonts (C-FONT-1, chrome-guidelines 3) and the metrics of the standard controls (C-CTRL-1). Not tied to the appearance, so this dictionary sits
+       in the application resources and overrides the base theme's keys of the same name. ComicRack.Mac.Controls.ChromeFonts and ChromeMetrics hold
+       the same numbers for code. -->
+
+  <!-- Font sizes in pixels: the original's points x 96/72. The family is the system font. -->
+  <x:Double x:Key="Cr.FontSize.Control">11</x:Double>
+  <x:Double x:Key="Cr.FontSize.Caption">9</x:Double>
+  <x:Double x:Key="Cr.FontSize.Item">12</x:Double>
+  <x:Double x:Key="Cr.FontSize.GroupHeader">13.8</x:Double>
+  <x:Double x:Key="Cr.FontSize.Counter">9</x:Double>
+  <x:Double x:Key="Cr.FontSize.Overlay">16</x:Double>
+  <FontFamily x:Key="Cr.FontFamily.Arial">Arial</FontFamily>
+  <FontFamily x:Key="Cr.FontFamily.Times">Times New Roman</FontFamily>
+
+  <!-- Base theme keys: the text size of controls is the original's dialog font, corners are square, edit boxes are 21 high. -->
+  <x:Double x:Key="ControlContentThemeFontSize">11</x:Double>
+  <CornerRadius x:Key="ControlCornerRadius">0</CornerRadius>
+  <Thickness x:Key="ButtonPadding">8,0,8,0</Thickness>
+  <x:Double x:Key="TextControlThemeMinHeight">21</x:Double>
+  <Thickness x:Key="TextControlThemePadding">3,1,3,1</Thickness>
+  <Thickness x:Key="TextControlBorderThemeThickness">1</Thickness>
+  <Thickness x:Key="TextControlBorderThemeThicknessFocused">1</Thickness>
+  <x:Double x:Key="ComboBoxMinHeight">21</x:Double>
+  <Thickness x:Key="ComboBoxPadding">4,1,0,1</Thickness>
+  <x:Double x:Key="SliderTrackThemeHeight">4</x:Double>
+  <x:Double x:Key="SliderHorizontalThumbWidth">11</x:Double>
+  <x:Double x:Key="SliderHorizontalThumbHeight">21</x:Double>
+  <x:Double x:Key="SliderHorizontalHeight">21</x:Double>
+  <GridLength x:Key="SliderPreContentMargin">0</GridLength>
+  <GridLength x:Key="SliderPostContentMargin">0</GridLength>
+  <x:Double x:Key="SliderOutsideTickBarThemeHeight">0</x:Double>
+  <Thickness x:Key="ListBoxItemPadding">4,2,4,2</Thickness>
+  <Thickness x:Key="ComboBoxItemThemePadding">4,2,4,2</Thickness>
+  <x:Double x:Key="TabItemHeaderFontSize">11</x:Double>
+  <x:Double x:Key="TabItemMinHeight">21</x:Double>
+</ResourceDictionary>

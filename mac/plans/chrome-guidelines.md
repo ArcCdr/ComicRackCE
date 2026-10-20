@@ -256,6 +256,8 @@ Default = what tasks implement. **O** = original look, **N** = native macOS. "Fl
 | C-ICON-1 | Icons and images | `Resources` PNG/GIF | SF Symbols | **O** (§5) | owner: "icons from the existing resources" | — |
 | C-CURSOR-1 | Cursors (hand, magnifier, wait) | Windows cursors and custom cursor resources | macOS cursors | **N** for standard cursors, **O** for ComicRack's custom cursors (if a resource exists) | standard cursors are part of the OS | low |
 | C-SPLASH-1 | Splash and About | `Splash` form (619 × 317 image, fade, version text) | standard About panel | **O** (splash at startup when `ShowSplash`; About shows the same panel) | original feature (PB.01) | low |
+| C-DLG-3 | Alert where the system alert cannot run (tests, headless platform) | `QuestionDialog` | NSAlert | **O** (the window `AlertWindow` on the `CrDialogWindow` frame: bold message, description at most 350 wide, check box, 80 x 24 buttons, first button default, Esc = cancel button); only a fallback, the app uses NSAlert | keeps tests and the headless smoke run independent of AppKit's modal loop | — |
+| C-CTRL-2 | Text size of standard controls | 8.25 pt dialog font | system font | **O sizes**: every control reads 11 px (`ControlContentThemeFontSize`), item views and trees 12, menus 13 (C-MENU-3); the MVP windows follow until P5.R1 to P5.R3 restyle them | one rule for every control, the proportions of the original | low (one resource) |
 
 New decisions are added here by the task that meets them (same columns) and listed in its report; the owner sees them on the next contact sheet.
 

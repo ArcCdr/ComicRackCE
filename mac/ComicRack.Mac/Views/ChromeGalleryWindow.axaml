@@ -1,14 +1,152 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
         x:Class="ComicRack.Mac.Views.ChromeGalleryWindow"
         Title="ComicRack Chrome Gallery"
-        Width="900" Height="640"
-        Background="{DynamicResource Cr.WindowBrush}">
-  <DockPanel>
-    <TextBlock DockPanel.Dock="Top" Margin="12,10,12,6" Foreground="{DynamicResource Cr.WindowTextBrush}"
-               Text="Theme tokens of the current appearance (placeholder: the control gallery of P5.T4 replaces this window)" />
-    <ScrollViewer>
-      <WrapPanel x:Name="Swatches" Margin="8" />
-    </ScrollViewer>
-  </DockPanel>
+        Width="1000" Height="880"
+        FontSize="11"
+        Background="{DynamicResource Cr.ControlBrush}">
+  <!-- The control gallery of P5.T4 (the view ChromeGallery): every custom control and the restyled standard controls in their states, then the
+       theme tokens of the current appearance. Colours only through Cr resources. -->
+  <Window.Styles>
+    <Style Selector="TextBlock.caption">
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Margin" Value="0,0,0,4" />
+      <Setter Property="Foreground" Value="{DynamicResource Cr.ControlTextBrush}" />
+    </Style>
+    <Style Selector="TextBlock.note">
+      <Setter Property="Foreground" Value="{DynamicResource Cr.GrayTextBrush}" />
+      <Setter Property="FontSize" Value="10" />
+    </Style>
+  </Window.Styles>
+  <ScrollViewer>
+    <StackPanel Margin="12" Spacing="14">
+
+      <!-- Probes: two flat swatches at fixed places; the e2e case reads their pixels. -->
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Border Name="ProbeHighlight" Width="48" Height="24" Background="{DynamicResource Cr.HighlightBrush}" />
+        <Border Name="ProbeWindow" Width="48" Height="24" Background="{DynamicResource Cr.WindowBrush}" BorderBrush="{DynamicResource Cr.ControlDarkBrush}" BorderThickness="1" />
+        <TextBlock Classes="note" VerticalAlignment="Center" Text="probe swatches: Highlight, Window" />
+      </StackPanel>
+
+      <StackPanel Name="ToolBars">
+        <TextBlock Classes="caption" Text="Toolbar (C-TB-1): 25 high, flat 16 px buttons; normal, hot, pressed, checked, disabled, split button, text buttons, search box" />
+        <c:CrToolBar Name="ToolBarSample" HorizontalAlignment="Left" Width="640">
+          <c:CrToolButton Name="ToolNormal" IconName="FitWidth" />
+          <c:CrToolButton Name="ToolHot" IconName="FitHeight" />
+          <c:CrToolButton Name="ToolPressed" IconName="FitAll" />
+          <c:CrToolButton Name="ToolChecked" IconName="SinglePage" />
+          <c:CrToolButton Name="ToolDisabled" IconName="TwoPage" IsEnabled="False" />
+          <c:CrToolSeparator />
+          <c:CrSplitButton Name="ToolSplit" IconName="Rotate0" Text="0°" />
+          <c:CrSplitButton Name="ToolSplitHot" IconName="Zoom" Text="100 %" />
+          <c:CrToolSeparator />
+          <c:CrToolButton Name="ToolText" IconName="Tools" Text="Tools" />
+          <c:CrToolSeparator />
+          <TextBox Name="SearchBox" Width="130" Height="24" MinHeight="24" Margin="0,0,0,1" VerticalAlignment="Center" />
+        </c:CrToolBar>
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Tab bar (C-TAB-1): 31 high, tab 24, indent 8, 60 to 250 wide, selected tab, close box, toolbar slot" />
+        <c:CrTabBar Name="TabBarSample" HorizontalAlignment="Left" Width="640" />
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Status bar (C-SB-1): 24 high, text segment that stretches, 20 x 19 sunken icon slots, slider slot" />
+        <c:CrStatusBar Name="StatusBarSample" HorizontalAlignment="Left" Width="640" />
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Collapsible group box (C-GRP-1): 24 high bold header, gradient, toggle arrow" />
+        <StackPanel Orientation="Horizontal" Spacing="16">
+          <c:CrCollapsibleGroup Name="GroupExpanded" Width="300" Header="Expanded group">
+            <StackPanel Margin="8" Spacing="4">
+              <CheckBox Content="First option" IsChecked="True" />
+              <CheckBox Content="Second option" />
+            </StackPanel>
+          </c:CrCollapsibleGroup>
+          <c:CrCollapsibleGroup Name="GroupCollapsed" Width="300" Header="Collapsed group" IsExpanded="False">
+            <TextBlock Margin="8" Text="hidden" />
+          </c:CrCollapsibleGroup>
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Sizable container (C-SPLIT-1): 6 px grip with the original's grip image; normal, hot, pressed, collapsed" />
+        <StackPanel Orientation="Horizontal" Spacing="16" Name="Containers" />
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Column header (C-HDR-1): normal, hot, pressed, active with sort arrow, drop-down" />
+        <StackPanel Orientation="Horizontal" Spacing="0" Name="Headers" />
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Tree (C-TREE-1): row = font + 8, bold selected label, arrow images, selection style (focused and unfocused)" />
+        <StackPanel Orientation="Horizontal" Spacing="16">
+          <TreeView Name="TreeFocused" Width="200" Height="130" Background="{DynamicResource Cr.WindowBrush}" BorderBrush="{DynamicResource Cr.EditFrameBrush}" BorderThickness="1" />
+          <TreeView Name="TreeUnfocused" Width="200" Height="130" Background="{DynamicResource Cr.WindowBrush}" BorderBrush="{DynamicResource Cr.EditFrameBrush}" BorderThickness="1" />
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Standard controls (C-CTRL-1): button, default button, disabled; check boxes; radio buttons; text box; combo box; numeric up/down; slider" />
+        <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="8">
+          <StackPanel Spacing="6" Grid.Column="0">
+            <Button Name="ButtonNormal" Content="Button" Width="80" />
+            <Button Name="ButtonDefault" Content="Default" Width="80" IsDefault="True" />
+            <Button Name="ButtonDisabled" Content="Disabled" Width="80" IsEnabled="False" />
+            <ToggleButton Name="ToggleChecked" Content="Toggle" Width="80" IsChecked="True" />
+          </StackPanel>
+          <StackPanel Spacing="4" Grid.Column="1">
+            <CheckBox Name="CheckUnchecked" Content="Unchecked" />
+            <CheckBox Name="CheckChecked" Content="Checked" IsChecked="True" />
+            <CheckBox Name="CheckThree" Content="Indeterminate" IsThreeState="True" IsChecked="{x:Null}" />
+            <CheckBox Name="CheckDisabled" Content="Disabled" IsChecked="True" IsEnabled="False" />
+            <RadioButton Name="RadioOff" Content="Radio off" GroupName="g1" />
+            <RadioButton Name="RadioOn" Content="Radio on" GroupName="g1" IsChecked="True" />
+            <RadioButton Name="RadioDisabled" Content="Radio disabled" GroupName="g2" IsEnabled="False" />
+          </StackPanel>
+          <StackPanel Spacing="6" Grid.Column="2">
+            <TextBox Name="TextSample" Text="Text box" Width="160" HorizontalAlignment="Left" />
+            <TextBox Name="TextDisabled" Text="Disabled" Width="160" HorizontalAlignment="Left" IsEnabled="False" />
+            <ComboBox Name="ComboSample" Width="160" SelectedIndex="0" />
+            <NumericUpDown Name="NumericSample" Width="100" HorizontalAlignment="Left" Value="3" />
+            <Slider Name="SliderSample" Width="160" HorizontalAlignment="Left" Value="40" />
+          </StackPanel>
+          <TabControl Name="TabControlSample" Grid.Row="1" Grid.ColumnSpan="2" Height="90" />
+          <ListBox Name="ListSample" Grid.Row="1" Grid.Column="2" Height="90" Background="{DynamicResource Cr.WindowBrush}" BorderBrush="{DynamicResource Cr.EditFrameBrush}" BorderThickness="1" />
+        </Grid>
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Dialog buttons (C-DLG-2): OK, Cancel, Apply, 80 x 24, 6 apart" />
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Button Name="DialogOk" Content="OK" Width="80" Height="24" IsDefault="True" />
+          <Button Name="DialogCancel" Content="Cancel" Width="80" Height="24" />
+          <Button Name="DialogApply" Content="Apply" Width="80" Height="24" />
+          <Button Name="AlertButton" Content="Show alert..." Margin="16,0,0,0" Height="24" />
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Popup menu (C-MENU-3): system font 13, rounded, system accent as selection" />
+        <StackPanel Orientation="Horizontal" Spacing="16">
+          <Border Name="MenuSample" Width="220" HorizontalAlignment="Left" />
+          <ScrollViewer Name="ScrollSample" Width="220" Height="90" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="{DynamicResource Cr.WindowBrush}" />
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Fonts (C-FONT-1): system font, the original's sizes in pixels" />
+        <StackPanel Name="FontSamples" Spacing="2" />
+      </StackPanel>
+
+      <StackPanel>
+        <TextBlock Classes="caption" Text="Theme tokens of the current appearance" />
+        <WrapPanel x:Name="Swatches" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
 </Window>

@@ -105,7 +105,9 @@ namespace ComicRack.Mac.Tests.Theme
 					try
 					{
 						Assert.Equal("ComicRack Chrome Gallery", window.Title);
-						var swatches = window.GetVisualDescendants().OfType<WrapPanel>().Single();
+						window.Height = 2600; // tall enough that every swatch is in the frame
+						HiDpi.Dpi.Settle(window);
+						var swatches = window.FindControl<WrapPanel>("Swatches");
 						int expected = typeof(ThemeTokens.Names).GetFields().Count(f => f.IsLiteral && ThemeTokens.TryGetColor((string)f.GetRawConstantValue(), out _));
 						Assert.True(expected >= 170, "tokens in the dictionary: " + expected);
 						Assert.Equal(expected, swatches.Children.Count);

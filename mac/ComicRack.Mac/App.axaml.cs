@@ -44,6 +44,15 @@ namespace ComicRack.Mac
 			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
 			// Before any window: the texts of the Core's TR (and later every label of the UI) come from Languages/ next to the executable.
 			Localization.Apply(options.Language);
+			if (!options.Headless && OperatingSystem.IsMacOS())
+			{
+				// C-WIN-3: the app has its own tab bars, so macOS must not merge its windows into tabs.
+				Platform.WindowTabbing.Disable();
+				// C-SCROLL-1: overlay scrollers hide when idle, legacy ones stay visible, as System Settings says.
+				var autoHide = new Avalonia.Styling.Style(x => x.OfType<ScrollViewer>());
+				autoHide.Setters.Add(new Avalonia.Styling.Setter(ScrollViewer.AllowAutoHideProperty, Platform.ScrollerStyle.IsOverlay));
+				Styles.Add(autoHide);
+			}
 			if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 			{
 				// An exception on the UI thread is logged through the host log and the app keeps running.

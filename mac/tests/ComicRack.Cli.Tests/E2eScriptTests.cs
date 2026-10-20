@@ -58,7 +58,7 @@ namespace ComicRack.Cli.Tests
 		[Fact]
 		public void The_suite_has_the_cases_of_the_task()
 		{
-			string[] expected = { "launch-quit", "menu-structure", "open-folder", "import", "grid-keys", "reader-keys", "fullscreen", "overlay", "quit-during-scan", "pdf-cb7" };
+			string[] expected = { "launch-quit", "menu-structure", "open-folder", "import", "grid-keys", "reader-keys", "fullscreen", "overlay", "quit-during-scan", "pdf-cb7", "chrome-gallery" };
 			var names = CaseFiles().Select(f => Path.GetFileNameWithoutExtension(f)).ToArray();
 			foreach (string n in expected)
 			{
