@@ -3,5 +3,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>ApiInventory</RootNamespace>
     <AssemblyName>api-inventory</AssemblyName>
+    <!-- The shims are read with a MetadataLoadContext, never referenced: referencing cYo.Compat.Drawing would pull the SkiaSharp native assets of every platform. -->
+    <NoWarn>$(NoWarn);NU1510</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.0" />
+    <InternalsVisibleTo Include="Upstream.Tests" />
+  </ItemGroup>
 </Project>

@@ -43,7 +43,11 @@ namespace ApiInventory
 		public string Name;
 		public string Assembly;
 		public int ParamCount;
+		/// <summary>Parameter types as the inventory prints them, e.g. "(nint, int)".</summary>
+		public string Sig;
 		public int Calls;
+		/// <summary>The file that holds the declaring type's code (null when the PDB has none, as for a type of extern methods only).</summary>
+		public string DeclFile;
 		public readonly Dictionary<string, int> Files = new();
 	}
 }

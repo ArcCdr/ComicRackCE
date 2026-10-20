@@ -12,5 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\tools\upstream-scan\UpstreamScan.csproj" />
+    <ProjectReference Include="..\..\tools\api-inventory\ApiInventory.csproj" />
+    <!-- Built before the tests (the coverage check reads their output with a MetadataLoadContext); not referenced, so no SkiaSharp native assets are copied here. -->
+    <ProjectReference Include="..\..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\cYo.Compat.Forms\cYo.Compat.Forms.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

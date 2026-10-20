@@ -73,6 +73,7 @@ namespace ApiInventory
 					if ((m.Attributes & MethodAttributes.PinvokeImpl) == 0)
 						continue;
 					var import = m.GetImport();
+					var parameters = m.DecodeSignature(provider, null).ParameterTypes;
 					var rec = new PInvokeRec
 					{
 						Module = import.Module.IsNil ? "?" : md.GetString(md.GetModuleReference(import.Module).Name),
@@ -80,7 +81,8 @@ namespace ApiInventory
 						Declaring = declaring,
 						Name = md.GetString(m.Name),
 						Assembly = Name,
-						ParamCount = m.DecodeSignature(provider, null).ParameterTypes.Length,
+						ParamCount = parameters.Length,
+						Sig = "(" + string.Join(", ", parameters) + ")",
 					};
 					pinvokeDefs[mh] = rec;
 					inv.PInvokes.Add(rec);
@@ -122,6 +124,16 @@ namespace ApiInventory
 					Decl(md.GetEventDefinition(eh).Type, file);
 				foreach (var mh in td.GetMethods())
 					ScanMethod(mh);
+			}
+		}
+
+		/// <summary>Phase 3 (after <see cref="Scan"/>): the file of each P/Invoke declaration's type.</summary>
+		public void ResolveDeclFiles()
+		{
+			foreach (var (mh, rec) in pinvokeDefs)
+			{
+				string file = FileOfType(md.GetMethodDefinition(mh).GetDeclaringType());
+				rec.DeclFile = file.StartsWith("(no code:", StringComparison.Ordinal) ? null : file;
 			}
 		}
 

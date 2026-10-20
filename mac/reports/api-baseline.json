@@ -1,0 +1,3838 @@
+{
+  "version": 1,
+  "types": [
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Bitmap",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Brush",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Brushes",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.ContentAlignment",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.CombineMode",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.CompositingMode",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.CompositingQuality",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.CoordinateSpace",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.GraphicsState",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.InterpolationMode",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.LinearGradientBrush",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.Matrix",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.MatrixOrder",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.PathGradientBrush",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.PixelOffsetMode",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Drawing2D.SmoothingMode",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Font",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.FontFamily",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.FontStyle",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Graphics",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.GraphicsUnit",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.IDeviceContext",
+      "kind": "interface"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Icon",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Image",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.BitmapData",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.ColorMatrix",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.Encoder",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.EncoderParameter",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.EncoderParameters",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.ImageAttributes",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.ImageCodecInfo",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.ImageFormat",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.ImageLockMode",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Imaging.PixelFormat",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Pen",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Region",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.RotateFlipType",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.SolidBrush",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.StringAlignment",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.StringFormat",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.StringFormatFlags",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.StringTrimming",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.SystemBrushes",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.SystemFonts",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.SystemPens",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "name": "System.Drawing.Text.TextRenderingHint",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.Color",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.ColorTranslator",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.KnownColor",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.Point",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.PointF",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.Rectangle",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.RectangleF",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.Size",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.SizeF",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "name": "System.Drawing.SystemColors",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "name": "System.Windows.Forms.Padding",
+      "kind": "struct"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Application",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Clipboard",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.CommonDialog",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Control",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Cursor",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.DataFormats",
+      "kind": "static class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.DataFormats+Format",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.DataObject",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.DialogResult",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Form",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.FormWindowState",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.IWin32Window",
+      "kind": "interface"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.ImageLayout",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Keys",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.MethodInvoker",
+      "kind": "delegate"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.MouseButtons",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.Screen",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.SortOrder",
+      "kind": "enum"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.ToolStripRenderer",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.TreeNode",
+      "kind": "class"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "name": "System.Windows.Forms.TreeView",
+      "kind": "class"
+    }
+  ],
+  "members": [
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Image, int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int, int, PixelFormat)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "method",
+      "name": "Clone",
+      "sig": "(Rectangle, PixelFormat) : Bitmap",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "method",
+      "name": "GetHbitmap",
+      "sig": "() : nint",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "method",
+      "name": "GetHicon",
+      "sig": "() : nint",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "method",
+      "name": "GetPixel",
+      "sig": "(int, int) : Color",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "method",
+      "name": "LockBits",
+      "sig": "(Rectangle, ImageLockMode, PixelFormat) : BitmapData",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Bitmap",
+      "kind": "method",
+      "name": "UnlockBits",
+      "sig": "(BitmapData) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Brushes",
+      "kind": "property",
+      "name": "Black",
+      "sig": " : Brush",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Brush",
+      "kind": "method",
+      "name": "Dispose",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "method",
+      "name": "AddArc",
+      "sig": "(int, int, int, int, float, float) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "method",
+      "name": "AddEllipse",
+      "sig": "(int, int, int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "method",
+      "name": "AddLines",
+      "sig": "(PointF[]) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "method",
+      "name": "AddLine",
+      "sig": "(int, int, int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.GraphicsPath",
+      "kind": "method",
+      "name": "CloseFigure",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.LinearGradientBrush",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Rectangle, Color, Color, float)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.LinearGradientBrush",
+      "kind": "method",
+      "name": "SetSigmaBellShape",
+      "sig": "(float, float) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.Matrix",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.Matrix",
+      "kind": "method",
+      "name": "Rotate",
+      "sig": "(float, MatrixOrder) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.Matrix",
+      "kind": "method",
+      "name": "TransformPoints",
+      "sig": "(Point[]) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.Matrix",
+      "kind": "method",
+      "name": "Translate",
+      "sig": "(float, float, MatrixOrder) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.PathGradientBrush",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(GraphicsPath)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.PathGradientBrush",
+      "kind": "property",
+      "name": "CenterColor",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Drawing2D.PathGradientBrush",
+      "kind": "property",
+      "name": "SurroundColors",
+      "sig": " : Color[]",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.FontFamily",
+      "kind": "property",
+      "name": "Name",
+      "sig": " : string",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(string, float, FontStyle)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "method",
+      "name": "Dispose",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "method",
+      "name": "ToHfont",
+      "sig": "() : nint",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "property",
+      "name": "FontFamily",
+      "sig": " : FontFamily",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "property",
+      "name": "IsSystemFont",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "property",
+      "name": "Size",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Font",
+      "kind": "property",
+      "name": "Style",
+      "sig": " : FontStyle",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "Clear",
+      "sig": "(Color) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawIcon",
+      "sig": "(Icon, Rectangle) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, Rectangle) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, Rectangle, Rectangle, GraphicsUnit) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, Rectangle, int, int, int, int, GraphicsUnit) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, Rectangle, int, int, int, int, GraphicsUnit, ImageAttributes) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, RectangleF) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawImage",
+      "sig": "(Image, int, int, int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawString",
+      "sig": "(string, Font, Brush, RectangleF, StringFormat) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "DrawString",
+      "sig": "(string, Font, Brush, float, float) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "FillEllipse",
+      "sig": "(Brush, int, int, int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "FillRectangle",
+      "sig": "(Brush, Rectangle) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "FillRectangle",
+      "sig": "(Brush, int, int, int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "FromImage",
+      "sig": "(Image) : Graphics",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "GetHdc",
+      "sig": "() : nint",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "MeasureString",
+      "sig": "(string, Font) : SizeF",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "MeasureString",
+      "sig": "(string, Font, SizeF, StringFormat) : SizeF",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "ReleaseHdc",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "Restore",
+      "sig": "(GraphicsState) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "Save",
+      "sig": "() : GraphicsState",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "ScaleTransform",
+      "sig": "(float, float) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "SetClip",
+      "sig": "(Rectangle, CombineMode) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "SetClip",
+      "sig": "(RectangleF, CombineMode) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "TransformPoints",
+      "sig": "(CoordinateSpace, CoordinateSpace, PointF[]) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "method",
+      "name": "TransformPoints",
+      "sig": "(CoordinateSpace, CoordinateSpace, Point[]) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "Clip",
+      "sig": " : Region",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "CompositingMode",
+      "sig": " : CompositingMode",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "CompositingQuality",
+      "sig": " : CompositingQuality",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "InterpolationMode",
+      "sig": " : InterpolationMode",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "PageUnit",
+      "sig": " : GraphicsUnit",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "PixelOffsetMode",
+      "sig": " : PixelOffsetMode",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "SmoothingMode",
+      "sig": " : SmoothingMode",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Graphics",
+      "kind": "property",
+      "name": "TextRenderingHint",
+      "sig": " : TextRenderingHint",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Icon",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Stream, int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Icon",
+      "kind": "method",
+      "name": "Clone",
+      "sig": "() : object",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Icon",
+      "kind": "method",
+      "name": "FromHandle",
+      "sig": "(nint) : Icon",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Icon",
+      "kind": "method",
+      "name": "ToBitmap",
+      "sig": "() : Bitmap",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Icon",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Icon",
+      "kind": "property",
+      "name": "Width",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "Clone",
+      "sig": "() : object",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "Dispose",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "FromFile",
+      "sig": "(string) : Image",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "FromStream",
+      "sig": "(Stream) : Image",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "FromStream",
+      "sig": "(Stream, bool) : Image",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "FromStream",
+      "sig": "(Stream, bool, bool) : Image",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "GetPixelFormatSize",
+      "sig": "(PixelFormat) : int",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "RotateFlip",
+      "sig": "(RotateFlipType) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "Save",
+      "sig": "(Stream, ImageCodecInfo, EncoderParameters) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "Save",
+      "sig": "(Stream, ImageFormat) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "method",
+      "name": "Save",
+      "sig": "(string, ImageFormat) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "property",
+      "name": "Flags",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "property",
+      "name": "PixelFormat",
+      "sig": " : PixelFormat",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "property",
+      "name": "Size",
+      "sig": " : Size",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Image",
+      "kind": "property",
+      "name": "Width",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.BitmapData",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.BitmapData",
+      "kind": "property",
+      "name": "Scan0",
+      "sig": " : nint",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.BitmapData",
+      "kind": "property",
+      "name": "Stride",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ColorMatrix",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ColorMatrix",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(float[][])",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ColorMatrix",
+      "kind": "property",
+      "name": "Item",
+      "sig": "[int, int] : float",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ColorMatrix",
+      "kind": "property",
+      "name": "Matrix33",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.EncoderParameters",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.EncoderParameters",
+      "kind": "property",
+      "name": "Param",
+      "sig": " : EncoderParameter[]",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.EncoderParameter",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Encoder, long)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.Encoder",
+      "kind": "field",
+      "name": "ColorDepth",
+      "sig": "ColorDepth : Encoder",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.Encoder",
+      "kind": "field",
+      "name": "Quality",
+      "sig": "Quality : Encoder",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageAttributes",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageAttributes",
+      "kind": "method",
+      "name": "SetColorMatrix",
+      "sig": "(ColorMatrix) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageCodecInfo",
+      "kind": "method",
+      "name": "GetImageEncoders",
+      "sig": "() : ImageCodecInfo[]",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageCodecInfo",
+      "kind": "property",
+      "name": "FormatID",
+      "sig": " : Guid",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageFormat",
+      "kind": "property",
+      "name": "Bmp",
+      "sig": " : ImageFormat",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageFormat",
+      "kind": "property",
+      "name": "Gif",
+      "sig": " : ImageFormat",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageFormat",
+      "kind": "property",
+      "name": "Guid",
+      "sig": " : Guid",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageFormat",
+      "kind": "property",
+      "name": "Jpeg",
+      "sig": " : ImageFormat",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageFormat",
+      "kind": "property",
+      "name": "Png",
+      "sig": " : ImageFormat",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Imaging.ImageFormat",
+      "kind": "property",
+      "name": "Tiff",
+      "sig": " : ImageFormat",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Pen",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Color)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Pen",
+      "kind": "method",
+      "name": "Dispose",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.Region",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(GraphicsPath)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.SolidBrush",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Color)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(StringFormatFlags)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "method",
+      "name": "Dispose",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "method",
+      "name": "SetTabStops",
+      "sig": "(float, float[]) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "property",
+      "name": "Alignment",
+      "sig": " : StringAlignment",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "property",
+      "name": "FormatFlags",
+      "sig": " : StringFormatFlags",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "property",
+      "name": "LineAlignment",
+      "sig": " : StringAlignment",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.StringFormat",
+      "kind": "property",
+      "name": "Trimming",
+      "sig": " : StringTrimming",
+      "isStatic": false,
+      "accessors": "set"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.SystemFonts",
+      "kind": "property",
+      "name": "DefaultFont",
+      "sig": " : Font",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Common",
+      "type": "System.Drawing.SystemFonts",
+      "kind": "property",
+      "name": "MenuFont",
+      "sig": " : Font",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.ColorTranslator",
+      "kind": "method",
+      "name": "FromHtml",
+      "sig": "(string) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "field",
+      "name": "Empty",
+      "sig": "Empty : Color",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "FromArgb",
+      "sig": "(int) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "FromArgb",
+      "sig": "(int, Color) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "FromArgb",
+      "sig": "(int, int, int) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "FromArgb",
+      "sig": "(int, int, int, int) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "FromKnownColor",
+      "sig": "(KnownColor) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "FromName",
+      "sig": "(string) : Color",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "ToArgb",
+      "sig": "() : int",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "method",
+      "name": "ToKnownColor",
+      "sig": "() : KnownColor",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "A",
+      "sig": " : byte",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "Black",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "Blue",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "B",
+      "sig": " : byte",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "DimGray",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "Green",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "G",
+      "sig": " : byte",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "Name",
+      "sig": " : string",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "Orange",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "Red",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "R",
+      "sig": " : byte",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Color",
+      "kind": "property",
+      "name": "White",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.PointF",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(float, float)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.PointF",
+      "kind": "field",
+      "name": "Empty",
+      "sig": "Empty : PointF",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.PointF",
+      "kind": "method",
+      "name": "op_Equality",
+      "sig": "(PointF, PointF) : bool",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.PointF",
+      "kind": "property",
+      "name": "X",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.PointF",
+      "kind": "property",
+      "name": "Y",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "field",
+      "name": "Empty",
+      "sig": "Empty : Point",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "method",
+      "name": "Offset",
+      "sig": "(Point) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "method",
+      "name": "Offset",
+      "sig": "(int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "method",
+      "name": "op_Equality",
+      "sig": "(Point, Point) : bool",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "method",
+      "name": "op_Implicit",
+      "sig": "(Point) : PointF",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "property",
+      "name": "IsEmpty",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "property",
+      "name": "X",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Point",
+      "kind": "property",
+      "name": "Y",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(PointF, SizeF)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(float, float, float, float)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "field",
+      "name": "Empty",
+      "sig": "Empty : RectangleF",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "FromLTRB",
+      "sig": "(float, float, float, float) : RectangleF",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "Inflate",
+      "sig": "(float, float) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "Intersect",
+      "sig": "(RectangleF, RectangleF) : RectangleF",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "Offset",
+      "sig": "(PointF) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "Offset",
+      "sig": "(float, float) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "Union",
+      "sig": "(RectangleF, RectangleF) : RectangleF",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "method",
+      "name": "op_Implicit",
+      "sig": "(Rectangle) : RectangleF",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Bottom",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "IsEmpty",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Left",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Location",
+      "sig": " : PointF",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Right",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Size",
+      "sig": " : SizeF",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Top",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Width",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "X",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.RectangleF",
+      "kind": "property",
+      "name": "Y",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(Point, Size)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int, int, int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "field",
+      "name": "Empty",
+      "sig": "Empty : Rectangle",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "FromLTRB",
+      "sig": "(int, int, int, int) : Rectangle",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "Intersect",
+      "sig": "(Rectangle) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "Intersect",
+      "sig": "(Rectangle, Rectangle) : Rectangle",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "Offset",
+      "sig": "(int, int) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "Round",
+      "sig": "(RectangleF) : Rectangle",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "Truncate",
+      "sig": "(RectangleF) : Rectangle",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "method",
+      "name": "Union",
+      "sig": "(Rectangle, Rectangle) : Rectangle",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Bottom",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "IsEmpty",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Left",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Location",
+      "sig": " : Point",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Right",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Size",
+      "sig": " : Size",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Top",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Width",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "X",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Rectangle",
+      "kind": "property",
+      "name": "Y",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SizeF",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(float, float)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SizeF",
+      "kind": "method",
+      "name": "ToSize",
+      "sig": "() : Size",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SizeF",
+      "kind": "method",
+      "name": "op_Equality",
+      "sig": "(SizeF, SizeF) : bool",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SizeF",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SizeF",
+      "kind": "property",
+      "name": "Width",
+      "sig": " : float",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "field",
+      "name": "Empty",
+      "sig": "Empty : Size",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "method",
+      "name": "op_Equality",
+      "sig": "(Size, Size) : bool",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "method",
+      "name": "op_Implicit",
+      "sig": "(Size) : SizeF",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "property",
+      "name": "Height",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "property",
+      "name": "IsEmpty",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.Size",
+      "kind": "property",
+      "name": "Width",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ActiveBorder",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ActiveCaptionText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ActiveCaption",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "AppWorkspace",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ButtonFace",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ButtonHighlight",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ButtonShadow",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ControlDarkDark",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ControlDark",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ControlLightLight",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ControlLight",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ControlText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "Control",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "Desktop",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "GradientActiveCaption",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "GradientInactiveCaption",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "GrayText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "HighlightText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "Highlight",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "HotTrack",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "InactiveBorder",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "InactiveCaptionText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "InactiveCaption",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "InfoText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "Info",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "MenuBar",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "MenuHighlight",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "MenuText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "Menu",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "ScrollBar",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "WindowFrame",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "WindowText",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Drawing.Primitives",
+      "type": "System.Drawing.SystemColors",
+      "kind": "property",
+      "name": "Window",
+      "sig": " : Color",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "type": "System.Windows.Forms.Padding",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "type": "System.Windows.Forms.Padding",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(int, int, int, int)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "type": "System.Windows.Forms.Padding",
+      "kind": "property",
+      "name": "Horizontal",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "type": "System.Windows.Forms.Padding",
+      "kind": "property",
+      "name": "Left",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "type": "System.Windows.Forms.Padding",
+      "kind": "property",
+      "name": "Top",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms.Primitives",
+      "type": "System.Windows.Forms.Padding",
+      "kind": "property",
+      "name": "Vertical",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Application",
+      "kind": "event",
+      "name": "Idle",
+      "sig": " : EventHandler",
+      "isStatic": true,
+      "accessors": "add"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Application",
+      "kind": "event",
+      "name": "ThreadException",
+      "sig": " : ThreadExceptionEventHandler",
+      "isStatic": true,
+      "accessors": "add"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Application",
+      "kind": "method",
+      "name": "RaiseIdle",
+      "sig": "(EventArgs) : void",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Application",
+      "kind": "property",
+      "name": "CompanyName",
+      "sig": " : string",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Application",
+      "kind": "property",
+      "name": "ProductName",
+      "sig": " : string",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Application",
+      "kind": "property",
+      "name": "ProductVersion",
+      "sig": " : string",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Clipboard",
+      "kind": "method",
+      "name": "SetDataObject",
+      "sig": "(object) : void",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.CommonDialog",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.CommonDialog",
+      "kind": "method",
+      "name": "Reset",
+      "sig": "() : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.CommonDialog",
+      "kind": "method",
+      "name": "ShowDialog",
+      "sig": "() : DialogResult",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Control",
+      "kind": "property",
+      "name": "Handle",
+      "sig": " : nint",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Control",
+      "kind": "property",
+      "name": "IsDisposed",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Control",
+      "kind": "property",
+      "name": "Visible",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Cursor",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(nint)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Cursor",
+      "kind": "method",
+      "name": "Draw",
+      "sig": "(Graphics, Rectangle) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Cursor",
+      "kind": "method",
+      "name": "op_Equality",
+      "sig": "(Cursor, Cursor) : bool",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Cursor",
+      "kind": "property",
+      "name": "HotSpot",
+      "sig": " : Point",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Cursor",
+      "kind": "property",
+      "name": "Size",
+      "sig": " : Size",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.DataFormats+Format",
+      "kind": "property",
+      "name": "Id",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.DataFormats",
+      "kind": "field",
+      "name": "UnicodeText",
+      "sig": "UnicodeText : string",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.DataFormats",
+      "kind": "method",
+      "name": "GetFormat",
+      "sig": "(string) : DataFormats.Format",
+      "isStatic": true,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.DataObject",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.DataObject",
+      "kind": "method",
+      "name": "GetData",
+      "sig": "(string, bool) : object",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.DataObject",
+      "kind": "method",
+      "name": "SetData",
+      "sig": "(string, object) : void",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Form",
+      "kind": "property",
+      "name": "WindowState",
+      "sig": " : FormWindowState",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.IWin32Window",
+      "kind": "property",
+      "name": "Handle",
+      "sig": " : nint",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.MethodInvoker",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "(object, nint)",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "ctor",
+      "name": ".ctor",
+      "sig": "()",
+      "isStatic": false,
+      "accessors": ""
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "ButtonPressedBorder",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "ButtonPressedGradientBegin",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "ButtonPressedGradientEnd",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "ButtonSelectedHighlightBorder",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "MenuItemPressedGradientBegin",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "MenuItemPressedGradientEnd",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "MenuItemSelectedGradientBegin",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "MenuItemSelectedGradientEnd",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "ToolStripDropDownBackground",
+      "sig": " : Color",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.ProfessionalColorTable",
+      "kind": "property",
+      "name": "UseSystemColors",
+      "sig": " : bool",
+      "isStatic": false,
+      "accessors": "get,set"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Screen",
+      "kind": "property",
+      "name": "BitsPerPixel",
+      "sig": " : int",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.Screen",
+      "kind": "property",
+      "name": "PrimaryScreen",
+      "sig": " : Screen",
+      "isStatic": true,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.TreeNode",
+      "kind": "property",
+      "name": "Handle",
+      "sig": " : nint",
+      "isStatic": false,
+      "accessors": "get"
+    },
+    {
+      "scope": "System.Windows.Forms",
+      "type": "System.Windows.Forms.TreeNode",
+      "kind": "property",
+      "name": "TreeView",
+      "sig": " : TreeView",
+      "isStatic": false,
+      "accessors": "get"
+    }
+  ],
+  "dllImports": [
+    {
+      "module": "credui.dll",
+      "entryPoint": "CredUIConfirmCredentialsW",
+      "declaring": "cYo.Common.Win32.UserCredentialsDialog+Win32Native",
+      "name": "CredUIConfirmCredentialsW",
+      "sig": "(string, bool)"
+    },
+    {
+      "module": "credui.dll",
+      "entryPoint": "CredUIParseUserNameW",
+      "declaring": "cYo.Common.Win32.UserCredentialsDialog+Win32Native",
+      "name": "CredUIParseUserNameW",
+      "sig": "(string, StringBuilder, int, StringBuilder, int)"
+    },
+    {
+      "module": "credui.dll",
+      "entryPoint": "CredUIPromptForCredentialsW",
+      "declaring": "cYo.Common.Win32.UserCredentialsDialog+Win32Native",
+      "name": "CredUIPromptForCredentials",
+      "sig": "(CredUIInfo&, string, nint, int, StringBuilder, int, StringBuilder, int, bool&, UserCredentialsDialogFlags)"
+    },
+    {
+      "module": "dwmapi.dll",
+      "entryPoint": "DwmSetWindowAttribute",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "DwmSetWindowAttribute",
+      "sig": "(nint, int, int&, int)"
+    },
+    {
+      "module": "gdi32.dll",
+      "entryPoint": "CreateBitmap",
+      "declaring": "cYo.Common.Win32.BitmapCursor+NativeBitmapCursor+Native",
+      "name": "CreateBitmap",
+      "sig": "(int, int, uint, uint, nint)"
+    },
+    {
+      "module": "gdi32.dll",
+      "entryPoint": "DeleteObject",
+      "declaring": "cYo.Common.Win32.BitmapCursor+NativeBitmapCursor+Native",
+      "name": "DeleteObject",
+      "sig": "(nint)"
+    },
+    {
+      "module": "Gdi32",
+      "entryPoint": "DeleteObject",
+      "declaring": "cYo.Common.Win32.FontDC+UnsafeNativeMethods",
+      "name": "DeleteObject",
+      "sig": "(HandleRef)"
+    },
+    {
+      "module": "gdi32.dll",
+      "entryPoint": "DeleteObject",
+      "declaring": "cYo.Common.Win32.UserCredentialsDialog+Win32Native",
+      "name": "DeleteObject",
+      "sig": "(nint)"
+    },
+    {
+      "module": "Gdi32",
+      "entryPoint": "SelectObject",
+      "declaring": "cYo.Common.Win32.FontDC+UnsafeNativeMethods",
+      "name": "SelectObject",
+      "sig": "(HandleRef, HandleRef)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlColorEncodingSetToSRGB",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlColorEncodingSetToSRGB",
+      "sig": "(JxlColorEncoding&, int)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderCreate",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderCreate",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderDestroy",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderDestroy",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderGetBasicInfo",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderGetBasicInfo",
+      "sig": "(nint, JxlBasicInfo&)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderImageOutBufferSize",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderImageOutBufferSize",
+      "sig": "(nint, JxlPixelFormat&, nuint&)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderProcessInput",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderProcessInput",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderSetImageOutBuffer",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderSetImageOutBuffer",
+      "sig": "(nint, JxlPixelFormat&, nint, nuint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderSetInput",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderSetInput",
+      "sig": "(nint, byte[], nuint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlDecoderSubscribeEvents",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlDecoderSubscribeEvents",
+      "sig": "(nint, int)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderAddImageFrame",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderAddImageFrame",
+      "sig": "(nint, JxlPixelFormat&, nint, nuint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderAddJPEGFrame",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderAddJPEGFrame",
+      "sig": "(nint, byte[], nuint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderCloseFrames",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderCloseFrames",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderCloseInput",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderCloseInput",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderCreate",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderCreate",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderDestroy",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderDestroy",
+      "sig": "(nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderFrameSettingsCreate",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderFrameSettingsCreate",
+      "sig": "(nint, nint)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderFrameSettingsSetOption",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderFrameSettingsSetOption",
+      "sig": "(nint, JxlEncoderFrameSettingId, long)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderProcessOutput",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderProcessOutput",
+      "sig": "(nint, byte**, nuint*)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderSetBasicInfo",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderSetBasicInfo",
+      "sig": "(nint, JxlBasicInfo&)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderSetColorEncoding",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderSetColorEncoding",
+      "sig": "(nint, JxlColorEncoding&)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderSetFrameDistance",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderSetFrameDistance",
+      "sig": "(nint, float)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderSetFrameLossless",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderSetFrameLossless",
+      "sig": "(nint, int)"
+    },
+    {
+      "module": "jxl.dll",
+      "entryPoint": "JxlEncoderStoreJPEGMetadata",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.JpegXLImage+NativeMethods",
+      "name": "JxlEncoderStoreJPEGMetadata",
+      "sig": "(nint, int)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "BackupRead",
+      "declaring": "cYo.Common.Win32.AlternateDataStreamFile+NativeMethods",
+      "name": "BackupRead",
+      "sig": "(SafeFileHandle, WIN32_STREAM_ID&, int, int&, bool, bool, int&)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "BackupRead",
+      "declaring": "cYo.Common.Win32.AlternateDataStreamFile+NativeMethods",
+      "name": "BackupRead",
+      "sig": "(SafeFileHandle, nint, int, int&, bool, bool, int&)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "BackupSeek",
+      "declaring": "cYo.Common.Win32.AlternateDataStreamFile+NativeMethods",
+      "name": "BackupSeek",
+      "sig": "(SafeFileHandle, int, int, int&, int&, int&)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "CloseHandle",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "CloseHandle",
+      "sig": "(nint)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "CreateFile",
+      "declaring": "cYo.Common.Win32.AlternateDataStreamFile+NativeMethods",
+      "name": "CreateFile",
+      "sig": "(string, uint, uint, nint, uint, uint, nint)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "DeleteFile",
+      "declaring": "cYo.Common.Win32.AlternateDataStreamFile+NativeMethods",
+      "name": "DeleteFile",
+      "sig": "(string)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "FindClose",
+      "declaring": "cYo.Common.Win32.FileSystemEnumerable+Native",
+      "name": "FindClose",
+      "sig": "(nint)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "FindFirstFile",
+      "declaring": "cYo.Common.Win32.FileSystemEnumerable+Native",
+      "name": "FindFirstFile",
+      "sig": "(string, WIN32_FIND_DATA&)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "FindNextFile",
+      "declaring": "cYo.Common.Win32.FileSystemEnumerable+Native",
+      "name": "FindNextFile",
+      "sig": "(nint, WIN32_FIND_DATA&)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "FreeLibrary",
+      "declaring": "cYo.Common.Compression.SevenZip.SevenZipFactory+NativeMethods+SafeLibraryHandle",
+      "name": "FreeLibrary",
+      "sig": "(nint)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "GetOEMCP",
+      "declaring": "cYo.Common.Win32.ExecuteProcess+Result+Native",
+      "name": "GetOEMCP",
+      "sig": "()"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "GetProcAddress",
+      "declaring": "cYo.Common.Compression.SevenZip.SevenZipFactory+NativeMethods",
+      "name": "GetProcAddress",
+      "sig": "(SafeLibraryHandle, string)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "GetProcAddress",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "GetProcAddress",
+      "sig": "(nuint, string)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "GetShortPathName",
+      "declaring": "cYo.Common.Win32.FileMethods+NativeMethods",
+      "name": "GetShortPathName",
+      "sig": "(string, StringBuilder, int)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "GlobalAlloc",
+      "declaring": "cYo.Common.Win32.DataObjectEx+NativeMethods",
+      "name": "GlobalAlloc",
+      "sig": "(int, int)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "GlobalFree",
+      "declaring": "cYo.Common.Win32.DataObjectEx+NativeMethods",
+      "name": "GlobalFree",
+      "sig": "(HandleRef)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "LoadLibraryEx",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "LoadLibraryEx",
+      "sig": "(string, nint, uint)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "LoadLibrary",
+      "declaring": "cYo.Common.Compression.SevenZip.SevenZipFactory+NativeMethods",
+      "name": "LoadLibrary",
+      "sig": "(string)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "LoadLibrary",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "LoadLibrary",
+      "sig": "(string)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "PowerClearRequest",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "PowerClearRequest",
+      "sig": "(PowerRequestHandle, PowerRequestType)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "PowerCreateRequest",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "PowerCreateRequest",
+      "sig": "(POWER_REQUEST_CONTEXT&)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "PowerSetRequest",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "PowerSetRequest",
+      "sig": "(PowerRequestHandle, PowerRequestType)"
+    },
+    {
+      "module": "kernel32",
+      "entryPoint": "RegisterApplicationRestart",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "RegisterApplicationRestart",
+      "sig": "(string, int)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "SetFilePointer",
+      "declaring": "cYo.Common.Win32.AlternateDataStreamFile+NativeMethods",
+      "name": "SetFilePointer",
+      "sig": "(SafeFileHandle, int, int, uint)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "SetThreadExecutionState",
+      "declaring": "cYo.Common.Threading.ThreadUtility",
+      "name": "SetThreadExecutionState",
+      "sig": "(EXECUTION_STATE)"
+    },
+    {
+      "module": "kernel32.dll",
+      "entryPoint": "SetThreadExecutionState",
+      "declaring": "cYo.Common.Win32.PowerRequest+NativeMethods",
+      "name": "SetThreadExecutionState",
+      "sig": "(EXECUTION_STATE)"
+    },
+    {
+      "module": "libheif",
+      "entryPoint": "heif_check_filetype",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.HeifAvifImage+NativeMethods",
+      "name": "heif_check_filetype",
+      "sig": "(nint, int)"
+    },
+    {
+      "module": "ole32.dll",
+      "entryPoint": "PropVariantClear",
+      "declaring": "cYo.Common.Compression.SevenZip.PropVariant",
+      "name": "PropVariantClear",
+      "sig": "(PropVariant&)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPDecodeBGRAInto",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPDecodeBGRAInto64",
+      "sig": "(nint, nuint, nint, nuint, int)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPEncodeBGRA",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeBGRA64",
+      "sig": "(nint, int, int, int, float, nint&)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPEncodeBGR",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeBGR64",
+      "sig": "(nint, int, int, int, float, nint&)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPEncodeLosslessBGRA",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeLosslessBGRA64",
+      "sig": "(nint, int, int, int, nint&)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPEncodeLosslessBGR",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeLosslessBGR64",
+      "sig": "(nint, int, int, int, nint&)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPFree",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPFree64",
+      "sig": "(nint)"
+    },
+    {
+      "module": "Resources\\x64\\libwebp.dll",
+      "entryPoint": "WebPGetInfo",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPGetInfo64",
+      "sig": "(nint, nuint, int&, int&)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPDecodeBGRAInto",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPDecodeBGRAInto32",
+      "sig": "(nint, nuint, nint, nuint, int)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPEncodeBGRA",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeBGRA32",
+      "sig": "(nint, int, int, int, float, nint&)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPEncodeBGR",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeBGR32",
+      "sig": "(nint, int, int, int, float, nint&)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPEncodeLosslessBGRA",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeLosslessBGRA32",
+      "sig": "(nint, int, int, int, nint&)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPEncodeLosslessBGR",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPEncodeLosslessBGR32",
+      "sig": "(nint, int, int, int, nint&)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPFree",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPFree32",
+      "sig": "(nint)"
+    },
+    {
+      "module": "Resources\\x86\\libwebp.dll",
+      "entryPoint": "WebPGetInfo",
+      "declaring": "cYo.Projects.ComicRack.Engine.IO.Provider.WebpImage+NativeMethods",
+      "name": "WebPGetInfo32",
+      "sig": "(nint, nuint, int&, int&)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "#17",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "ILRemoveLastID",
+      "sig": "(nint)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "#18",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "ILClone",
+      "sig": "(nint)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "#25",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "ILCombine",
+      "sig": "(nint, nint)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "ILCreateFromPath",
+      "declaring": "cYo.Common.Win32.FileExplorer+NativeMethods",
+      "name": "ILCreateFromPath",
+      "sig": "(string)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "ILFree",
+      "declaring": "cYo.Common.Win32.FileExplorer+NativeMethods",
+      "name": "ILFree",
+      "sig": "(nint)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHChangeNotify",
+      "declaring": "cYo.Common.Win32.ShellRegister+Native",
+      "name": "SHChangeNotify",
+      "sig": "(HChangeNotifyEventID, HChangeNotifyFlags, nint, nint)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHCreateItemFromParsingName",
+      "declaring": "cYo.Common.Win32.FileOperations.IFileOperation+Native",
+      "name": "SHCreateItemFromParsingName",
+      "sig": "(string, nint, Guid&, IShellItem&)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHFileOperation",
+      "declaring": "cYo.Common.Win32.FileOperations.SHFileOperation+Native",
+      "name": "SHFileOperation",
+      "sig": "(SHFILEOPSTRUCT&)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHGetDesktopFolder",
+      "declaring": "cYo.Common.Win32.ShellFolder+NativeMethods",
+      "name": "SHGetDesktopFolder",
+      "sig": "(IShellFolder&)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHGetDesktopFolder",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "SHGetDesktopFolder",
+      "sig": "(IShellFolder&)"
+    },
+    {
+      "module": "Shell32.dll",
+      "entryPoint": "SHGetFileInfo",
+      "declaring": "cYo.Common.Win32.ShellIcon+Unsafe",
+      "name": "SHGetFileInfo",
+      "sig": "(string, uint, ShellFileInfo&, uint, uint)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHGetFileInfo",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "SHGetFileInfo",
+      "sig": "(nint, uint, SHFILEINFO&, int, SHGFI)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHGetFileInfo",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "SHGetFileInfo",
+      "sig": "(string, uint, SHFILEINFO&, int, SHGFI)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHGetFolderLocation",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "SHGetFolderLocation",
+      "sig": "(nint, CSIDL, nint, uint, nint&)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHGetPathFromIDList",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "SHGetPathFromIDList",
+      "sig": "(nint, StringBuilder)"
+    },
+    {
+      "module": "shell32.dll",
+      "entryPoint": "SHOpenFolderAndSelectItems",
+      "declaring": "cYo.Common.Win32.FileExplorer+NativeMethods",
+      "name": "SHOpenFolderAndSelectItems",
+      "sig": "(nint, uint, nint, uint)"
+    },
+    {
+      "module": "shlwapi.dll",
+      "entryPoint": "PathGetCharType",
+      "declaring": "cYo.Common.IO.FileUtility+Native",
+      "name": "PathGetCharType",
+      "sig": "(char)"
+    },
+    {
+      "module": "USER32.DLL",
+      "entryPoint": "CreateIconIndirect",
+      "declaring": "cYo.Common.Win32.BitmapCursor+NativeBitmapCursor+Native",
+      "name": "CreateIconIndirect",
+      "sig": "(ICONINFO&)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "DestroyIcon",
+      "declaring": "cYo.Common.Drawing.BitmapExtensions",
+      "name": "DestroyIcon",
+      "sig": "(nint)"
+    },
+    {
+      "module": "USER32.DLL",
+      "entryPoint": "DestroyIcon",
+      "declaring": "cYo.Common.Win32.BitmapCursor+NativeBitmapCursor+Native",
+      "name": "DestroyIcon",
+      "sig": "(nint)"
+    },
+    {
+      "module": "User32.dll",
+      "entryPoint": "DestroyIcon",
+      "declaring": "cYo.Common.Win32.ShellIcon+Unsafe",
+      "name": "DestroyIcon",
+      "sig": "(nint)"
+    },
+    {
+      "module": "User32.dll",
+      "entryPoint": "DestroyIcon",
+      "declaring": "cYo.Common.Win32.ShellPidl+NativeMethods",
+      "name": "DestroyIcon",
+      "sig": "(nint)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "GetComboBoxInfo",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "GetComboBoxInfo",
+      "sig": "(nint, COMBOBOXINFO&)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "GetKeyNameText",
+      "declaring": "cYo.Common.Win32.Keyboard+Native",
+      "name": "GetKeyNameText",
+      "sig": "(uint, StringBuilder, int)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "GetWindowLong",
+      "declaring": "cYo.Common.Win32.TrueVisibility+Native",
+      "name": "GetWindowLong",
+      "sig": "(nint, int)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "GetWindow",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "GetWindow",
+      "sig": "(nint, uint)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "MapVirtualKey",
+      "declaring": "cYo.Common.Win32.Keyboard+Native",
+      "name": "MapVirtualKey",
+      "sig": "(uint, uint)"
+    },
+    {
+      "module": "user32.dll",
+      "entryPoint": "SendMessage",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "SendMessage",
+      "sig": "(nint, int, nint, nint)"
+    },
+    {
+      "module": "user32",
+      "entryPoint": "SendMessage",
+      "declaring": "cYo.Common.Win32.VariableHeightTreeNode",
+      "name": "SendMessage",
+      "sig": "(nint, uint, nint, TVITEMEX&)"
+    },
+    {
+      "module": "uxtheme.dll",
+      "entryPoint": "#133",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "AllowDarkModeForWindow",
+      "sig": "(nint, bool)"
+    },
+    {
+      "module": "uxtheme.dll",
+      "entryPoint": "#135",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "AllowDarkModeForApp",
+      "sig": "(bool)"
+    },
+    {
+      "module": "uxtheme.dll",
+      "entryPoint": "#135",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "SetPreferredAppMode",
+      "sig": "(PreferredAppMode)"
+    },
+    {
+      "module": "uxtheme.dll",
+      "entryPoint": "#136",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "FlushMenuThemes",
+      "sig": "()"
+    },
+    {
+      "module": "uxtheme.dll",
+      "entryPoint": "SetWindowTheme",
+      "declaring": "cYo.Common.Win32.UXTheme+Native",
+      "name": "SetWindowTheme",
+      "sig": "(nint, string, string)"
+    }
+  ]
+}

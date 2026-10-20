@@ -45,7 +45,7 @@ dotnet build mac/ComicRack.Plugins.Core/ComicRack.Plugins.Core.csproj -p:CensusP
 dotnet run --project mac/tools/api-inventory     # writes mac/reports/api-inventory.md
 ```
 
-`api-inventory` builds pass A clean and lists the System.Drawing, System.Windows.Forms and P/Invoke members the Core uses. Pass A and B share `obj/` (the restore result is per pass): `dotnet build` restores by itself, but a bare `dotnet msbuild` query needs `-restore` after the other pass ran.
+`api-inventory` builds pass A clean and lists the System.Drawing, System.Windows.Forms and P/Invoke members the Core uses. `dotnet run --project mac/tools/api-inventory -- --compare mac/reports/api-baseline.json` compares the current surface with the committed baseline and prints `no new platform API` (exit 0) or the new types, members and DllImports with "covered by the shim" and "linked" answers (exit 1); `-- --write-baseline` rewrites the baseline after a reviewed change (P0.5b). Pass A and B share `obj/` (the restore result is per pass): `dotnet build` restores by itself, but a bare `dotnet msbuild` query needs `-restore` after the other pass ran.
 
 ## Compat shims and tests (M1.1)
 
