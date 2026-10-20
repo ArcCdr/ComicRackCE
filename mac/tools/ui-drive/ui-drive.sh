@@ -24,7 +24,7 @@ usage: ui-drive.sh <command> [args]
   front                                                  bring the app to the front (activates only the launched pid)
   menu <Menu> <Item> [<Sub>]                             click a menu item (path of any depth)
   menu-items [<Menu> [<Item>...]]                        list menu bar items, or the items of a menu: name, shortcut, mark, enabled
-  key <combo>                                            e.g. cmd+shift+g, return, escape, right, f5 (see README)
+  key <combo>                                            e.g. cmd+shift+g, return, escape, right, f5, cmd+code19 (see README)
   keycode <n>                                            raw key code
   type <text>                                            type text
   click <x> <y> [--right] [--double] [--window ID]       click, window relative points
@@ -32,6 +32,7 @@ usage: ui-drive.sh <command> [args]
   probe <png> <x> <y> [--box N]                          pixel colour (crcli image probe)
   stats <png>                                            channel statistics, non-blank check (crcli image stats)
   choose-path <path>                                     in an open/save panel: Cmd+Shift+G, path, Return, Return
+  texts                                                  the static texts of the app's windows (status bar, counts, labels): window title <TAB> text
   expect-log <regex> [seconds=10]                        wait for a line of the app log (or its output) that matches
   status                                                 print the session
   check                                                  exit 0 if the GUI session is usable, 4 if locked or no GUI
@@ -217,8 +218,9 @@ parse_combo() {
 		f10) KEY_KIND=code; KEY_VALUE=109 ;;
 		f11) KEY_KIND=code; KEY_VALUE=103 ;;
 		f12) KEY_KIND=code; KEY_VALUE=111 ;;
+		code[0-9]*) case "${name#code}" in *[!0-9]*) die 2 "bad key code in '$combo'" ;; esac; KEY_KIND=code; KEY_VALUE=${name#code} ;;
 		?) KEY_KIND=char; KEY_VALUE=$name ;;
-		*) die 2 "unknown key '$name' in '$combo' (single character, or return escape tab space delete left right up down home end pageup pagedown f1..f12)" ;;
+		*) die 2 "unknown key '$name' in '$combo' (single character, code<N>, or return escape tab space delete left right up down home end pageup pagedown f1..f12)" ;;
 	esac
 }
 
@@ -591,6 +593,46 @@ end run" "$UD_PID" "$path" >/dev/null
 	echo "chose: $path"
 }
 
+cmd_texts() {
+	load_session; check_gui
+	local out rc
+	out=$(printf '%s\n' '
+on run argv
+	set targetPid to (item 1 of argv) as integer
+	set res to ""
+	tell application "System Events"
+		set p to first process whose unix id is targetPid
+		repeat with w in windows of p
+			set wt to ""
+			try
+				set wt to name of w
+			end try
+			if wt is missing value then set wt to ""
+			set els to {}
+			try
+				set els to entire contents of w
+			end try
+			repeat with e in els
+				try
+					if role of e is "AXStaticText" then
+						set v to value of e
+						if v is not missing value and (v as text) is not "" then set res to res & wt & tab & (v as text) & linefeed
+					end if
+				end try
+			end repeat
+		end repeat
+	end tell
+	return res
+end run' | osascript - "$UD_PID" 2>&1); rc=$?
+	if [ $rc -ne 0 ]; then
+		case "$out" in
+			*"not allowed assistive"*|*"-1719"*|*"-25211"*|*"-1743"*) die 4 "no Accessibility access: $out" ;;
+			*) die 1 "AppleScript failed: $out" ;;
+		esac
+	fi
+	printf '%s\n' "$out" | sed '/^$/d'
+}
+
 cmd_expect_log() {
 	[ $# -ge 1 ] || die 2 "expect-log needs a regex"
 	local regex=$1 timeout=${2:-10}
@@ -657,6 +699,7 @@ case "$command_name" in
 	probe) cmd_probe "$@" ;;
 	stats) cmd_stats "$@" ;;
 	choose-path) cmd_choose_path "$@" ;;
+	texts) cmd_texts "$@" ;;
 	expect-log) cmd_expect_log "$@" ;;
 	status) cmd_status "$@" ;;
 	check) cmd_check "$@" ;;

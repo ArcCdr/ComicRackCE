@@ -99,6 +99,7 @@ namespace ComicRack.Cli.Tests
 			Assert.Equal(2, Run(script, "key").code);
 			Assert.Equal(2, Run(script, "key", "hyper+a").code);
 			Assert.Equal(2, Run(script, "key", "cmd+notakey").code);
+			Assert.Equal(2, Run(script, "key", "cmd+code1x").code);
 			Assert.Equal(2, Run(script, "keycode", "abc").code);
 			Assert.Equal(2, Run(script, "click", "1").code);
 			Assert.Equal(2, Run(script, "shot").code);
@@ -107,6 +108,15 @@ namespace ComicRack.Cli.Tests
 			Assert.Equal(2, Run(script, "launch", "--bogus").code);
 			Assert.Equal(2, Run(script, "wait-window").code);
 			Assert.Equal(2, Run(script, "expect-log").code);
+		}
+
+		[Fact]
+		public void A_physical_key_code_is_a_valid_key_and_reaches_the_session_check()
+		{
+			// code<N> is accepted by the parser: the first failure is the missing session (exit 2 with "no session"), not "unknown key".
+			var r = Run(script, "key", "cmd+code20");
+			Assert.Equal(2, r.code);
+			Assert.Contains("no session", r.error);
 		}
 
 		[Fact]

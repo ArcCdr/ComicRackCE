@@ -14,7 +14,7 @@ Requirements: an unlocked GUI session, and Screen Recording and Accessibility gr
 | `front` | Brings the launched app to the front (the only command that activates anything; it targets the launched pid only). |
 | `menu <Menu> <Item> [<Sub>]` | Clicks a menu item through System Events (`menu File "Open Folder…"`). The path may be deeper. |
 | `menu-items [<Menu> [<Item>...]]` | Without arguments the menu bar item names. With a menu, one line per item: `name<TAB>shortcut<TAB>mark<TAB>enabled[<TAB>>]` (`-` is a separator, `>` marks a submenu). Shortcuts are written `Ctrl+Option+Shift+Cmd+Key` (`Option+Cmd+P`, `Ctrl+Cmd+F`); the mark is the check mark character. |
-| `key <combo>` | `cmd+shift+g`, `ctrl+cmd+f`, `return`, `escape`, `right`, `f5`, `space`, `pagedown`, a single character. Modifiers: `cmd`, `shift`, `opt`/`option`/`alt`, `ctrl`. |
+| `key <combo>` | `cmd+shift+g`, `ctrl+cmd+f`, `return`, `escape`, `right`, `f5`, `space`, `pagedown`, a single character, or `code<N>` for a physical key (`cmd+code20` is Cmd and the key at the position of 3 on a US keyboard). Modifiers: `cmd`, `shift`, `opt`/`option`/`alt`, `ctrl`. A single character is typed as that character, so on a non-US layout (this Mac has AZERTY: the digit row needs Shift to type 1, 2, 3) shortcuts on the digit keys need `code<N>` (US codes: 1=18, 2=19, 3=20, 4=21, 5=23, 6=22, 7=26, 8=28, 9=25, 0=29). |
 | `keycode <n>` | A raw virtual key code. |
 | `type <text>` | Types the text (System Events `keystroke`). |
 | `click <x> <y> [--right] [--double] [--window ID]` | Mouse click at window-relative points (Retina: points, not pixels). Refused when the point is outside the window or another app's window covers it. |
@@ -22,6 +22,7 @@ Requirements: an unlocked GUI session, and Screen Recording and Accessibility gr
 | `probe <png> <x> <y> [--box N]` | `crcli image probe`: colour at an image pixel, or the mean of an N x N box. |
 | `stats <png>` | `crcli image stats`: size, per channel mean/min/max, distinct colours, blank yes/no. |
 | `choose-path <path>` | In an open or save panel: Cmd+Shift+G, the path, Return, Return. |
+| `texts` | The static texts of every window of the app through the accessibility tree, one per line: `window title<TAB>text` (the status bar line, the book count "2.246 books", sidebar counts, labels). Read only; no focus needed. |
 | `expect-log <regex> [s=10]` | Waits for an extended regex in the app's log (`<data dir>/Logs/ComicRack.log`) or its console output; prints the first matching line. |
 | `status`, `check` | The session; `check` prints `unlocked` and exits 0, else exits 4. |
 | `quit` | Brings the app to the front, sends Cmd+Q, waits up to 20 s and prints `exit code N` (exit 0 if N is 0). |
@@ -60,4 +61,4 @@ $U shot library && $U stats mac/artifacts/ui-drive/shots/library.png
 $U quit
 ```
 
-Notes: through System Events the app menu bar item of both the dev build and the bundle of 2026-10-17 is called `Avalonia Application` (the menu bar shows the bundle name); P0.6b's `menu-structure` case must account for that. `mac/artifacts/ui-drive/app.out` holds the console output of the last launch.
+Notes: the app menu bar item is named after `Application.Name` (set in `App.axaml` by P0.6b; before it was `Avalonia Application`). `mac/artifacts/ui-drive/app.out` holds the console output of the last launch. The end-to-end cases that use this tool are in `mac/tests/e2e/` (`mac/tools/e2e.sh`).
