@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Classifies the files of an upstream commit range for the sync harness (full-port.md section 5.2, step 2). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>UpstreamScan</RootNamespace>
+    <AssemblyName>upstream-scan</AssemblyName>
+  </PropertyGroup>
+</Project>

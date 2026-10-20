@@ -21,10 +21,12 @@
     <Project Path="tests/ComicRack.Mac.Host.Tests/ComicRack.Mac.Host.Tests.csproj" />
     <Project Path="tests/ComicRack.Cli.Tests/ComicRack.Cli.Tests.csproj" />
     <Project Path="tests/ComicRack.Mac.Tests/ComicRack.Mac.Tests.csproj" />
+    <Project Path="tests/Upstream.Tests/Upstream.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/api-inventory/ApiInventory.csproj" />
     <Project Path="tools/census/Census.csproj" />
     <Project Path="tools/drawing-coverage/DrawingCoverage.csproj" />
+    <Project Path="tools/upstream-scan/UpstreamScan.csproj" />
   </Folder>
 </Solution>
