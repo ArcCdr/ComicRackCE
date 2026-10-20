@@ -16,6 +16,10 @@ namespace ComicRack.Mac
 				Console.Error.WriteLine("Usage: ComicRack.Mac [--smoke-test[=SECONDS]] [--headless] [--data-dir DIR] [--read-book FILE]");
 				return 2;
 			}
+			if (options.ScriptSelfTest != null)
+			{
+				return ScriptSelfTest.Run(options.ScriptSelfTest, Console.Out);
+			}
 			App.StartupOptions = options;
 			try
 			{

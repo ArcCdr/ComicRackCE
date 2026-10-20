@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Spike S4 (P4.1): runs the same scripting checks as the hidden script-selftest option of ComicRack.Mac, in a plain
+       console process. Not part of ComicRack.Mac.slnx. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>S4</RootNamespace>
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <NoWarn>$(NoWarn);CA1416;NU1510;NU1904</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ComicRack.Mac\ScriptSelfTest.cs" Link="ScriptSelfTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The Python 2.7 standard library (Lib/ folder), same version as IronPython. -->
+    <PackageReference Include="IronPython.StdLib" Version="2.7.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ComicRack.Plugins.Core\ComicRack.Plugins.Core.csproj" />
+    <ProjectReference Include="..\..\ComicRack.Engine.Core\ComicRack.Engine.Core.csproj" />
+    <ProjectReference Include="..\..\cYo.Common.Core\cYo.Common.Core.csproj" />
+    <ProjectReference Include="..\..\cYo.Compat.Forms\cYo.Compat.Forms.csproj" />
+    <ProjectReference Include="..\..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
+  </ItemGroup>
+</Project>

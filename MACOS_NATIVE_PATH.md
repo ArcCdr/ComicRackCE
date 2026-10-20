@@ -439,7 +439,7 @@ An **ImageIO-based decoder** (CoreGraphics `CGImageSourceCreateWithData`) is a s
 
 ### 5.7 Scripting on macOS (in v1 scope)
 
-- Use **IronPython 2.7.12** in the net10 build. It is the same Python 2 language, so existing scripts and smart-list expressions (`PythonCommand.CompileExpression`) keep their semantics, including integer division.
+- Use **IronPython 2.7.12** in the net10 build. It is the same Python 2 language, so existing scripts and smart-list expressions (`PythonCommand.CompileExpression`) keep their semantics, including integer division. Spike S4 (§11.4): the stock `IronPython.dll` fails to create any new-style class on .NET 9 and later, so the build applies a small IL patch to it (`mac/spikes/S4-patch`).
 - **All hooks are supported, including UI hooks (D6).**
   - Headless hooks (Books, Library, NewBooks, ParseComicPath, CreateBookList, NetSearch, Startup, Shutdown, ConfigScript, …) need only the Core.
   - Scripts that build dialogs with `System.Windows.Forms`, the `ComicInfoUI`/`QuickOpenUI` panels, and `DrawThumbnailOverlay` (GDI+ `Graphics`) run through the **Script UI Compatibility Layer** (§5.9).
@@ -1043,7 +1043,8 @@ dotnet publish mac/ComicRack.Mac -c Release -r osx-arm64 --self-contained -p:Pub
 ### 11.4 Spike results log
 - **S1** (2026-10-17, M0.3a/M0.3b, `mac/reports/census.md`): can the Core compile on net10? Pass A (`net10.0-windows` + WinForms) 134 errors, then 0 after exclusions and `Replacements/`; pass B (`net10.0`) 1319 errors, then 0 after M1.3 (`dotnet build` of the three shadow projects succeeds, no original file edited). Decision: GO, shadow-project technique.
 - **S2** (2026-10-17, M0.4, `mac/reports/drawing-route.md`): `GeneXus.Drawing.Common` 2.2.3 (Apache-2.0) covers 72 to 75 % of the used System.Drawing surface (threshold 90 %), 4 of 6 checks fail, aliasing cannot serve scripts. Decision: not adopted (G0); custom `cYo.Compat.Drawing` on SkiaSharp.
-- **S3 to S5:** not yet written up.
+- **S4** (2026-10-20, P4.1, `mac/reports/s4-ironpython.md`): IronPython 2.7.12 on .NET 10 arm64. Stock engine: smart-list expressions and `ComicBookExpressionMatcher` work, but every new-style Python class fails (.NET 9 added four default members to `ICustomTypeDescriptor`; `NewTypeMaker` finds no helper for them), so the StdLib and `class X(Control)` do not run. Four-instruction IL patch of `IronPython.dll` (`NewTypeMaker.ImplementCTDOverride` returns for non-abstract methods) fixes it: StdLib (`IronPython.StdLib` 2.7.12, `Lib/` next to the host, 45 of 45 modules probed), Control subclasses and the headless hooks of `Sample.py` pass, in the dev build and in the hardened ad-hoc signed bundle (`allow-jit` is required, `allow-unsigned-executable-memory` is not). Verdict **GO with the patch** (build step; D6 not weakened). Open for S6/P4.2/P4.10: `clr.AddReference("System.Windows.Forms")` has no assembly of that name (IOException, first line of 5 of the 7 bundled scripts), `System.Drawing` leads to the real `System.Drawing.Common` (Bitmap throws), `ComicRack.Engine`/`cYo.Common` names differ from the shadow assemblies, an `AssemblyLoadContext.Resolving` hook cannot map a name to an assembly with another simple name.
+- **S3, S5:** not yet written up.
 
 ### 11.5 Sources (prior art and ecosystem facts)
 

@@ -31,6 +31,13 @@ namespace ComicRack.Mac
 		/// </summary>
 		public string ReadBook { get; private set; }
 
+		/// <summary>
+		/// Hidden <c>--script-selftest FILE</c> (spike S4): run the scripting checks of <see cref="ScriptSelfTest"/> with the Python
+		/// probe script FILE in this process, print the result lines to the console and exit (0 when nothing failed). No window,
+		/// no host, no data folder.
+		/// </summary>
+		public string ScriptSelfTest { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -72,6 +79,14 @@ namespace ComicRack.Mac
 				else if (arg.StartsWith("--read-book=", StringComparison.Ordinal))
 				{
 					options.ReadBook = Path.GetFullPath(arg.Substring("--read-book=".Length));
+				}
+				else if (arg == "--script-selftest" && i + 1 < args.Length)
+				{
+					options.ScriptSelfTest = Path.GetFullPath(args[++i]);
+				}
+				else if (arg.StartsWith("--script-selftest=", StringComparison.Ordinal))
+				{
+					options.ScriptSelfTest = Path.GetFullPath(arg.Substring("--script-selftest=".Length));
 				}
 				else if (arg == "--data-dir" && i + 1 < args.Length)
 				{
