@@ -15,5 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
+    <!-- WindowsTripwireTests generate their books with the code of `crcli fixtures make`. -->
+    <ProjectReference Include="..\..\ComicRack.Cli\ComicRack.Cli.csproj" />
   </ItemGroup>
 </Project>

@@ -111,6 +111,7 @@ namespace ComicRack.Mac.Host
 		{
 			Paths.CreateFolders();
 			Log = new HostLog(Paths.LogFile);
+			NativeLibraryResolver.Log = Log;
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 			TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 			Log.Info($"Opening host. Data {Paths.DataFolder}, cache {Paths.CacheFolder}, database {DatabaseFile}{(readOnly ? " (read only)" : "")}, {RuntimeInformation.FrameworkDescription}, {RuntimeInformation.OSDescription}");
@@ -281,6 +282,10 @@ namespace ComicRack.Mac.Host
 			AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
 			TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
 			Log?.Info(errors.Count == 0 ? "Host closed." : $"Host closed with {errors.Count} error(s).");
+			if (ReferenceEquals(NativeLibraryResolver.Log, Log))
+			{
+				NativeLibraryResolver.Log = null;
+			}
 			Log?.Dispose();
 
 			if (rethrow && errors.Count > 0)

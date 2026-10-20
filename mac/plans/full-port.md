@@ -223,6 +223,13 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Another app (a browser) took the focus twice during the first runs; `front_app` (retries the front call up to four times) and `shot` (fronts first) make the cases robust against that. If another app takes the focus between `front_app` and the key, ui-drive refuses (exit 5) and the case fails with that message instead of typing into the other app.
 - Tests without a window server: `E2eScriptTests` (bash syntax of the runner, library and cases, the case list, no direct osascript in a case, bad arguments exit 2) and one more `UiDriveScriptTests` case for `code<N>`; `ComicRack.Cli.Tests` now has 33 tests.
 
+
+**Facts from P1.2 (2026-10-20)**
+- `NativeLibraryResolver` (mac/ComicRack.Mac.Host) is now installed on five assemblies (`NativeLibraryResolver.CoreAssemblies()`: ComicRack.Engine.Core, cYo.Common.Core, ComicRack.Plugins.Core, cYo.Compat.Forms, cYo.Compat.Drawing). A library name that is a Windows system module (`kernel32 user32 shell32 gdi32 shlwapi ole32 uxtheme dwmapi credui` plus advapi32, ntdll, comctl32, comdlg32, oleaut32, winmm, psapi, version, imm32, mpr, netapi32, setupapi, propsys, crypt32, wininet; with or without `.dll`, any case or path) increments `NativeLibraryResolver.WindowsCalls` on every call and, on the first call per module and entry point, writes `[WARN] ... Windows API <module>!<entry> called from` plus the managed stack (up to 40 frames, one `at Type.Method` per line) to the host log. The resolver still answers "not found", so the runtime raises its DllNotFoundException as before. API: `WindowsCalls`, `WindowsCallRecords` (module, entry, stack, count), `ResetWindowsCalls()`, `WindowsModuleOf(name)`, `Log` (set by `MacHost` while a host is open). The entry point is the `DllImport` method found on the stack, so it needs no entry-point argument from the runtime.
+- Names that are not Windows system modules are not watched: `Resources\x64\libwebp.dll`, `libheif`, the JPEG XL import (codec tasks of P2) and `7z.exe`.
+- Test: `WindowsTripwireTests` in `ComicRack.Mac.Host.Tests` (name table, installed assemblies, a deliberate `cYo.Common.Win32.Keyboard` call logged once with its stack, and the v1 flow: `FixtureCommands` books, scan, thumbnail, page, smart lists, save, close, reopen). The flow lists two known findings in `KnownUntilP13`; any other Windows call fails it. P1.3 fixes the two and then deletes that list so the test requires zero. The test project now references `ComicRack.Cli` (for `FixtureCommands`).
+- The app smoke run (`--smoke-test=3 --headless`, empty library) logs no tripwire line.
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -409,7 +416,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: new host test: a queue whose worker ignores its stop flag for 15 s; `MacHost.Dispose` completes without exception and every later disposal step runs; manifest test passes (changed lines within budget); `verify.sh`.
 
 #### P1.2 Windows P/Invoke tripwire
-- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Depends: none · Effort: high · Unattended: yes · Status: done 2026-10-20
 - Goal: a linked Core path that calls `kernel32`, `user32`, `shell32`, `gdi32`, `shlwapi`, `ole32`, `uxtheme`, `dwmapi` or `credui` is logged once with its managed stack, counted, and fails tests, instead of being swallowed (the `FileSystemEnumerable` lesson of M1.5b).
 - Edit: `mac/ComicRack.Mac.Host/NativeLibraryResolver.cs` (resolver for all Core assemblies: Windows module names log `WARN Windows API <module>!<first entry> called from <stack>` once per module and entry, increment `WindowsCalls`), `mac/ComicRack.Mac.Host/HostLog.cs` if needed.
 - Add: `mac/tests/ComicRack.Mac.Host.Tests/WindowsTripwireTests.cs` (open, scan `crcli fixtures make` output, thumbnail, page, smart lists, save, close: zero calls; a deliberate call to `cYo.Common.Win32` code is detected).
@@ -1448,6 +1455,10 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 - [P0.6b] `Application.Name` is set in `App.axaml` to `ComicRack CE (MVP)`; P6.1 (bundle identity and name) must change it together with the `Product`, `APP_NAME` in `make-app.sh`, the titles in the `.axaml` windows and the menu-structure case (`APP_NAME` in `mac/tests/e2e/lib.sh`).
 - [P0.6b] Shortcuts on digit keys depend on the keyboard layout (AZERTY shows `Cmd+É`); ledger rows for shortcuts compare against the US names, so the P5.T3 `ledger-check --menus` comparison must map layout characters or run on a US layout (the e2e cases use physical key codes).
 - [P0.6a] The Window menu shows two "Enter Full Screen" items (AppKit's Fn+F one and the app's View > Enter Full Screen); P5.R1/P5.R3 decide on the final menu structure.
+
+- [P1.2] Tripwire finding 1, `kernel32!CreateFile`: `NtfsInfoStorage.Load` -> `AlternateDataStreamFile.Exists` -> `AlternateDataStreamFile+NativeMethods.CreateFile`, called by `ComicProvider.LoadInfo` <- `ComicBook.RefreshInfoFromFile` <- `ComicScanner.OnProcessScannedFile` (once per scanned book; the DllNotFoundException is swallowed). P1.3: `EngineConfiguration.Default.DisableNTFS = true` in `MacHost.ConfigureCore`.
+- [P1.2] Tripwire finding 2, `shlwapi!PathGetCharType`: `FileUtility+Native.PathGetCharType` <- `FileUtility.MakeValidFilename` <- `ComicProvider.IsSupportedImage` <- `ArchiveComicProvider.OnParse` <- `ImageProvider.Open` <- `ComicBook.RefreshInfoFromFile` <- `ComicScanner` (once per archive entry; `MakeValidFilename` catches the exception and falls back to `NetMakeValidFilename`, so the result is right but every entry of every scanned archive throws and catches a DllNotFoundException). P1.3: a patched copy of `FileUtility.cs` (pass B, manifest entry) that skips the P/Invoke on macOS.
+- [P1.2] The tripwire does not watch non-system native names (libwebp, libheif, libjxl under `Resources\x64\`, `7z.exe`); the codec tasks of P2 (WebP, HEIF, AVIF, JXL) must add their own checks. Linked but not on the v1 flow tested by P1.2: `cYo.Common.Win32` shell, power, credentials, `FileExplorer`, `ShellRegister`, `Keyboard` code paths (P2.1 and P2.x decide each).
 
 ---
 
