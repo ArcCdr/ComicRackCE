@@ -10,8 +10,9 @@ namespace ComicRack.Cli.Core
 	/// <summary>
 	/// `crcli image probe` and `crcli image stats` (P0.6a): read a PNG (or any Skia-decodable image) and report a pixel colour or
 	/// channel statistics. mac/tools/ui-drive uses them to check screenshots (non-blank, expected colour at a point).
+	/// `crcli image sheet` (P5.T3, <see cref="ImageSheet"/>) puts screenshots and reference cards into one captioned picture.
 	/// </summary>
-	public static class ImageCommands
+	public static partial class ImageCommands
 	{
 		private const string ProbeUsage = "image probe <png> <x> <y> [--box N]";
 		private const string StatsUsage = "image stats <png> [--require-nonblank]";
@@ -22,11 +23,15 @@ namespace ComicRack.Cli.Core
 
 		public static int Run(string[] args, TextWriter output, TextWriter error)
 		{
-			if (args.Length == 0 || (args[0] != "probe" && args[0] != "stats"))
+			if (args.Length == 0 || (args[0] != "probe" && args[0] != "stats" && args[0] != "sheet"))
 			{
-				throw new UsageException("image: expected `probe <png> <x> <y> [--box N]` or `stats <png>`.");
+				throw new UsageException("image: expected `probe <png> <x> <y> [--box N]`, `stats <png>` or `sheet --out <png> --cols N <image-or-card.json>...`.");
 			}
 			var o = Options.Parse(args[1..]);
+			if (args[0] == "sheet")
+			{
+				return ImageSheet.Run(o, output);
+			}
 			return args[0] == "probe" ? Probe(o, output) : Stats(o, output, error);
 		}
 

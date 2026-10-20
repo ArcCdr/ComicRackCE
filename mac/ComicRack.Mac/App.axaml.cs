@@ -72,12 +72,54 @@ namespace ComicRack.Mac
 
 				hostService.Start();
 				Task commandLineBook = options.ReadBook != null ? OpenCommandLineBookAsync(options.ReadBook) : Task.CompletedTask;
+				if (options.FixtureLibrary != null)
+				{
+					commandLineBook = Task.WhenAll(commandLineBook, ScanFixtureLibraryAsync(options.FixtureLibrary));
+				}
+				if (options.Show != null && options.Show != ViewRegistry.MainWindowName)
+				{
+					window.Opened += (sender, e) => ShowRequestedView(window, options.Show);
+				}
 				if (options.SmokeTest)
 				{
 					RunSmokeTest(desktop, window, commandLineBook);
 				}
 			}
 			base.OnFrameworkInitializationCompleted();
+		}
+
+		/// <summary><c>--show NAME</c>: opens the registered view over the library window; a failure is logged as an error.</summary>
+		private static void ShowRequestedView(Window owner, string name)
+		{
+			try
+			{
+				Window shown = ViewRegistry.Show(name, owner);
+				AppLog.Info("Showing the view " + name + (shown != null ? " (\"" + shown.Title + "\")." : "."));
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("The view " + name + " did not open.", ex);
+			}
+		}
+
+		/// <summary><c>--fixture-library DIR</c>: scans DIR into the (private) library once the engine is up.</summary>
+		private async Task ScanFixtureLibraryAsync(string folder)
+		{
+			try
+			{
+				await hostService.Ready;
+				if (hostService.Host == null)
+				{
+					AppLog.Error("Fixture library: the library engine did not start.");
+					return;
+				}
+				await viewModel.ScanFolderAsync(folder);
+				AppLog.Info("Fixture library: " + folder + " scanned.");
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("Fixture library failed.", ex);
+			}
 		}
 
 		/// <summary>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fast gate for the macOS port (mac/plans/full-port.md §2, mac/plans/RUNBOOK.md).
 #
-#   mac/tools/verify.sh            disk guard + rule-1 check + build mac/ComicRack.Mac.slnx + fast tests
+#   mac/tools/verify.sh            disk guard + rule-1 check + parity ledger check + build mac/ComicRack.Mac.slnx + fast tests
 #   mac/tools/verify.sh --full     same, and also the tests marked [Trait("Category", "Slow")]
 #   options: --no-build (reuse the last build), --no-test, --config Release, --keep-logs
 #
@@ -69,6 +69,18 @@ if [ -n "$offenders" ]; then
 	while IFS= read -r f; do SUMMARY+=("                $f"); done <<< "$offenders"
 else
 	add rule-1 PASS "nothing outside mac/ changed against $BASE"
+fi
+
+# 2b. Parity ledger (P5.T3): unique IDs, valid statuses, deviation reasons, known task IDs, and a row for every menu or toolbar
+#     item of the original Designer files. Reads files only (python3 standard library, no build).
+if [ -f mac/tools/ledger-check/ledger-check.py ]; then
+	ledger_out=$(python3 mac/tools/ledger-check/ledger-check.py 2>&1); ledger_rc=$?
+	if [ $ledger_rc -eq 0 ]; then
+		add ledger PASS "$(printf '%s\n' "$ledger_out" | tail -1 | sed 's/^ledger-check: //')"
+	else
+		add ledger FAIL "$(printf '%s\n' "$ledger_out" | grep -c '^FAIL') finding(s) (python3 mac/tools/ledger-check/ledger-check.py); first ones:"
+		while IFS= read -r e; do SUMMARY+=("                $e"); done < <(printf '%s\n' "$ledger_out" | grep '^FAIL' | head -5)
+	fi
 fi
 
 # 3. Build. The Compat.*.Tests drift guards need the Microsoft.WindowsDesktop.App.Ref pack, which a pass A build downloads.

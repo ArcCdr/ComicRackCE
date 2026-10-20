@@ -15,7 +15,7 @@
 
 ## Inbox
 
-**Required now: none.** The four optional blocks below belong to checkpoint C1. Answer any of them whenever convenient; nothing waits for them.
+**Required now: none.** The five optional blocks below belong to checkpoint C1. Answer any of them whenever convenient; nothing waits for them.
 
 ### OA-1: Real CBR and 7-Zip samples (optional, C1)
 - **Status:** OPEN
@@ -71,6 +71,26 @@
 - **Time needed:** about 5 to 15 minutes
 - **If you skip it:** P5.0 is skipped; the defaults of `mac/plans/full-port.md` §1.2 apply (for example: closing the library window keeps the app running; reader defaults as on Windows).
 - **What happens next:** each issue becomes a task `P5.0.<n>` early in wave B.
+- **Your answer** (write below this line, then change Status to ANSWERED):
+  >
+- **Resume:** paste the resume prompt above.
+
+### OA-5: Reference screenshots of the Windows app (optional, C1 (e))
+- **Status:** OPEN
+- **Checkpoint / tasks:** C1 / P5.T3, P5.T4, P5.R1 to P5.R3 and every later UI task (contact sheets) · **Asked:** 2026-10-20 · **Blocks:** nothing; sessions use the default
+- **Why now:** the repository has no screenshot of the Windows app. The contact sheets (`mac/tools/chrome-sheet.sh`) compare each Mac view with a reference; without your screenshot the reference is a card drawn from the original source (layout outline, colour swatches, icons), which shows the structure but not the real look.
+- **What to do:**
+  1. On Windows, in the light theme, take a screenshot of each view below (a window or dialog alone, not the whole screen). If it is easy, also run `ComicRack.exe -dark` and take the same ones again.
+  2. Save them as PNG files in `/Users/vince/dev/ComicRackCE/mac/fixtures/owner/reference/` (git-ignored; create the folder), named `<View>.png`, and `<View>-dark.png` for the dark ones:
+     - `MainWindow` (main window with the browser showing covers and the side panel), `MainWindow-Reader` (a book open, with the navigation overlay shown), `MainWindow-BrowserContextMenu` (right click on a book in the browser)
+     - `ComicBookDialog-Summary`, `ComicBookDialog-Details`, `ComicBookDialog-PlotNotes`, `ComicBookDialog-Catalog`, `ComicBookDialog-Custom`, `ComicBookDialog-Pages`, `ComicBookDialog-Colors` (the Info dialog, each tab)
+     - `PreferencesDialog-Reader`, `PreferencesDialog-Libraries`, `PreferencesDialog-Behavior`, `PreferencesDialog-Scripts`, `PreferencesDialog-Advanced` (each tab)
+     - `SmartListDialog` and `SmartListQueryDialog` (Edit Smart List, both dialogs), `ExportComicsDialog` (Export Books), `ComicDisplaySettingsDialog` (Book Display Settings), `ListLayoutDialog` (List Options)
+  3. Any subset is fine; a missing file only means that row keeps its reference card.
+- **What you should see:** the PNG files in that folder. Nothing else changes until a UI task makes a contact sheet; the sheet then shows your screenshot in its first column.
+- **Time needed:** about 15 to 30 minutes (half of that without the dark ones)
+- **If you skip it:** the first column of every contact sheet is the reference card; the look verdicts at C2 and C6 are then made against the cards and your memory of the Windows app. The optional CI job P5.T5 can produce the same images later.
+- **What happens next:** `mac/tools/chrome-sheet.sh` copies each file into the sheet next to the Mac light and dark shots.
 - **Your answer** (write below this line, then change Status to ANSWERED):
   >
 - **Resume:** paste the resume prompt above.

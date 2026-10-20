@@ -86,6 +86,9 @@ namespace ComicRack.Cli
   image stats <png> [--require-nonblank]
       Size, mean/min/max of R, G, B and A, number of distinct colours, and whether the image is blank (one colour). With
       --require-nonblank a blank image exits with 1. Used by mac/tools/ui-drive to check screenshots.
+  image sheet --out <png> --cols N [--cell-width W] [--gap G] [--background #RRGGBB] <image-or-card.json>[::caption]...
+      Contact sheet: the inputs in rows of N cells (scaled to the cell width, default 480), each with a caption under it
+      (the text after `::`, else the file name). A .json input is a reference card (title, lines, swatches, icons) that is drawn first.
 Options of db/scan/page/thumb/smartlist: --data-dir <dir> (or CRCLI_DATA_DIR) keeps data, cache and logs there; --app-folders uses
 ~/Library/.../ComicRack CE (MVP). Default: a temporary folder that is deleted at the end.
 Everything under mac/fixtures is limited to 1.5 GB; the commands estimate first and refuse to exceed it.";

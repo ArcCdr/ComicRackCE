@@ -14,6 +14,7 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
+| MF.00 | Main menu bar: File, Edit, Browse, Read, Display, Help (in this order) | `mainMenuStrip`: `fileMenu`, `editMenu`, `browseMenu`, `readMenu`, `displayMenu`, `helpMenu` | — | P5.R1 | todo | becomes the macOS menu bar (C-MENU-1); the six menus keep their names and order |
 | MF.01 | Open File... | File `miOpenComic` | Ctrl+O → Cmd+O | P5.10a | todo | MVP has Open Folder on Cmd+O; P5.10a moves it |
 | MF.02 | Close (current book tab) | File `miCloseComic` | Ctrl+X → Option+Cmd+X, alias Cmd+W | P5.32a | todo | Cmd+X is Cut on macOS |
 | MF.03 | Close All | File `miCloseAllComics` | Ctrl+Shift+X → Cmd+Shift+X | P5.32a | todo | |
@@ -35,10 +36,10 @@
 | ME.01 | Info... | Edit `miShowInfo` | Ctrl+I → Cmd+I | P5.7a | todo | |
 | ME.02 | Undo | Edit `miUndo` (`Database.Undo`) | Ctrl+Z → Cmd+Z | P5.7a | todo | |
 | ME.03 | Redo | Edit `miRedo` | Ctrl+Y → Cmd+Y, alias Cmd+Shift+Z | P5.7a | todo | |
-| ME.04 | My Rating (None, 1 to 5 stars, Quick Rating and Review...) | Edit `miRating` → `contextRating` | — | P5.5 | todo | |
+| ME.04 | My Rating (None, 1 to 5 stars, Quick Rating and Review...) | Edit `miRating` → `contextRating`, `miRate0`, `miRate1`, `miRate2`, `miRate3`, `miRate4`, `miRate5`, `miQuickRating` | — | P5.5 | todo | |
 | ME.05 | Page Type | Edit `miPageType` | — | P5.23b | todo | |
 | ME.06 | Page Rotation | Edit `miPageRotate` | — | P5.23b | todo | |
-| ME.07 | Bookmarks > Set Bookmark... | Edit `miSetBookmark` | Ctrl+Shift+B → Cmd+Shift+B | P5.23a | todo | |
+| ME.07 | Bookmarks > Set Bookmark... | Edit `miSetBookmark`, `miBookmarks` | Ctrl+Shift+B → Cmd+Shift+B | P5.23a | todo | |
 | ME.08 | Bookmarks > Remove Bookmark | Edit `miRemoveBookmark` | Ctrl+Shift+D → Cmd+Shift+D | P5.23a | todo | |
 | ME.09 | Bookmarks > Previous Bookmark | Edit `miPrevBookmark` | Ctrl+Shift+P → Cmd+Shift+P | P5.23a | todo | |
 | ME.10 | Bookmarks > Next Bookmark | Edit `miNextBookmark` | Ctrl+Shift+N → Cmd+Shift+N | P5.23a | todo | |
@@ -80,7 +81,7 @@
 | MR.12 | Double Page Auto Scrolling | Read `miDoublePageAutoScroll` | Alt+Shift+S → Option+Shift+S | P5.23d | todo | |
 | MR.13 | Track current Page | Read `miTrackCurrentPage` | Alt+Shift+T → Option+Shift+T | P5.32a | todo | |
 | MD.01 | Book Display Settings... | Display `miComicDisplaySettings` | F9 | P5.23c | todo | |
-| MD.02 | Page Layout > Original Size | Display `miOriginal` | Ctrl+1 → Cmd+1 | P5.23e | todo | MVP fit shortcuts are realigned by P5.R3 |
+| MD.02 | Page Layout > Original Size | Display `miOriginal`, `miPageLayout` | Ctrl+1 → Cmd+1 | P5.23e | todo | MVP fit shortcuts are realigned by P5.R3 |
 | MD.03 | Page Layout > Fit All | Display `miFitAll` | Ctrl+2 → Cmd+2 | P5.R3 | todo | |
 | MD.04 | Page Layout > Fit Width | Display `miFitWidth` | Ctrl+3 → Cmd+3 | P5.R3 | todo | |
 | MD.05 | Page Layout > Fit Width (adaptive) | Display `miFitWidthAdaptive` | Ctrl+4 → Cmd+4 | P5.23e | todo | |
@@ -92,14 +93,14 @@
 | MD.11 | Page Layout > Continuous | Display `miContinuous` | — | P5.23f | todo | |
 | MD.12 | Page Layout > Right to Left | Display `miRightToLeft` | Ctrl+0 → Cmd+0 | P5.R3 | todo | DD7's Cmd+0 for Window > Library moves (C-MENU-2) |
 | MD.13 | Page Layout > Only fit if oversized | Display `miOnlyFitOversized` | Ctrl+Shift+0 → Cmd+Shift+0 | P5.23e | todo | original shares the chord with MD.22 |
-| MD.14 | Zoom > Zoom In | Display `miZoomIn` | Ctrl+Plus → Cmd+= | P5.23e | todo | |
+| MD.14 | Zoom > Zoom In | Display `miZoomIn`, `miZoom` | Ctrl+Plus → Cmd+= | P5.23e | todo | |
 | MD.15 | Zoom > Zoom Out | Display `miZoomOut` | Ctrl+Minus → Cmd+- | P5.23e | todo | |
 | MD.16 | Zoom > Toggle Zoom | Display `miToggleZoom` | Ctrl+Alt+Z → Option+Cmd+Z | P5.23e | todo | |
-| MD.17 | Zoom > 100% 125% 150% 200% 400% | Display `miZoom100..400` | — | P5.23e | todo | |
+| MD.17 | Zoom > 100% 125% 150% 200% 400% | Display `miZoom100..400`, `miZoom125`, `miZoom150`, `miZoom200`, `miZoom400` | — | P5.23e | todo | |
 | MD.18 | Zoom > Custom... (Custom Zoom dialog) | Display `miZoomCustom` | Ctrl+Shift+Z → Option+Cmd+Shift+Z | P5.23e | todo | Cmd+Shift+Z is Redo on macOS |
-| MD.19 | Rotation > Rotate Left / Rotate Right | Display `miRotateLeft/Right` | Ctrl+Shift+Minus/Plus → Cmd+Shift+-/= | P5.23e | todo | |
+| MD.19 | Rotation > Rotate Left / Rotate Right | Display `miRotateLeft/Right`, `miRotation`, `miRotateRight` | Ctrl+Shift+Minus/Plus → Cmd+Shift+-/= | P5.23e | todo | |
 | MD.20 | Rotation > No Rotation | Display `miRotate0` | Ctrl+Shift+7 → Cmd+Shift+7 | P5.23e | todo | |
-| MD.21 | Rotation > 90° / 180° | Display `miRotate90/180` | Ctrl+Shift+8/9 → Cmd+Shift+8/9 | P5.23e | todo | |
+| MD.21 | Rotation > 90° / 180° | Display `miRotate90/180`, `miRotate180` | Ctrl+Shift+8/9 → Cmd+Shift+8/9 | P5.23e | todo | |
 | MD.22 | Rotation > 270° | Display `miRotate270` | Ctrl+Shift+0 → Cmd+Shift+0 | P5.23e | todo | |
 | MD.23 | Rotation > Autorotate Double Pages | Display `miAutoRotate` | — | P5.23e | todo | |
 | MD.24 | Minimal User Interface | Display `miMinimalGui` | F10 | P5.23f | todo | |
@@ -124,15 +125,15 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| TB.01 | Previous Page split button (First Page, Previous Bookmark, Previous Book from List) | `mainToolStrip.tbPrevPage` | as MR/ME rows | P5.R3 | todo | |
-| TB.02 | Next Page split button (Last Page, Next Bookmark, Last Page Read, Next Book from List, Random Book) | `tbNextPage` | as MR/ME rows | P5.R3 | todo | |
-| TB.03 | Page Layout split button (Single, Two Pages, Two Pages adaptive, Continuous, Right to Left) | `tbPageLayout` | as MD rows | P5.R3 | todo | button cycles the layout (`ComicDisplay.TogglePageLayout`) |
-| TB.04 | Fit split button (Original, Fit All, Fit Width, adaptive, Fit Height, Fit Best, Only fit if oversized) | `tbFit` | as MD rows | P5.R3 | todo | button cycles fit (`TogglePageFit`) |
-| TB.05 | Zoom split button showing "100 %" (Zoom In/Out, presets, Custom...) | `tbZoom` | as MD rows | P5.R3 | todo | |
-| TB.06 | Rotate split button showing "0°" (rotation items, Autorotate) | `tbRotate` | as MD rows | P5.R3 | todo | |
+| TB.01 | Previous Page split button (First Page, Previous Bookmark, Previous Book from List) | `mainToolStrip.tbPrevPage`, `tbFirstPage`, `tbPrevBookmark`, `tbPrevFromList` | as MR/ME rows | P5.R3 | todo | |
+| TB.02 | Next Page split button (Last Page, Next Bookmark, Last Page Read, Next Book from List, Random Book) | `tbNextPage`, `tbLastPage`, `tbNextBookmark`, `tbLastPageRead`, `tbNextFromList`, `tbRandomFromList` | as MR/ME rows | P5.R3 | todo | |
+| TB.03 | Page Layout split button (Single, Two Pages, Two Pages adaptive, Continuous, Right to Left) | `tbPageLayout`, `tbSinglePage`, `tbTwoPages`, `tbTwoPagesAdaptive`, `tbContinuous`, `tbRightToLeft` | as MD rows | P5.R3 | todo | button cycles the layout (`ComicDisplay.TogglePageLayout`) |
+| TB.04 | Fit split button (Original, Fit All, Fit Width, adaptive, Fit Height, Fit Best, Only fit if oversized) | `tbFit`, `tbOriginal`, `tbFitAll`, `tbFitWidth`, `tbFitWidthAdaptive`, `tbFitHeight`, `tbBestFit`, `tbOnlyFitOversized` | as MD rows | P5.R3 | todo | button cycles fit (`TogglePageFit`) |
+| TB.05 | Zoom split button showing "100 %" (Zoom In/Out, presets, Custom...) | `tbZoom`, `tbZoomIn`, `tbZoomOut`, `tbZoom100`, `tbZoom125`, `tbZoom150`, `tbZoom200`, `tbZoom400`, `tbZoomCustom` | as MD rows | P5.R3 | todo | |
+| TB.06 | Rotate split button showing "0°" (rotation items, Autorotate) | `tbRotate`, `tbRotateLeft`, `tbRotateRight`, `tbRotate0`, `tbRotate90`, `tbRotate180`, `tbRotate270`, `tbAutoRotate` | as MD rows | P5.R3 | todo | |
 | TB.07 | Magnifier split button | `tbMagnify` | — | P5.23d | todo | drop-down holds `MagnifySetupControl` |
 | TB.08 | Full Screen button | `tbFullScreen` | — | P5.R3 | todo | |
-| TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools` | items as their menu rows | P5.R3 | todo | remote and device items deferred (D4); Show Main Menu: TB.10 |
+| TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools`, `tbOpenComic`, `tbOpenRemoteLibrary`, `tbShowInfo`, `tsWorkspaces`, `tsSaveWorkspace`, `tsEditWorkspaces`, `tbBookmarks`, `tbSetBookmark`, `tbRemoveBookmark`, `tbAutoScroll`, `tbMinimalGui`, `tbReaderUndocked`, `tbScan`, `tbUpdateAllComicFiles`, `tbUpdateWebComics`, `tbCacheThumbnails`, `tsSynchronizeDevices`, `tbComicDisplaySettings`, `tbPreferences`, `tbAbout`, `tbExit` | items as their menu rows | P5.R3 | todo | remote and device items deferred (D4); Show Main Menu: TB.10 |
 | TB.10 | Show Main Menu (toggle menu strip) | `tbShowMainMenu` | Shift+F10 | P5.23f | deviation | impossible: the macOS menu bar cannot be removed from a window; in full screen it auto-hides natively |
 | TC.01 | Book tabs bar (one tab per open book, current tab, close box) | `fileTabs` (`TabBar`) | — | P5.32a | todo | original TabBar look (C-TAB-1) |
 | TC.02 | Tab menu: Close | `cmClose` | as MF.02 | P5.32a | todo | |
@@ -142,13 +143,13 @@
 | TC.06 | Tab menu: Reveal in Explorer | `cmRevealInExplorer` | Ctrl+G → Cmd+G | P5.32a | deviation | native: label "Reveal in Finder" (platform name) |
 | TC.07 | Tab menu: Copy Full Path to Clipboard | `cmCopyPath` | — | P5.32a | todo | |
 | PC.01 | Page menu: Info... | `pageContextMenu.cmShowInfo` | Cmd+I | P5.R3 | todo | |
-| PC.02 | Page menu: My Rating | `cmRating` → `contextRating2` | — | P5.R3 | todo | |
+| PC.02 | Page menu: My Rating | `cmRating` → `contextRating2`, `cmRate0`, `cmRate1`, `cmRate2`, `cmRate3`, `cmRate4`, `cmRate5`, `cmQuickRating` | — | P5.R3 | todo | |
 | PC.03 | Page menu: Page Type, Page Rotation | `cmPageType`, `cmPageRotate` | — | P5.23b | todo | |
-| PC.04 | Page menu: Bookmarks (Set, Remove, Previous, Next, Last Page Read) | `cmBookmarks` | as ME rows | P5.23a | todo | |
-| PC.05 | Page menu: Books (Open File..., Close, Previous/Next/Random Book) | `cmComics` | as MF/MR rows | P5.23a | todo | |
-| PC.06 | Page menu: Page Layout (fit, layout, rotation, oversized) | `cmPageLayout` | as MD rows | P5.R3 | todo | |
+| PC.04 | Page menu: Bookmarks (Set, Remove, Previous, Next, Last Page Read) | `cmBookmarks`, `cmSetBookmark`, `cmRemoveBookmark`, `cmPrevBookmark`, `cmNextBookmark`, `cmLastPageRead` | as ME rows | P5.23a | todo | |
+| PC.05 | Page menu: Books (Open File..., Close, Previous/Next/Random Book) | `cmComics`, `cmOpenComic`, `cmCloseComic`, `cmPrevFromList`, `cmNextFromList`, `cmRandomFromList` | as MF/MR rows | P5.23a | todo | |
+| PC.06 | Page menu: Page Layout (fit, layout, rotation, oversized) | `cmPageLayout`, `cmOriginal`, `cmFitAll`, `cmFitWidth`, `cmFitWidthAdaptive`, `cmFitHeight`, `cmFitBest`, `cmSinglePage`, `cmTwoPages`, `cmTwoPagesAdaptive`, `cmContinuous`, `cmRightToLeft`, `cmRotate0`, `cmRotate90`, `cmRotate180`, `cmRotate270`, `cmOnlyFitOversized` | as MD rows | P5.R3 | todo | |
 | PC.07 | Page menu: Magnifier, Copy Page, Export Page..., Refresh, Minimal User Interface | `cmMagnify`, `cmCopyPage`, `cmExportPage`, `cmRefreshPage`, `cmMinimalGui` | as their rows | P5.23a | todo | |
-| NT.01 | Notification-area icon with menu (Restore, Exit); Minimize/Close to tray settings | `notifyIcon`, `notfifyContextMenu`, Settings `MinimizeToTray`, `CloseMinimizesToTray` | — | P5.33 | todo | macOS equivalent: a menu bar status item (NSStatusItem) with the same menu |
+| NT.01 | Notification-area icon with menu (Restore, Exit); Minimize/Close to tray settings | `notifyIcon`, `notfifyContextMenu`, Settings `MinimizeToTray`, `CloseMinimizesToTray`, `cmNotifyRestore`, `cmNotifyExit` | — | P5.33 | todo | macOS equivalent: a menu bar status item (NSStatusItem) with the same menu |
 
 ## Status bar (`statusStrip`)
 
@@ -166,7 +167,7 @@
 |---|---|---|---|---|---|---|
 | MV.01 | Main window = reader area (book tabs, Quick Open) plus a dockable browser panel | `MainForm` (`mainViewContainer`, `panelReader`) | — | P5.32a | todo | MVP separate reader windows become "Reader in own Window" |
 | MV.02 | Browser tab strip (Library, Folders, Pages, lists opened in tabs) | `MainView.tabStrip` | — | P5.32b | todo | |
-| MV.03 | Docking Mode: Dock Bottom / Left / Right / Fill / Info Panel Right | `tsbAlignBottom..tsbInfoPanelLeft` | Ctrl+Shift+1..5 → Option+Cmd+Shift+1..5 | P5.32b | todo | Cmd+Shift+3/4/5 are screenshots; the group stays consistent |
+| MV.03 | Docking Mode: Dock Bottom / Left / Right / Fill / Info Panel Right | `tsbAlignBottom..tsbInfoPanelLeft`, `tsbAlignment`, `tsbAlignLeft`, `tsbAlignRight`, `tsbAlignFill` | Ctrl+Shift+1..5 → Option+Cmd+Shift+1..5 | P5.32b | todo | Cmd+Shift+3/4/5 are screenshots; the group stays consistent |
 | MV.04 | Browser docking grip, animated expand/collapse (`AnimatePanels`) | `SizableContainer` | — | P5.32b | todo | |
 
 ## Browser (`ComicRack/Views/ComicBrowserControl.Designer.cs`, `ComicExplorerView`)
@@ -175,15 +176,15 @@
 |---|---|---|---|---|---|---|
 | BT.01 | Toolbar: Sidebar toggle | `toolStrip.tbSidebar` | — | P5.4 | todo | |
 | BT.02 | Toolbar: Previous / Next (list history) | `btBrowsePrev`, `btBrowseNext` | Mouse 4/5 | P5.32b | todo | |
-| BT.03 | Toolbar: Views (Thumbnails, Tiles, Details) | `tbbView` | — | P5.12 | todo | |
+| BT.03 | Toolbar: Views (Thumbnails, Tiles, Details) | `tbbView`, `miViewThumbnails`, `miViewTiles`, `miViewDetails` | — | P5.12 | todo | |
 | BT.04 | Views: Collapse/Expand all Groups, Show Group Headers | `miExpandAllGroups`, `miShowGroupHeaders` | Ctrl+Shift+G → Cmd+Shift+G | P5.13a | todo | |
 | BT.05 | Views: Show All / not Read / Reading / Read / only Books / only fileless Entries / Duplicates | `miShowOnly*` | — | P5.15a | todo | |
-| BT.06 | Toolbar: Group (grouper list) | `tbbGroup` | — | P5.13a | todo | |
-| BT.07 | Toolbar: Stack (stacker list) | `tbbStack` | — | P5.13b | todo | |
-| BT.08 | Toolbar: Arrange (sort keys, ascending/descending) | `tbbSort` | — | P5.14 | todo | |
-| BT.09 | Toolbar: Quick search box with scope menu (All, Series, Writer, Artists, Descriptive, Catalog, Filename) | `tsQuickSearch`, `contextQuickSearch` | Ctrl+F → Cmd+F (focus) | P5.15a | todo | |
-| BT.10 | Toolbar: List Layouts (Edit, Save, Reset List Background, Edit Layouts, saved layouts) | `tsListLayouts` | Ctrl+L, Ctrl+Alt+L as MB rows | P5.11b | todo | |
-| BT.11 | Toolbar: Duplicate list (into a new list or smart list) | `tbbDuplicateList` | — | P5.16a | todo | |
+| BT.06 | Toolbar: Group (grouper list) | `tbbGroup`, `dummyToolStripMenuItem` | — | P5.13a | todo | |
+| BT.07 | Toolbar: Stack (stacker list) | `tbbStack`, `dummyToolStripMenuItem1` | — | P5.13b | todo | |
+| BT.08 | Toolbar: Arrange (sort keys, ascending/descending) | `tbbSort`, `dummyToolStripMenuItem2` | — | P5.14 | todo | |
+| BT.09 | Toolbar: Quick search box with scope menu (All, Series, Writer, Artists, Descriptive, Catalog, Filename) | `tsQuickSearch`, `contextQuickSearch`, `miSearchAll`, `miSearchSeries`, `miSearchWriter`, `miSearchArtists`, `miSearchDescriptive`, `miSearchCatalog`, `miSearchFile` | Ctrl+F → Cmd+F (focus) | P5.15a | todo | |
+| BT.10 | Toolbar: List Layouts (Edit, Save, Reset List Background, Edit Layouts, saved layouts) | `tsListLayouts`, `tsEditListLayout`, `tsSaveListLayout`, `tsEditLayouts` | Ctrl+L, Ctrl+Alt+L as MB rows | P5.11b | todo | |
+| BT.11 | Toolbar: Duplicate list (into a new list or smart list) | `tbbDuplicateList`, `dummyEntryToolStripMenuItem2` | — | P5.16a | todo | |
 | BT.12 | Toolbar: Undo / Redo | `tbUndo`, `tbRedo` | as ME.02/03 | P5.7a | todo | |
 | BV.01 | Thumbnails view (cover, title lines, rating, badges) | `ItemView` + `ComicBookViewItem` | — | P5.R2 | todo | |
 | BV.02 | Tiles view | `ItemView` tiles | — | P5.12 | todo | |
@@ -197,18 +198,18 @@
 | BV.10 | Keyboard in the browser: arrows, Return opens, Delete removes | `ItemView` | Delete, alias Cmd+Backspace | P5.3 | todo | |
 | BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | todo | |
 | BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.32a | todo | |
-| BC.03 | Context: Open With (programs, Manage Programs...) | `miOpenWith`, `contextOpenWith` | — | P5.21 | todo | |
+| BC.03 | Context: Open With (programs, Manage Programs...) | `miOpenWith`, `contextOpenWith`, `miOpenWithManager` | — | P5.21 | todo | |
 | BC.04 | Context: Info... | `miProperties` | Cmd+I | P5.5 | todo | |
 | BC.05 | Context: Web... (open the book's Web field) | `miShowWeb` | Ctrl+R → Cmd+R | P5.20 | todo | |
 | BC.06 | Context: Edit (in-place edit of the focused field) | `miEdit` | F2 | P5.11a | todo | |
-| BC.07 | Context: My Rating (None, 1 to 5, Quick Rating and Review...) | `miRateMenu`, `contextRating` | Alt+Shift+0..5, Alt+Shift+Q → Option+Shift+0..5, Option+Shift+Q | P5.5 | todo | |
-| BC.08 | Context: Mark as (Unread, Read, Checked, Unchecked) | `miMarkAs`, `contextMarkAs` | Alt+Shift+U/R/M/V → Option+Shift+U/R/M/V | P5.5 | todo | |
-| BC.09 | Context: Edit List (Move to Top, Move to Bottom, Apply current Order) | `miEditList` | Ctrl+Alt+T/B → Option+Cmd+T/B | P5.16c | todo | |
-| BC.10 | Context: Add to List (list of lists) | `miAddList` | — | P5.16c | todo | |
+| BC.07 | Context: My Rating (None, 1 to 5, Quick Rating and Review...) | `miRateMenu`, `contextRating`, `miRating0`, `miRating1`, `miRating2`, `miRating3`, `miRating4`, `miRating5` | Alt+Shift+0..5, Alt+Shift+Q → Option+Shift+0..5, Option+Shift+Q | P5.5 | todo | |
+| BC.08 | Context: Mark as (Unread, Read, Checked, Unchecked) | `miMarkAs`, `contextMarkAs`, `miMarkUnread`, `miMarkRead`, `miMarkChecked`, `miMarkUnchecked` | Alt+Shift+U/R/M/V → Option+Shift+U/R/M/V | P5.5 | todo | |
+| BC.09 | Context: Edit List (Move to Top, Move to Bottom, Apply current Order) | `miEditList`, `miEditListMoveToTop`, `miEditListMoveToBottom`, `miEditListApplyOrder` | Ctrl+Alt+T/B → Option+Cmd+T/B | P5.16c | todo | |
+| BC.10 | Context: Add to List (list of lists) | `miAddList`, `dummyEntryToolStripMenuItem` | — | P5.16c | todo | |
 | BC.11 | Context: Add to Library | `miAddLibrary` | — | P5.20 | todo | |
 | BC.12 | Context: Browse Books (show only) | `miShowOnly` | — | P5.20 | todo | |
-| BC.13 | Context: Show in List (lists containing the book) | `miShowInList` | — | P5.20 | todo | |
-| BC.14 | Context: Export Books (Export Books..., Export with Previous) | `miExportComics`, `contextExport` | Ctrl+Shift+E, Ctrl+Alt+E → Cmd+Shift+E, Option+Cmd+E | P5.24a | todo | |
+| BC.13 | Context: Show in List (lists containing the book) | `miShowInList`, `dummyEntryToolStripMenuItem1` | — | P5.20 | todo | |
+| BC.14 | Context: Export Books (Export Books..., Export with Previous) | `miExportComics`, `contextExport`, `miExportComicsAs`, `miExportComicsWithPrevious` | Ctrl+Shift+E, Ctrl+Alt+E → Cmd+Shift+E, Option+Cmd+E | P5.24a | todo | |
 | BC.15 | Context: Automation (script commands) | `miAutomation` | — | P4.5 | todo | |
 | BC.16 | Context: Update Book Files | `miUpdateComicFiles` | — | P5.9 | todo | |
 | BC.17 | Context: Reveal Book in Explorer | `miRevealBrowser` | Ctrl+G → Cmd+G | P5.5 | deviation | native: label "Reveal in Finder" |
@@ -224,7 +225,7 @@
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
 | LT.01 | Library tree with list icons, counts and live counters (gauges) | `ComicListLibraryBrowser`, Settings `LibraryGauges*` | — | P5.R1 (look), P5.2 (gauges) | todo | |
-| LT.02 | Tree toolbar: New Folder, New List, New Smart List, New Window, New Tab, Expand/Collapse all, Refresh, Show Favorites, Quick Search | `ComicListLibraryBrowser.toolStrip` | Quick Search Ctrl+Alt+F → Option+Cmd+F | P5.16a | todo | New Tab: P5.32b |
+| LT.02 | Tree toolbar: New Folder, New List, New Smart List, New Window, New Tab, Expand/Collapse all, Refresh, Show Favorites, Quick Search | `ComicListLibraryBrowser.toolStrip`, `tbNewFolder`, `tbNewList`, `tbNewSmartList`, `tbExpandCollapseAll` | Quick Search Ctrl+Alt+F → Option+Cmd+F | P5.16a | todo | New Tab: P5.32b |
 | LT.03 | Tree menu: Edit... (smart list editor) | `treeContextMenu.miEditSmartList` | — | P5.17a | todo | |
 | LT.04 | Tree menu: Rename | `miQueryRename` | F2 | P5.16a | todo | |
 | LT.05 | Tree menu: Sort | `miNodeSort` | — | P5.16a | todo | |
@@ -237,19 +238,19 @@
 | LT.12 | Tree menu: Add to Favorites | `miAddToFavorites` | — | P5.16b | todo | |
 | LT.13 | Tree menu: Refresh | `miRefresh` | — | P5.16a | todo | |
 | LT.14 | Tree menu: Remove... | `miRemoveListOrFolder` | Delete, alias Cmd+Backspace | P5.16a | todo | |
-| LT.15 | Favorites panel (Refresh, Remove...) | `contextMenuFavorites` | — | P5.16b | todo | |
+| LT.15 | Favorites panel (Refresh, Remove...) | `contextMenuFavorites`, `miFavRemove` | — | P5.16b | todo | |
 | LT.16 | Drag and drop of lists (reorder, nest) and books onto lists | `ComicListLibraryBrowser.cs` | — | P5.16b, P5.18 | todo | |
 | FB.01 | Folders browser: folder tree and books of the folder | `ComicListFolderFilesBrowser` | — | P5.30 | todo | |
-| FB.02 | Folders toolbar: Show Favorites, Include all Subfolders, New Window, New Tab, Refresh | `toolStrip` | — | P5.30 | todo | |
-| FB.03 | Folders menu: Open in New Window, Open in New Tab, Add Folder to Favorites, Add Folder to Library, Refresh | `contextMenuFolders` | — | P5.30 | todo | |
-| FB.04 | Folder favorites (Refresh, Remove...) | `contextMenuFavorites` | — | P5.30 | todo | |
-| PV.01 | Pages view of the open book (thumbnails, tiles, details; group, arrange, page filter) | `ComicPagesView` toolbar | — | P5.23b | todo | |
-| PV.02 | Pages menu: Page Type, Page Rotation, Page Position (Default, Near, Far) | `PagesView.contextPages` | — | P5.23b | todo | |
+| FB.02 | Folders toolbar: Show Favorites, Include all Subfolders, New Window, New Tab, Refresh | `toolStrip`, `tbFavorites`, `tbIncludeSubFolders`, `tbOpenWindow`, `tbOpenTab`, `tbRefresh` | — | P5.30 | todo | |
+| FB.03 | Folders menu: Open in New Window, Open in New Tab, Add Folder to Favorites, Add Folder to Library, Refresh | `contextMenuFolders`, `miAddFolderLibrary` | — | P5.30 | todo | |
+| FB.04 | Folder favorites (Refresh, Remove...) | `contextMenuFavorites`, `miFavRefresh` | — | P5.30 | todo | |
+| PV.01 | Pages view of the open book (thumbnails, tiles, details; group, arrange, page filter) | `ComicPagesView` toolbar, `tbFilter` | — | P5.23b | todo | |
+| PV.02 | Pages menu: Page Type, Page Rotation, Page Position (Default, Near, Far) | `PagesView.contextPages`, `miPagePosition`, `miPagePositionDefault`, `miPagePositionNear`, `miPagePositionFar` | — | P5.23b | todo | |
 | PV.03 | Pages menu: Set Bookmark... / Remove Bookmark | `miSetBookmark`, `miRemoveBookmark` | Ctrl+Shift+B/D → Cmd+Shift+B/D | P5.23b | todo | |
 | PV.04 | Pages menu: Move to Top / Move to Bottom / Reset original Order | `miMoveToTop`, `miMoveToBottom`, `miResetOriginalOrder` | Ctrl+Alt+T/B → Option+Cmd+T/B | P5.23b | todo | |
 | PV.05 | Pages menu: Copy Page, Merge Pages, Select All, Invert Selection, Refresh, Mark as Deleted | `miCopy`, `miMergePages`, `miSelectAll`, `miInvertSelection`, `miRefreshThumbnail`, `miMarkDeleted` | Ctrl+C, Ctrl+A, Delete → Cmd+C, Cmd+A, Delete | P5.23b | todo | |
 | SR.01 | Search browser (value columns with counts, multi-select narrowing) | `ComicRack.Engine/Controls/SearchBrowserControl.cs` | — | P5.15b | todo | |
-| SP.01 | Small preview (page viewer, toolbar: Open, First, Previous, Next, Last, Two Pages, Refresh, Close) | `SmallComicPreview` | — | P5.6 | todo | |
+| SP.01 | Small preview (page viewer, toolbar: Open, First, Previous, Next, Last, Two Pages, Refresh, Close) | `SmallComicPreview`, `tsbOpen`, `tsbFirst`, `tsbPrev`, `tsbNext`, `tsbLast`, `tsbTwoPages`, `tsbRefresh`, `tbClose` | — | P5.6 | todo | |
 | IP.01 | Info panel (book info page with search links, script panels) | `ComicExplorerView.pluginContainer` (`ComicPageContainerControl`) | — | P5.6, P4.11a | todo | |
 | QO.01 | Quick Open view when no book is open (recent books, Open, Browser, Open File...) | `QuickOpenView`, Settings `ShowQuickOpen` | — | P5.29 | todo | |
 
@@ -304,12 +305,12 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.04 | Book Display Settings | `ComicDisplaySettingsDialog` | P5.23c | todo | |
 | DL.05 | Crash dialog ("ComicRack encountered a Problem...") | `CrashDialog` | P7.1 | todo | |
 | DL.06 | Delete Item {0} | `DeleteItemDialog` | P5.5 | todo | |
-| DL.07 | Devices, Select Device, device and server edit controls | `DevicesEditDialog`, `DeviceSelectDialog`, `DeviceEditControl`, `ServerEditControl` | — | deferred (D4) | |
+| DL.07 | Devices, Select Device, device and server edit controls | `DevicesEditDialog`, `DeviceSelectDialog`, `DeviceEditControl`, `ServerEditControl`, `miDeviceCopy`, `miDevicePaste`, `miDeviceCopyToAll`, `miDeviceRename`, `miDeviceUnpair` | — | deferred (D4) | |
 | DL.08 | Edit List | `EditListDialog` | P5.16a | todo | |
 | DL.09 | Export Books | `ExportComicsDialog` | P5.24a | todo | |
 | DL.10 | List editor (Edit Workspaces, Edit Layouts) | `ListEditorDialog` | P5.32c, P5.11b | todo | |
 | DL.11 | List Options (tabs Details, Thumbnails, Tiles) | `ListLayoutDialog` | P5.11b | todo | |
-| DL.12 | Smart list rule editors | `MatcherEditor`, `MatcherGroupEditor` (menu: New Rule Ctrl+R, New Group Ctrl+G, Delete, Cut, Copy, Paste, Move Up Ctrl+U, Move Down Ctrl+D) | P5.17b | todo | shortcuts Ctrl→Cmd; Cut/Copy/Paste keep their meaning |
+| DL.12 | Smart list rule editors | `MatcherEditor`, `MatcherGroupEditor` (menu: New Rule Ctrl+R, New Group Ctrl+G, Delete, Cut, Copy, Paste, Move Up Ctrl+U, Move Down Ctrl+D), `miNewRule`, `miNewGroup`, `miDelete`, `miCut`, `miPaste`, `miMoveUp`, `miMoveDown` | P5.17b | todo | shortcuts Ctrl→Cmd; Cut/Copy/Paste keep their meaning |
 | DL.13 | Latest ComicRack News | `NewsDialog` | P5.31 | todo | |
 | DL.14 | Open Remote Library, Password | `OpenRemoteDialog`, `PasswordDialog` | — | deferred (D4) | |
 | DL.15 | Open With (Manage Programs) | `OpenWithDialog` | P5.21 | todo | |
@@ -319,9 +320,9 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.19 | Save Workspace | `SaveWorkspaceDialog` | P5.32c | todo | |
 | DL.20 | Errors | `ShowErrorsDialog` | P5.26 | todo | |
 | DL.21 | Edit Smart List (rule builder) | `SmartListDialog` | P5.17b | todo | |
-| DL.22 | Edit Smart List (query text; menu: Undo, Redo, Cut, Copy, Paste, Select All, Quick Format Ctrl+F, Insert Match, Insert Value) | `SmartListQueryDialog` | P5.17a | todo | |
+| DL.22 | Edit Smart List (query text; menu: Undo, Redo, Cut, Copy, Paste, Select All, Quick Format Ctrl+F, Insert Match, Insert Value) | `SmartListQueryDialog`, `miQuickFormat`, `miInsertMatch`, `miInsertValue` | P5.17a | todo | |
 | DL.23 | Splash screen at startup (`ShowSplash`) and About panel | `Splash` | P5.31 | todo | MACOS_NATIVE_PATH §6.2 "no splash" superseded by D9 |
-| DL.24 | Tasks (Background Tasks; Server Statistics tab) | `TasksDialog` | P5.26 | todo | Server Statistics tab deferred (D4) |
+| DL.24 | Tasks (Background Tasks; Server Statistics tab) | `TasksDialog`, `dummyToolStripMenuItem` | P5.26 | todo | Server Statistics tab deferred (D4) |
 | DL.25 | Match Value | `ValueEditorDialog` | P5.17c | todo | |
 | DL.26 | Custom Zoom | `ZoomDialog` | P5.23e | todo | |
 | DL.27 | Script Output | `ScriptOutputForm` | P4.5 | todo | |
@@ -337,9 +338,9 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | IN.03 | Info: Plot & Notes tab (Summary, Notes, Review sub-tabs) | `ComicBookDialog` | P5.7b | todo | |
 | IN.04 | Info: Catalog tab (`CatalogOnlyForFileless`) | `ComicBookDialog` | P5.7b | todo | |
 | IN.05 | Info: Custom tab (`ShowCustomBookFields`) | `ComicBookDialog` | P5.7b | todo | |
-| IN.06 | Info: Pages tab (menu: Order by Name, Order by Name numeric) | `ComicBookDialog`, `cmResetPages` | P5.7c | todo | |
+| IN.06 | Info: Pages tab (menu: Order by Name, Order by Name numeric) | `ComicBookDialog`, `cmResetPages`, `miOrderByName`, `miOrderByNameNumeric` | P5.7c | todo | |
 | IN.07 | Info: Colors tab ("Double Click on Color to set White Point") | `ComicBookDialog` | P5.7c | todo | |
-| IN.08 | Info: thumbnail menu (Reset) and Previous/Next book buttons | `cmThumbnail`, buttons | P5.7a | todo | |
+| IN.08 | Info: thumbnail menu (Reset) and Previous/Next book buttons | `cmThumbnail`, buttons, `miResetThumbnail` | P5.7a | todo | |
 
 ## Preferences (`ComicRack/Dialogs/PreferencesDialog.Designer.cs`; tabs Reader, Libraries, Behavior, Scripts, Advanced)
 
@@ -347,10 +348,10 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 |---|---|---|---|---|---|
 | PR.01 | Window frame | left tab column (Reader, Libraries, Behavior, Scripts, Advanced), collapsible groups, OK / Cancel / Apply | P5.22a | todo | original layout (C-PREF-1) |
 | PR.02 | Reader > Display | contrast, brightness, saturation, gamma, sharpening sliders, Automatic Contrast Enhancement, High Quality, Anamorphic Scaling, Reset | P5.22a | todo | |
-| PR.03 | Reader > Keyboard | shortcut editor, Import... (with Default layout), Export... (`*.xml`) | P5.22c | todo | DD19 overridden by R9 |
+| PR.03 | Reader > Keyboard | shortcut editor, Import... (with Default layout), Export... (`*.xml`), `miDefaultKeyboardLayout` | P5.22c | todo | DD19 overridden by R9 |
 | PR.04 | Reader > Overlays | Show Navigation automatically, visible Page Part, Messages and Status, current Page, page names; sizing; navigation position | P5.22a | todo | |
 | PR.05 | Reader > Mouse Scrolling | wheel speed slow/fast, Inertial Mouse scrolling, Smooth Auto Scrolling | P5.22a | todo | |
-| PR.06 | Reader > Hardware Acceleration | Animation of Page Display changes, Hardware Acceleration, Software Filters, Hardware Filters | P5.22a | deviation | partly: rendering is always Metal through Skia; "Enable Hardware Acceleration" has no off switch on macOS (impossible: no OpenGL/Tao path, §6.4); animation and filters keep their meaning |
+| PR.06 | Reader > Hardware Acceleration | Animation of Page Display changes, Hardware Acceleration, Software Filters, Hardware Filters | P5.22a | deviation | impossible: partly (no OpenGL/Tao path, §6.4): rendering is always Metal through Skia and "Enable Hardware Acceleration" has no off switch on macOS; animation and filters keep their meaning |
 | PR.07 | Reader > macOS group (swipe at edge, pinch speed, trackpad) | Mac-only additions (DD8) | P5.22a | mac-only | |
 | PR.08 | Libraries > Book Folders | folder list with watch check boxes, Add..., Remove, Change..., Open | P5.22b | todo | |
 | PR.09 | Libraries > Scanning | Scan, auto-remove missing, do not re-add removed files | P5.22b | todo | |

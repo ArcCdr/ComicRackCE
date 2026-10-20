@@ -54,6 +54,22 @@ namespace ComicRack.Mac
 		/// </summary>
 		public string Theme { get; private set; }
 
+		/// <summary>
+		/// Hidden <c>--show NAME</c>: opens the named window, dialog or view after launch (<see cref="Views.ViewRegistry"/> lists the names;
+		/// <c>MainWindow</c> and <c>ChromeGallery</c> exist, every later UI task registers its views). The contact sheets of
+		/// <c>mac/tools/chrome-sheet.sh</c> use it with <c>--theme</c>. Null opens only the library window.
+		/// </summary>
+		public string Show { get; private set; }
+
+		/// <summary>Hidden <c>--list-views</c>: prints the names that <c>--show</c> accepts, one per line, and exits (no window, no host).</summary>
+		public bool ListViews { get; private set; }
+
+		/// <summary>
+		/// Hidden <c>--fixture-library DIR</c>: after the engine opens, scans DIR (a folder made by <c>crcli fixtures make</c>) into the library, as
+		/// File > Open Folder does. It needs a private data folder (<c>--data-dir</c> or a smoke test), so a real library is never filled with fixtures.
+		/// </summary>
+		public string FixtureLibrary { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -130,6 +146,26 @@ namespace ComicRack.Mac
 				{
 					theme = arg.Substring("--theme=".Length);
 				}
+				else if (arg == "--list-views")
+				{
+					options.ListViews = true;
+				}
+				else if (arg == "--show" && i + 1 < args.Length)
+				{
+					options.Show = args[++i];
+				}
+				else if (arg.StartsWith("--show=", StringComparison.Ordinal))
+				{
+					options.Show = arg.Substring("--show=".Length);
+				}
+				else if (arg == "--fixture-library" && i + 1 < args.Length)
+				{
+					options.FixtureLibrary = Path.GetFullPath(args[++i]);
+				}
+				else if (arg.StartsWith("--fixture-library=", StringComparison.Ordinal))
+				{
+					options.FixtureLibrary = Path.GetFullPath(arg.Substring("--fixture-library=".Length));
+				}
 				else if (arg.StartsWith("-psn_", StringComparison.Ordinal))
 				{
 					// Launch Services passes a process serial number to apps it starts.
@@ -163,6 +199,29 @@ namespace ComicRack.Mac
 			{
 				options.DataDirectory = Path.Combine(Path.GetTempPath(), "comicrack-mac-smoke-" + Guid.NewGuid().ToString("N"));
 				options.DataDirectoryIsTemporary = true;
+			}
+			if (options.Show != null)
+			{
+				string canonical = Views.ViewRegistry.Canonical(options.Show.Trim());
+				if (canonical == null)
+				{
+					options.Error = "--show expects one of: " + string.Join(", ", Views.ViewRegistry.Names) + ".";
+					return options;
+				}
+				options.Show = canonical;
+			}
+			if (options.FixtureLibrary != null)
+			{
+				if (!Directory.Exists(options.FixtureLibrary))
+				{
+					options.Error = "--fixture-library: no such folder: " + options.FixtureLibrary;
+					return options;
+				}
+				if (options.DataDirectory == null)
+				{
+					options.Error = "--fixture-library needs a private data folder: add --data-dir DIR (or --smoke-test).";
+					return options;
+				}
 			}
 			return options;
 		}

@@ -371,6 +371,9 @@ namespace ComicRack.Cli.Fixtures
 
 		public bool Flag(string name) => flags.Contains(name);
 
+		/// <summary>Every argument that is not an option or the value of one, in order.</summary>
+		public IReadOnlyList<string> PositionalArguments => positional;
+
 		public static Options Parse(string[] args)
 		{
 			var o = new Options();

@@ -15,7 +15,7 @@ Contents: 1 sources and references · 2 colour tokens · 3 fonts · 4 metrics ·
 - **Reference images:** the repository contains **no screenshots** of the app (the README hero image is a remote GitHub asset, `README.md:25`; `ComicRack/Output/Help/ComicRack Introduction.djvu` has 19 illustrated pages but needs a DjVu decoder, deferred by D4). No session has a Windows machine. So the reference for a view is, in this order:
   1. an owner-supplied screenshot in `mac/fixtures/owner/reference/<View>.png` (optional request written by P5.T3 into `OWNER-ACTIONS.md`, checkpoint C1/C2);
   2. a screenshot from the optional Windows CI job (P5.T5), stored by the owner in `mac/fixtures/owner/reference/ci/`;
-  3. the README hero image, downloaded by P5.T3 into `mac/artifacts/chrome/reference/` (not committed);
+  3. the README hero image, downloaded by P5.T3 into `mac/artifacts/chrome/reference/readme-hero.png` (not committed). It turned out to be a 597 x 299 brand banner (a painted landscape with the title), not a screenshot, so it only shows at the top of `sheet.html` and gives no layout reference;
   4. otherwise the **view spec** (§8) plus the original source: layout, sizes, tokens and icons rendered as a reference card on the contact sheet (§9).
 
 ## 2. Colour tokens
@@ -268,7 +268,7 @@ New decisions are added here by the task that meets them (same columns) and list
 ## 9. Visual parity check (every UI task; owner review at C2 and C6)
 
 1. **Unit level:** headless frame tests (`CRMAC_FRAMES_DIR`) assert token colours at known points (toolbar background, selection frame, status bar) and metrics (toolbar height 25, tab bar 31, status bar 24) in DIPs.
-2. **Real window:** `mac/tools/ui-drive/ui-drive.sh launch --dev --data-dir <tmp> -- --theme light --show <ViewName>` (the hidden `--show` option, P5.T3, opens any view or dialog with fixture data), `shot <view>-light`, same with `--theme dark`; `probe` checks two or three token pixels.
+2. **Real window:** `mac/tools/ui-drive/ui-drive.sh launch --dev --data-dir <tmp> -- --theme light --show <ViewName> --fixture-library <dir>` (the hidden options of P5.T3: `--show` opens a view registered in `Views/ViewRegistry.cs`, `--list-views` prints the names, `--fixture-library` scans a `crcli fixtures make` folder into the private library), `shot <view>-light`, same with `--theme dark`; `probe` checks two or three token pixels.
 3. **Contact sheet:** `mac/tools/chrome-sheet.sh <label> <ViewName>...` (P5.T3) writes `mac/artifacts/chrome/<label>/sheet.html` and `sheet.png`: one row per view with the reference (owner or CI screenshot if present, else a reference card rendered from the view spec: layout outline with sizes, token swatches, the icons used), the Mac light shot and the Mac dark shot, plus the §7 decisions that apply. `crcli image sheet` composes the PNG (no browser needed).
 4. **Report:** the task lists the sheet path in its report and in `full-port.md` §3; differences it cannot fix become ledger notes or §9 items; new native-over-original choices become §7 rows.
 5. **Owner checkpoints:** at C2 (after the restyle tasks and wave B) and C6 (after P7.A4) the orchestrator runs `mac/tools/chrome-sheet.sh C2 --all` (C6), copies `sheet.png` and `sheet.html` to `mac/artifacts/chrome/C2/`, and the checkpoint block asks the owner to open one file and answer per row "ok" or what to change, and to confirm or flip the §7 defaults marked with a flip cost. Answers become `R<n>` tasks.

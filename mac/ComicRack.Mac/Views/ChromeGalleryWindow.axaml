@@ -1,0 +1,14 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ComicRack.Mac.Views.ChromeGalleryWindow"
+        Title="ComicRack Chrome Gallery"
+        Width="900" Height="640"
+        Background="{DynamicResource Cr.WindowBrush}">
+  <DockPanel>
+    <TextBlock DockPanel.Dock="Top" Margin="12,10,12,6" Foreground="{DynamicResource Cr.WindowTextBrush}"
+               Text="Theme tokens of the current appearance (placeholder: the control gallery of P5.T4 replaces this window)" />
+    <ScrollViewer>
+      <WrapPanel x:Name="Swatches" Margin="8" />
+    </ScrollViewer>
+  </DockPanel>
+</Window>
