@@ -11,6 +11,7 @@ using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.Thumbnails;
 using ComicRack.Mac.Tests.Thumbnails;
 using ComicRack.Mac.Views;
@@ -80,6 +81,12 @@ namespace ComicRack.Mac.Tests.Browser
 				return p.WorkingSet64;
 			}
 		}
+
+		/// <summary>
+		/// The memory footprint of this process as Activity Monitor shows it (dirty and compressed pages). Unlike the resident size it does not
+		/// drop when the system compresses or swaps pages of the process under memory pressure.
+		/// </summary>
+		private static long FootprintBytes() => ProcessMemory.Read().FootprintBytes;
 
 		[FixtureFact("BD", "ComicDb.xml")]
 		public async Task The_main_window_shows_the_imported_library_with_covers_search_sort_and_open()
@@ -178,6 +185,9 @@ namespace ComicRack.Mac.Tests.Browser
 						double Mb(long b) => b / 1048576.0;
 						Gc.Flush();
 						long rssBase = ResidentBytes();
+						long footBase = FootprintBytes();
+						long peakFoot = footBase;
+						long footWarm = -1, peakAfterWarm = 0; // taken once the cache is full (30% of the rows)
 						long managedBase = GC.GetTotalMemory(true);
 						long liveBase = PixelBlock.LiveBytes;
 						long peakRss = rssBase, peakLive = liveBase, peakCached = 0;
@@ -196,6 +206,12 @@ namespace ComicRack.Mac.Tests.Browser
 								// Where the memory goes while the scroll runs: it must level off once the cache is full, not grow with the library.
 								deciles.Add($"{row * 100 / rows}%: RSS {Mb(ResidentBytes()):0} MB, managed {Mb(GC.GetTotalMemory(true)):0} MB, pixels {Mb(PixelBlock.LiveBytes):0} MB, cached {service.GetStats().CachedCount} images");
 							}
+							if (footWarm < 0 && row >= rows * 3 / 10)
+							{
+								Gc.Flush();
+								footWarm = FootprintBytes();
+								peakAfterWarm = footWarm;
+							}
 							var sw = Stopwatch.StartNew();
 							grid.Scroller.Offset = new Avalonia.Vector(0, grid.OffsetOfRow(row));
 							await WaitForCovers(grid, window, 60000);
@@ -205,6 +221,9 @@ namespace ComicRack.Mac.Tests.Browser
 							if (positions % 25 == 0)
 							{
 								peakRss = Math.Max(peakRss, ResidentBytes());
+								long foot = FootprintBytes();
+								peakFoot = Math.Max(peakFoot, foot);
+								peakAfterWarm = Math.Max(peakAfterWarm, foot);
 							}
 							ThumbnailServiceStats s = service.GetStats();
 							peakCached = Math.Max(peakCached, s.CachedBytes);
@@ -218,6 +237,7 @@ namespace ComicRack.Mac.Tests.Browser
 						peakRss = Math.Max(peakRss, rssEnd);
 						Gc.Flush();
 						long rssAfterGc = ResidentBytes();
+						long footEnd = FootprintBytes();
 						long managedEnd = GC.GetTotalMemory(true);
 						long liveEnd = PixelBlock.LiveBytes;
 						stepMs.Sort();
@@ -225,6 +245,7 @@ namespace ComicRack.Mac.Tests.Browser
 						output.WriteLine($"service: {end.Requests:N0} requests, {end.DecodesCompleted:N0} decodes completed, {end.DecodesCancelled:N0} cancelled, {end.DroppedFromQueue:N0} dropped from the queue, {end.CacheHits:N0} hits, peak in flight {end.PeakInFlight}, cached {end.CachedCount:N0} images / {Mb(end.CachedBytes):0.0} MB (bound {Mb(bound):0} MB), failures {end.Failures}");
 						output.WriteLine($"time per position (move, layout, render, covers on screen): median {stepMs[stepMs.Count / 2]:0.0} ms, p95 {stepMs[(int)(stepMs.Count * 0.95)]:0.0} ms, max {stepMs.Last():0.0} ms");
 						output.WriteLine($"pixels alive (PixelBlock.LiveBytes): base {Mb(liveBase):0.0} MB, peak {Mb(peakLive):0.0} MB, end {Mb(liveEnd):0.0} MB");
+						output.WriteLine($"footprint: base {Mb(footBase):0} MB, cache full (30%) {Mb(footWarm):0} MB, peak {Mb(peakFoot):0} MB (+{Mb(peakFoot - footBase):0}), peak after 30% +{Mb(peakAfterWarm - footWarm):0} MB, end after GC {Mb(footEnd):0} MB (+{Mb(footEnd - footWarm):0} from 30%)");
 						foreach (string d in deciles)
 						{
 							output.WriteLine("  at " + d);
@@ -234,11 +255,15 @@ namespace ComicRack.Mac.Tests.Browser
 						Assert.True(end.CachedBytes <= bound, $"the cache holds {Mb(end.CachedBytes):0} MB, bound {Mb(bound):0} MB");
 						long onScreen = (long)maxRealized * 512 * 512 * 4;
 						Assert.True(peakLive <= bound + onScreen, $"pixels alive peaked at {Mb(peakLive):0} MB; bound {Mb(bound):0} MB plus the cells {Mb(onScreen):0} MB");
-						// The 256 MB bound is for the pictures. On top of the baseline the process also holds the Core's own caches (a 50 MB memory
-						// cache of thumbnail data, the disk cache index), Skia's caches and malloc's free lists: allow 420 MB for them (320 MB until M2.2c; the lists' caches raise the managed base by about 50 MB, which also lets the GC float more garbage), and require that
-						// the memory levels off instead of growing with the library (the second half of the scroll must not use more than the first).
-						Assert.True(peakRss - rssBase <= bound + 420L * 1048576, $"RSS grew by {Mb(peakRss - rssBase):0} MB, bound {Mb(bound):0} MB plus 420 MB");
-						Assert.True(rssAfterGc - rssBase <= bound + 160L * 1048576, $"after the scroll RSS is {Mb(rssAfterGc - rssBase):0} MB above the baseline, bound {Mb(bound):0} MB plus 160 MB");
+						// The 256 MB bound is for the pictures (asserted above). The process also holds the Core's own caches (a 50 MB memory cache of
+						// thumbnail data, the disk cache index), Skia's caches and malloc's free lists, and how much of that is already there when the
+						// test starts depends on the tests that ran before it: the managed heap at the start ranged from 150 to 790 MB, the memory above
+						// the baseline after the scroll from -210 to +570 MB, and the unflushed peak (garbage the GC has not collected yet) from +190
+						// to +520 MB for the same code. So the memory is not compared with the start. What matters is that it levels off once the cache
+						// is full instead of growing with the library, and that is measured between two points that were both taken after a full
+						// GC: a leak of one cover in twenty adds more than 500 MB in the last 70% of the scroll, and the same code measured between
+						// -100 and +90 MB, so one cache bound (256 MB) leaves the noise out and keeps every real leak in.
+						Assert.True(footEnd - footWarm <= bound, $"after the scroll and a GC the footprint is {Mb(footEnd - footWarm):0} MB above the one with the cache full; allowed {Mb(bound):0} MB");
 						Assert.True(end.DecodesCompleted > 10000, "the scroll must have decoded most covers: " + end.DecodesCompleted);
 						Assert.True(maxRealized < 100);
 						Assert.True(end.PeakInFlight <= 4);

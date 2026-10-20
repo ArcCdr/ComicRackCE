@@ -86,7 +86,26 @@ namespace ComicRack.Mac.ViewModels
 				Browser.Clear();
 				return;
 			}
-			_ = ReloadBrowserAsync(host);
+			Volatile.Write(ref browserReload, ReloadBrowserAsync(host));
+		}
+
+		private Task browserReload = Task.CompletedTask;
+
+		/// <summary>
+		/// Completes when the newest reload of the sidebar and the grid is done: the tree is built, the counts are computed and the
+		/// selected list is loaded. Those run on worker threads against the open library, so a caller that changes the library itself
+		/// (tests, scripted use) waits for this first.
+		/// </summary>
+		public async Task WhenLibraryShownAsync()
+		{
+			Task seen;
+			do
+			{
+				seen = Volatile.Read(ref browserReload);
+				await seen.ConfigureAwait(false);
+			}
+			while (!ReferenceEquals(seen, Volatile.Read(ref browserReload)));
+			await Sidebar.CountsReady.ConfigureAwait(false);
 		}
 
 		private async Task ReloadBrowserAsync(ComicRack.Mac.Host.MacHost host)

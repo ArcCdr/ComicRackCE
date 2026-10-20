@@ -39,6 +39,14 @@ namespace ComicRack.Mac.Tests
 				launch.Service.Start();
 				await launch.Service.Ready;
 				launch.ViewModel.OnHostOpened();
+				// The sidebar and the grid load on worker threads that read the library's list caches; a test that then changes the library
+				// itself must not do it while they run (the Core's cache bookkeeping is not safe against that).
+				Task shown = launch.ViewModel.WhenLibraryShownAsync();
+				if (await Task.WhenAny(shown, Task.Delay(TimeSpan.FromSeconds(60))) != shown)
+				{
+					throw new TimeoutException("The sidebar and the grid did not finish loading after the host opened.");
+				}
+				await shown;
 				if (launch.Service.Host == null)
 				{
 					throw new InvalidOperationException("The host did not open: " + launch.Service.Failure);

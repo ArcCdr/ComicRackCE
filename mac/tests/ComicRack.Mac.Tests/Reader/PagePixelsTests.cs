@@ -21,13 +21,12 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public PagePixelsTests()
 		{
-			Gc.Flush();
-			liveBefore = PixelBlock.LiveCount;
+			liveBefore = Gc.SettleLive();
 		}
 
 		public void Dispose()
 		{
-			Gc.Flush();
+			Gc.WaitForLive(liveBefore);
 			Assert.Equal(liveBefore, PixelBlock.LiveCount);
 		}
 

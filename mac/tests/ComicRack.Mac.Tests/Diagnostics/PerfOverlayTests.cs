@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using ComicRack.Mac.Diagnostics;
+using ComicRack.Mac.Tests.Thumbnails;
 using Xunit;
 
 namespace ComicRack.Mac.Tests.Diagnostics
@@ -312,15 +313,28 @@ namespace ComicRack.Mac.Tests.Diagnostics
 		[Fact]
 		public void The_footprint_follows_a_big_allocation()
 		{
-			long before = ProcessMemory.Read().FootprintBytes;
-			byte[] block = new byte[200 * 1024 * 1024];
-			for (int i = 0; i < block.Length; i += 4096)
+			// The footprint is a process-wide counter: memory that earlier tests or the GC give back while this one measures lowers it
+			// (one run saw 2,288 MB before and 1,945 MB after a 200 MB allocation). The counter is right if it can see the allocation in at
+			// least one of a few attempts; it cannot invent 150 MB, so a counter that does not follow allocations fails all of them.
+			var attempts = new List<string>();
+			for (int attempt = 0; attempt < 5; attempt++)
 			{
-				block[i] = 1;
+				Gc.Flush();
+				long before = ProcessMemory.Read().FootprintBytes;
+				byte[] block = new byte[200 * 1024 * 1024];
+				for (int i = 0; i < block.Length; i += 4096)
+				{
+					block[i] = 1;
+				}
+				long after = ProcessMemory.Read().FootprintBytes;
+				GC.KeepAlive(block);
+				if (after - before > 150L * 1024 * 1024)
+				{
+					return;
+				}
+				attempts.Add($"before {before}, after {after}");
 			}
-			long after = ProcessMemory.Read().FootprintBytes;
-			GC.KeepAlive(block);
-			Assert.True(after - before > 150L * 1024 * 1024, $"before {before}, after {after}");
+			throw new Xunit.Sdk.XunitException("the footprint did not follow a 200 MB allocation in any attempt: " + string.Join("; ", attempts));
 		}
 	}
 }

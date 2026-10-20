@@ -24,8 +24,7 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public PageServiceTests()
 		{
-			Gc.Flush();
-			liveBefore = PixelBlock.LiveCount;
+			liveBefore = Gc.SettleLive();
 			bytesBefore = PixelBlock.LiveBytes;
 		}
 
@@ -35,7 +34,7 @@ namespace ComicRack.Mac.Tests.Reader
 			{
 				s.Dispose();
 			}
-			Gc.Flush();
+			Gc.WaitForLive(liveBefore);
 			// Whatever a test did, no page memory may be left behind.
 			Assert.Equal(liveBefore, PixelBlock.LiveCount);
 			Assert.Equal(bytesBefore, PixelBlock.LiveBytes);

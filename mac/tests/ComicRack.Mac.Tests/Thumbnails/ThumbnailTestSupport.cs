@@ -246,6 +246,52 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				GC.WaitForPendingFinalizers();
 			}
 		}
+
+		/// <summary>
+		/// <see cref="Flush"/>, then waits until the process-wide count of live pixel blocks has stopped changing (at most 2 s) and returns it.
+		/// A test class that compares the count at its end with the count at its start takes the start value here: a decode of the test
+		/// before, still finishing on a pool thread, would otherwise be in the baseline and vanish during the test.
+		/// </summary>
+		public static long SettleLive()
+		{
+			var watch = Stopwatch.StartNew();
+			long last = -1;
+			int stable = 0;
+			while (watch.ElapsedMilliseconds < 2000)
+			{
+				Flush();
+				long now = PixelBlock.LiveCount;
+				if (now == last)
+				{
+					if (++stable >= 5)
+					{
+						break;
+					}
+				}
+				else
+				{
+					last = now;
+					stable = 0;
+				}
+				Thread.Sleep(20);
+			}
+			return PixelBlock.LiveCount;
+		}
+
+		/// <summary>
+		/// Flushes and waits (at most 2 s) until the live pixel block count is <paramref name="expected"/>: pool work that was cancelled by the
+		/// test releases its pixels a moment after the test's last line. The caller asserts the value afterwards, so a real leak still fails.
+		/// </summary>
+		public static void WaitForLive(long expected)
+		{
+			var watch = Stopwatch.StartNew();
+			Flush();
+			while (PixelBlock.LiveCount != expected && watch.ElapsedMilliseconds < 2000)
+			{
+				Thread.Sleep(10);
+				Flush();
+			}
+		}
 	}
 
 	/// <summary>A clock the test advances.</summary>

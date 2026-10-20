@@ -200,8 +200,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 						var vm = launch.ViewModel;
 						var f = Fill(launch.Service.Host);
 						vm.OnHostOpened(); // builds the tree and shows the library
-						await WaitFor(() => vm.Sidebar.Roots.Count > 0, "the tree");
-						await vm.Sidebar.CountsReady;
+						await vm.WhenLibraryShownAsync();
 						await Dispatcher.UIThread.InvokeAsync(() => { }); // the posted counts
 
 						SidebarNode Find(string name) => vm.Sidebar.AllNodes().Single(n => n.Name == name);
@@ -240,6 +239,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 						// The selection survives a reload of the library (a scan, an import).
 						vm.Sidebar.Select(Find("Betas"));
 						await WaitFor(() => vm.Browser.TotalCount == 2 && !vm.Browser.IsLoading, "the Betas");
+						await vm.WhenLibraryShownAsync(); // the counts of the lists read the library: change it only when they are done
 						f.db.Books.Add(Book("Beta", "3"));
 						vm.OnHostOpened();
 						await WaitFor(() => vm.Browser.TotalCount == 3 && !vm.Browser.IsLoading && vm.Sidebar.SelectedNode?.Name == "Betas", "the Betas after a reload");
@@ -267,8 +267,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 						var vm = launch.ViewModel;
 						Fill(launch.Service.Host);
 						vm.OnHostOpened();
-						await WaitFor(() => vm.Sidebar.Roots.Count > 0, "the tree");
-						await vm.Sidebar.CountsReady;
+						await vm.WhenLibraryShownAsync();
 						var window = new MainWindow { DataContext = vm };
 						window.Show();
 						Layout(window);

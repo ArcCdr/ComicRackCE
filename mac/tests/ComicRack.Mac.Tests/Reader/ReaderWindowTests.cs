@@ -190,14 +190,15 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public ReaderWindowTests()
 		{
-			Gc.Flush();
-			liveBefore = PixelBlock.LiveCount;
+			liveBefore = Gc.SettleLive();
+			Ui.BeginTest();
 		}
 
 		public void Dispose()
 		{
-			Gc.Flush();
-			Assert.Equal(liveBefore, PixelBlock.LiveCount);
+			long expected = Ui.LiveBaseline(liveBefore);
+			Gc.WaitForLive(expected);
+			Assert.Equal(expected, PixelBlock.LiveCount);
 		}
 
 		[Fact]

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -14,6 +15,7 @@ using ComicRack.Mac.Host.Library;
 using ComicRack.Mac.Services;
 using ComicRack.Mac.ViewModels;
 using ComicRack.Mac.Views;
+using cYo.Projects.ComicRack.Engine;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -138,30 +140,61 @@ namespace ComicRack.Mac.Tests
 					string books = temp.Combine("books");
 					Synthetic.CreateCbzFolder(books, 200);
 					using (var launch = await Launch.Start(temp.Combine("app")))
+					using (var held = new ManualResetEventSlim(false))
+					using (var release = new ManualResetEventSlim(false))
 					{
-						var window = new MainWindow { DataContext = launch.ViewModel };
-						window.Show();
-						var cancel = window.FindControl<Button>("CancelButton");
-						var scan = launch.ViewModel.ScanFolderAsync(books);
-						// Wait until the panel is up and some books are in, then press the button the way a click does.
-						var deadline = DateTime.UtcNow.AddSeconds(30);
-						while (launch.ViewModel.BookCount < 5 && !scan.IsCompleted && DateTime.UtcNow < deadline)
+						// The scanner is parked in front of its 6th file until the test lets it go, so that the scan cannot finish before the
+						// button is pressed (200 tiny files take well under a second). The handler is subscribed before the one of the
+						// FolderScanner, so it runs first on the scanner thread; the 5 books before the 6th file are fully added.
+						int seen = 0;
+						EventHandler<ComicScanNotifyEventArgs> hold = (sender, e) =>
 						{
-							await Task.Delay(5);
-						}
-						if (!scan.IsCompleted)
+							if (e.File.Length != 0 && Interlocked.Increment(ref seen) == 6)
+							{
+								held.Set();
+								release.Wait(TimeSpan.FromSeconds(60));
+							}
+						};
+						var scanner = launch.Service.Host.QueueManager.Scanner;
+						scanner.ScanNotify += hold;
+						try
 						{
+							var window = new MainWindow { DataContext = launch.ViewModel };
+							window.Show();
+							var cancel = window.FindControl<Button>("CancelButton");
+							var scan = launch.ViewModel.ScanFolderAsync(books);
+							var deadline = DateTime.UtcNow.AddSeconds(60);
+							while (!held.IsSet && DateTime.UtcNow < deadline)
+							{
+								await Task.Delay(2);
+							}
+							Assert.True(held.IsSet, "the scanner never reached its 6th file");
+							Assert.False(scan.IsCompleted);
 							Assert.True(window.FindControl<Border>("ProgressPanel").IsVisible);
 							Capture(window, "main-4-scanning-live");
 							Assert.True(cancel.IsEffectivelyEnabled);
+
+							// Press the button the way a click does, then let the scanner go on.
 							cancel.Command.Execute(cancel.CommandParameter);
+							Dispatcher.UIThread.RunJobs();
+							Assert.False(cancel.IsEffectivelyEnabled, "Cancel must be disabled once it was pressed");
+							Assert.Equal("Cancelling...", window.FindControl<TextBlock>("ProgressTitleLabel").Text);
+							release.Set();
+
+							var result = await scan;
+							output.WriteLine($"outcome {result.Outcome}, {result.BooksAdded} of 200 books");
+							Assert.Equal(ScanOutcome.Cancelled, result.Outcome);
+							Assert.Equal(5, result.FilesSeen);
+							Assert.Equal(5, result.BooksAdded);
+							Dispatcher.UIThread.RunJobs();
+							Assert.False(window.FindControl<Border>("ProgressPanel").IsVisible);
+							window.Close();
 						}
-						var result = await scan;
-						output.WriteLine($"outcome {result.Outcome}, {result.BooksAdded} of 200 books");
-						// 200 tiny files can finish before the click lands; if they did, the window must be back to idle all the same.
-						Assert.False(window.FindControl<Border>("ProgressPanel").IsVisible);
-						Assert.True(result.Outcome == ScanOutcome.Cancelled ? result.BooksAdded < 200 : result.BooksAdded == 200);
-						window.Close();
+						finally
+						{
+							release.Set();
+							scanner.ScanNotify -= hold;
+						}
 					}
 				});
 			}
