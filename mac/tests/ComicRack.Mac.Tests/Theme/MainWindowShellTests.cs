@@ -141,19 +141,20 @@ namespace ComicRack.Mac.Tests.Theme
 		{
 			await InAppearance(appearance, () =>
 			{
-				var pill = new CrGaugePill { Text = "50" };
-				var host = new Border { Child = pill, Width = 60, Height = 20 };
-				host.Background = null;
-				Window shell = ShowIn(host, 80, 40);
+				var strip = new CrGaugeStrip { Total = 50, Width = 60, Height = 20 };
+				Window shell = ShowIn(strip, 80, 40);
 				Dpi.Settle(shell);
-				Assert.Equal(GaugeKind.Total, pill.Kind);
+				GaugeCell cell = Assert.Single(strip.Cells);
+				Assert.Equal(GaugeKind.Total, cell.Kind);
+				Assert.Equal("50", cell.Text);
 				Raster frame = Dpi.Capture(shell, "r1-gauge-" + appearance);
 				SKColor green = Token(ThemeTokens.Names.GaugeTotal, appearance);
-				// the middle of the pill is the green of the counter blended with the surface (alpha between 128 and 192)
+				// the top of the pill is the green of the counter blended with the surface (alpha 128 at the top, 192 at the bottom)
 				SKColor surface = Token(ThemeTokens.Names.Control, appearance);
-				Point o = Dpi.Origin(pill, shell);
-				SKColor middleTop = frame[(int)(o.X + 2), (int)(o.Y + 2)];
-				Assert.True(Math.Abs(middleTop.Green - (green.Green * 0.75 + surface.Green * 0.25)) < 40, "pill colour " + Describe(middleTop));
+				Point o = Dpi.Origin(strip, shell);
+				double x = o.X + strip.Bounds.Width - cell.Bounds.Width + 1; // right aligned in the room the row gave
+				SKColor middleTop = frame[(int)x, (int)(o.Y + 3)];
+				Assert.True(Math.Abs(middleTop.Green - (green.Green * 0.55 + surface.Green * 0.45)) < 40, "pill colour " + Describe(middleTop));
 				shell.Close();
 			});
 		}

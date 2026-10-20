@@ -9,6 +9,7 @@ using ComicRack.Mac.Browser;
 using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
 using ComicRack.Mac.Services;
+using cYo.Common.Collections;
 using cYo.Projects.ComicRack.Engine.Database;
 
 namespace ComicRack.Mac.ViewModels
@@ -78,6 +79,22 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>True when the counter shows: the original draws none for a list without books (<c>LibraryTreeSkin.DrawMarkers</c>).</summary>
 		public bool HasCount => Count > 0 && !Node.RequiresScripts;
 
+		/// <summary>Books of the list that are not read and not new (<c>ComicListItem.UnreadBookCount</c>).</summary>
+		[ObservableProperty]
+		public partial int UnreadCount { get; set; }
+
+		/// <summary>Books of the list that are not read and were added recently (<c>ComicListItem.NewBookCount</c>).</summary>
+		[ObservableProperty]
+		public partial int NewCount { get; set; }
+
+		/// <summary>Takes the three numbers of a list (the counters of the tree).</summary>
+		public void SetStats(ListStats stats)
+		{
+			Count = stats.Total;
+			UnreadCount = stats.Unread;
+			NewCount = stats.New;
+		}
+
 		[ObservableProperty]
 		public partial bool IsExpanded { get; set; }
 
@@ -115,6 +132,62 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>The width of the open side panel in device independent pixels (the grip changes it; 252 as in the original).</summary>
 		[ObservableProperty]
 		public partial double Width { get; set; } = AppPreferences.DefaultSidebarWidth;
+
+		/// <summary><c>DisplayLibraryGauges</c>: the counters behind the list names show at all.</summary>
+		[ObservableProperty]
+		public partial bool GaugesVisible { get; set; } = true;
+
+		/// <summary><c>LibraryGauges.Total</c> of <c>LibraryGaugesFormat</c>.</summary>
+		[ObservableProperty]
+		public partial bool GaugeTotal { get; set; } = true;
+
+		/// <summary><c>LibraryGauges.Unread</c>.</summary>
+		[ObservableProperty]
+		public partial bool GaugeUnread { get; set; } = true;
+
+		/// <summary><c>LibraryGauges.New</c>.</summary>
+		[ObservableProperty]
+		public partial bool GaugeNew { get; set; } = true;
+
+		/// <summary><c>LibraryGauges.Numeric</c>: numbers in the counters, else bars.</summary>
+		[ObservableProperty]
+		public partial bool GaugeNumeric { get; set; } = true;
+
+		/// <summary>
+		/// Takes the counter settings of the preferences (<c>DisplayLibraryGauges</c>, <c>LibraryGaugesFormat</c>) and follows them, as the original redraws its
+		/// tree when <c>DisplayLibraryGaugesChanged</c> fires (the Libraries pane of Preferences, P5.22b, changes them).
+		/// </summary>
+		public void BindGauges(AppPreferences preferences)
+		{
+			if (preferences == null)
+			{
+				return;
+			}
+			void Apply()
+			{
+				GaugesVisible = preferences.DisplayLibraryGauges;
+				LibraryGauges format = preferences.LibraryGaugesFormat;
+				GaugeTotal = format.HasFlag(LibraryGauges.Total);
+				GaugeUnread = format.HasFlag(LibraryGauges.Unread);
+				GaugeNew = format.HasFlag(LibraryGauges.New);
+				GaugeNumeric = format.HasFlag(LibraryGauges.Numeric);
+			}
+			Apply();
+			preferences.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(AppPreferences.DisplayLibraryGauges) || e.PropertyName == nameof(AppPreferences.LibraryGaugesFormat))
+				{
+					if (UiDispatch.IsUiThread)
+					{
+						Apply();
+					}
+					else
+					{
+						UiDispatch.Post(Apply);
+					}
+				}
+			};
+		}
 
 		/// <summary>A message for the middle of the grid ("Requires scripts (not in MVP)", "This list is empty"), or null.</summary>
 		[ObservableProperty]
@@ -227,6 +300,27 @@ namespace ComicRack.Mac.ViewModels
 			return new SidebarNode(node, node.Children.Select(Wrap).ToArray());
 		}
 
+		/// <summary>
+		/// Counts every list again (live refresh): the books, the unread and the new ones of each, on a worker thread, children before their folders, posting
+		/// each row's numbers as they come. Does nothing without a tree; a reload of the tree cancels it.
+		/// </summary>
+		public Task RefreshCountsAsync()
+		{
+			MacHost current = host;
+			SidebarNode[] roots = Roots.ToArray();
+			if (current == null || roots.Length == 0)
+			{
+				return Task.CompletedTask;
+			}
+			return ComputeCounts(roots, current, evaluator, countsCts.Token);
+		}
+
+		/// <summary>Stops a running count (the library is about to be closed).</summary>
+		public void CancelCounts()
+		{
+			countsCts.Cancel();
+		}
+
 		// One list at a time, children before their folder, so that a folder never combines a child's stale stored result.
 		private static async Task ComputeCounts(SidebarNode[] roots, MacHost host, ListEvaluator evaluator, CancellationToken token)
 		{
@@ -238,10 +332,10 @@ namespace ComicRack.Mac.ViewModels
 					foreach (SidebarNode node in order)
 					{
 						token.ThrowIfCancellationRequested();
-						int count = node.Kind == ListKind.Library
-							? host.DatabaseManager.Database.Books.Count
-							: evaluator.Evaluate(node.Node.Item).Count;
-						UiDispatch.Post(() => node.Count = count);
+						ListStats stats = node.Kind == ListKind.Library
+							? ListStats.Of(host.DatabaseManager.Database.Books.Lock().ToArray())
+							: ListStats.Of(evaluator.Evaluate(node.Node.Item).Books);
+						UiDispatch.Post(() => node.SetStats(stats));
 					}
 				}, token).ConfigureAwait(true);
 			}
@@ -289,7 +383,8 @@ namespace ComicRack.Mac.ViewModels
 					return BookCatalog.Empty;
 				}
 				int count = result.Count;
-				UiDispatch.Post(() => node.Count = count);
+				ListStats stats = ListStats.Of(result.Books);
+				UiDispatch.Post(() => node.SetStats(stats));
 				BookCatalog catalog = BookCatalog.FromBooks(result.Books, ct);
 				outcome(count == 0 ? "This list has no books." : null);
 				return catalog;

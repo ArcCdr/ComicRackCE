@@ -136,6 +136,7 @@ namespace ComicRack.Mac.Views
 			}
 			CoverHeight = owner.CoverHeight;
 			ApplyOptions(owner.Options);
+			CaptionText = ThumbnailBadgeBuilder.Caption(Item);
 			Badges = ThumbnailBadgeBuilder.From(Item, owner.Options);
 			UpdateBackImage();
 		}

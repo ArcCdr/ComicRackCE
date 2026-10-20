@@ -677,6 +677,26 @@ namespace ComicRack.Mac.Host
 			set { Set(ref cultureName, value); }
 		}
 
+		// ---- Library tree counters (LT.01, PR.10)
+
+		private bool displayLibraryGauges = true; // Settings.cs:310
+
+		[DefaultValue(true)]
+		public bool DisplayLibraryGauges
+		{
+			get { return displayLibraryGauges; }
+			set { Set(ref displayLibraryGauges, value); }
+		}
+
+		private LibraryGauges libraryGaugesFormat = LibraryGauges.Default; // Settings.cs:312
+
+		[DefaultValue(LibraryGauges.Default)]
+		public LibraryGauges LibraryGaugesFormat
+		{
+			get { return libraryGaugesFormat; }
+			set { Set(ref libraryGaugesFormat, value); }
+		}
+
 		// ---- Mac only: window and view state
 
 		private WindowFrame libraryWindow;

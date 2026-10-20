@@ -19,7 +19,7 @@ tokens ──► control themes and styles ──► Cr controls ──► views
 |---|---|---|
 | Tokens | `Themes/ComicRackTheme.Light.axaml`, `.Dark.axaml`, `Themes/ThemeTokens*.cs`, `Themes/ProfessionalColors.cs`, `Themes/Controls/CrMetrics.axaml`, `Controls/ChromeMetrics.cs` (`ChromeMetrics`, `ChromeFonts`) | the `Cr.*` colours of the original (tested against the original tables), font sizes, metrics of chrome-guidelines sections 3 and 4 |
 | Control themes and styles | `Themes/Controls/CrChromeThemes.axaml` (one `ControlTheme` per Cr control and variant, key `<ControlTypeName>.<Variant>`), `CrControlThemes.axaml` (type-keyed themes of stock controls: tree item, check box, radio button), `CrControls.axaml` (styles of stock controls: buttons, list boxes, menus, tabs, focus ring), `CrControlResources.Light/Dark.axaml` (the base theme's own brush keys set from tokens), `CrParts.axaml` (the semantic classes), `CrThumbnailLook.axaml` and `CrReaderLook.axaml` (the colours the original's renderers write as literals: `Cr.Thumb.*`, `Cr.Reader.*`, `Cr.Perf.*`) | templates, setters, per-variant looks |
-| Cr controls | `Controls/*.cs`, `Platform/*.cs` (native pieces: `NSAlert`, window tabbing, scroller style) | `CrToolBar`, `CrToolButton`, `CrSplitButton`, `CrToolSeparator`, `CrSearchBox`, `CrTabBar`, `CrStatusBar`, `CrStatusSlot`, `CrTreeView`, `StyledSelectionVisual`, `CrGaugePill`, `CrHeader`, `CrCollapsibleGroup`, `CrSizableContainer`, `CrIcon`, `CrDialogWindow`, `AlertWindow`, `CrThumbnailItem`, `CoverView`, `CrBookToolTip`, `CrTextOverlay`, `CrPartOverlay`, `CrNavigationOverlay`; custom drawing through `ChromePaint` |
+| Cr controls | `Controls/*.cs`, `Platform/*.cs` (native pieces: `NSAlert`, window tabbing, scroller style) | `CrToolBar`, `CrToolButton`, `CrSplitButton`, `CrToolSeparator`, `CrSearchBox`, `CrTabBar`, `CrStatusBar`, `CrStatusSlot`, `CrTreeView`, `StyledSelectionVisual`, `CrTreeRow`, `CrGaugeStrip`, `CrHeader`, `CrCollapsibleGroup`, `CrSizableContainer`, `CrIcon`, `CrDialogWindow`, `AlertWindow`, `CrThumbnailItem`, `CoverView`, `CrBookToolTip`, `CrTextOverlay`, `CrPartOverlay`, `CrNavigationOverlay`; custom drawing through `ChromePaint` |
 | Views | `Views/`, `ViewModels/`, `Browser/`, `Reader/`, `Services/`, `Diagnostics/`, top level files | structure, bindings, behaviour; no chrome |
 
 The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the app project may contain chrome (the tests of section 6 enforce it). `Views/ChromeGalleryWindow` is the one view that is chrome on purpose: it is the test card that shows every control in every state.
@@ -52,7 +52,7 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 | Toolbar | `CrToolBar`, `CrToolButton`, `CrSplitButton`, `CrToolSeparator`, `CrSearchBox` (self-drawn from `Cr.Tool*`) | not yet |
 | TabBar | `CrTabBar` (self-drawn) | not yet |
 | StatusBar | `CrStatusBar`, `CrStatusSlot` | **yes** (proof) |
-| Tree | `CrTreeView`, `StyledSelectionVisual`, `CrGaugePill`, tree item theme (`CrControlThemes.axaml`) | not yet |
+| Tree | `CrTreeView`, `CrTreeRow`, `CrGaugeStrip`, `StyledSelectionVisual`, tree item theme (`CrControlThemes.axaml`) | not yet |
 | ListHeader | `CrHeader` | not yet |
 | GroupBox | `CrCollapsibleGroup` | not yet |
 | SidePanel | `CrSizableContainer` | not yet |

@@ -57,6 +57,10 @@ namespace ComicRack.Mac.Host.Tests
 			{
 				return "null";
 			}
+			if (value.GetType().IsEnum)
+			{
+				return value.GetType().Name + "." + value; // LibraryGauges.Default, as the original writes it
+			}
 			return value is bool b ? (b ? "true" : "false") : value is string s ? "\"" + s + "\"" : Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
 		}
 

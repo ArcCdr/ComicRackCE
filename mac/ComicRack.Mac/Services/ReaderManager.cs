@@ -22,6 +22,12 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>Readers that are open.</summary>
 		int OpenCount { get; }
+
+		/// <summary>True if <paramref name="book"/> is open in a reader (the browser draws the "open" state icon on its cover).</summary>
+		bool IsOpen(ComicBook book);
+
+		/// <summary>Raised on the UI thread when a reader was opened or closed.</summary>
+		event EventHandler OpenBooksChanged;
 	}
 
 	/// <summary>
@@ -83,6 +89,10 @@ namespace ComicRack.Mac.Services
 		}
 
 		public int OpenCount => windows.Count;
+
+		public bool IsOpen(ComicBook book) => book != null && windows.ContainsKey(book);
+
+		public event EventHandler OpenBooksChanged;
 
 		/// <summary>The readers that are open (for tests).</summary>
 		public IReadOnlyCollection<ReaderWindow> Windows => windows.Values.ToArray();
@@ -146,9 +156,11 @@ namespace ComicRack.Mac.Services
 			window.Activated += (sender, e) => recent = window;
 			recent = window;
 			windows[book] = window;
+			OpenBooksChanged?.Invoke(this, EventArgs.Empty);
 			window.Closed += (sender, e) =>
 			{
 				windows.Remove(book);
+				OpenBooksChanged?.Invoke(this, EventArgs.Empty);
 				try
 				{
 					model.Dispose();

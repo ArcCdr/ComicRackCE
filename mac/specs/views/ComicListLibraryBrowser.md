@@ -19,7 +19,7 @@ Mac in P5.R1: the tree only (no toolbar yet), window colour, no frame.
 |---|---|---|
 | `tvQueries` | `TreeView` with the P5.T4 tree item theme (row = font 12 + 8, bold selected label, chevron images, `StyledSelection`) | P5.R1 |
 | `treeImages` | `CrIcon` by the list's `ImageKey`: Library = `<Library>`, Folder = `<SearchFolder>`, Search = `<SearchDocument>`, List = `<List>`, TempFolder = `<TempFolder>` | P5.R1 |
-| counters | `CrGaugePill`: total in `GaugeTotal` (green, white text, 0.75 x font, alpha 192 to 128 gradient), right aligned; none when the list has no books. Unread (orange) and new (red) counters need the read state (P5.2) | P5.R1, P5.2 |
+| counters | `CrGaugeStrip` (chrome layer, drawn in `Render`) inside the row panel `CrTreeRow`: Total (`GaugeTotal` green), Unread (orange), New (red) from the right, one apart, white text at 0.75 x font, gradient alpha 128 at the top to 192 at the bottom (GDI+ angle 270), corners rounded as `DrawNumberMarker` rounds them (radii 1, 1, 4 and 1 x 2). Numbers when `Numeric` is set and they fit in the room behind the label (sum of text + 4 + 1 each below the room), else bars of the room / 3 (at most 6, none when 2 or less). Unread takes the new books when there is no New counter. None when the list has no books or `DisplayLibraryGauges` is off | P5.R1, P5.2 |
 | `toolStrip`, `favContainer`, `quickSearchPanel` | not yet | P5.16a, P5.18 |
 
 ## 4. Menus and shortcuts
@@ -32,6 +32,8 @@ Tree menu (LT.03 to LT.15) and GK.03 are later tasks; selecting a row shows its 
 Cr.Window, Cr.WindowText, Cr.SelectionFocused / Cr.SelectionUnfocused (frame alpha 164, fill 41), Cr.GaugeTotal, Cr.GaugeTotalText; item font 12, counter font 9.
 
 ## 7. Behaviour
+The counters follow the library (P5.2): a scan, a page read, a rating or an edit counts every list again in the background (`LibraryWatcher` collects the Core's change events, at most one pass per second; reading alone waits 3 seconds, a closed reader counts at once), and the shown list is refilled only when its books changed, keeping the selection and the scroll position.
+
 A selected row shows its list in the browser; counts are computed in the background and appear as they arrive. A list that needs scripts has no counter and a tool tip ("Requires scripts (not in MVP)"); its grid shows the notice.
 
 ## 8. Planned differences

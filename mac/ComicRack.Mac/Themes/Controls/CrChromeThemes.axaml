@@ -39,7 +39,7 @@
         <Setter Property="Sunken" Value="False" />
       </ControlTheme>
 
-      <!-- Tree: the rows draw their own selection (StyledSelectionVisual) and counters (CrGaugePill); the tree item theme is CrControlThemes.axaml. -->
+      <!-- Tree: the rows draw their own selection (StyledSelectionVisual) and counters (CrGaugeStrip); the tree item theme is CrControlThemes.axaml. -->
       <ControlTheme x:Key="CrTreeView.Original" TargetType="c:CrTreeView" BasedOn="{StaticResource {x:Type TreeView}}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
@@ -47,7 +47,8 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
       </ControlTheme>
       <ControlTheme x:Key="StyledSelectionVisual.Original" TargetType="c:StyledSelectionVisual" />
-      <ControlTheme x:Key="CrGaugePill.Original" TargetType="c:CrGaugePill" />
+      <ControlTheme x:Key="CrTreeRow.Original" TargetType="c:CrTreeRow" />
+      <ControlTheme x:Key="CrGaugeStrip.Original" TargetType="c:CrGaugeStrip" />
 
       <!-- Column header -->
       <ControlTheme x:Key="CrHeader.Original" TargetType="c:CrHeader" />

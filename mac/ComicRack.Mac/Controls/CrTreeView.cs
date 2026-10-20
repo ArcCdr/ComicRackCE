@@ -12,8 +12,8 @@ namespace ComicRack.Mac.Controls
 {
 	/// <summary>
 	/// The library tree of the side panel (C-TREE-1, <c>LibraryTreeSkin</c>) as one control with semantic parts: every row is an original icon, the
-	/// label and an optional counter pill (<see cref="CrGaugePill"/>). The view only names which members of its node objects carry what
-	/// (<see cref="IconMember"/>, <see cref="TextMember"/>, <see cref="CountMember"/>, <see cref="CountVisibleMember"/>, <see cref="ToolTipMember"/>,
+	/// label and the counters (<see cref="CrGaugeStrip"/>). The view only names which members of its node objects carry what
+	/// (<see cref="IconMember"/>, <see cref="TextMember"/>, <see cref="TotalMember"/>, <see cref="UnreadMember"/>, <see cref="NewMember"/>, <see cref="ToolTipMember"/>,
 	/// <see cref="ChildrenMember"/>, <see cref="ExpandedMember"/>); the row layout, the selection look and the item metrics are the control's and its
 	/// theme's, so they change in the chrome layer without a view being edited.
 	/// </summary>
@@ -29,9 +29,26 @@ namespace ComicRack.Mac.Controls
 
 		public static readonly StyledProperty<string> TextMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(TextMember));
 
-		public static readonly StyledProperty<string> CountMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(CountMember));
+		public static readonly StyledProperty<string> TotalMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(TotalMember));
 
-		public static readonly StyledProperty<string> CountVisibleMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(CountVisibleMember));
+		public static readonly StyledProperty<string> UnreadMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(UnreadMember));
+
+		public static readonly StyledProperty<string> NewMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(NewMember));
+
+		/// <summary><c>DisplayLibraryGauges</c>: whether the counters show at all.</summary>
+		public static readonly StyledProperty<bool> GaugesVisibleProperty = AvaloniaProperty.Register<CrTreeView, bool>(nameof(GaugesVisible), true);
+
+		/// <summary><c>LibraryGauges.Total</c>.</summary>
+		public static readonly StyledProperty<bool> GaugeTotalProperty = AvaloniaProperty.Register<CrTreeView, bool>(nameof(GaugeTotal), true);
+
+		/// <summary><c>LibraryGauges.Unread</c>.</summary>
+		public static readonly StyledProperty<bool> GaugeUnreadProperty = AvaloniaProperty.Register<CrTreeView, bool>(nameof(GaugeUnread), true);
+
+		/// <summary><c>LibraryGauges.New</c>.</summary>
+		public static readonly StyledProperty<bool> GaugeNewProperty = AvaloniaProperty.Register<CrTreeView, bool>(nameof(GaugeNew), true);
+
+		/// <summary><c>LibraryGauges.Numeric</c>.</summary>
+		public static readonly StyledProperty<bool> GaugeNumericProperty = AvaloniaProperty.Register<CrTreeView, bool>(nameof(GaugeNumeric), true);
 
 		public static readonly StyledProperty<string> ToolTipMemberProperty = AvaloniaProperty.Register<CrTreeView, string>(nameof(ToolTipMember));
 
@@ -64,18 +81,55 @@ namespace ComicRack.Mac.Controls
 			set => SetValue(TextMemberProperty, value);
 		}
 
-		/// <summary>The member with the text of the counter pill.</summary>
-		public string CountMember
+		/// <summary>The member (an int) with the number of books of the list; 0 or less shows no counter.</summary>
+		public string TotalMember
 		{
-			get => GetValue(CountMemberProperty);
-			set => SetValue(CountMemberProperty, value);
+			get => GetValue(TotalMemberProperty);
+			set => SetValue(TotalMemberProperty, value);
 		}
 
-		/// <summary>The member (a bool) that says whether the pill shows; without it the pill shows whenever the count text is not empty.</summary>
-		public string CountVisibleMember
+		/// <summary>The member (an int) with the number of books that are not read and not new.</summary>
+		public string UnreadMember
 		{
-			get => GetValue(CountVisibleMemberProperty);
-			set => SetValue(CountVisibleMemberProperty, value);
+			get => GetValue(UnreadMemberProperty);
+			set => SetValue(UnreadMemberProperty, value);
+		}
+
+		/// <summary>The member (an int) with the number of books that are not read and were added recently.</summary>
+		public string NewMember
+		{
+			get => GetValue(NewMemberProperty);
+			set => SetValue(NewMemberProperty, value);
+		}
+
+		public bool GaugesVisible
+		{
+			get => GetValue(GaugesVisibleProperty);
+			set => SetValue(GaugesVisibleProperty, value);
+		}
+
+		public bool GaugeTotal
+		{
+			get => GetValue(GaugeTotalProperty);
+			set => SetValue(GaugeTotalProperty, value);
+		}
+
+		public bool GaugeUnread
+		{
+			get => GetValue(GaugeUnreadProperty);
+			set => SetValue(GaugeUnreadProperty, value);
+		}
+
+		public bool GaugeNew
+		{
+			get => GetValue(GaugeNewProperty);
+			set => SetValue(GaugeNewProperty, value);
+		}
+
+		public bool GaugeNumeric
+		{
+			get => GetValue(GaugeNumericProperty);
+			set => SetValue(GaugeNumericProperty, value);
 		}
 
 		/// <summary>The member with the tool tip of the row.</summary>
@@ -101,40 +155,45 @@ namespace ComicRack.Mac.Controls
 
 		private Control BuildRow(object node, Avalonia.Controls.INameScope scope)
 		{
-			var row = new Grid { ColumnSpacing = RowSpacing };
-			row.ColumnDefinitions.Add(new ColumnDefinition(IconColumnWidth, GridUnitType.Pixel));
-			row.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
-			row.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
-			row.DataContext = node;
+			var row = new CrTreeRow { DataContext = node };
 			if (!string.IsNullOrEmpty(IconMember))
 			{
 				var icon = new CrIcon { VerticalAlignment = VerticalAlignment.Center };
 				icon.Bind(CrIcon.IconNameProperty, new Binding(IconMember));
-				row.Children.Add(icon);
+				row.Icon = icon;
 			}
 			var label = new TextBlock { TextTrimming = Avalonia.Media.TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
 			if (!string.IsNullOrEmpty(TextMember))
 			{
 				label.Bind(TextBlock.TextProperty, new Binding(TextMember));
 			}
-			Grid.SetColumn(label, 1);
-			row.Children.Add(label);
-			if (!string.IsNullOrEmpty(CountMember))
+			row.Label = label;
+			if (!string.IsNullOrEmpty(TotalMember) || !string.IsNullOrEmpty(UnreadMember) || !string.IsNullOrEmpty(NewMember))
 			{
-				var pill = new CrGaugePill { Margin = new Thickness(4, 0, 2, 0) };
-				pill.Bind(CrGaugePill.TextProperty, new Binding(CountMember));
-				if (!string.IsNullOrEmpty(CountVisibleMember))
-				{
-					pill.Bind(IsVisibleProperty, new Binding(CountVisibleMember));
-				}
-				Grid.SetColumn(pill, 2);
-				row.Children.Add(pill);
+				var gauges = new CrGaugeStrip();
+				BindIfNamed(gauges, CrGaugeStrip.TotalProperty, TotalMember);
+				BindIfNamed(gauges, CrGaugeStrip.UnreadProperty, UnreadMember);
+				BindIfNamed(gauges, CrGaugeStrip.NewProperty, NewMember);
+				gauges.Bind(IsVisibleProperty, new Binding(nameof(GaugesVisible)) { Source = this });
+				gauges.Bind(CrGaugeStrip.ShowTotalProperty, new Binding(nameof(GaugeTotal)) { Source = this });
+				gauges.Bind(CrGaugeStrip.ShowUnreadProperty, new Binding(nameof(GaugeUnread)) { Source = this });
+				gauges.Bind(CrGaugeStrip.ShowNewProperty, new Binding(nameof(GaugeNew)) { Source = this });
+				gauges.Bind(CrGaugeStrip.NumericProperty, new Binding(nameof(GaugeNumeric)) { Source = this });
+				row.Gauges = gauges;
 			}
 			if (!string.IsNullOrEmpty(ToolTipMember))
 			{
 				row.Bind(ToolTip.TipProperty, new Binding(ToolTipMember));
 			}
 			return row;
+		}
+
+		private static void BindIfNamed(CrGaugeStrip strip, AvaloniaProperty property, string member)
+		{
+			if (!string.IsNullOrEmpty(member))
+			{
+				strip.Bind(property, new Binding(member));
+			}
 		}
 
 		private IEnumerable ChildrenOf(object node)
@@ -154,6 +213,114 @@ namespace ComicRack.Mac.Controls
 			{
 				item.Bind(TreeViewItem.IsExpandedProperty, new Binding(ExpandedMember) { Mode = BindingMode.TwoWay });
 			}
+		}
+	}
+	/// <summary>
+	/// One row of <see cref="CrTreeView"/>: icon column, label and the counters behind it. The label takes what it needs and the counters get what is
+	/// left, which is the room <c>LibraryTreeSkin.DrawNodeLabel</c> measures (from the label's right edge plus 4 to the end of the row); a label that is
+	/// longer than the row is trimmed and leaves nothing for them.
+	/// </summary>
+	public sealed class CrTreeRow : Panel, IChromeElement
+	{
+		public CrTreeRow()
+		{
+			ChromeVariants.Bind(this);
+		}
+
+		public ChromeElement Element => ChromeElement.Tree;
+
+		private Control icon;
+		private Control label;
+		private CrGaugeStrip gauges;
+
+		public Control Icon
+		{
+			get => icon;
+			set => Replace(ref icon, value);
+		}
+
+		public Control Label
+		{
+			get => label;
+			set => Replace(ref label, value);
+		}
+
+		public CrGaugeStrip Gauges
+		{
+			get => gauges;
+			set
+			{
+				if (gauges != null)
+				{
+					Children.Remove(gauges);
+				}
+				gauges = value;
+				if (value != null)
+				{
+					Children.Add(value);
+				}
+			}
+		}
+
+		private void Replace(ref Control field, Control value)
+		{
+			if (field != null)
+			{
+				Children.Remove(field);
+			}
+			field = value;
+			if (value != null)
+			{
+				Children.Add(value);
+			}
+		}
+
+		private double IconSpace => icon == null ? 0 : CrTreeView.IconColumnWidth + CrTreeView.RowSpacing;
+
+		protected override Size MeasureOverride(Size availableSize)
+		{
+			double height = 0;
+			icon?.Measure(new Size(CrTreeView.IconColumnWidth, availableSize.Height));
+			height = Math.Max(height, icon?.DesiredSize.Height ?? 0);
+			label?.Measure(new Size(double.PositiveInfinity, availableSize.Height));
+			double natural = label?.DesiredSize.Width ?? 0;
+			height = Math.Max(height, label?.DesiredSize.Height ?? 0);
+			double room = availableSize.Width - IconSpace;
+			double labelWidth = double.IsInfinity(room) ? natural : Math.Min(natural, Math.Max(0, room));
+			if (label != null && labelWidth < natural)
+			{
+				label.Measure(new Size(labelWidth, availableSize.Height));
+			}
+			double gaugeRoom = double.IsInfinity(room) ? double.PositiveInfinity : Math.Max(0, room - labelWidth - CrTreeView.RowSpacing);
+			if (gauges != null)
+			{
+				gauges.Measure(new Size(gaugeRoom, double.IsInfinity(availableSize.Height) ? Math.Max(height, 1) : availableSize.Height));
+				height = Math.Max(height, gauges.DesiredSize.Height);
+			}
+			double width = IconSpace + labelWidth + (gauges != null && gauges.DesiredSize.Width > 0 ? CrTreeView.RowSpacing + gauges.DesiredSize.Width : 0);
+			return new Size(double.IsInfinity(availableSize.Width) ? width : availableSize.Width, height);
+		}
+
+		protected override Size ArrangeOverride(Size finalSize)
+		{
+			if (icon != null)
+			{
+				double h = icon.DesiredSize.Height;
+				icon.Arrange(new Rect(0, Math.Max(0, (finalSize.Height - h) / 2), CrTreeView.IconColumnWidth, h));
+			}
+			double room = Math.Max(0, finalSize.Width - IconSpace);
+			double labelWidth = label == null ? 0 : Math.Min(label.DesiredSize.Width, room);
+			if (label != null)
+			{
+				double h = label.DesiredSize.Height;
+				label.Arrange(new Rect(IconSpace, Math.Max(0, (finalSize.Height - h) / 2), labelWidth, h));
+			}
+			if (gauges != null)
+			{
+				double x = IconSpace + labelWidth + CrTreeView.RowSpacing;
+				gauges.Arrange(new Rect(x, 0, Math.Max(0, finalSize.Width - x), finalSize.Height));
+			}
+			return finalSize;
 		}
 	}
 }

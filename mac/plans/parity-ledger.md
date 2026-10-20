@@ -188,7 +188,7 @@
 | BT.10 | Toolbar: List Layouts (Edit, Save, Reset List Background, Edit Layouts, saved layouts) | `tsListLayouts`, `tsEditListLayout`, `tsSaveListLayout`, `tsEditLayouts` | Ctrl+L, Ctrl+Alt+L as MB rows | P5.11b | todo | |
 | BT.11 | Toolbar: Duplicate list (into a new list or smart list) | `tbbDuplicateList`, `dummyEntryToolStripMenuItem2` | — | P5.16a | todo | |
 | BT.12 | Toolbar: Undo / Redo | `tbUndo`, `tbRedo` | as ME.02/03 | P5.7a | todo | |
-| BV.01 | Thumbnails view (cover, title lines, rating, badges) | `ItemView` + `ComicBookViewItem` | — | P5.R2 | done 2026-10-20 | thumbnail items drawn as `ThumbRenderer` and `ThumbIconRenderer` draw them (`CrThumbnailItem`, spec `CoverViewItem`): shadow, frame, empty tile, caption of three lines with the selection style, dog-ear, ribbons, state icons, ratings. Uniform item width (the grid is the MVP's `UniformGridLayout`): a variable width per cover is a section 9 item; the open and last markers are drawn but filled by P5.2; clicking the stars to rate is P5.5 |
+| BV.01 | Thumbnails view (cover, title lines, rating, badges) | `ItemView` + `ComicBookViewItem` | — | P5.R2 | done 2026-10-20 | thumbnail items drawn as `ThumbRenderer` and `ThumbIconRenderer` draw them (`CrThumbnailItem`, spec `CoverViewItem`): shadow, frame, empty tile, caption of three lines with the selection style, dog-ear, ribbons, state icons, ratings. Uniform item width (the grid is the MVP's `UniformGridLayout`): a variable width per cover is a section 9 item; the open and last markers are filled by P5.2 (`BrowserViewModel.MarkerOf`: open in a reader, else the book opened last in the shown list, as `ComicBrowserControl.UpdateBookMarkers`); clicking the stars to rate is P5.5 |
 | BV.02 | Tiles view | `ItemView` tiles | — | P5.12 | todo | |
 | BV.03 | Details view (columns, sort by header, column chooser) | `ItemView` details | — | P5.11a | todo | |
 | BV.04 | Item size by Ctrl+mouse wheel and by the status-bar slider | `ComicBrowserControl.cs:1255` | Ctrl+wheel → Cmd+wheel, also pinch | P5.R2 | done 2026-10-20 | Cmd+wheel (16 per notch, 80 to 360), a trackpad pinch, and the status-bar slider all set the same item size; the caption font and the cell follow it |
@@ -226,7 +226,7 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| LT.01 | Library tree with list icons, counts and live counters (gauges) | `ComicListLibraryBrowser`, Settings `LibraryGauges*` | — | P5.2 | todo | look done by P5.R1 (original images by list type, row height, bold selection, total counter pill); P5.2 adds the unread and new counters and the live update |
+| LT.01 | Library tree with list icons, counts and live counters (gauges) | `ComicListLibraryBrowser`, Settings `LibraryGauges*` | — | P5.2 | done 2026-10-21 | look by P5.R1 (original images by list type, row height, bold selection); P5.2: the Total, Unread and New counters as `LibraryTreeSkin` draws them (`CrGaugeStrip`: pills of the text plus 4 when the numbers fit behind the label, bars of at most 6 otherwise, the original's corners, alpha 128 at the top to 192 at the bottom), the numbers by the Core's own rule (`ListStats`), and the live update after a scan, reading and edits (`LibraryWatcher`); `DisplayLibraryGauges` and `LibraryGaugesFormat` are saved with the original's defaults and followed live. The device-sync marker on a row is deferred with device sync |
 | LT.02 | Tree toolbar: New Folder, New List, New Smart List, New Window, New Tab, Expand/Collapse all, Refresh, Show Favorites, Quick Search | `ComicListLibraryBrowser.toolStrip`, `tbNewFolder`, `tbNewList`, `tbNewSmartList`, `tbExpandCollapseAll` | Quick Search Ctrl+Alt+F → Option+Cmd+F | P5.16a | todo | New Tab: P5.32b |
 | LT.03 | Tree menu: Edit... (smart list editor) | `treeContextMenu.miEditSmartList` | — | P5.17a | todo | |
 | LT.04 | Tree menu: Rename | `miQueryRename` | F2 | P5.16a | todo | |
@@ -357,7 +357,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | PR.07 | Reader > macOS group (swipe at edge, pinch speed, trackpad) | Mac-only additions (DD8) | P5.22a | mac-only | |
 | PR.08 | Libraries > Book Folders | folder list with watch check boxes, Add..., Remove, Change..., Open | P5.22b | todo | |
 | PR.09 | Libraries > Scanning | Scan, auto-remove missing, do not re-add removed files | P5.22b | todo | |
-| PR.10 | Libraries > Display | Live Counters (New, Unread, Total, numbers) | P5.22b | todo | |
+| PR.10 | Libraries > Display | Live Counters (New, Unread, Total, numbers) | P5.22b | todo | the behaviour is there since P5.2 (`DisplayLibraryGauges`, `LibraryGaugesFormat` saved and followed live by the tree); the check boxes come with the pane |
 | PR.11 | Libraries > Sharing, Server Settings | shares, public address, private list password | — | deferred (D4) | |
 | PR.12 | Libraries > Virtual Tags | tag selector, enable, name, description, caption prefix/field/suffix/format, Insert, Choose Value, help | P5.22b | todo | |
 | PR.13 | Behavior | generated from Settings booleans by category (PB rows) | P5.22a | todo | |

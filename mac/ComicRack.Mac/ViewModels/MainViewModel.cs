@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -49,16 +50,159 @@ namespace ComicRack.Mac.ViewModels
 				}
 			};
 			Sidebar.SelectionChanged += (sender, e) => _ = ShowSelectedListAsync();
-			hostService.Closing += (sender, e) => Browser.Thumbnails = null; // the cover service is about to be disposed (import)
+			hostService.Closing += (sender, e) =>
+			{
+				Browser.Thumbnails = null; // the cover service is about to be disposed (import)
+				StopWatching();
+			};
+			if (readers != null)
+			{
+				Browser.IsBookOpen = readers.IsOpen;
+				openReaders = readers.OpenCount;
+				readers.OpenBooksChanged += OnOpenBooksChanged;
+			}
 			if (preferences != null)
 			{
 				RestoreAndFollow(preferences);
 			}
 		}
 
+		// ---- live refresh (P5.2)
+
+		private ISaveScheduler liveScheduler;
+		private LibraryWatcher watcher;
+		private Task liveTask = Task.CompletedTask;
+		private bool liveRunning, livePending;
+		private int openReaders;
+
+		/// <summary>
+		/// Turns the live refresh on: from now on the changes of the open library (books added by a scan, a page read, a rating, an edit) update the covers that
+		/// show them at once, and the counters of the tree and the shown list a moment later, off the UI thread, keeping the selection and the scroll position
+		/// (<see cref="LibraryWatcher"/> collects the changes and delivers them on <paramref name="scheduler"/>; the default is a timer). The window does it
+		/// at start; a test passes a scheduler it releases by hand.
+		/// </summary>
+		public void EnableLiveRefresh(ISaveScheduler scheduler = null)
+		{
+			liveScheduler = scheduler ?? new TimerSaveScheduler();
+			StartWatching();
+		}
+
+		private void StartWatching()
+		{
+			watcher?.Dispose();
+			watcher = null;
+			MacHost host = hostService.Host;
+			if (liveScheduler == null || host == null)
+			{
+				return;
+			}
+			watcher = new LibraryWatcher(host.DatabaseManager.Database, liveScheduler, change => UiDispatch.Post(() => OnLibraryChanged(change)));
+		}
+
+		private void StopWatching()
+		{
+			watcher?.Dispose();
+			watcher = null;
+			Sidebar.CancelCounts();
+		}
+
+		/// <summary>The watcher of the open library, or null (for tests).</summary>
+		public LibraryWatcher Watcher => watcher;
+
+		// A reader was opened or closed: the "open" state icons follow, and a closed reader has just recorded its page, so the lists count at once.
+		private void OnOpenBooksChanged(object sender, EventArgs e)
+		{
+			Browser.NotifyMarkersChanged();
+			int now = readers.OpenCount;
+			bool closed = now < openReaders;
+			openReaders = now;
+			if (closed)
+			{
+				watcher?.Flush();
+			}
+		}
+
+		private void OnLibraryChanged(LibraryChange change)
+		{
+			if (hostService.Host == null)
+			{
+				return;
+			}
+			Browser.NotifyBooksChanged(change.Books);
+			if (change.ListChanged)
+			{
+				SetBookCount(hostService.Host.DatabaseManager.Database.Books.Count);
+			}
+			RequestLiveRefresh();
+		}
+
+		/// <summary>Counts the lists again and refreshes the shown list now (one pass at a time; a request made during a pass runs another pass after it).</summary>
+		public void RequestLiveRefresh()
+		{
+			if (liveRunning)
+			{
+				livePending = true;
+				return;
+			}
+			liveRunning = true;
+			liveTask = RunLiveRefreshAsync();
+		}
+
+		/// <summary>Completes when no refresh is running or waiting.</summary>
+		public async Task WhenLiveRefreshedAsync()
+		{
+			Task seen;
+			do
+			{
+				seen = liveTask;
+				await seen.ConfigureAwait(true);
+			}
+			while (!ReferenceEquals(seen, liveTask) || liveRunning);
+		}
+
+		private async Task RunLiveRefreshAsync()
+		{
+			try
+			{
+				do
+				{
+					livePending = false;
+					if (hostService.Host == null)
+					{
+						break;
+					}
+					var watch = System.Diagnostics.Stopwatch.StartNew();
+					SidebarNode node = Sidebar.SelectedNode;
+					string notice = null;
+					Task counts = Sidebar.RefreshCountsAsync();
+					Task grid = Browser.RefreshAsync(Sidebar.LoaderFor(node, text => notice = text));
+					await Task.WhenAll(counts, grid).ConfigureAwait(true);
+					if (Sidebar.SelectedNode == node && hostService.Host != null)
+					{
+						Sidebar.Notice = notice;
+					}
+					// the numbers of the rows are posted to the UI thread by the count pass: let them arrive before they are logged
+					await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { }, Avalonia.Threading.DispatcherPriority.Background);
+					// the counters as the tree now shows them: total/unread/new of every list that has books
+					string counters = string.Join(", ", Sidebar.AllNodes().Where(n => n.Count > 0).Select(n => $"{n.Name} {n.Count}/{n.UnreadCount}/{n.NewCount}"));
+					AppLog.Info($"Live refresh: counts and list updated in {watch.ElapsedMilliseconds} ms. Counters {counters}.");
+				}
+				while (livePending);
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("The live refresh failed.", ex);
+			}
+			finally
+			{
+				liveRunning = false;
+			}
+		}
+
 		// The state of the library window that is kept between runs: it starts from the preferences and every change is written back.
 		private void RestoreAndFollow(AppPreferences saved)
 		{
+			Sidebar.BindGauges(saved);
 			Sidebar.IsVisible = saved.SidebarVisible;
 			Sidebar.Width = saved.SidebarWidth;
 			Browser.ThumbnailSize = Math.Clamp(saved.ThumbnailSize, BrowserViewModel.MinThumbnailSize, BrowserViewModel.MaxThumbnailSize);
@@ -283,6 +427,7 @@ namespace ComicRack.Mac.ViewModels
 			SetBookCount(host.DatabaseManager.Database.Books.Count);
 			Browser.Thumbnails = hostService.Thumbnails;
 			ReloadBrowser();
+			StartWatching();
 			StatusText = $"Library engine ready. {BookCount} books. Data: {host.Paths.DataFolder}";
 		}
 

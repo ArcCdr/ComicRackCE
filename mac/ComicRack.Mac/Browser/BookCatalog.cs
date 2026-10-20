@@ -70,6 +70,63 @@ namespace ComicRack.Mac.Browser
 			return new BookCatalog(items);
 		}
 
+		/// <summary>
+		/// True if <paramref name="other"/> lists the same Core books with the same shown values (title, series, number, date added), in any order: a refresh
+		/// that finds nothing new need not replace the list under the user's hands. Items without a Core book (tests) are never the same.
+		/// </summary>
+		public bool HasSameContentAs(BookCatalog other, CancellationToken cancellationToken = default)
+		{
+			if (other == null || other.Count != Count)
+			{
+				return false;
+			}
+			var mine = new Dictionary<ComicBook, BookItem>(Count, ReferenceEqualityComparer.Instance);
+			foreach (BookItem item in Items)
+			{
+				if (item.Book == null || !mine.TryAdd(item.Book, item))
+				{
+					return false;
+				}
+			}
+			int n = 0;
+			foreach (BookItem item in other.Items)
+			{
+				if ((++n & (CheckEvery - 1)) == 0)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+				}
+				if (item.Book == null || !mine.TryGetValue(item.Book, out BookItem old))
+				{
+					return false;
+				}
+				if (old.Title != item.Title || old.Series != item.Series || old.Number != item.Number || old.Added != item.Added)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// The book of <paramref name="items"/> that was opened last (the largest <c>OpenedTime</c>; a book never opened does not count), or null:
+		/// <c>ComicBrowserControl.UpdateBookMarkers</c> puts the "last opened" marker on it.
+		/// </summary>
+		public static ComicBook LastOpened(IEnumerable<BookItem> items)
+		{
+			DateTime t = DateTime.MinValue;
+			ComicBook last = null;
+			foreach (BookItem item in items)
+			{
+				ComicBook book = item.Book;
+				if (book != null && t < book.OpenedTime)
+				{
+					t = book.OpenedTime;
+					last = book;
+				}
+			}
+			return last;
+		}
+
 		/// <summary>The words of a search text, folded; empty if the text has none.</summary>
 		public static string[] SplitTerms(string text)
 		{

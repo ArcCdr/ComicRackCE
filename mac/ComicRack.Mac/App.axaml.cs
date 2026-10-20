@@ -95,6 +95,7 @@ namespace ComicRack.Mac
 				window.AttachPerfOverlay(perf);
 				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers, preferences);
 				window.DataContext = viewModel;
+				viewModel.EnableLiveRefresh();
 				ViewRegistry.Library = viewModel;
 				// Avalonia.Native has made the app menu before this runs and ignores a menu set now: its items are changed in place (MainMenu.FillAppMenu).
 				NativeMenu appMenu = NativeMenu.GetMenu(this);

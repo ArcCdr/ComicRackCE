@@ -169,12 +169,14 @@ namespace ComicRack.Mac.Views
 			{
 				model.PropertyChanged -= OnModelChanged;
 				model.ThumbnailOptions.Changed -= OnOptionsChanged;
+				model.BooksChanged -= OnBooksChanged;
 			}
 			model = DataContext as BrowserViewModel;
 			if (model != null)
 			{
 				model.PropertyChanged += OnModelChanged;
 				model.ThumbnailOptions.Changed += OnOptionsChanged;
+				model.BooksChanged += OnBooksChanged;
 				ApplyMetrics(model.ThumbnailSize);
 			}
 			ApplyItems();
@@ -186,6 +188,19 @@ namespace ComicRack.Mac.Views
 			foreach (BookCell cell in BoundCells())
 			{
 				cell.RefreshLook();
+			}
+		}
+
+		// Books of the library changed (a page was read): the cells that show them draw their state again.
+		private void OnBooksChanged(object sender, IReadOnlyCollection<cYo.Projects.ComicRack.Engine.ComicBook> books)
+		{
+			var changed = books as ISet<cYo.Projects.ComicRack.Engine.ComicBook> ?? new HashSet<cYo.Projects.ComicRack.Engine.ComicBook>(books);
+			foreach (BookCell cell in BoundCells())
+			{
+				if (cell.Item.Book != null && changed.Contains(cell.Item.Book))
+				{
+					cell.RefreshLook();
+				}
 			}
 		}
 
@@ -253,7 +268,7 @@ namespace ComicRack.Mac.Views
 					}
 					break;
 				case nameof(BrowserViewModel.SelectedIndex):
-					ApplySelection(model.SelectedIndex);
+					ApplySelection(model.SelectedIndex, ensureVisible: !model.KeepsView);
 					break;
 			}
 		}
@@ -262,12 +277,33 @@ namespace ComicRack.Mac.Views
 		{
 			items = model?.Items ?? Array.Empty<BookItem>();
 			selected = -1;
+			Vector before = scroll.Offset;
 			repeater.ItemsSource = items;
 			if (model != null && model.ConsumeScrollReset())
 			{
 				scroll.Offset = new Vector(0, 0);
 			}
-			ApplySelection(model?.SelectedIndex ?? -1);
+			else if (model != null && model.KeepsView && before.Y > 0)
+			{
+				KeepOffset(before);
+			}
+			ApplySelection(model?.SelectedIndex ?? -1, ensureVisible: !(model?.KeepsView ?? false));
+		}
+
+		// A refresh replaces the list under the user's hands: the scroll position stays where it was (as far as the new list is long enough).
+		private void KeepOffset(Vector offset)
+		{
+			scroll.Offset = offset;
+			if (scroll.Offset.Y + 0.5 < offset.Y)
+			{
+				// the extent is not known until the repeater has laid out the new list: put the offset back once it has
+				void Restore(object sender, EventArgs e)
+				{
+					repeater.LayoutUpdated -= Restore;
+					scroll.Offset = offset;
+				}
+				repeater.LayoutUpdated += Restore;
+			}
 		}
 
 		private void ApplyMetrics(double coverHeight)
@@ -324,7 +360,7 @@ namespace ComicRack.Mac.Views
 			}
 		}
 
-		private void ApplySelection(int index)
+		private void ApplySelection(int index, bool ensureVisible = true)
 		{
 			int old = selected;
 			selected = index;
@@ -335,7 +371,10 @@ namespace ComicRack.Mac.Views
 			if (index >= 0)
 			{
 				CellAt(index)?.SetSelected(true);
-				EnsureVisible(index);
+				if (ensureVisible)
+				{
+					EnsureVisible(index);
+				}
 			}
 		}
 

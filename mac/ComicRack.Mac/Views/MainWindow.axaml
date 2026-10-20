@@ -29,8 +29,10 @@
                           ExpandedExtent="{Binding Sidebar.Width, Mode=TwoWay}" IsExpanded="{Binding Sidebar.IsVisible, Mode=TwoWay}">
       <Border Classes="cr-panel">
         <c:CrTreeView Name="SidebarTree" ItemsSource="{Binding Sidebar.Roots}" SelectedItem="{Binding Sidebar.SelectedNode, Mode=TwoWay}"
-                      IconMember="IconName" TextMember="Name" CountMember="CountText" CountVisibleMember="HasCount" ToolTipMember="Badge"
-                      ChildrenMember="Children" ExpandedMember="IsExpanded" />
+                      IconMember="IconName" TextMember="Name" TotalMember="Count" UnreadMember="UnreadCount" NewMember="NewCount" ToolTipMember="Badge"
+                      ChildrenMember="Children" ExpandedMember="IsExpanded"
+                      GaugesVisible="{Binding Sidebar.GaugesVisible}" GaugeTotal="{Binding Sidebar.GaugeTotal}" GaugeUnread="{Binding Sidebar.GaugeUnread}"
+                      GaugeNew="{Binding Sidebar.GaugeNew}" GaugeNumeric="{Binding Sidebar.GaugeNumeric}" />
       </Border>
     </c:CrSizableContainer>
 

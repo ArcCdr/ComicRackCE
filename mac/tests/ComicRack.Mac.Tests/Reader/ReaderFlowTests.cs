@@ -32,9 +32,23 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public int OpenCount => Opened.Count;
 
-		public void Open(ComicBook book) => Opened.Add(book);
+		public void Open(ComicBook book)
+		{
+			Opened.Add(book);
+			OpenBooksChanged?.Invoke(this, EventArgs.Empty);
+		}
 
 		public void CloseAll() => CloseAllCalls++;
+
+		public void Close(ComicBook book)
+		{
+			Opened.Remove(book);
+			OpenBooksChanged?.Invoke(this, EventArgs.Empty);
+		}
+
+		public bool IsOpen(ComicBook book) => Opened.Contains(book);
+
+		public event EventHandler OpenBooksChanged;
 	}
 
 	/// <summary>

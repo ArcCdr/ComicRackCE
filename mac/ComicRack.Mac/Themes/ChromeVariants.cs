@@ -21,7 +21,7 @@ namespace ComicRack.Mac.Themes
 		/// <summary>The status bar and its segments: <c>CrStatusBar</c>, <c>CrStatusSlot</c>.</summary>
 		StatusBar,
 
-		/// <summary>Tree views, item selection and counters: <c>CrTreeView</c>, <c>StyledSelectionVisual</c>, <c>CrGaugePill</c>, the tree item theme.</summary>
+		/// <summary>Tree views, item selection and counters: <c>CrTreeView</c>, <c>StyledSelectionVisual</c>, <c>CrGaugeStrip</c>, the tree item theme.</summary>
 		Tree,
 
 		/// <summary>Column headers: <c>CrHeader</c>.</summary>
