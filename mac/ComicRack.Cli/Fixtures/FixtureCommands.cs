@@ -366,8 +366,8 @@ namespace ComicRack.Cli.Fixtures
 		private readonly Dictionary<string, string> named = new Dictionary<string, string>();
 		private readonly HashSet<string> flags = new HashSet<string>();
 
-		/// <summary>Options that take no value (`--app-folders`, `--all`, `--cached`); every other `--name` takes the next argument.</summary>
-		private static readonly HashSet<string> FlagNames = new HashSet<string> { "app-folders", "all", "cached" };
+		/// <summary>Options that take no value (`--app-folders`, `--all`, `--cached`, `--require-nonblank`); every other `--name` takes the next argument.</summary>
+		private static readonly HashSet<string> FlagNames = new HashSet<string> { "app-folders", "all", "cached", "require-nonblank" };
 
 		public bool Flag(string name) => flags.Contains(name);
 
