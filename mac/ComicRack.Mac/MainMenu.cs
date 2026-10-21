@@ -103,7 +103,11 @@ namespace ComicRack.Mac
 					// MF.15: the open books, Ctrl+Alt+F1 to F12 of the original on the first twelve
 					OpenBooksItem(vm),
 				}),
-				Submenu(Text("editMenu", "&Edit"), new NativeMenu()),
+				Submenu(Text("editMenu", "&Edit"), new NativeMenu
+				{
+					// ME.04: the rating of the book of the current tab, or of the selected books of the browser
+					RatingItem(vm),
+				}),
 				Submenu(Text("browseMenu", "&Browse"), new NativeMenu
 				{
 					BrowserItem(vm),
@@ -170,6 +174,42 @@ namespace ComicRack.Mac
 					Item(Text("miWebHelp", "ComicRack Documentation..."), vm.ShowHelpCommand, Key.F1, KeyModifiers.None),
 				}),
 			};
+		}
+
+		// Edit > My Rating (miRating, ME.04): None, 1 to 5 stars, Quick Rating and Review..., Option+Shift+0 to 5 and Q. The picture of five stars the original's
+		// menu hosts is a control, which a native menu cannot hold; it is in the context menu of the browser (BC.07). The marks and the enabled state follow the
+		// rating target when the menu opens (IEditRating.IsValid, GetRating).
+		private static NativeMenuItem RatingItem(MainViewModel vm)
+		{
+			const KeyModifiers OptionShift = KeyModifiers.Alt | KeyModifiers.Shift;
+			string[] names = { "None", "* (1 Star)", "** (2 Stars)", "*** (3 Stars)", "**** (4 Stars)", "***** (5 Stars)" };
+			var menu = new NativeMenu();
+			var rated = new List<NativeMenuItem>();
+			for (int stars = 0; stars <= 5; stars++)
+			{
+				int value = stars;
+				if (stars == 1)
+				{
+					menu.Items.Add(new NativeMenuItemSeparator());
+				}
+				NativeMenuItem item = Item(Text("miRate" + stars, names[stars]), new RelayCommand(() => vm.Rate(value), () => vm.CanRate), (Key)((int)Key.D0 + stars), OptionShift);
+				item.ToggleType = MenuItemToggleType.Radio;
+				rated.Add(item);
+				menu.Items.Add(item);
+			}
+			menu.Items.Add(new NativeMenuItemSeparator());
+			NativeMenuItem quick = Item(Text("miQuickRating", "Quick Rating and Review..."), vm.QuickRatingCommand, Key.Q, OptionShift);
+			menu.Items.Add(quick);
+			menu.Opening += (sender, e) =>
+			{
+				int current = vm.CurrentRating < 0 ? -1 : (int)Math.Round(vm.CurrentRating);
+				for (int i = 0; i < rated.Count; i++)
+				{
+					rated[i].IsChecked = i == current;
+					((RelayCommand)rated[i].Command).NotifyCanExecuteChanged();
+				}
+			};
+			return Submenu(Text("miRating", "My R&ating"), menu);
 		}
 
 		// Read > Track current Page (Option+Shift+T, MR.13): a check mark that follows the setting.

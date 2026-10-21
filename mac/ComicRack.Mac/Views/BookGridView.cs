@@ -793,6 +793,9 @@ namespace ComicRack.Mac.Views
 			return cmd ^ shift ? OpenTabMode.Invert : OpenTabMode.Default;
 		}
 
+		// The shortcuts of the original's mark and rating items, Alt+Shift (Option+Shift here) and nothing else
+		private static bool OptionShift(KeyEventArgs e) => e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift);
+
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -816,7 +819,45 @@ namespace ComicRack.Mac.Views
 					return;
 				case Key.Delete:
 				case Key.Back when toggle: // Cmd+Backspace: the Mac alias of Delete (DD20)
-					model.RemoveSelected();
+					// Ctrl+Delete of the original removes without the question (RemoveBooks(books, Control.ModifierKeys != Keys.Control)): Cmd+Delete here; the alias asks
+					model.RemoveSelected(ask: !(toggle && e.Key == Key.Delete));
+					e.Handled = true;
+					return;
+				case Key.O when toggle && !extend && !e.KeyModifiers.HasFlag(KeyModifiers.Alt):
+					// Open (miRead, Ctrl+O)
+					model.OpenSelected(OpenTabMode.Default);
+					e.Handled = true;
+					return;
+				case Key.I when toggle && !extend && !e.KeyModifiers.HasFlag(KeyModifiers.Alt):
+					model.Run(BookCommand.Info);
+					e.Handled = true;
+					return;
+				case Key.G when toggle && !extend && !e.KeyModifiers.HasFlag(KeyModifiers.Alt):
+					model.Run(BookCommand.Reveal);
+					e.Handled = true;
+					return;
+				case Key.D0 or Key.D1 or Key.D2 or Key.D3 or Key.D4 or Key.D5 when OptionShift(e):
+					model.Run(BookCommand.Rate, e.Key - Key.D0);
+					e.Handled = true;
+					return;
+				case Key.Q when OptionShift(e):
+					model.Run(BookCommand.QuickRating);
+					e.Handled = true;
+					return;
+				case Key.U when OptionShift(e):
+					model.Run(BookCommand.MarkUnread);
+					e.Handled = true;
+					return;
+				case Key.R when OptionShift(e):
+					model.Run(BookCommand.MarkRead);
+					e.Handled = true;
+					return;
+				case Key.M when OptionShift(e):
+					model.Run(BookCommand.MarkChecked);
+					e.Handled = true;
+					return;
+				case Key.V when OptionShift(e):
+					model.Run(BookCommand.MarkUnchecked);
 					e.Handled = true;
 					return;
 				case Key.Enter:

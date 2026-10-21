@@ -51,6 +51,9 @@
       <ControlTheme x:Key="CrTreeRow.Original" TargetType="c:CrTreeRow" />
       <ControlTheme x:Key="CrGaugeStrip.Original" TargetType="c:CrGaugeStrip" />
 
+      <!-- Rating editor: draws itself (CrRatingStars.Render) from the Cr tokens and the StarYellow image. -->
+      <ControlTheme x:Key="CrRatingStars.Original" TargetType="c:CrRatingStars" />
+
       <!-- Column header -->
       <ControlTheme x:Key="CrHeader.Original" TargetType="c:CrHeader" />
 

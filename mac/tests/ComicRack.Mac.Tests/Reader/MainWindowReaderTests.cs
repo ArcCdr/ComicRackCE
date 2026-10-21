@@ -36,7 +36,8 @@ namespace ComicRack.Mac.Tests.Reader
 			Preferences = preferences ?? new AppPreferences();
 			Shell = new NullShell();
 			Tabs = new ReaderManager(service, Preferences);
-			Vm = new MainViewModel(Shell, service, new FakeDialogs(), Tabs, Preferences);
+			Dialogs = new FakeDialogs();
+			Vm = new MainViewModel(Shell, service, Dialogs, Tabs, Preferences);
 			Window = new MainWindow { DataContext = Vm, Width = width, Height = height };
 			if (show)
 			{
@@ -48,6 +49,8 @@ namespace ComicRack.Mac.Tests.Reader
 		public AppPreferences Preferences { get; }
 
 		public NullShell Shell { get; }
+
+		public FakeDialogs Dialogs { get; }
 
 		public ReaderManager Tabs { get; }
 

@@ -103,7 +103,7 @@ namespace ComicRack.Mac.Host.Tests
 				{
 					Match field = Regex.Match(Source, @"private (?:volatile )?\w+ " + getter.Groups[1].Value + @"(?: = ([^;]+))?;");
 					Assert.True(field.Success, property.Name + ": the field " + getter.Groups[1].Value + " was not found");
-					string init = field.Groups[1].Success ? Resolve(field.Groups[1].Value, consts) : (type == "bool" ? "false" : type == "int" ? "0" : "null");
+					string init = field.Groups[1].Success ? Resolve(field.Groups[1].Value, consts) : (type == "bool" ? "false" : type == "int" ? "0" : property.PropertyType.IsEnum ? Format(Activator.CreateInstance(property.PropertyType)) : "null");
 					Assert.True(init == actual, property.Name + ": the initializer of " + getter.Groups[1].Value + " is " + init + ", a new AppPreferences has " + actual);
 				}
 				checkedCount++;

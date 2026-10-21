@@ -107,6 +107,11 @@ namespace ComicRack.Mac.Host.Tests
 				BrowserDockHeight = 321.5,
 				BrowserDockExpanded = false,
 				ReaderUndocked = true,
+				MoveFilesToRecycleBin = true,
+				AlsoRemoveFromLibrary = true,
+				AlsoRemoveFromLibraryFiltered = true,
+				RemoveFilesfromDatabase = true,
+				HiddenMessageBoxes = HiddenMessageBoxes.AskClearData | HiddenMessageBoxes.RemoveFromList,
 			};
 			SettingsStore.Save(SettingsFile, written);
 

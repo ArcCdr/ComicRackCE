@@ -32,5 +32,14 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>Shows a problem the user must know about (a failed import, a failed save).</summary>
 		Task ShowMessageAsync(string title, string message);
+
+		/// <summary>
+		/// Asks a question (<c>QuestionDialog</c>, <c>Program.AskQuestion</c>). The default answers OK with nothing checked, so a fake that does not care lets
+		/// the command go on.
+		/// </summary>
+		Task<QuestionAnswer> AskQuestionAsync(QuestionRequest request) => Task.FromResult(QuestionAnswer.Ok);
+
+		/// <summary>The Quick Rating dialog (DL.18). Null: cancelled. The default cancels.</summary>
+		Task<QuickRatingResult> AskQuickRatingAsync(QuickRatingRequest request) => Task.FromResult<QuickRatingResult>(null);
 	}
 }

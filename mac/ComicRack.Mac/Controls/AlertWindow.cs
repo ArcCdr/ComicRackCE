@@ -18,6 +18,7 @@ namespace ComicRack.Mac.Controls
 	{
 		private readonly MacAlertOptions options;
 		private readonly CheckBox suppression;
+		private readonly List<CheckBox> optionBoxes = new List<CheckBox>();
 		private readonly List<Button> buttons = new List<Button>();
 		private int pressed = -1;
 
@@ -36,6 +37,20 @@ namespace ComicRack.Mac.Controls
 			{
 				suppression = new CheckBox { Content = options.SuppressionText, Margin = new Thickness(0, 4, 0, 0) };
 				panel.Children.Add(suppression);
+			}
+			for (int i = 0; i < options.Options.Count; i++)
+			{
+				MacAlertOption option = options.Options[i];
+				var box = new CheckBox { Content = option.Text, IsChecked = option.Checked, Margin = new Thickness(option.OnlyWhilePreviousChecked ? 32 : 0, 4, 0, 0) };
+				if (option.OnlyWhilePreviousChecked && i > 0)
+				{
+					// the box appears while the one before it is checked (QuestionDialog.chkOption_CheckedChanged)
+					CheckBox before = optionBoxes[i - 1];
+					box.IsVisible = before.IsChecked == true;
+					before.IsCheckedChanged += (sender, e) => box.IsVisible = before.IsChecked == true;
+				}
+				optionBoxes.Add(box);
+				panel.Children.Add(box);
 			}
 			var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = ChromeMetrics.DialogButtonGap, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 8, 0, 12) };
 			for (int i = 0; i < options.Buttons.Count; i++)
@@ -69,6 +84,9 @@ namespace ComicRack.Mac.Controls
 
 		public CheckBox SuppressionBox => suppression;
 
+		/// <summary>The option check boxes, in the order of <see cref="MacAlertOptions.Options"/>.</summary>
+		public IReadOnlyList<CheckBox> OptionBoxes => optionBoxes;
+
 		/// <summary>True if a button closed the window (not the close box).</summary>
 		public bool ClosedWithButton => pressed >= 0;
 
@@ -76,7 +94,12 @@ namespace ComicRack.Mac.Controls
 		public MacAlertResult Result(bool accepted)
 		{
 			int index = pressed >= 0 ? pressed : (options.CancelIndex >= 0 ? options.CancelIndex : 0);
-			return new MacAlertResult(index, suppression?.IsChecked == true);
+			var states = new bool[optionBoxes.Count];
+			for (int i = 0; i < states.Length; i++)
+			{
+				states[i] = optionBoxes[i].IsChecked == true; // a hidden box keeps its state, as QuestionDialog.Ask reads it
+			}
+			return new MacAlertResult(index, suppression?.IsChecked == true, states);
 		}
 	}
 }

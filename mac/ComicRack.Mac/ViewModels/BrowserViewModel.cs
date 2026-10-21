@@ -26,6 +26,53 @@ namespace ComicRack.Mac.ViewModels
 		NewTab,
 	}
 
+	/// <summary>The commands of the book context menu that need more than the browser (the main view model carries them out; <see cref="BrowserViewModel.Run"/>).</summary>
+	public enum BookCommand
+	{
+		/// <summary>Info... (<c>miProperties</c>, Cmd+I): the information of the selected books.</summary>
+		Info,
+
+		/// <summary>Reveal in Finder (<c>miRevealBrowser</c>, Cmd+G): the file of the first selected book that has one.</summary>
+		Reveal,
+
+		/// <summary>Mark as Read (<c>miMarkRead</c>, Option+Shift+R).</summary>
+		MarkRead,
+
+		/// <summary>Mark as Unread (<c>miMarkUnread</c>, Option+Shift+U).</summary>
+		MarkUnread,
+
+		/// <summary>Mark as Checked (<c>miMarkChecked</c>, Option+Shift+M).</summary>
+		MarkChecked,
+
+		/// <summary>Mark as Unchecked (<c>miMarkUnchecked</c>, Option+Shift+V).</summary>
+		MarkUnchecked,
+
+		/// <summary>My Rating (<c>miRating0</c> to <c>miRating5</c>, Option+Shift+0 to 5, or the stars): the rating is the value.</summary>
+		Rate,
+
+		/// <summary>Quick Rating and Review... (<c>miQuickRating</c>, Option+Shift+Q).</summary>
+		QuickRating,
+	}
+
+	/// <summary>A <see cref="BookCommand"/> to carry out on the selected books.</summary>
+	public sealed class BookCommandEventArgs : EventArgs
+	{
+		public BookCommandEventArgs(BookCommand command, IReadOnlyList<ComicBook> books, float value)
+		{
+			Command = command;
+			Books = books;
+			Value = value;
+		}
+
+		public BookCommand Command { get; }
+
+		/// <summary>The selected books, in the order of the grid.</summary>
+		public IReadOnlyList<ComicBook> Books { get; }
+
+		/// <summary>The rating of <see cref="BookCommand.Rate"/>.</summary>
+		public float Value { get; }
+	}
+
 	/// <summary>
 	/// State of the book grid: the catalog (a snapshot of the library), the search text, the sort, the thumbnail size, the
 	/// selection and the list the grid shows.
@@ -601,17 +648,117 @@ namespace ComicRack.Mac.ViewModels
 		[RelayCommand]
 		public void InvertSelection() => Selection.Invert();
 
-		/// <summary>Raised on the UI thread with the selected books when the user presses Delete (or Cmd+Backspace); P5.5 answers it with the Remove dialog.</summary>
+		/// <summary>Raised on the UI thread with the selected books when the user presses Delete (or Cmd+Backspace) or chooses Remove...; the main view model answers it with the Remove question.</summary>
 		public event EventHandler<IReadOnlyList<ComicBook>> RemoveBooksRequested;
+
+		/// <summary>
+		/// False while <see cref="RemoveBooksRequested"/> runs for a remove without the question (<c>removeBooks.RemoveBooks(books, Control.ModifierKeys != Keys.Control)</c>:
+		/// the original's Ctrl+Delete, here Cmd+Delete); true otherwise.
+		/// </summary>
+		public bool PendingRemoveAsk { get; private set; } = true;
 
 		/// <summary>Remove (<c>miRemove</c>, Delete): asks to remove the selected books. Does nothing without a selection (<c>CanRemoveBooks</c>).</summary>
 		[RelayCommand]
-		public void RemoveSelected()
+		public void RemoveSelected() => RemoveSelected(ask: true);
+
+		/// <summary>Remove with or without the question (<paramref name="ask"/> false: Cmd held).</summary>
+		public void RemoveSelected(bool ask)
 		{
 			IReadOnlyList<ComicBook> books = SelectedBooks;
 			if (books.Count > 0)
 			{
-				RemoveBooksRequested?.Invoke(this, books);
+				PendingRemoveAsk = ask;
+				try
+				{
+					RemoveBooksRequested?.Invoke(this, books);
+				}
+				finally
+				{
+					PendingRemoveAsk = true;
+				}
+			}
+		}
+
+		// ---- the context menu's commands (P5.5)
+
+		/// <summary>Raised on the UI thread when a command of the context menu wants the selected books (Info, Reveal, Mark as, My Rating, Quick Rating); the main view model carries it out.</summary>
+		public event EventHandler<BookCommandEventArgs> BookCommandRequested;
+
+		/// <summary>
+		/// Whether a command of the context menu is enabled for the selection, by the rules of <c>ComicBrowserControl</c>'s command table: Open, Open in new Tab and Reveal
+		/// need books that all have a file (<c>AllSelectedLinked</c>), the others a selection (<c>SelectedCount &gt; 0</c>; <c>ComicEditMode.CanEditProperties</c> is always
+		/// true for the local library).
+		/// </summary>
+		public bool CanRun(BookCommand command)
+		{
+			IReadOnlyList<ComicBook> books = SelectedBooks;
+			if (books.Count == 0)
+			{
+				return false;
+			}
+			if (command == BookCommand.Reveal)
+			{
+				bool all = true;
+				foreach (ComicBook book in books)
+				{
+					all &= book.IsLinked;
+				}
+				return all;
+			}
+			return true;
+		}
+
+		/// <summary>True if every selected book has a file (<c>AllSelectedLinked</c>) and there is a selection: Open, Open in new Tab.</summary>
+		public bool CanOpen
+		{
+			get
+			{
+				IReadOnlyList<ComicBook> books = SelectedBooks;
+				if (books.Count == 0 || SelectedItem?.Book == null)
+				{
+					return false;
+				}
+				foreach (ComicBook book in books)
+				{
+					if (!book.IsLinked)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
+		/// <summary>Runs a command of the context menu on the selected books (does nothing when it is not enabled).</summary>
+		public void Run(BookCommand command, float value = 0)
+		{
+			if (CanRun(command))
+			{
+				BookCommandRequested?.Invoke(this, new BookCommandEventArgs(command, SelectedBooks, value));
+			}
+		}
+
+		/// <summary>
+		/// The rating the selected books share, rounded as the menu does (<c>Math.Round(GetRating())</c>), or -1 when there is no selection or the ratings differ
+		/// (<c>RatingEditor.GetRating</c>).
+		/// </summary>
+		public float SelectedRating
+		{
+			get
+			{
+				float rating = -1f;
+				foreach (ComicBook book in SelectedBooks)
+				{
+					if (rating == -1f)
+					{
+						rating = book.Rating;
+					}
+					else if (rating != book.Rating)
+					{
+						return -1f;
+					}
+				}
+				return rating;
 			}
 		}
 	}

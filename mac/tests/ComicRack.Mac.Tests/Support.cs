@@ -298,5 +298,29 @@ namespace ComicRack.Mac.Tests
 			Messages.Add((title, message));
 			return Task.CompletedTask;
 		}
+
+		/// <summary>The questions that were asked, in order.</summary>
+		public System.Collections.Generic.List<QuestionRequest> Questions { get; } = new System.Collections.Generic.List<QuestionRequest>();
+
+		/// <summary>The answers to give to the next questions, in order; OK with nothing checked when it is empty.</summary>
+		public System.Collections.Generic.Queue<QuestionAnswer> Answers { get; } = new System.Collections.Generic.Queue<QuestionAnswer>();
+
+		public Task<QuestionAnswer> AskQuestionAsync(QuestionRequest request)
+		{
+			Questions.Add(request);
+			return Task.FromResult(Answers.Count > 0 ? Answers.Dequeue() : QuestionAnswer.Ok);
+		}
+
+		/// <summary>The Quick Rating dialogs that were shown.</summary>
+		public System.Collections.Generic.List<QuickRatingRequest> QuickRatings { get; } = new System.Collections.Generic.List<QuickRatingRequest>();
+
+		/// <summary>What the Quick Rating dialog returns (null: Cancel).</summary>
+		public QuickRatingResult QuickRatingToReturn { get; set; }
+
+		public Task<QuickRatingResult> AskQuickRatingAsync(QuickRatingRequest request)
+		{
+			QuickRatings.Add(request);
+			return Task.FromResult(QuickRatingToReturn);
+		}
 	}
 }

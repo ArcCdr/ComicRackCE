@@ -16,6 +16,26 @@ namespace ComicRack.Mac.Platform
 	}
 
 	/// <summary>
+	/// An extra check box of a question (<c>QuestionDialog.chkOption</c> and <c>chkOption2</c>). <see cref="OnlyWhilePreviousChecked"/>: the box is
+	/// shown, indented, only while the box before it is checked (the original's second option, unless it is independent).
+	/// </summary>
+	public sealed class MacAlertOption
+	{
+		public MacAlertOption(string text, bool isChecked = false, bool onlyWhilePreviousChecked = false)
+		{
+			Text = text;
+			Checked = isChecked;
+			OnlyWhilePreviousChecked = onlyWhilePreviousChecked;
+		}
+
+		public string Text { get; }
+
+		public bool Checked { get; }
+
+		public bool OnlyWhilePreviousChecked { get; }
+	}
+
+	/// <summary>
 	/// What an alert says. <see cref="Message"/> is the first line of the original's question text (<c>QuestionDialog.Question</c>, the part before
 	/// the first line break), <see cref="Informative"/> the rest. <see cref="Buttons"/> are left to right as the original shows them: the first is the
 	/// default button (Return); <see cref="CancelIndex"/> names the one that Esc presses (-1: none). <see cref="SuppressionText"/> is the check box of
@@ -33,6 +53,12 @@ namespace ComicRack.Mac.Platform
 
 		public string SuppressionText { get; set; }
 
+		/// <summary>
+		/// Check boxes of a question that the system alert cannot show (it has one, the suppression box): an alert with options is always the window,
+		/// ComicRack's own question dialog (chrome decision C-DLG-3).
+		/// </summary>
+		public IList<MacAlertOption> Options { get; set; } = new List<MacAlertOption>();
+
 		public MacAlertStyle Style { get; set; } = MacAlertStyle.Informational;
 
 		/// <summary>Splits a question as the original does: the first line is the message, the other lines the description.</summary>
@@ -48,18 +74,22 @@ namespace ComicRack.Mac.Platform
 		}
 	}
 
-	/// <summary>The outcome of an alert: the 0-based index of the pressed button (-1: the alert ended without one and has no cancel button) and the state of the suppression check box.</summary>
+	/// <summary>The outcome of an alert: the 0-based index of the pressed button (-1: the alert ended without one and has no cancel button), the state of the suppression check box and of the option check boxes (in the order of <see cref="MacAlertOptions.Options"/>).</summary>
 	public sealed class MacAlertResult
 	{
-		public MacAlertResult(int buttonIndex, bool suppressed)
+		public MacAlertResult(int buttonIndex, bool suppressed, IReadOnlyList<bool> options = null)
 		{
 			ButtonIndex = buttonIndex;
 			Suppressed = suppressed;
+			Options = options ?? Array.Empty<bool>();
 		}
 
 		public int ButtonIndex { get; }
 
 		public bool Suppressed { get; }
+
+		/// <summary>The state of each option box when the alert closed (false for a box that was hidden).</summary>
+		public IReadOnlyList<bool> Options { get; }
 	}
 
 	/// <summary>
@@ -99,7 +129,7 @@ namespace ComicRack.Mac.Platform
 				// the system alert and the window both belong to the UI thread: a caller on a worker is moved there (the result comes back to the caller)
 				return await Dispatcher.UIThread.InvokeAsync(() => ShowAsync(owner, options));
 			}
-			if (UseNative && NativeSupported)
+			if (UseNative && NativeSupported && options.Options.Count == 0)
 			{
 				return ShowNative(options);
 			}

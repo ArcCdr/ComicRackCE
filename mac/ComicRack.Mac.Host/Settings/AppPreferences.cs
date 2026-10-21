@@ -274,6 +274,53 @@ namespace ComicRack.Mac.Host
 			set { Set(ref autoShowQuickReview, value); }
 		}
 
+		// ---- Remove, and the questions that stay off (BC.23, DL.30)
+
+		private bool moveFilesToRecycleBin; // Settings.cs:535 (automatic property)
+
+		[DefaultValue(false)]
+		public bool MoveFilesToRecycleBin
+		{
+			get { return moveFilesToRecycleBin; }
+			set { Set(ref moveFilesToRecycleBin, value); }
+		}
+
+		private bool alsoRemoveFromLibrary; // Settings.cs:543
+
+		[DefaultValue(false)]
+		public bool AlsoRemoveFromLibrary
+		{
+			get { return alsoRemoveFromLibrary; }
+			set { Set(ref alsoRemoveFromLibrary, value); }
+		}
+
+		private bool alsoRemoveFromLibraryFiltered; // Settings.cs:551
+
+		[DefaultValue(false)]
+		public bool AlsoRemoveFromLibraryFiltered
+		{
+			get { return alsoRemoveFromLibraryFiltered; }
+			set { Set(ref alsoRemoveFromLibraryFiltered, value); }
+		}
+
+		private bool removeFilesfromDatabase; // Settings.cs:559
+
+		[DefaultValue(false)]
+		public bool RemoveFilesfromDatabase
+		{
+			get { return removeFilesfromDatabase; }
+			set { Set(ref removeFilesfromDatabase, value); }
+		}
+
+		private HiddenMessageBoxes hiddenMessageBoxes; // Settings.cs:200
+
+		[DefaultValue(HiddenMessageBoxes.None)]
+		public HiddenMessageBoxes HiddenMessageBoxes
+		{
+			get { return hiddenMessageBoxes; }
+			set { Set(ref hiddenMessageBoxes, value); }
+		}
+
 		// ---- Right to Left (PB.19, PB.20)
 
 		private bool trueRightToLeftReading; // Settings.cs:1601

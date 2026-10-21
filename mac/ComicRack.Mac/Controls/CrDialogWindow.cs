@@ -32,6 +32,8 @@ namespace ComicRack.Mac.Controls
 	public class CrDialogWindow : Window, IChromeElement
 	{
 		private readonly ContentControl bodyHost = new ContentControl { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
+		private DockPanel bottomBar;
+		private readonly ContentControl footerHost = new ContentControl { HorizontalContentAlignment = HorizontalAlignment.Left, VerticalContentAlignment = VerticalAlignment.Center };
 		private readonly StackPanel buttonRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = ChromeMetrics.DialogButtonGap, HorizontalAlignment = HorizontalAlignment.Right };
 		private readonly Button okButton = CreateButton();
 		private readonly Button cancelButton = CreateButton();
@@ -54,10 +56,14 @@ namespace ComicRack.Mac.Controls
 			okButton.Click += (sender, e) => Accept();
 			cancelButton.Click += (sender, e) => Cancel();
 			applyButton.Click += (sender, e) => ApplyClicked?.Invoke(this, EventArgs.Empty);
-			buttonRow.Margin = new Thickness(15, 12, 15, 12);
+			// the bottom bar: the buttons at the right, the footer (a check box such as "Show when Book read") at the left
+			var bottom = bottomBar = new DockPanel { LastChildFill = true, Margin = new Thickness(15, 12, 15, 12) };
+			DockPanel.SetDock(buttonRow, Dock.Right);
+			bottom.Children.Add(buttonRow);
+			bottom.Children.Add(footerHost);
 			var root = new DockPanel { LastChildFill = true };
-			DockPanel.SetDock(buttonRow, Dock.Bottom);
-			root.Children.Add(buttonRow);
+			DockPanel.SetDock(bottom, Dock.Bottom);
+			root.Children.Add(bottom);
 			root.Children.Add(bodyHost);
 			Content = root;
 			this.Bind(BackgroundProperty, this.GetResourceObservable(ThemeTokens.BrushKey(ThemeTokens.Names.Control)));
@@ -84,6 +90,26 @@ namespace ComicRack.Mac.Controls
 		{
 			get => (Control)bodyHost.Content;
 			set => bodyHost.Content = value;
+		}
+
+		/// <summary>A control at the left of the button row, level with the buttons (the original puts a check box there: Quick Rating's "Show when Book read").</summary>
+		public Control Footer
+		{
+			get => (Control)footerHost.Content;
+			set
+			{
+				footerHost.Content = value;
+				UpdateBottomBar();
+			}
+		}
+
+		// the bar takes room only when it holds something (an alert has its own button row in the body)
+		private void UpdateBottomBar()
+		{
+			if (bottomBar != null)
+			{
+				bottomBar.IsVisible = buttonRow.IsVisible || footerHost.Content != null;
+			}
 		}
 
 		public DialogButtons Buttons
@@ -230,6 +256,7 @@ namespace ComicRack.Mac.Controls
 				buttonRow.Children.Add(applyButton);
 			}
 			buttonRow.IsVisible = buttonRow.Children.Count > 0;
+			UpdateBottomBar();
 		}
 	}
 }

@@ -66,6 +66,7 @@ namespace ComicRack.Mac.ViewModels
 				RestoreAndFollow(preferences);
 			}
 			WireTabs();
+			WireBooks();
 		}
 
 		// ---- live refresh (P5.2)
@@ -290,7 +291,15 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>Closes every book tab (each records its page). Called before the library is replaced and when the app quits.</summary>
 		public void CloseReaders()
 		{
-			readers?.CloseAll();
+			closingEverything = true; // no quick review dialog for the books that close with the application or the library
+			try
+			{
+				readers?.CloseAll();
+			}
+			finally
+			{
+				closingEverything = false;
+			}
 		}
 
 		/// <summary>

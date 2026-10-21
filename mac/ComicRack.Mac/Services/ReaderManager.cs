@@ -175,6 +175,12 @@ namespace ComicRack.Mac.Services
 		/// <summary>A book was opened or closed (the browser's "open" state icons follow).</summary>
 		public event EventHandler OpenBooksChanged;
 
+		/// <summary>
+		/// Raised after a book was closed (its page is recorded in the book): the place of <c>MainForm.OnBookClosing</c>, which asks for a quick review of a
+		/// book that was read to the end (<c>AutoShowQuickReview</c>). Not raised for an empty tab.
+		/// </summary>
+		public event EventHandler<ComicBook> BookClosed;
+
 		/// <summary>The reader asked for the browser panel to open or close (Esc, <c>ShowBrowser</c>).</summary>
 		public event EventHandler ToggleBrowserRequested;
 
@@ -522,7 +528,7 @@ namespace ComicRack.Mac.Services
 		}
 
 		// The page is recorded in the book, the pages and the book are released: the order of the original's Close (OnBookClosing, remove, dispose).
-		private static void DisposeSlot(ReaderSlot slot)
+		private void DisposeSlot(ReaderSlot slot)
 		{
 			if (slot.IsEmpty)
 			{
@@ -540,6 +546,7 @@ namespace ComicRack.Mac.Services
 				AppLog.Error("Closing the reader failed.", ex);
 			}
 			AppLog.Info("Reader closed: " + slot.Book.FilePath + " on page " + (model.CurrentPage + 1) + ".");
+			BookClosed?.Invoke(this, slot.Book);
 		}
 
 		private void Raise(EventHandler handler) => handler?.Invoke(this, EventArgs.Empty);

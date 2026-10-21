@@ -20,6 +20,7 @@ namespace ComicRack.Mac.Views
 		private readonly List<MenuItem> sortItems = new List<MenuItem>();
 		private ReaderWindow readerWindow;
 		private WindowFrameTracker readerFrame;
+		private BrowserContextMenu contextMenu;
 		private MenuItem revealItem, copyPathItem;
 		private Separator revealSeparator;
 
@@ -129,6 +130,10 @@ namespace ComicRack.Mac.Views
 				model.ReaderChanged += OnReaderChanged;
 				model.FocusReaderRequested += OnFocusReaderRequested;
 				model.FocusBrowserRequested += OnFocusBrowserRequested;
+				// the context menu of the book grid (BC.*) and the rating target of the Edit menu
+				contextMenu = new BrowserContextMenu(model);
+				BookGrid.ContextFlyout = contextMenu.Flyout;
+				model.BrowserHasFocus = () => BookGrid.IsKeyboardFocusWithin;
 				BrowserDock.KeepGripVisible = model.KeepBrowserGrip;
 				if (model.Tabs != null)
 				{
@@ -161,6 +166,9 @@ namespace ComicRack.Mac.Views
 
 		/// <summary>The reader area in the window; its DataContext is the reader of the current tab while the reader is docked.</summary>
 		public ReaderArea Reader => ReaderPane;
+
+		/// <summary>The context menu of the book grid (<c>contextMenuItems</c>).</summary>
+		public BrowserContextMenu BookContextMenu => contextMenu;
 
 		/// <summary>The reader window while the reader is in its own window, else null.</summary>
 		public ReaderWindow UndockedReader => readerWindow;

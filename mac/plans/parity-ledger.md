@@ -36,7 +36,7 @@
 | ME.01 | Info... | Edit `miShowInfo` | Ctrl+I → Cmd+I | P5.7a | todo | |
 | ME.02 | Undo | Edit `miUndo` (`Database.Undo`) | Ctrl+Z → Cmd+Z | P5.7a | todo | |
 | ME.03 | Redo | Edit `miRedo` | Ctrl+Y → Cmd+Y, alias Cmd+Shift+Z | P5.7a | todo | |
-| ME.04 | My Rating (None, 1 to 5 stars, Quick Rating and Review...) | Edit `miRating` → `contextRating`, `miRate0`, `miRate1`, `miRate2`, `miRate3`, `miRate4`, `miRate5`, `miQuickRating` | — | P5.5 | todo | |
+| ME.04 | My Rating (None, 1 to 5 stars, Quick Rating and Review...) | Edit `miRating` → `contextRating`, `miRate0`, `miRate1`, `miRate2`, `miRate3`, `miRate4`, `miRate5`, `miQuickRating` | — | P5.5 | done 2026-10-21 | Edit > My Rating: None, 1 to 5 stars, Quick Rating and Review... with Option+Shift+0 to 5 and Q, marks follow the selection or the book of the reader; the five stars editor is only in the context menu (C-MENU-5) |
 | ME.05 | Page Type | Edit `miPageType` | — | P5.23b | todo | |
 | ME.06 | Page Rotation | Edit `miPageRotate` | — | P5.23b | todo | |
 | ME.07 | Bookmarks > Set Bookmark... | Edit `miSetBookmark`, `miBookmarks` | Ctrl+Shift+B → Cmd+Shift+B | P5.23a | todo | |
@@ -200,14 +200,14 @@
 | BV.10 | Keyboard in the browser: arrows, Return opens, Delete removes | `ItemView` | Delete, alias Cmd+Backspace | P5.3 | done 2026-10-21 | arrows, Home, End, Page keys with Shift (extend) and Cmd (Ctrl of the original: move the focus only), Space selects the focused book and Option+Space flips it (Ctrl+Space of the original: Cmd+Space, Option+Cmd+Space and Ctrl+Cmd+Space are system shortcuts), Return opens the focused book; Delete and Cmd+Backspace raise `BrowserViewModel.RemoveBooksRequested`, which the Remove dialog answers in P5.5 (BC.23); with nothing focused the first movement key moves from the first book as `ItemView.OnKeyDown` does (Right selects the second book; RV6), and Space selects the first book without focusing it; the release of a press scrolls the focused book into view (`OnMouseUpView`) |
 | BV.11 | Rubber band (marquee) selection: drag a rectangle from the empty area; Shift adds, Cmd flips; auto scroll beyond the view edge | `ItemView.UpdateSelection`, `OnMouseDownView`, `OnPaint` | Ctrl → Cmd | RV6 | done 2026-10-21 | `BookGridView` + `SelectionModel.UpdateMarquee` + `CrSelectionRectangle` (fill Highlight alpha 128, one unit Highlight line); empty area = outside what an item draws (`CrThumbnailItem.HitRegion`: cover picture and caption text, as `CoverViewItem.Contains`); only books on screen are re-evaluated (as the original); the 20 ms auto scroll of `ScrollControl` (10 + a tenth of the distance beyond 10); the focus goes to the book under the pointer; right button press on the empty area clears but starts no band (a right drag has no band on the Mac: the secondary button is the context click) |
 | BV.12 | Drag the selected books out of the browser (books for the lists, files for Finder) | `ItemView.OnItemDrag`, `ComicBrowserControl.itemView_ItemDrag` | — | RV6 | done 2026-10-21 | drop targets: P5.16c and P5.18; left button, more than 4 units from the press; carries a `ComicBookContainer` (in-process format) and the files of the linked books (Finder); Copy only: Move and removal from an editable list, the grid as a drop target for reordering and the drag cursor picture (`DragDropCursorAlpha`) are P5.16c; the drag image is the system's (Avalonia offers no custom image); a right button drag is not a drag (see BV.11); the file count is not limited (50 books checked on screen) |
-| BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | todo | |
-| BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.5 | todo | the command and Cmd+Shift+O are in place (`BrowserViewModel.OpenSelectedInNewTab`, a window key binding); a held Cmd or Shift on Return or a double click does the opposite of Open in new Tab as the original does; the item of the context menu arrives with the menu (P5.5) |
+| BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | done 2026-10-21 | `BrowserContextMenu` item Open (Cmd+O in the grid too); enabled for a selection whose books all have a file; opens the focused book as the setting says |
+| BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.5 | done 2026-10-21 | the item (Cmd+Shift+O) joins the command that P5.32a built |
 | BC.03 | Context: Open With (programs, Manage Programs...) | `miOpenWith`, `contextOpenWith`, `miOpenWithManager` | — | P5.21 | todo | |
-| BC.04 | Context: Info... | `miProperties` | Cmd+I | P5.5 | todo | |
+| BC.04 | Context: Info... | `miProperties` | Cmd+I | P5.7a | todo | the item and the command are in place (Cmd+I in the grid, `BookCommand.Info`); the Info dialog is P5.7a, until then the status bar says so |
 | BC.05 | Context: Web... (open the book's Web field) | `miShowWeb` | Ctrl+R → Cmd+R | P5.20 | todo | |
 | BC.06 | Context: Edit (in-place edit of the focused field) | `miEdit` | F2 | P5.11a | todo | |
-| BC.07 | Context: My Rating (None, 1 to 5, Quick Rating and Review...) | `miRateMenu`, `contextRating`, `miRating0`, `miRating1`, `miRating2`, `miRating3`, `miRating4`, `miRating5` | Alt+Shift+0..5, Alt+Shift+Q → Option+Shift+0..5, Option+Shift+Q | P5.5 | todo | |
-| BC.08 | Context: Mark as (Unread, Read, Checked, Unchecked) | `miMarkAs`, `contextMarkAs`, `miMarkUnread`, `miMarkRead`, `miMarkChecked`, `miMarkUnchecked` | Alt+Shift+U/R/M/V → Option+Shift+U/R/M/V | P5.5 | todo | |
+| BC.07 | Context: My Rating (None, 1 to 5, Quick Rating and Review...) | `miRateMenu`, `contextRating`, `miRating0`, `miRating1`, `miRating2`, `miRating3`, `miRating4`, `miRating5` | Alt+Shift+0..5, Alt+Shift+Q → Option+Shift+0..5, Option+Shift+Q | P5.5 | done 2026-10-21 | My Rating with None, 1 to 5 stars (radio mark of the rating the selected books share), the five stars editor (`CrRatingStars`, applied when the menu closes, only if used) and Quick Rating and Review...; Option+Shift+0 to 5 and Q in the grid; an undo marker "Change Rating" as `RatingEditor.SetRating` |
+| BC.08 | Context: Mark as (Unread, Read, Checked, Unchecked) | `miMarkAs`, `contextMarkAs`, `miMarkUnread`, `miMarkRead`, `miMarkChecked`, `miMarkUnchecked` | Alt+Shift+U/R/M/V → Option+Shift+U/R/M/V | P5.5 | done 2026-10-21 | Unread, Read, Checked, Unchecked on every selected book (`MarkAsNotRead`, `MarkAsRead`, `Checked`); Option+Shift+U, R, M, V in the grid; the lists count again through the live refresh |
 | BC.09 | Context: Edit List (Move to Top, Move to Bottom, Apply current Order) | `miEditList`, `miEditListMoveToTop`, `miEditListMoveToBottom`, `miEditListApplyOrder` | Ctrl+Alt+T/B → Option+Cmd+T/B | P5.16c | todo | |
 | BC.10 | Context: Add to List (list of lists) | `miAddList`, `dummyEntryToolStripMenuItem` | — | P5.16c | todo | |
 | BC.11 | Context: Add to Library | `miAddLibrary` | — | P5.20 | todo | |
@@ -216,13 +216,13 @@
 | BC.14 | Context: Export Books (Export Books..., Export with Previous) | `miExportComics`, `contextExport`, `miExportComicsAs`, `miExportComicsWithPrevious` | Ctrl+Shift+E, Ctrl+Alt+E → Cmd+Shift+E, Option+Cmd+E | P5.24a | todo | |
 | BC.15 | Context: Automation (script commands) | `miAutomation` | — | P4.5 | todo | |
 | BC.16 | Context: Update Book Files | `miUpdateComicFiles` | — | P5.9 | todo | |
-| BC.17 | Context: Reveal Book in Explorer | `miRevealBrowser` | Ctrl+G → Cmd+G | P5.5 | deviation | native: label "Reveal in Finder" |
+| BC.17 | Context: Reveal Book in Explorer | `miRevealBrowser` | Ctrl+G → Cmd+G | P5.5 | deviation | native: label "Reveal in Finder"; works since P5.5 (Cmd+G in the grid too, enabled when every selected book has a file) |
 | BC.18 | Context: Copy Data / Paste Data... / Clear Data | `miCopyData`, `miPasteData`, `miClearData` | Ctrl+C/V → Cmd+C/V | P5.20 | todo | |
-| BC.19 | Context: Select All / Invert Selection | `miSelectAll`, `miInvertSelection` | as BV.09 | P5.3 | todo | the commands exist since P5.3 (`SelectAllCommand`, `InvertSelectionCommand`); the menu items come with the context menu (P5.5) |
+| BC.19 | Context: Select All / Invert Selection | `miSelectAll`, `miInvertSelection` | as BV.09 | P5.3 | done 2026-10-21 | Select All (Cmd+A) and Invert Selection in the context menu |
 | BC.20 | Context: Refresh (re-read info and thumbnail) | `miRefreshInformation` | — | P5.20 | todo | |
 | BC.21 | Context: Reset Top of Stack / Set as Top of Stack / Set custom Stack Thumbnail... / Remove custom Stack Thumbnail | `miResetTopOfStack`, `miSetTopOfStack`, `miSetStackThumbnail`, `miRemoveStackThumbnail` | — | P5.13b | todo | |
 | BC.22 | Context: Set as List Background | `miSetListBackground` | — | P5.20 | todo | |
-| BC.23 | Context: Remove... (Delete Item dialog: from list, library, to Trash) | `miRemove` | Delete, alias Cmd+Backspace | P5.5 | todo | |
+| BC.23 | Context: Remove... (Delete Item dialog: from list, library, to Trash) | `miRemove` | Delete, alias Cmd+Backspace | P5.5 | done 2026-10-21 | `BookRemoval` and `MainViewModel.RemoveBooksAsync`: the questions and options of `RemoveBookHandler` (from the library with the Trash option; from a fixed or smart list with the library and Trash options), blacklist, a file that stays keeps its book; Delete and Cmd+Backspace ask, Cmd+Delete does not (Ctrl+Delete of the original); the books picture of the question is not shown (plan section 9) |
 
 ## Sidebar: library tree, favorites, folders, pages, search browser, previews (`ComicRack/Views`, `ComicRack/Controls`, `ComicRack.Engine/Controls`)
 
@@ -308,7 +308,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.03 | Paste Data to {0} Books | `ComicDataPasteDialog` | P5.20 | todo | |
 | DL.04 | Book Display Settings | `ComicDisplaySettingsDialog` | P5.23c | todo | |
 | DL.05 | Crash dialog ("ComicRack encountered a Problem...") | `CrashDialog` | P7.1 | todo | |
-| DL.06 | Delete Item {0} | `DeleteItemDialog` | P5.5 | todo | |
+| DL.06 | Delete Item {0} | `DeleteItemDialog` | P5.5 | done 2026-10-21 | the original form `DeleteItemDialog` has no caller; the question that removes books is `QuestionDialog` in `RemoveBookHandler` (spec `QuestionDialog`) |
 | DL.07 | Devices, Select Device, device and server edit controls | `DevicesEditDialog`, `DeviceSelectDialog`, `DeviceEditControl`, `ServerEditControl`, `miDeviceCopy`, `miDevicePaste`, `miDeviceCopyToAll`, `miDeviceRename`, `miDeviceUnpair` | — | deferred (D4) | |
 | DL.08 | Edit List | `EditListDialog` | P5.16a | todo | |
 | DL.09 | Export Books | `ExportComicsDialog` | P5.24a | todo | |
@@ -320,7 +320,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.15 | Open With (Manage Programs) | `OpenWithDialog` | P5.21 | todo | |
 | DL.16 | Preferences | `PreferencesDialog` (PR rows) | P5.22a | todo | |
 | DL.17 | Progress dialogs | `ProgressDialog`, `AutomaticProgressDialog` | P5.26 | todo | |
-| DL.18 | Quick Rating | `QuickRatingDialog` | P5.5 | todo | |
+| DL.18 | Quick Rating | `QuickRatingDialog` | P5.5 | done 2026-10-21 | `QuickRatingWindow` (spec `QuickRatingDialog`) |
 | DL.19 | Save Workspace | `SaveWorkspaceDialog` | P5.32c | todo | |
 | DL.20 | Errors | `ShowErrorsDialog` | P5.26 | todo | |
 | DL.21 | Edit Smart List (rule builder) | `SmartListDialog` | P5.17b | todo | |
@@ -332,7 +332,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.27 | Script Output | `ScriptOutputForm` | P4.5 | todo | |
 | DL.28 | Reader in own window | `ReaderForm` | P5.32a | done 2026-10-21 | `ReaderWindow` around the reader area (title = the caption of the book) |
 | DL.29 | Browser in own window (Open in New Window) | `ComicBrowserForm` | P5.16a | todo | |
-| DL.30 | Question dialogs with "do not show again" (`HiddenMessageBoxes`) | `QuestionDialog` | P5.5 | todo | reset in Preferences > Advanced (PR.27) |
+| DL.30 | Question dialogs with "do not show again" (`HiddenMessageBoxes`) | `QuestionDialog` | P5.5 | done 2026-10-21 | `MainViewModel.AskQuestionAsync` with `HiddenMessageBoxes` (saved) and the system alert's suppression box; the reset is PR.27 |
 | DL.31 | Select item / text input dialogs | `SelectItemDialog` | P5.16a | todo | used by bookmarks, names, external programs |
 | DL.32 | Key input (shortcut capture) | `KeyInputForm` | P5.22c | todo | |
 | DL.33 | Magnifier setup | `ComicRack.Engine/Controls/MagnifySetupControl` | P5.23d | todo | |
@@ -398,7 +398,7 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.15 | Reading | Zoom out during page change (`ZoomInOutOnPageChange`) | true | P5.23e | todo | |
 | PB.16 | Reading | Blend animation while fast paging (`BlendWhilePaging`) | false | P5.23c | todo | |
 | PB.17 | Reading | Fullscreen also toggles Minimal User Interface (`AutoMinimalGui`) | false | P5.23f | todo | |
-| PB.18 | Reading | Show Quick Review Dialog after finishing Book (`AutoShowQuickReview`) | false | P5.5 | todo | |
+| PB.18 | Reading | Show Quick Review Dialog after finishing Book (`AutoShowQuickReview`) | false | P5.5 | done 2026-10-21 | `AutoShowQuickReview`: the Quick Rating dialog opens after a book that was read to the end and has no rating is closed (`ReaderManager.BookClosed`); not while the application closes its readers |
 | PB.19 | Right to Left | True right to left reading (`TrueRightToLeftReading`) | false | P5.23e | todo | |
 | PB.20 | Right to Left | Left/right movement is also reversed (`LeftRightMovementReversed`) | false | P5.23e | todo | |
 | PB.21 | Browser | Show Tooltips for Books (`ShowToolTips`) | false | P5.R2 | done 2026-10-20 | the option works (`ThumbnailOptions.ShowToolTips`); saved in Settings.xml since P5.1; the check box is P5.22a |

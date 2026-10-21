@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             x:Class="ComicRack.Mac.Views.QuickRatingBody"
+             Width="564" Height="266">
+  <!-- The body of the Quick Rating dialog at the positions of QuickRatingDialog.Designer.cs (form 564 x 304; the buttons and the check box are the dialog frame's):
+       coverThumbnail (12,12) 170 x 227, txRating (12,245) 170 x 21, txReview (188,12) 369 x 254. -->
+  <Canvas>
+    <c:CoverView Name="Cover" Canvas.Left="12" Canvas.Top="12" Width="170" Height="227" />
+    <c:CrRatingStars Name="Stars" Canvas.Left="12" Canvas.Top="245" Width="170" Height="21" />
+    <TextBox Name="ReviewBox" Canvas.Left="188" Canvas.Top="12" Width="369" Height="254" AcceptsReturn="True" TextWrapping="Wrap" />
+  </Canvas>
+</UserControl>
