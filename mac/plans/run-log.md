@@ -48,3 +48,7 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-21 04:35 | RV8 | done | 42d9ff3 |  | Review fixes: parity and UI correctness (Arrange flips the sort order, toolbar overflow with the quick search at the right end, reader rating keys, last-open... |
 | 2026-10-21 04:53 | RV9 | done | 8528688 |  | Launch.Start double OnHostOpened race (one announcement per host in Launch, first database access made on the opening thread, regression test) |
 | 2026-10-21 11:50 | P5.32a | done | 287b96a |  | Main window hosts the reader: book tabs, Reader in own Window (tabs as NavigatorManager, reader area in the main window, browser dock at the bottom, tab menu... |
+| 2026-10-21 12:27 | P5.5 | done-with-caveat | d294a6f |  | Grid context menu, part 1 (all items of contextMenuItems in order; Open, Info, My Rating with the stars editor and Quick Rating dialog, Mark as, Reveal in Fi... |
+| 2026-10-21 13:03 | RV10 | done | 5ef3403 |  | Verify P5.5 on a healthy disk (full gate passes, no code change needed) |
+| 2026-10-21 13:40 | P5.6a | done | 810e5e8 |  | Small preview pane (Browse > Small Preview Shift+F7: toolbar, page viewer on the reader, 500 ms timer, copy of the first selected book opened as DisableAll,... |
+| 2026-10-21 14:27 | P5.6b | done | 2b3006e |  | Info panel container (Browse > Info Panel Shift+F9: tab strip of script pages, 162 high bottom dock, settings kept, selected books given to the showing page,... |

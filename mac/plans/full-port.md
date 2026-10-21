@@ -14,11 +14,11 @@ Run state: RUNNING (2026-10-21, orchestrator; next task: RV5b)
 | P2 Platform pieces | 9 | 2 | P2.4a | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 68 | 16 | P5.6b | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 68 | 17 | P5.7a | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 12 | 11 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **171** | **46** | | estimate in §10 |
+| RV Review fixes and upstream sync | 13 | 11 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **172** | **48** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -633,6 +633,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **RV6** runs right after P5.3, before P5.4.
 - **RV7, RV8** (wave B review fixes) run right now, before P5.32a.
 - **RV10** (full gate after P5.5) runs first after the disk stop.
+- **RV11** (flaky gate round 2) runs right now, before P2.4a.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`RV<n>`, formerly `R<n>`; renamed because R1 to R9 are the owner requirements of §1.1) go to the **front** of the list.
 
 ---
@@ -719,6 +720,12 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Goal: P5.5 finished while the disk was full, so its fast gate was skipped and several test projects failed on disk guards. Run the full gate on the current tree and fix anything real.
 - Do: `mac/tools/verify.sh --full`; `mac/tools/e2e.sh` (retry focus losses once); `dotnet run --project mac/tools/census -- --pass B` then `git restore mac/reports`; `mac/tools/upstream-sync-check.sh --no-merge`; fix failures that come from P5.5 code or tests (not disk-guard noise); if the baseline frames for `--full` are missing, regenerate them as RV8 documents.
 - Accept: all of the above exit 0 (or SKIPPED(focus) for e2e after one retry).
+
+#### RV11 Flaky fast gate, round 2 (pixel live-count assertions and friends)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: P5.6b needed 5 `verify.sh` runs because runs 1-4 hit flaky failures (`SmallPreviewWiringTests`, `ReaderWindowTests` process-wide pixel live-count assertion; earlier `LibraryFlowTests`). The fast gate must be reliable again; as the suite grows (1619 tests, 253 s) flakiness gets worse.
+- Do: (1) collect failures from 6 consecutive `verify.sh` runs (keep the logs under `mac/artifacts/verify/`), classify; (2) replace process-wide counters (`PixelBlock.LiveCount`, `Image.LiveStorageCount`) in assertions with per-test scoped tracking (a tracking scope / allocation list owned by the test) or serialize all tests that assert on them in one non-parallel collection; (3) find other shared static state (single MacHost, dispatcher, theme, preferences) and make test isolation explicit with a base fixture; (4) look at the 253 s duration: report the slowest 15 tests/classes and cut or mark Slow where a faster equivalent exists, keeping the fast gate under 4 minutes; (5) add a script `mac/tools/flaky-scan.sh N` that runs the fast gate N times and summarises failures for future use.
+- Accept: 6 consecutive `verify.sh` runs PASS with no retries (record durations); `flaky-scan.sh 2` works.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
