@@ -247,41 +247,6 @@ namespace ComicRack.Mac.Tests.HiDpi
 		}
 
 		[Theory]
-		[MemberData(nameof(Scales.AllData), MemberType = typeof(Scales))]
-		public async Task The_page_label_text_has_the_same_logical_box_and_a_device_size_that_follows_the_scale(double scale)
-		{
-			await Ui.Run(async () =>
-			{
-				Avalonia.Rect logicalOne;
-				int inkOne;
-				using (ReaderHarness one = await Open(1.0))
-				{
-					(logicalOne, inkOne) = MeasureLabel(one, 1.0);
-				}
-				using (ReaderHarness h = await Open(scale))
-				{
-					(Avalonia.Rect logical, int ink) = MeasureLabel(h, scale);
-					output.WriteLine($"scale {scale}: label {logical}, ink width {ink} device pixels (1x: {inkOne})");
-					Assert.Equal(logicalOne.Width, logical.Width, 0);
-					Assert.Equal(logicalOne.Height, logical.Height, 0);
-					Assert.InRange((double)ink / inkOne, scale * 0.9, scale * 1.1);
-				}
-			});
-		}
-
-		private static (Avalonia.Rect box, int ink) MeasureLabel(ReaderHarness h, double scale)
-		{
-			var label = h.Window.FindControl<TextBlock>("BookSegment");
-			Avalonia.Rect box = Dpi.Area(label, h.Window);
-			Raster frame = Dpi.Capture(h.Window, "reader-label");
-			RectInt region = RectInt.Snapped(box, scale);
-			SKColor ground = frame[region.Left - 2, region.Top + 1];
-			RectInt? ink = frame.Bounds(c => !Raster.Near(c, ground, 40), region);
-			Assert.NotNull(ink);
-			return (box, ink.Value.Width);
-		}
-
-		[Theory]
 		[MemberData(nameof(Scales.MainData), MemberType = typeof(Scales))]
 		public async Task The_frame_at_each_scale_is_the_frame_at_1x_in_more_pixels(double scale)
 		{

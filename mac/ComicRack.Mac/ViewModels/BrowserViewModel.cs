@@ -13,6 +13,19 @@ using cYo.Projects.ComicRack.Engine;
 
 namespace ComicRack.Mac.ViewModels
 {
+	/// <summary>How a book that the browser opens is placed among the tabs.</summary>
+	public enum OpenTabMode
+	{
+		/// <summary>As the setting Open in new Tab says.</summary>
+		Default,
+
+		/// <summary>The opposite of the setting (a held Cmd or Shift).</summary>
+		Invert,
+
+		/// <summary>In a tab of its own, whatever the setting says.</summary>
+		NewTab,
+	}
+
 	/// <summary>
 	/// State of the book grid: the catalog (a snapshot of the library), the search text, the sort, the thumbnail size, the
 	/// selection and the list the grid shows.
@@ -535,13 +548,49 @@ namespace ComicRack.Mac.ViewModels
 
 		/// <summary>Opens the selected book (double click, Enter). Raises <see cref="OpenBookRequested"/>.</summary>
 		[RelayCommand]
-		public void OpenSelected()
+		public void OpenSelected() => OpenSelected(OpenTabMode.Default);
+
+		/// <summary>How the book of the running <see cref="OpenBookRequested"/> is to be opened: in the setting's tab mode, the other one, or in a new tab.</summary>
+		public OpenTabMode PendingOpenMode { get; private set; }
+
+		/// <summary>
+		/// Opens the focused book in a tab. <see cref="OpenTabMode.Invert"/> (a held Cmd or Shift, <c>OpenComic</c> of the original) does the opposite of the setting Open in
+		/// new Tab, <see cref="OpenTabMode.NewTab"/> (Open in new Tab, Cmd+Shift+O) always opens a tab of its own.
+		/// </summary>
+		public void OpenSelected(OpenTabMode mode)
 		{
 			BookItem item = SelectedItem;
 			if (item != null)
 			{
-				OpenBookRequested?.Invoke(this, item);
+				PendingOpenMode = mode;
+				try
+				{
+					OpenBookRequested?.Invoke(this, item);
+				}
+				finally
+				{
+					PendingOpenMode = OpenTabMode.Default;
+				}
 			}
+		}
+
+		/// <summary>Open in new Tab (<c>miReadTab</c>, Cmd+Shift+O): the focused book in a tab of its own.</summary>
+		[RelayCommand]
+		public void OpenSelectedInNewTab() => OpenSelected(OpenTabMode.NewTab);
+
+		/// <summary>Selects <paramref name="book"/> if the shown list has it and returns true (<c>SelectComic</c>); the grid scrolls to it.</summary>
+		public bool SelectBook(ComicBook book)
+		{
+			BookItem[] items = Items;
+			for (int i = 0; i < items.Length; i++)
+			{
+				if (ReferenceEquals(items[i].Book, book))
+				{
+					SelectedIndex = i;
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/// <summary>Select All (<c>miSelectAll</c>, Cmd+A): every book of the shown list.</summary>

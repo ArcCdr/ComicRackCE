@@ -77,6 +77,12 @@ namespace ComicRack.Mac
 		/// </summary>
 		public string FixtureLibrary { get; private set; }
 
+		/// <summary>
+		/// Hidden <c>--browser-height N</c>: the height of the browser dock at the bottom of the main window for this run (the saved value is replaced, as a drag of
+		/// the grip does). The e2e cases that click in the book grid use it to keep their click points; it needs a private data folder.
+		/// </summary>
+		public double? BrowserHeight { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -182,6 +188,16 @@ namespace ComicRack.Mac
 				{
 					options.FixtureLibrary = Path.GetFullPath(arg.Substring("--fixture-library=".Length));
 				}
+				else if ((arg == "--browser-height" && i + 1 < args.Length) || arg.StartsWith("--browser-height=", StringComparison.Ordinal))
+				{
+					string value = arg == "--browser-height" ? args[++i] : arg.Substring("--browser-height=".Length);
+					if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double height) || height < 26 || height > 5000)
+					{
+						options.Error = "--browser-height expects a height from 26 to 5000.";
+						return options;
+					}
+					options.BrowserHeight = height;
+				}
 				else if (arg.StartsWith("-psn_", StringComparison.Ordinal))
 				{
 					// Launch Services passes a process serial number to apps it starts.
@@ -235,6 +251,11 @@ namespace ComicRack.Mac
 					return options;
 				}
 				options.Show = canonical;
+			}
+			if (options.BrowserHeight != null && options.DataDirectory == null)
+			{
+				options.Error = "--browser-height needs a private data folder: add --data-dir DIR (or --smoke-test).";
+				return options;
 			}
 			if (options.FixtureLibrary != null)
 			{

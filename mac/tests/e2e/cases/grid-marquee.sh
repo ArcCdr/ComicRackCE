@@ -20,8 +20,9 @@ expect_status() {
 	bad "$2: the status text is '${got:-nothing}', expected /$1/"; return 1
 }
 
-# click points (window relative, points) of the default 1100 x 748 window with five columns; EDGE is the empty margin left of the first column
-C0="388 157"; C1="531 157"; C2="674 157"; C4="960 157"; C6="531 407"; C7="674 407"; EDGE="290 60"; EMPTY="280 300"
+# click points (window relative, points) of the 1100 x 748 window with the browser dock opened to 640 (the grid starts 62 points lower than in the library window of
+# the MVP: tab strip 31, reader area 25, grip 6) with five columns; EDGE is the empty margin left of the first column
+C0="388 219"; C1="531 219"; C2="674 219"; C4="960 219"; C6="531 469"; C7="674 469"; EDGE="290 122"; EMPTY="280 362"
 
 # near_hex <hex> <hex>: every channel within 4
 near_hex() {
@@ -39,12 +40,12 @@ expect_status 'Library: 50 Books' "the library is shown"
 front_app
 
 # a band from the margin to the middle of the second book of the second row: the books of the first two rows in the first two columns
-must drag $EDGE 531 407
+must drag $EDGE 531 469
 expect_status '- 4 selected' "a band over two rows and two columns selects four books"
 
 # the same band while the button is held: a screenshot, and the pure Highlight colour on the left line of the band (two units in from where it started)
 held_drag() { front_app; "$UI" drag "$@" >/dev/null 2>&1; }
-bg_run held_drag $EDGE 531 407 --hold-ms 3500
+bg_run held_drag $EDGE 531 469 --hold-ms 3500
 HOLD=$LAST_BG
 sleep 2
 shot marquee-held
@@ -67,15 +68,15 @@ front_app; must click $EMPTY
 expect_status '^Library: 50 Books / [^-]*$' "a click on the empty area clears the selection"
 must click $C4
 expect_status '- .*\.cbz' "one book is selected"
-must drag $EDGE 531 157 --shift
+must drag $EDGE 531 219 --shift
 expect_status '- 3 selected' "Shift: the band adds its two books to the selected one"
-must drag $EDGE 531 157 --cmd
+must drag $EDGE 531 219 --cmd
 expect_status '- .*Fixture Series 01 005\.cbz' "Cmd: the band flips its two books (both were selected: off), the fifth stays"
 
 # drag out: press on a book and move further than the drag size, release over a place that takes no drop
 front_app; must click $EMPTY
 before=$(log_count 'Drag started')
-must drag $C1 531 330 --steps 20
+must drag $C1 531 392 --steps 20
 sleep 1
 if [ "$(log_count 'Drag started')" -gt "$before" ]; then ok "dragging a book started a drag: $(app_log | grep 'Drag started' | tail -1)"; else bad "no 'Drag started' line in the log after dragging a book"; fi
 if log_has 'Drag ended'; then ok "the drag ended: $(app_log | grep 'Drag ended' | tail -1)"; else bad "no 'Drag ended' line in the log"; fi
@@ -86,7 +87,7 @@ shot drag-done
 front_app; press cmd+a
 expect_status '- 50 selected' "Cmd+A selects every book"
 before=$(log_count 'Drag started')
-must drag $C1 531 330 --steps 20
+must drag $C1 531 392 --steps 20
 sleep 2
 if [ "$(log_count 'Drag started')" -gt "$before" ] && app_log | grep -F 'Drag started' | tail -1 | grep -q '50 books, 50 files'; then ok "the whole selection was dragged: $(app_log | grep 'Drag started' | tail -1)"; else bad "no 'Drag started: 50 books, 50 files' line after dragging the selection"; fi
 expect_status '- 50 selected' "the selection is unchanged after the drag"

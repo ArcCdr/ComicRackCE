@@ -50,12 +50,12 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 | Element | Controls and styles | Native variant |
 |---|---|---|
 | Toolbar | `CrToolBar` (items planned by `ToolBarLayout`: `CrToolBar.Alignment`, `CrToolBar.Overflow`, the overflow button and its drop-down, RV8), `CrToolButton`, `CrSplitButton`, `CrDropDownButton`, `CrToolSeparator`, `CrSearchBox` (self-drawn from `Cr.Tool*`) | not yet |
-| TabBar | `CrTabBar` (self-drawn) | not yet |
+| TabBar | `CrTabBar` (self-drawn: tabs with their own minimum width, the New Tab button as a tab that is not selectable, scroll arrows and the drop-down button, the right click menu hook) | not yet |
 | StatusBar | `CrStatusBar`, `CrStatusSlot` | **yes** (proof) |
 | Tree | `CrTreeView`, `CrTreeRow`, `CrGaugeStrip`, `StyledSelectionVisual`, tree item theme (`CrControlThemes.axaml`) | not yet |
 | ListHeader | `CrHeader` | not yet |
 | GroupBox | `CrCollapsibleGroup` | not yet |
-| SidePanel | `CrSizableContainer` | not yet |
+| SidePanel | `CrSizableContainer` (grip, slide, a click on the grip toggles it, `Fill` takes the whole room: the side panel and the browser dock of the main window) | not yet |
 | Icons | `CrIcon`, `Icons` | not yet |
 | Dialogs | `CrDialogWindow`, `AlertWindow` (the system alert is native already: `MacAlert`) | not yet |
 | ItemView | `CrThumbnailItem` (shadow, frame, badges, caption, selection; its backdrop and overlay are inner parts), `CoverView` (the picture, fade-in), `CrBookToolTip`, `CrSelectionRectangle` (the rubber band, RV6); the colours of the original's renderers are `Cr.Thumb.*` in `Themes/Controls/CrThumbnailLook.axaml`, the numbers are `ThumbnailMetrics` and `ThumbnailLayout` | not yet |

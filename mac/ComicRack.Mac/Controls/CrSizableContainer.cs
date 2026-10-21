@@ -39,6 +39,8 @@ namespace ComicRack.Mac.Controls
 
 		public static readonly StyledProperty<double> ExpandedExtentProperty = AvaloniaProperty.Register<CrSizableContainer, double>(nameof(ExpandedExtent), 250);
 
+		public static readonly StyledProperty<bool> FillProperty = AvaloniaProperty.Register<CrSizableContainer, bool>(nameof(Fill));
+
 		/// <summary><c>SizableContainer.EnableAnimation</c>: switches every slide off (tests, reduced motion).</summary>
 		public static bool EnableAnimation { get; set; } = true;
 
@@ -48,6 +50,9 @@ namespace ComicRack.Mac.Controls
 			Hot,
 			Pressed,
 		}
+
+		/// <summary>A press on the grip that moves less than this (the original compares the cursor position against 4) is a click.</summary>
+		public const double ClickDistance = 4;
 
 		private GripState state;
 		private double currentExtent = 250;
@@ -63,8 +68,8 @@ namespace ComicRack.Mac.Controls
 
 		static CrSizableContainer()
 		{
-			AffectsMeasure<CrSizableContainer>(GripProperty, GripWidthProperty, ExpandedExtentProperty, IsExpandedProperty);
-			AffectsRender<CrSizableContainer>(GripProperty, IsExpandedProperty);
+			AffectsMeasure<CrSizableContainer>(GripProperty, GripWidthProperty, ExpandedExtentProperty, IsExpandedProperty, FillProperty);
+			AffectsRender<CrSizableContainer>(GripProperty, IsExpandedProperty, FillProperty);
 		}
 
 		public CrSizableContainer()
@@ -94,6 +99,19 @@ namespace ComicRack.Mac.Controls
 			get => GetValue(IsExpandedProperty);
 			set => SetValue(IsExpandedProperty, value);
 		}
+
+		/// <summary>
+		/// True takes all the room the parent offers and shows no grip (<c>Dock = Fill</c> of the original: the browser fills the main window while the reader is in its
+		/// own window). <see cref="IsExpanded"/> and <see cref="ExpandedExtent"/> keep their values for when the panel is docked again.
+		/// </summary>
+		public bool Fill
+		{
+			get => GetValue(FillProperty);
+			set => SetValue(FillProperty, value);
+		}
+
+		/// <summary>True (the default, as in the original) lets a click on the grip that did not move the pointer more than 4 units collapse or expand the panel.</summary>
+		public bool ClickTogglesExpanded { get; set; } = true;
 
 		/// <summary>The extent (width for a left or right grip, height for a top or bottom grip) while expanded, grip included.</summary>
 		public double ExpandedExtent
@@ -145,6 +163,10 @@ namespace ComicRack.Mac.Controls
 		{
 			get
 			{
+				if (Fill)
+				{
+					return default;
+				}
 				double w = Bounds.Width, h = Bounds.Height, g = GripWidth;
 				switch (Grip)
 				{
@@ -167,6 +189,10 @@ namespace ComicRack.Mac.Controls
 		{
 			get
 			{
+				if (Fill)
+				{
+					return new Rect(Bounds.Size);
+				}
 				double w = Bounds.Width, h = Bounds.Height, g = GripWidth;
 				switch (Grip)
 				{
@@ -186,6 +212,11 @@ namespace ComicRack.Mac.Controls
 
 		protected override Size MeasureOverride(Size availableSize)
 		{
+			if (Fill)
+			{
+				Child?.Measure(availableSize);
+				return new Size(double.IsInfinity(availableSize.Width) ? Child?.DesiredSize.Width ?? 0 : availableSize.Width, double.IsInfinity(availableSize.Height) ? Child?.DesiredSize.Height ?? 0 : availableSize.Height);
+			}
 			double extent = CurrentExtent;
 			Size content = availableSize;
 			if (Child != null)
@@ -203,6 +234,12 @@ namespace ComicRack.Mac.Controls
 
 		protected override Size ArrangeOverride(Size finalSize)
 		{
+			if (Fill)
+			{
+				Child?.Arrange(new Rect(finalSize));
+				ClipToBounds = false;
+				return finalSize;
+			}
 			if (Child != null)
 			{
 				double g = Grip == GripPosition.None ? 0 : GripWidth;
@@ -255,6 +292,10 @@ namespace ComicRack.Mac.Controls
 			else if (change.Property == ChildProperty)
 			{
 				UpdateChildReach();
+			}
+			else if (change.Property == FillProperty && !Fill)
+			{
+				ClipToBounds = true;
 			}
 		}
 
@@ -419,7 +460,18 @@ namespace ComicRack.Mac.Controls
 			if (state == GripState.Pressed)
 			{
 				e.Pointer.Capture(null);
+				Point release = e.GetPosition(this);
+				if (this.GetVisualParent() is Visual parent)
+				{
+					release = e.GetPosition(parent);
+				}
+				bool click = ClickTogglesExpanded && Math.Abs(release.X - pressPoint.X) < ClickDistance && Math.Abs(release.Y - pressPoint.Y) < ClickDistance;
 				SetState(HitGrip(e.GetPosition(this)) ? GripState.Hot : GripState.None);
+				if (click)
+				{
+					// OnMouseUp of the original: a press that moved less than 4 units on the grip collapses or expands the panel
+					IsExpanded = !IsExpanded;
+				}
 			}
 		}
 

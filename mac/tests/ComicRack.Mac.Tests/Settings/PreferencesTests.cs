@@ -1,4 +1,5 @@
 using System;
+using cYo.Projects.ComicRack.Engine;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -613,18 +614,19 @@ namespace ComicRack.Mac.Tests.Settings
 			return folder;
 		}
 
-		private static async Task<ReaderWindow> Open(Launch launch, ReaderManager manager, int index, int expectedWindows)
+		private static async Task<ReaderViewModel> Open(Launch launch, ReaderManager manager, int index)
 		{
 			launch.ViewModel.Browser.SelectedIndex = index;
+			ComicBook book = launch.ViewModel.Browser.SelectedItem.Book;
 			launch.ViewModel.Browser.OpenSelected();
-			await WaitFor(() => manager.Windows.Count == expectedWindows, "reader window");
-			ReaderWindow window = manager.Windows.Single(w => ((CoreReadingSession)w.Model.Session).Book == launch.ViewModel.Browser.SelectedItem.Book);
-			await WaitFor(() => window.Model.IsOpen && window.Model.Scene != null, "first page shown");
-			return window;
+			await WaitFor(() => ReferenceEquals(manager.Current?.Book, book), "reader tab");
+			ReaderViewModel model = manager.CurrentModel;
+			await WaitFor(() => model.IsOpen && model.Scene != null, "first page shown");
+			return model;
 		}
 
 		[FixtureFact("BD-reader")]
-		public async Task Fit_layout_and_frame_of_a_reader_are_kept_and_the_next_reader_starts_from_them()
+		public async Task Fit_and_layout_of_a_reader_are_kept_and_the_next_reader_starts_from_them()
 		{
 			using (new RealLibraryGuard())
 			using (var temp = new TempDir())
@@ -632,7 +634,7 @@ namespace ComicRack.Mac.Tests.Settings
 				await Ui.Run(async () =>
 				{
 					string data = temp.Combine("app");
-					using (var launch = await Launch.Start(data, svc => new ReaderManager(svc, preferences: svc.Preferences.Current)))
+					using (var launch = await Launch.Start(data, svc => new ReaderManager(svc, svc.Preferences.Current)))
 					{
 						AppPreferences prefs = launch.Service.Preferences.Current;
 						var manager = (ReaderManager)launch.ViewModel.Readers;
@@ -641,37 +643,25 @@ namespace ComicRack.Mac.Tests.Settings
 						Assert.Equal("Fit", prefs.ReaderFit);
 						Assert.Equal("Single", prefs.ReaderLayout);
 
-						ReaderWindow first = await Open(launch, manager, 0, 1);
-						first.Model.FitWidth();
-						first.Model.TwoPageLayout();
+						ReaderViewModel first = await Open(launch, manager, 0);
+						first.FitWidth();
+						first.TwoPageLayout();
 						Assert.Equal("FitWidth", prefs.ReaderFit);
 						Assert.Equal("Double", prefs.ReaderLayout);
 
-						// the user moves it: that is the frame the next reader opens at, moved aside because this one is still open
-						first.Position = new PixelPoint(210, 130);
-						first.Width = 777;
-						first.Height = 555;
-						Dispatcher.UIThread.RunJobs();
-						await WaitFor(() => prefs.ReaderWindow.Width == 777, "the new frame is reported");
-						Assert.Equal(555, prefs.ReaderWindow.Height);
-
-						ReaderWindow second = await Open(launch, manager, 1, 2);
-						Assert.Equal(ImageFitMode.FitWidth, second.Model.Fit);
-						Assert.Equal(PageLayoutMode.Double, second.Model.LayoutMode);
-						Assert.Equal(777, second.ClientSize.Width);
-						Assert.Equal(555, second.ClientSize.Height);
-						Assert.Equal(new PixelPoint(210 + 26, 130 + 26), second.Position);
+						ReaderViewModel second = await Open(launch, manager, 1);
+						Assert.Equal(ImageFitMode.FitWidth, second.Fit);
+						Assert.Equal(PageLayoutMode.Double, second.LayoutMode);
 						launch.Quit();
 					}
 					// and after a relaunch the first reader starts like the last one ended
-					using (var again = await Launch.Start(data, svc => new ReaderManager(svc, preferences: svc.Preferences.Current)))
+					using (var again = await Launch.Start(data, svc => new ReaderManager(svc, svc.Preferences.Current)))
 					{
 						var manager = (ReaderManager)again.ViewModel.Readers;
 						await FixtureLibrary.WaitForGrid(again.ViewModel, 3);
-						ReaderWindow window = await Open(again, manager, 0, 1);
-						Assert.Equal(ImageFitMode.FitWidth, window.Model.Fit);
-						Assert.Equal(PageLayoutMode.Double, window.Model.LayoutMode);
-						Assert.Equal(777, window.ClientSize.Width);
+						ReaderViewModel model = await Open(again, manager, 0);
+						Assert.Equal(ImageFitMode.FitWidth, model.Fit);
+						Assert.Equal(PageLayoutMode.Double, model.LayoutMode);
 						again.Quit();
 					}
 				});

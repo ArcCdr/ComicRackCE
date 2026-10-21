@@ -120,6 +120,12 @@ namespace ComicRack.Mac.Tests.Theme
 					{
 						frames["reader-" + suffix] = Frame(h.Window);
 					}
+					// the main window with a book in a tab (P5.32a): tab strip with the reader toolbar, the reader area, the browser dock, the status bar
+					using (var h = new MainReaderHarness(width: 1000, height: 700))
+					{
+						await h.AddBook("Snapshot Book", pages: 5, resume: 2);
+						frames["main-book-" + suffix] = Frame(h.Window);
+					}
 					using (var h = new ReaderHarness(new ReaderViewModel(new FakeSession(new FakePageDecoder { PageCount = 5 }, openImmediately: false), ReaderHarness.DefaultOptions()), 500, 300))
 					{
 						h.Vm.Notice = "Opening...";
@@ -190,7 +196,7 @@ namespace ComicRack.Mac.Tests.Theme
 		public async Task The_views_render_and_match_the_baseline_frames_when_one_is_given(string variantName)
 		{
 			Dictionary<string, Raster> frames = await Render(variantName);
-			Assert.Equal(7, frames.Count);
+			Assert.Equal(8, frames.Count);
 			string save = Environment.GetEnvironmentVariable(SnapshotVariable);
 			bool fullGate = Environment.GetEnvironmentVariable(FullGateVariable) == "1";
 			string baseline = BaselineFolder(Environment.GetEnvironmentVariable(BaselineVariable), fullGate);

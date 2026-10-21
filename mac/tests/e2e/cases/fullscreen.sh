@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# fullscreen: Ctrl+Cmd+F puts the library window and the reader window into native full screen (the window covers a whole
-# screen) and brings them back to their size; in the reader Esc leaves full screen first (mvp-acceptance.md 5.16).
+# fullscreen: Ctrl+Cmd+F puts the main window without and with a book in a tab into native full screen (the window covers a whole
+# screen) and brings it back to its size; in the reader Esc leaves full screen first and then only shows or hides the browser dock, it
+# never closes the book (mvp-acceptance.md 5.16; P5.32a).
 . "$(dirname "$0")/../lib.sh"; e2e_begin
 
 # geom <window id>: "x y w h" in points from ui-drive windows.
@@ -44,23 +45,25 @@ press ctrl+cmd+f
 if wait_geom "$MAIN" normal "$orig"; then ok "library window is back to its size: $GEOM"; else bad "library window did not return to its size ($orig): $GEOM"; fi
 quit_app
 
-# Reader window.
+# The book in a tab of the main window.
 BOOK="$FIXTURES/BD-reader/Amargo/Amargo - 01 - Le bal des vautours.cbz"; need "$BOOK"
+E2E_BROWSER_HEIGHT=
 launch_app --read-book "$BOOK"
 expect_log "Reader check: .*pages" 40
 sleep 1
 front_app
-R=$(other_window_id); [ -n "$R" ] || { bad "no reader window"; e2e_end; }
-orig=$(geom "$R"); ok "reader window id $R, $orig"
+R=$(main_window_id); [ -n "$R" ] || { bad "no main window"; e2e_end; }
+orig=$(geom "$R"); ok "main window id $R, $orig"
 press ctrl+cmd+f
-if wait_geom "$R" covers "$orig"; then ok "reader covers a screen in full screen: $GEOM"; else bad "reader did not cover a screen: $GEOM"; fi
+if wait_geom "$R" covers "$orig"; then ok "the window with a book covers a screen in full screen: $GEOM"; else bad "the window did not cover a screen: $GEOM"; fi
 sleep 1
 shot reader-fullscreen "$R"
 press escape
-if wait_geom "$R" normal "$orig"; then ok "Esc left full screen, the reader is back to its size: $GEOM"; else bad "Esc did not restore the reader ($orig): $GEOM"; fi
+if wait_geom "$R" normal "$orig"; then ok "Esc left full screen, the window is back to its size: $GEOM"; else bad "Esc did not restore the window ($orig): $GEOM"; fi
 sleep 0.5
-if "$UI" windows 2>/dev/null | awk -F'\t' -v id="$R" '$1 == id { f = 1 } END { exit !f }'; then ok "the reader stayed open after the first Esc"; else bad "the first Esc closed the reader"; fi
+before=$(log_count 'Reader closed')
 press escape; sleep 1.2
-if "$UI" windows 2>/dev/null | awk -F'\t' -v id="$R" '$1 == id { f = 1 } END { exit !f }'; then bad "the second Esc did not close the reader"; else ok "a second Esc closed the reader"; fi
+if [ "$(log_count 'Reader closed')" = "$before" ]; then ok "a second Esc did not close the book (it shows or hides the browser dock)"; else bad "the second Esc closed the book"; fi
+press escape; sleep 0.8
 quit_app
 e2e_end

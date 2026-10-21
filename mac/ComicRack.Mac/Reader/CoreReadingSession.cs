@@ -45,6 +45,12 @@ namespace ComicRack.Mac.Reader
 
 		public ComicBook Book => book;
 
+		/// <summary>
+		/// False for a book that is reopened by <c>OpenLastFile</c> at the start (<c>OpenComicOptions.NoIncreaseOpenedCount</c>): the book is read again, but the
+		/// library does not count another opening.
+		/// </summary>
+		public bool IncreaseOpenedCount { get; set; } = true;
+
 		public float Rating => book.Rating;
 
 		public void SetRating(float rating)
@@ -145,7 +151,10 @@ namespace ComicRack.Mac.Reader
 			pageCount = navigator.ProviderPageCount;
 			resumePage = Math.Max(0, Math.Min(book.CurrentPage, pageCount - 1));
 
-			book.OpenedCount++;
+			if (IncreaseOpenedCount)
+			{
+				book.OpenedCount++;
+			}
 			if (ComicBookNavigator.TrackCurrentPage)
 			{
 				book.OpenedTime = DateTime.Now;

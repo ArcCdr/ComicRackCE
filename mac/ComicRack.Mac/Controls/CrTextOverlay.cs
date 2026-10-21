@@ -83,7 +83,8 @@ namespace ComicRack.Mac.Controls
 		{
 			var area = new Rect(Bounds.Size);
 			Rect inner = GlassPainter.Panel(context, this, area);
-			if (string.IsNullOrEmpty(Text) || inner.Width <= 0)
+			// a window that is being resized (leaving full screen) can lay the overlay out with no room for a moment: nothing to draw then
+			if (string.IsNullOrEmpty(Text) || inner.Width <= 0 || inner.Height <= 0)
 			{
 				return;
 			}

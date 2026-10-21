@@ -240,6 +240,28 @@ namespace ComicRack.Mac.Tests
 		public void ToggleFullScreen()
 		{
 		}
+
+		/// <summary>The files that Reveal in Finder was asked for.</summary>
+		public System.Collections.Generic.List<string> Revealed { get; } = new System.Collections.Generic.List<string>();
+
+		/// <summary>The texts that were put on the clipboard.</summary>
+		public System.Collections.Generic.List<string> Copied { get; } = new System.Collections.Generic.List<string>();
+
+		public int Activations { get; private set; }
+
+		public int Quits { get; private set; }
+
+		public void RevealInFinder(string path) => Revealed.Add(path);
+
+		public Task CopyTextAsync(string text)
+		{
+			Copied.Add(text);
+			return Task.CompletedTask;
+		}
+
+		public void ActivateLibrary() => Activations++;
+
+		public void Quit() => Quits++;
 	}
 
 	/// <summary>Scripted dialogs: what the user would pick, and a record of what was shown.</summary>

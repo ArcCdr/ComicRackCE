@@ -65,6 +65,7 @@ namespace ComicRack.Mac.ViewModels
 			{
 				RestoreAndFollow(preferences);
 			}
+			WireTabs();
 		}
 
 		// ---- live refresh (P5.2)
@@ -256,7 +257,8 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>The tree of lists (M2.2c). The selected row decides which books the grid shows.</summary>
 		public SidebarViewModel Sidebar { get; } = new SidebarViewModel();
 
-		// Double click or Enter on a book: opens it in a reader window (M2.3a).
+		// Double click or Enter on a book: opens it in a book tab (M2.3a). Whether it takes the place of the book of the current tab or gets a tab of its own is the
+		// setting Open in new Tab (PB.09), reversed by a held Cmd or Shift, or Open in new Tab (BC.02).
 		private void OnOpenBookRequested(object sender, BookItem item)
 		{
 			AppLog.Info("Open book requested: " + item.Book?.FilePath);
@@ -270,11 +272,22 @@ namespace ComicRack.Mac.ViewModels
 				StatusText = $"\"{item.Title}\" cannot be opened: the file is missing ({item.Book.FilePath}).";
 				return;
 			}
-			readers.Open(item.Book);
+			if (tabs != null)
+			{
+				// the next Show in Browser finds the list the book was opened from (ComicBrowserControl.OpenComic)
+				item.Book.LastOpenedFromListId = Sidebar.SelectedNode?.Id ?? Guid.Empty;
+				OpenTabMode mode = Browser.PendingOpenMode;
+				bool inNewTab = mode == OpenTabMode.NewTab || (preferences != null && preferences.OpenInNewTab) ^ (mode == OpenTabMode.Invert);
+				tabs.Open(item.Book, inNewTab ? OpenBookOptions.InNewTab : OpenBookOptions.None);
+			}
+			else
+			{
+				readers.Open(item.Book);
+			}
 			StatusText = $"Reading \"{item.Title}\".";
 		}
 
-		/// <summary>Closes the reader windows (each records its page). Called before the library is replaced and when the app quits.</summary>
+		/// <summary>Closes every book tab (each records its page). Called before the library is replaced and when the app quits.</summary>
 		public void CloseReaders()
 		{
 			readers?.CloseAll();
@@ -345,8 +358,23 @@ namespace ComicRack.Mac.ViewModels
 
 		public string AppName => "ComicRack CE (MVP)";
 
-		/// <summary>The title of the window: the form's text of the original (<c>MainForm.xml</c> key MainForm), "ComicRack".</summary>
-		public string WindowTitle => UiText.Get("MainForm", "MainForm", "ComicRack");
+		/// <summary>
+		/// The title of the window (<c>MainForm.OnUpdateGui</c>): the form's text of the original (<c>MainForm.xml</c> key MainForm), "ComicRack", and with a book open
+		/// " - " and its caption (the file name when the book is in a container, such as a remote library).
+		/// </summary>
+		public string WindowTitle
+		{
+			get
+			{
+				string title = UiText.Get("MainForm", "MainForm", "ComicRack");
+				ReaderSlot slot = tabs?.Current;
+				if (slot == null || slot.IsEmpty || string.IsNullOrEmpty(slot.Model.Title))
+				{
+					return title;
+				}
+				return title + " - " + (slot.Book.IsInContainer ? slot.Caption : slot.Book.FileName);
+			}
+		}
 
 		/// <summary>
 		/// A message of the app (starting, the engine did not start, a failed operation). The status bar shows it until a library is open; after that
@@ -359,13 +387,13 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>The text of the status bar's first segment (<c>tsText</c>).</summary>
 		public string StatusLine => BookCount < 0 || string.IsNullOrEmpty(Browser.SummaryText) ? StatusText : Browser.SummaryText;
 
-		// The segments of the open book (tsBook, tsCurrentPage, tsPageCount). The library window shows no book, so they read as the original does
-		// without one: "None", "NA", "NA" (MainForm.OnUpdateGui, TotalPageInformation). The reader is a separate window until P5.32a.
-		public string BookSegmentText => UiText.Default("None", "None");
+		// The segments of the open book (tsBook, tsCurrentPage, tsPageCount) are those of the current tab; without a book they read "None", "NA", "NA"
+		// (MainForm.OnUpdateGui, TotalPageInformation).
+		public string BookSegmentText => Reader?.BookSegmentText ?? UiText.Default("None", "None");
 
-		public string PageSegmentText => UiText.Default("NotAvailable", "NA");
+		public string PageSegmentText => Reader?.PageSegmentText ?? UiText.Default("NotAvailable", "NA");
 
-		public string PageCountSegmentText => UiText.Default("NotAvailable", "NA");
+		public string PageCountSegmentText => Reader?.PageCountSegmentText ?? UiText.Default("NotAvailable", "NA");
 
 		public string BookSegmentTip => UiText.Tooltip("MainForm", "tsBook") ?? "Name of the opened Book";
 
@@ -437,6 +465,7 @@ namespace ComicRack.Mac.ViewModels
 			Browser.Thumbnails = hostService.Thumbnails;
 			ReloadBrowser();
 			StartWatching();
+			RestoreSession();
 			StatusText = $"Library engine ready. {BookCount} books. Data: {host.Paths.DataFolder}";
 		}
 

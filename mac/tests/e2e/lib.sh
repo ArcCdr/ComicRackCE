@@ -87,14 +87,25 @@ ui() {
 # must <ui-drive args>: like ui, but any other failure ends the case.
 must() { ui "$@" || { bad "ui-drive $* failed (exit $LAST_RC): $LAST_OUT"; e2e_end; }; }
 
-# launch_app [app arguments...]: starts the app in the current mode with this case's data folder and waits for the library window.
+# The main window hosts the reader area on top and the browser docked at the bottom (P5.32a, 250 high by default). The cases that click in the book grid
+# open the dock to E2E_BROWSER_HEIGHT points (hidden option --browser-height, as a drag of its grip does); the grid then starts GRID_DY points lower than it
+# did in the library window of the MVP (client height 720: tab strip 31, reader area 25, grip 6 above the browser toolbar). A case that wants the
+# default layout sets E2E_BROWSER_HEIGHT= (empty) before launch_app.
+E2E_BROWSER_HEIGHT=${E2E_BROWSER_HEIGHT-640}
+GRID_DY=62
+# gy <y>: a window-relative y of the book grid in the layout of the library window, moved to where it is now.
+gy() { echo $(( $1 + GRID_DY )); }
+
+# launch_app [app arguments...]: starts the app in the current mode with this case's data folder and waits for the main window.
 launch_app() {
 	if [ "$E2E_MODE" = bundle ]; then
 		[ -x "$E2E_ROOT/mac/artifacts/ComicRack CE (MVP).app/Contents/MacOS/ComicRack.Mac" ] || skip_case 3 "no bundle (run mac/tools/make-app.sh)"
 	fi
-	ui launch "--$E2E_MODE" --data-dir "$E2E_DATA" -- "$@" || { bad "launch failed: $LAST_OUT"; e2e_end; }
+	local dock=()
+	if [ -n "$E2E_BROWSER_HEIGHT" ]; then dock=(--browser-height "$E2E_BROWSER_HEIGHT"); fi
+	ui launch "--$E2E_MODE" --data-dir "$E2E_DATA" -- ${dock[@]+"${dock[@]}"} "$@" || { bad "launch failed: $LAST_OUT"; e2e_end; }
 	E2E_LAUNCHED=1
-	must wait-window "^ComicRack$" 60
+	must wait-window "^ComicRack( - .*)?$" 60
 	WINDOW_LINE=$LAST_OUT
 	front_app
 }
@@ -157,9 +168,14 @@ window_id_by_title() {
 	done
 }
 
-# Window that is not the library window (a reader, a dialog): its id.
+# Window that is not the main window (a dialog, the reader in its own window): its id.
 other_window_id() {
-	"$UI" windows 2>/dev/null | awk -F'\t' -v app="$APP_NAME" '$2 == 0 && $3 == 1 && $6 != app && $5 !~ /^[0-9]x/ { print $1; exit }'
+	"$UI" windows 2>/dev/null | awk -F'\t' '$2 == 0 && $3 == 1 && $6 !~ /^ComicRack( - .*)?$/ && $5 !~ /^[0-9]x/ { print $1; exit }'
+}
+
+# The main window ("ComicRack" or "ComicRack - <book>"): its id. The reader is in it (a tab), so shots of the reader are shots of this window.
+main_window_id() {
+	"$UI" windows 2>/dev/null | awk -F'\t' '$2 == 0 && $3 == 1 && $6 ~ /^ComicRack( - .*)?$/ { print $1; exit }'
 }
 
 # Screens as "x y w h" lines in top-left global points.

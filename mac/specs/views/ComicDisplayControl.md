@@ -1,14 +1,14 @@
 # ComicDisplayControl, the reader (ComicRack.Engine.Display.Forms/ComicDisplayControl.cs, ComicRack/MainForm.Designer.cs, ComicRack/MainForm.cs)
 
-Mac view: `ComicRack.Mac.Views.ReaderWindow` (tab strip, toolbar, status bar, overlay layer) on `ReaderView` (the page), `CrTabBar`, `CrToolBar`, `CrStatusBar`, `CrTextOverlay`, `CrPartOverlay`, `CrNavigationOverlay` and `PageFrame` (P5.R3). Decisions C-READ-1, C-TB-1, C-TAB-1, C-WIN-2 (original look). Until P5.32a docks the reader the window shows the main form's tab strip with one tab; the original's undocked `ReaderForm` has only the display control.
+Mac view: `ComicRack.Mac.Views.ReaderArea` (the page on `ReaderView` and the overlay layer: `CrTextOverlay`, `CrPartOverlay`, `CrNavigationOverlay`, `PageFrame`), hosted by `MainWindow` (docked: below the tab strip `CrTabBar` with the reader toolbar `CrToolBar`, above the browser dock, status bar `CrStatusBar` at the bottom) or by `ReaderWindow` (Reader in own Window, `ReaderForm`: the display control only). P5.R3 built the chrome in a window of its own; P5.32a moved the tab strip, the toolbar and the status bar into the main window and made the reader area follow the book of the current tab. Decisions C-READ-1, C-TB-1, C-TAB-1, C-WIN-2, C-MAIN-1, C-WIN-4, C-READ-4.
 
 ## 1. Sources
 `ComicDisplayControl.cs:196-240` (overlay sizes), `:1078-1170` (the overlays and their animators), `:1262-1345` (`DrawPageOrnaments`: outline and shadow), `:2594-3170` (overlay updates, `UpdateNavigationOverlay`), `MainForm.cs:4366-4376` (`CreateComicDisplay`: font Segoe UI 12 pt, padding 16), `MainForm.Designer.cs:2577-2615` (`fileTabs`, `mainToolStrip`), `:161-250` (Read, Display, page menus), `MainForm.cs:1563-1800` (reader keys), `Settings.cs` (overlay options), `EngineConfiguration.cs` (`PageShadowWidthPercentage` 1, `PageShadowOpacity` 0.6, `NavigationPanelWidth` 0.9), `PanelRenderer.cs`, `TextOverlay.cs`.
 
 ## 2. Layout (96 DPI units)
 ```
-window
-  tab strip 31 high (CrTabBar): one tab (book caption, close box), the reader toolbar in the slot at the right (25 high, transparent)
+main window (docked reader)              reader window (undocked)
+  tab strip 31 high (CrTabBar): one tab per open book (caption, close box), the New Tab button, the reader toolbar in the slot at the right (25 high, transparent)
   reading area (ReaderView): paper = Cr.ReaderBackground (WhiteSmoke; dark #303030); the pages are fitted in the whole area
     overlays align inside a 16 unit padding:
       page info   150 x 25 at least, top right        fade 100 / 2000 / 100 ms at every page change (ShowCurrentPageOverlay)
@@ -16,9 +16,9 @@ window
       loading     200 x 30 at least, middle            "Loading Page N..." while a page is not there (ShowStatusOverlay)
       message     300 x 30 at least, middle            opening the book, why a book or page cannot be shown
     navigation overlay 0.9 of the width (at least 200) x 200, centred, 3 above the bottom edge (or at the top, NavigationOverlayOnTop)
-  status bar 24 high: tsBook (caption, 60 characters), tsCurrentPage, tsPageCount
+  status bar 24 high (main window): tsBook (caption, 60 characters), tsCurrentPage, tsPageCount
 ```
-Tab strip and status bar are hidden in full screen.
+The reading area and its overlays are the same in both hosts. Tab strip, status bar and browser dock are hidden in full screen while a book is shown in the main window.
 
 ## 3. Page ornaments (`DrawRealisticPages`, default true)
 Each page has a one unit black outline (`Cr.Reader.PageFrameBrush`, on the left and top edge and one unit outside at the right and bottom); around all pages a shadow of 1 percent of the smaller side (at most 255) fading from 0.6 black (`Cr.Reader.PageShadowBrush`): linear along the sides, radial at the corners. Page bows and the toggle (Shift+D) come with P5.23f.

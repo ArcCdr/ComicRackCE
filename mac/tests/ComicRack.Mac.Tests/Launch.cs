@@ -86,7 +86,8 @@ namespace ComicRack.Mac.Tests
 		/// <summary>Cmd+Q: cancel a running operation, close the host (which saves) and check the saved file. Returns the check.</summary>
 		public SaveVerification Quit()
 		{
-			ViewModel.CloseReaders(); // App.OnExit closes the readers first: each records its page in the library that is saved next
+			ViewModel.RememberOpenBooks(); // App.OnExit remembers the open books for the next start,
+			ViewModel.CloseReaders(); // then closes the readers: each records its page in the library that is saved next
 			ViewModel.CancelRunningOperation();
 			Service.Dispose();
 			Quit_Done = true;

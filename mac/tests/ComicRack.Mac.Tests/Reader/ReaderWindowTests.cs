@@ -229,8 +229,8 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)page.Right - 4, (int)page.Bottom - 4), expected), "bottom right corner of the page");
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)(page.X - 10), (int)(page.Y + 100)), Paper, 1), "paper left of the page");
 					Assert.True(PageImages.Near(ReaderHarness.ColorAt(frame, (int)(page.Right + 10), (int)(page.Y + 100)), Paper, 1), "paper right of the page");
-					Assert.Equal("3", h.Window.FindControl<TextBlock>("PageSegment").Text);
-					Assert.Equal("5", h.Window.FindControl<TextBlock>("PageCountSegment").Text);
+					Assert.Equal("3", h.Vm.PageSegmentText);
+					Assert.Equal("5", h.Vm.PageCountSegmentText);
 					Assert.Equal("Fit All", h.Vm.FitText);
 					Assert.Equal("Fake Book", h.Window.Title);
 					Assert.False(h.Window.Message.IsVisible);
@@ -281,7 +281,7 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task Escape_closes_the_window_records_the_page_and_releases_the_book()
+		public async Task Cmd_W_closes_the_window_records_the_page_and_releases_the_book_and_Escape_only_asks_for_the_browser()
 		{
 			await Ui.Run(async () =>
 			{
@@ -292,7 +292,12 @@ namespace ComicRack.Mac.Tests.Reader
 				h.Press(Key.PageDown);
 				h.Press(Key.PageDown);
 				Assert.Equal(3, h.Vm.CurrentPage);
-				h.Press(Key.Escape);
+				int browser = 0;
+				h.Vm.ToggleBrowserRequested += (s, e) => browser++;
+				h.Press(Key.Escape); // ShowBrowser, not Close
+				Assert.False(closed);
+				Assert.Equal(1, browser);
+				h.Press(Key.W, KeyModifiers.Meta);
 				Assert.True(closed);
 				Assert.True(h.Vm.IsDisposed);
 				Assert.True(session.IsDisposed);

@@ -20,8 +20,9 @@ expect_status() {
 	bad "$2: the status text is '${got:-nothing}', expected /$1/"; return 1
 }
 
-# click points (window relative, points) of the first cells of the default 1100 x 748 window: five columns
-C0="388 157"; C1="531 157"; C2="674 157"; C3="817 157"; C4="960 157"; C5="388 407"; C6="531 407"; EMPTY="280 300"
+# click points (window relative, points) of the first cells of the 1100 x 748 window with the browser dock opened to 640 (62 points lower than in the library
+# window of the MVP): five columns
+C0="388 219"; C1="531 219"; C2="674 219"; C3="817 219"; C4="960 219"; C5="388 469"; C6="531 469"; EMPTY="280 362"
 
 # clk <x> <y> [--cmd] [--shift]: brings the app to the front (another app may have taken the focus), then clicks
 clk() { front_app; must click "$@"; }

@@ -18,8 +18,8 @@ expect_status() {
 	bad "$2: the status text is '${got:-nothing}', expected /$1/"; return 1
 }
 
-# the grip of the side panel (252 wide, 6 unit strip at its right edge) in window points: x 249, below the title bar (28) and the toolbar (25)
-GRIP="249 300"; GRIP_TO="349 300"
+# the grip of the side panel (252 wide, 6 unit strip at its right edge) in window points: x 249, below the title bar (28), the tab strip (31), the reader area (25 with the dock at 640), the grip (6) and the toolbar (25)
+GRIP="249 362"; GRIP_TO="349 362"
 
 launch_app --theme light
 scan_folder "$SMALL" 90

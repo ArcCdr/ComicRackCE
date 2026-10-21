@@ -45,11 +45,12 @@ check_pixels "$MAIN" library
 quit_app
 
 BOOK="$FIXTURES/BD-reader/Amargo/Amargo - 01 - Le bal des vautours.cbz"; need "$BOOK"
+E2E_BROWSER_HEIGHT=
 launch_app --read-book "$BOOK"
 expect_log "Reader check: .*pages" 40
 sleep 1
 front_app
-R=$(other_window_id); [ -n "$R" ] || { bad "no reader window"; e2e_end; }
+R=$(main_window_id); [ -n "$R" ] || { bad "no main window"; e2e_end; }
 check_pixels "$R" reader
 quit_app
 e2e_end

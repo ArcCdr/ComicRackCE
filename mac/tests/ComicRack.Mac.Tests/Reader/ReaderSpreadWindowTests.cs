@@ -346,43 +346,6 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task Full_screen_follows_ctrl_cmd_f_hides_the_tab_strip_and_the_status_bar_and_escape_leaves_it()
-		{
-			await Ui.Run(async () =>
-			{
-				using (ReaderHarness h = await Open(PageLayoutMode.Single))
-				{
-					Control status = h.Window.FindControl<Control>("StatusBar");
-					Control tabs = h.Window.FindControl<Control>("TabBar");
-					Assert.True(status.IsVisible);
-					Assert.True(tabs.IsVisible);
-					Assert.NotEqual(WindowState.FullScreen, h.Window.WindowState);
-					h.Press(Key.F, KeyModifiers.Meta | KeyModifiers.Control);
-					Assert.True(h.Vm.IsFullScreen);
-					Assert.Equal(WindowState.FullScreen, h.Window.WindowState);
-					Assert.False(status.IsVisible);
-					Assert.False(tabs.IsVisible);
-					h.Capture("m23b-17-full-screen");
-					bool closed = false;
-					h.Window.Closed += (s, e) => closed = true;
-					h.Press(Key.Escape);
-					Assert.False(h.Vm.IsFullScreen);
-					Assert.NotEqual(WindowState.FullScreen, h.Window.WindowState);
-					Assert.True(status.IsVisible);
-					Assert.True(tabs.IsVisible);
-					Assert.False(closed);
-					// the user (or macOS) leaves full screen: the view model follows
-					h.Window.WindowState = WindowState.FullScreen;
-					h.Tick();
-					Assert.True(h.Vm.IsFullScreen);
-					h.Window.WindowState = WindowState.Normal;
-					h.Tick();
-					Assert.False(h.Vm.IsFullScreen);
-				}
-			});
-		}
-
-		[Fact]
 		public async Task Frame_adaptive_layout_shows_the_cover_as_a_single_page()
 		{
 			await Ui.Run(async () =>
@@ -395,70 +358,6 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Single(r);
 					Assert.Equal(area.X + area.Width / 2, r[0].X + r[0].Width / 2, 1);
 					AssertPage(frame, r[0], 0, "cover");
-				}
-			});
-		}
-
-		[Fact]
-		public async Task The_menu_bar_has_the_original_menus_with_the_read_and_display_items_and_their_shortcuts()
-		{
-			await Ui.Run(async () =>
-			{
-				using (ReaderHarness h = await Open(PageLayoutMode.Single))
-				{
-					NativeMenu menu = NativeMenu.GetMenu(h.Window);
-					Assert.Equal(new[] { "File", "Edit", "Browse", "Read", "Display", "Window", "Help" }, menu.Items.OfType<NativeMenuItem>().Select(i => i.Header).ToArray());
-					NativeMenuItem Top(string header) => menu.Items.OfType<NativeMenuItem>().Single(i => i.Header == header);
-					NativeMenuItem Sub(NativeMenuItem parent, string header) => parent.Menu.Items.OfType<NativeMenuItem>().Single(i => i.Header == header);
-					NativeMenuItem read = Top("Read");
-					Assert.Equal(new KeyGesture(Key.B, KeyModifiers.Meta), Sub(read, "First Page").Gesture);
-					Assert.Equal(new KeyGesture(Key.P, KeyModifiers.Meta), Sub(read, "Previous Page").Gesture);
-					Assert.Equal(new KeyGesture(Key.N, KeyModifiers.Meta), Sub(read, "Next Page").Gesture);
-					Assert.Equal(new KeyGesture(Key.E, KeyModifiers.Meta), Sub(read, "Last Page").Gesture);
-					Sub(read, "Next Page").Command.Execute(null);
-					await h.Settled();
-					Assert.Equal(1, h.Vm.CurrentPage);
-
-					NativeMenuItem display = Top("Display");
-					NativeMenuItem layout = Sub(display, "Page Layout");
-					Assert.Equal(new KeyGesture(Key.D2, KeyModifiers.Meta), Sub(layout, "Fit All").Gesture);
-					Assert.Equal(new KeyGesture(Key.D3, KeyModifiers.Meta), Sub(layout, "Fit Width").Gesture);
-					Assert.Equal(new KeyGesture(Key.D5, KeyModifiers.Meta), Sub(layout, "Fit Height").Gesture);
-					Assert.Equal(new KeyGesture(Key.D7, KeyModifiers.Meta), Sub(layout, "Single Page").Gesture);
-					Assert.Equal(new KeyGesture(Key.D8, KeyModifiers.Meta), Sub(layout, "Two Pages").Gesture);
-					Assert.Equal(new KeyGesture(Key.D9, KeyModifiers.Meta), Sub(layout, "Two Pages (adaptive)").Gesture);
-					Assert.Equal(new KeyGesture(Key.D0, KeyModifiers.Meta), Sub(layout, "Right to Left").Gesture);
-					Assert.True(Sub(layout, "Single Page").IsChecked);
-					Assert.True(Sub(layout, "Fit All").IsChecked);
-					Sub(layout, "Two Pages").Command.Execute(null);
-					await h.Settled();
-					Assert.True(Sub(layout, "Two Pages").IsChecked);
-					Assert.False(Sub(layout, "Single Page").IsChecked);
-					Assert.False(Sub(layout, "Right to Left").IsChecked);
-					Sub(layout, "Right to Left").Command.Execute(null);
-					Assert.True(Sub(layout, "Right to Left").IsChecked);
-					Sub(layout, "Fit Width").Command.Execute(null);
-					Assert.True(Sub(layout, "Fit Width").IsChecked);
-					Assert.False(Sub(layout, "Fit All").IsChecked);
-
-					NativeMenuItem zoom = Sub(display, "Zoom");
-					Assert.Equal(new KeyGesture(Key.OemPlus, KeyModifiers.Meta), Sub(zoom, "Zoom In").Gesture);
-					Assert.Equal(new KeyGesture(Key.OemMinus, KeyModifiers.Meta), Sub(zoom, "Zoom Out").Gesture);
-					Sub(zoom, "Zoom In").Command.Execute(null);
-					Assert.Equal(1.25, h.Vm.Zoom, 9);
-					Sub(zoom, "200%").Command.Execute(null);
-					Assert.Equal(2.0, h.Vm.Zoom, 9);
-					Sub(zoom, "100%").Command.Execute(null);
-					Assert.Equal(1.0, h.Vm.Zoom, 9);
-
-					NativeMenuItem fullScreen = Sub(display, "Full Screen");
-					Assert.Equal(new KeyGesture(Key.F11, KeyModifiers.None), fullScreen.Gesture);
-					Assert.False(fullScreen.IsChecked);
-					fullScreen.Command.Execute(null);
-					Assert.True(fullScreen.IsChecked);
-					fullScreen.Command.Execute(null);
-					Assert.False(fullScreen.IsChecked);
-					Assert.Equal(new KeyGesture(Key.W, KeyModifiers.Meta), Sub(Top("File"), "Close").Gesture);
 				}
 			});
 		}

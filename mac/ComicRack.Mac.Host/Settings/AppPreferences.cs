@@ -677,6 +677,16 @@ namespace ComicRack.Mac.Host
 			set { Set(ref cultureName, value); }
 		}
 
+		private bool trackCurrentPage = true; // Settings.cs:264
+
+		/// <summary>Read &gt; Track current Page (MR.13): when off, turning pages does not move the current page and the last page read of the book (<c>ComicBookNavigator.TrackCurrentPage</c>).</summary>
+		[DefaultValue(true)]
+		public bool TrackCurrentPage
+		{
+			get { return trackCurrentPage; }
+			set { Set(ref trackCurrentPage, value); }
+		}
+
 		// ---- Library tree counters (LT.01, PR.10)
 
 		private bool displayLibraryGauges = true; // Settings.cs:310
@@ -710,6 +720,10 @@ namespace ComicRack.Mac.Host
 		private string readerLayout = DefaultReaderLayout;
 		private bool rightToLeftDefault;
 		private string lastFolder;
+		private string[] lastOpenBooks;
+		private double browserDockHeight = DefaultBrowserDockHeight;
+		private bool browserDockExpanded = true;
+		private bool readerUndocked;
 
 		/// <summary>The width of the side panel when it is open (<c>ComicExplorerView</c>'s <c>SizableContainer</c>, 252).</summary>
 		public const double DefaultSidebarWidth = 252;
@@ -719,6 +733,9 @@ namespace ComicRack.Mac.Host
 
 		/// <summary>The name of the sort of the grid (<c>BookSort</c>).</summary>
 		public const string DefaultSortBy = "Series";
+
+		/// <summary>The height of the browser docked at the bottom of the main window when it is open (<c>MainForm.mainViewContainer</c>, 250 high, grip included).</summary>
+		public const double DefaultBrowserDockHeight = 250;
 
 		/// <summary>The name of the fit mode a reader starts with (<c>ImageFitMode</c>; Fit = "Fit All").</summary>
 		public const string DefaultReaderFit = "Fit";
@@ -815,6 +832,45 @@ namespace ComicRack.Mac.Host
 		{
 			get { return lastFolder; }
 			set { Set(ref lastFolder, value); }
+		}
+
+		/// <summary>
+		/// The files of the books that were open at the last quit, in tab order (<c>Settings.LastOpenFiles</c>, saved at close). With Reopen Books from last session
+		/// (<c>OpenLastFile</c>, PB.02) the next start opens them again. Named differently from the original's list, which has no default value to compare.
+		/// </summary>
+		[MacOnly]
+		[DefaultValue(null)]
+		public string[] LastOpenBooks
+		{
+			get { return lastOpenBooks; }
+			set { Set(ref lastOpenBooks, value != null && value.Length == 0 ? null : value); }
+		}
+
+		/// <summary>The height of the browser dock (a drag of its grip sets it); the browser is docked at the bottom until P5.32b adds the other docking modes.</summary>
+		[MacOnly]
+		[DefaultValue(DefaultBrowserDockHeight)]
+		public double BrowserDockHeight
+		{
+			get { return browserDockHeight; }
+			set { Set(ref browserDockHeight, value); }
+		}
+
+		/// <summary>False when the browser dock was collapsed (<c>BrowserVisible</c>; a click on the grip, Esc in the reader).</summary>
+		[MacOnly]
+		[DefaultValue(true)]
+		public bool BrowserDockExpanded
+		{
+			get { return browserDockExpanded; }
+			set { Set(ref browserDockExpanded, value); }
+		}
+
+		/// <summary>True when the reader was in its own window at the last quit (<c>ReaderUndocked</c>; Display &gt; Reader in own Window).</summary>
+		[MacOnly]
+		[DefaultValue(false)]
+		public bool ReaderUndocked
+		{
+			get { return readerUndocked; }
+			set { Set(ref readerUndocked, value); }
 		}
 	}
 }

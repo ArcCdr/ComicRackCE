@@ -733,7 +733,7 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task Full_screen_toggles_with_ctrl_cmd_f_and_escape_leaves_it_before_it_closes_the_reader()
+		public async Task Full_screen_toggles_with_ctrl_cmd_f_and_escape_leaves_it_before_it_asks_for_the_browser()
 		{
 			await Ui.Run(async () =>
 			{
@@ -741,7 +741,7 @@ namespace ComicRack.Mac.Tests.Reader
 				try
 				{
 					int closes = 0;
-					vm.CloseRequested += (s, e) => closes++;
+					vm.ToggleBrowserRequested += (s, e) => closes++;
 					Assert.False(vm.IsFullScreen);
 					Assert.True(vm.ShowStatus);
 					Assert.True(vm.HandleKey(Key.F, KeyModifiers.Meta | KeyModifiers.Control));

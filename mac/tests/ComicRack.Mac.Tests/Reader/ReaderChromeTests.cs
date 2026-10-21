@@ -41,7 +41,7 @@ namespace ComicRack.Mac.Tests.Reader
 			Assert.Equal(expected, PixelBlock.LiveCount);
 		}
 
-		private static Task<ReaderHarness> Open(int pages = 12, int resume = 3, Func<int, (int, int)> size = null, ReaderOptions options = null, double width = 900, double height = 700)
+		private static Task<ReaderHarness> Open(int pages = 12, int resume = 3, Func<int, (int, int)> size = null, ReaderOptions options = null, double width = 900, double height = 645)
 		{
 			var session = new FakeSession(new FakePageDecoder { PageCount = pages, Size = size ?? (p => (1200, 1800)) }) { ResumePage = resume };
 			return ReaderHarness.Open(session, width, height, options);
@@ -72,99 +72,6 @@ namespace ComicRack.Mac.Tests.Reader
 				bitmap.Erase(FakePageDecoder.ColorFor(page));
 				return new CoverImage(SKImage.FromBitmap(bitmap));
 			}
-		}
-
-		[Fact]
-		public async Task The_window_has_the_tab_strip_with_one_tab_the_toolbar_at_its_right_and_the_status_bar_segments()
-		{
-			await Ui.Run(async () =>
-			{
-				using (ReaderHarness h = await Open())
-				{
-					CrTabBar tabs = h.Window.Tabs;
-					Assert.Equal(31, tabs.Bounds.Height);
-					Assert.Single(tabs.Tabs);
-					Assert.Equal("Fake Book", tabs.Tabs[0].Text);
-					Assert.True(tabs.Tabs[0].CanClose);
-					Assert.Same(h.Window.ReaderToolbar, tabs.ToolbarSlot);
-					string[] names = { "PreviousPageButton", "NextPageButton", "PageLayoutButton", "FitButton", "ZoomButton", "FullScreenButton", "ToolsButton" };
-					foreach (string name in names)
-					{
-						Assert.NotNull(h.Window.FindControl<CrToolButton>(name));
-					}
-					Assert.Equal("100%", h.Window.FindControl<CrSplitButton>("ZoomButton").Text);
-					Assert.Equal("SinglePage", h.Window.FindControl<CrSplitButton>("PageLayoutButton").IconName);
-					Assert.Equal("FitAll", h.Window.FindControl<CrSplitButton>("FitButton").IconName);
-					Assert.Equal(24, h.Window.FindControl<CrStatusBar>("StatusBar").Bounds.Height);
-					Assert.Equal("Fake Book", h.Window.FindControl<TextBlock>("BookSegment").Text);
-					Assert.Equal("4", h.Window.FindControl<TextBlock>("PageSegment").Text);
-					Assert.Equal("12", h.Window.FindControl<TextBlock>("PageCountSegment").Text);
-					// the toolbar follows the state: the layout and fit pictures, the zoom text
-					h.Press(Key.D8, KeyModifiers.Meta);
-					await h.Settled();
-					h.Press(Key.D3, KeyModifiers.Meta);
-					h.Press(Key.OemPlus, KeyModifiers.Meta);
-					Assert.Equal("TwoPageForced", h.Window.FindControl<CrSplitButton>("PageLayoutButton").IconName);
-					Assert.Equal("FitWidth", h.Window.FindControl<CrSplitButton>("FitButton").IconName);
-					Assert.Equal("125%", h.Window.FindControl<CrSplitButton>("ZoomButton").Text);
-					// the arrow parts have the menus of the original with the items the reader has
-					Assert.Equal(1, ((Avalonia.Controls.MenuFlyout)h.Window.FindControl<CrSplitButton>("PreviousPageButton").DropDown).Items.Count);
-					Assert.Equal(5, ((Avalonia.Controls.MenuFlyout)h.Window.FindControl<CrSplitButton>("PageLayoutButton").DropDown).Items.Count);
-					Assert.Equal(3, ((Avalonia.Controls.MenuFlyout)h.Window.FindControl<CrSplitButton>("FitButton").DropDown).Items.Count);
-					// a click on the tab's close box closes the reader
-					bool closed = false;
-					h.Window.Closed += (s, e) => closed = true;
-					tabs.Tabs[0].GetType(); // keep the tab alive
-					h.Vm.Close();
-					Assert.True(closed);
-				}
-			});
-		}
-
-		[Fact]
-		public async Task The_buttons_of_the_toolbar_run_the_commands_of_the_original()
-		{
-			await Ui.Run(async () =>
-			{
-				using (ReaderHarness h = await Open(resume: 2))
-				{
-					h.Window.FindControl<CrToolButton>("NextPageButton").Command.Execute(null);
-					await h.Settled();
-					Assert.Equal(3, h.Vm.CurrentPage);
-					h.Window.FindControl<CrToolButton>("PreviousPageButton").Command.Execute(null);
-					await h.Settled();
-					Assert.Equal(2, h.Vm.CurrentPage);
-					// the layout button cycles one page, two pages, two pages (adaptive); the fit button Fit All, Fit Width, Fit Height; the zoom button 100, 125, 150, 200
-					var layout = h.Window.FindControl<CrToolButton>("PageLayoutButton");
-					layout.Command.Execute(null);
-					await h.Settled();
-					Assert.Equal(cYo.Projects.ComicRack.Engine.Display.PageLayoutMode.Double, h.Vm.LayoutMode);
-					layout.Command.Execute(null);
-					await h.Settled();
-					Assert.Equal(cYo.Projects.ComicRack.Engine.Display.PageLayoutMode.DoubleAdaptive, h.Vm.LayoutMode);
-					layout.Command.Execute(null);
-					await h.Settled();
-					Assert.Equal(cYo.Projects.ComicRack.Engine.Display.PageLayoutMode.Single, h.Vm.LayoutMode);
-					var fit = h.Window.FindControl<CrToolButton>("FitButton");
-					fit.Command.Execute(null);
-					Assert.Equal(cYo.Projects.ComicRack.Engine.Display.ImageFitMode.FitWidth, h.Vm.Fit);
-					fit.Command.Execute(null);
-					Assert.Equal(cYo.Projects.ComicRack.Engine.Display.ImageFitMode.FitHeight, h.Vm.Fit);
-					fit.Command.Execute(null);
-					Assert.Equal(cYo.Projects.ComicRack.Engine.Display.ImageFitMode.Fit, h.Vm.Fit);
-					var zoom = h.Window.FindControl<CrToolButton>("ZoomButton");
-					var seen = new List<string>();
-					for (int i = 0; i < 5; i++)
-					{
-						zoom.Command.Execute(null);
-						seen.Add(h.Vm.ZoomText);
-					}
-					Assert.Equal(new[] { "125%", "150%", "200%", "100%", "125%" }, seen);
-					h.Window.FindControl<CrToolButton>("FullScreenButton").Command.Execute(null);
-					Assert.True(h.Vm.IsFullScreen);
-					Assert.True(h.Window.FindControl<CrToolButton>("FullScreenButton").IsChecked);
-				}
-			});
 		}
 
 		[Fact]
@@ -267,7 +174,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Rect m = Dpi.Area(h.Window.Message, h.Window);
 					Rect area = h.ReadingArea;
 					Assert.Equal(area.Center.X, m.Center.X, 1);
-					Assert.Equal(area.Center.Y, m.Center.Y, 1);
+					Assert.True(Math.Abs(area.Center.Y - m.Center.Y) <= 0.5, "centred in the middle to half a unit: " + m.Center.Y + " in " + area.Center.Y); // an odd height splits on a half unit
 					vm.LoadingText = "Loading Page 2...";
 					h.Tick();
 					Assert.False(h.Window.Loading.IsVisible); // the message hides it
@@ -285,6 +192,22 @@ namespace ComicRack.Mac.Tests.Reader
 					h.Tick();
 					Assert.False(h.Window.Loading.IsVisible);
 				}
+			});
+		}
+
+		[Fact]
+		public async Task A_text_overlay_with_no_room_for_its_text_draws_nothing_instead_of_failing_the_frame()
+		{
+			// Leaving full screen lays the overlays out in a window of no height for a moment; the frame must not throw ('MaxTextHeight' must be greater than zero)
+			await Ui.Run(() =>
+			{
+				var overlay = new CrTextOverlay { Text = "Opening the book...", MinSize = new Size(0, 0), Height = 6, Width = 120 };
+				Window window = ComicRack.Mac.Tests.Theme.ChromeTestSupport.ShowIn(overlay, 200, 80);
+				Dpi.Capture(window, "overlay-no-room");
+				overlay.Height = 0;
+				Dpi.Capture(window, "overlay-no-height");
+				window.Close();
+				return Task.CompletedTask;
 			});
 		}
 
@@ -701,14 +624,12 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task The_tools_menu_has_about_and_exit_and_q_and_the_keys_of_the_original_do_their_work()
+		public async Task The_arrows_scroll_and_q_and_the_keys_of_the_original_do_their_work()
 		{
 			await Ui.Run(async () =>
 			{
 				using (ReaderHarness h = await Open(resume: 5))
 				{
-					var tools = (MenuFlyout)h.Window.FindControl<CrToolButton>("ToolsButton").Flyout;
-					Assert.Equal(new[] { "About...", "Exit" }, tools.Items.OfType<MenuItem>().Select(m => (string)m.Header).ToArray());
 					// Left and Right scroll sideways, the arrows never turn the page
 					h.Vm.SetFit(cYo.Projects.ComicRack.Engine.Display.ImageFitMode.FitHeight);
 					h.Vm.SetZoom(4);

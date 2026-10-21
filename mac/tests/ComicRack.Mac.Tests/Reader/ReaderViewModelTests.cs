@@ -186,8 +186,12 @@ namespace ComicRack.Mac.Tests.Reader
 			await Ui.Run(async () =>
 			{
 				(ReaderViewModel vm, FakeSession session) = await Open(pages: 20, resume: 10);
-				int closes = 0;
+				int closes = 0, browser = 0, undock = 0, next = 0, previous = 0;
 				vm.CloseRequested += (s, e) => closes++;
+				vm.ToggleBrowserRequested += (s, e) => browser++;
+				vm.ToggleUndockRequested += (s, e) => undock++;
+				vm.NextTabRequested += (s, e) => next++;
+				vm.PreviousTabRequested += (s, e) => previous++;
 				try
 				{
 					Assert.True(vm.HandleKey(Key.PageDown, KeyModifiers.None));
@@ -232,9 +236,18 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.False(vm.HandleKey(Key.Up, KeyModifiers.Alt));
 					Assert.False(vm.HandleKey(Key.Q, KeyModifiers.Meta)); // Cmd+Q belongs to the menu
 					Assert.Equal(0, closes);
+					// Esc is ShowBrowser, Tab and Shift+Tab are NextTab and PrevTab, D is ToggleUndockReader; only Cmd+W closes the book's tab
 					Assert.True(vm.HandleKey(Key.Escape, KeyModifiers.None));
+					Assert.Equal(1, browser);
+					Assert.True(vm.HandleKey(Key.Tab, KeyModifiers.None));
+					Assert.True(vm.HandleKey(Key.Tab, KeyModifiers.Shift));
+					Assert.Equal((1, 1), (next, previous));
+					Assert.True(vm.HandleKey(Key.D, KeyModifiers.None));
+					Assert.Equal(1, undock);
+					Assert.False(vm.HandleKey(Key.D, KeyModifiers.Shift)); // Shift+D is the realistic display (P5.23f)
+					Assert.Equal(0, closes);
 					Assert.True(vm.HandleKey(Key.W, KeyModifiers.Meta));
-					Assert.Equal(2, closes);
+					Assert.Equal(1, closes);
 				}
 				finally
 				{

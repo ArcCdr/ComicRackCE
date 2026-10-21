@@ -16,9 +16,9 @@
 |---|---|---|---|---|---|---|
 | MF.00 | Main menu bar: File, Edit, Browse, Read, Display, Help (in this order) | `mainMenuStrip`: `fileMenu`, `editMenu`, `browseMenu`, `readMenu`, `displayMenu`, `helpMenu` | — | P5.R1 | done 2026-10-20 | becomes the macOS menu bar (C-MENU-1); the six menus keep their names, texts (TR) and order, the Mac Window menu sits before Help; Edit and Read are empty until their tasks land |
 | MF.01 | Open File... | File `miOpenComic` | Ctrl+O → Cmd+O | P5.10a | todo | MVP has Open Folder on Cmd+O; P5.10a moves it |
-| MF.02 | Close (current book tab) | File `miCloseComic` | Ctrl+X → Option+Cmd+X, alias Cmd+W | P5.32a | todo | Cmd+X is Cut on macOS |
-| MF.03 | Close All | File `miCloseAllComics` | Ctrl+Shift+X → Cmd+Shift+X | P5.32a | todo | |
-| MF.04 | New Tab (empty reader slot) | File `miAddTab` (`OpenBooks.AddSlot`) | Ctrl+T → Cmd+T | P5.32a | todo | |
+| MF.02 | Close (current book tab) | File `miCloseComic` | Ctrl+X → Option+Cmd+X, alias Cmd+W | P5.32a | done 2026-10-21 | Option+Cmd+X on the menu item, Cmd+W as a window key binding (and `ReaderViewModel.HandleKey`); closes the current tab, the page is recorded; the item is off without a tab |
+| MF.03 | Close All | File `miCloseAllComics` | Ctrl+Shift+X → Cmd+Shift+X | P5.32a | done 2026-10-21 | closes every tab |
+| MF.04 | New Tab (empty reader slot) | File `miAddTab` (`OpenBooks.AddSlot`) | Ctrl+T → Cmd+T | P5.32a | done 2026-10-21 | an empty tab at the right end that becomes current; the next book opened takes its place (`NavigatorManager.Open` without `OpenInNewSlot`); the "+" tab of the strip does the same |
 | MF.05 | Add Folder to Library... | File `miAddFolderToLibrary` | Ctrl+Shift+A → Cmd+Shift+A | P5.10a | todo | label and shortcut applied by P5.R1 (the MVP's Open Folder with the native folder picker); P5.10a adds the name-or-path dialog and the original's background scan |
 | MF.06 | Scan Book Folders | File `miScan` | Ctrl+Shift+S → Cmd+Shift+S | P5.19b | todo | |
 | MF.07 | Update all Book Files | File `miUpdateAllComicFiles` | Ctrl+Shift+U → Cmd+Shift+U | P5.9 | todo | |
@@ -29,7 +29,7 @@
 | MF.12 | Automation (script commands) | File `miFileAutomation` (visible when scripts add items) | — | P4.5 | todo | |
 | MF.13 | New fileless Book Entry... | File `miNewComic` | Ctrl+Shift+N → Cmd+Shift+N | P5.20 | todo | original shares Ctrl+Shift+N with Next Bookmark (ME.11); keep both as the original does |
 | MF.14 | Open Remote Library... | File `miOpenRemoteLibrary` | Ctrl+Shift+R | — | deferred (D4) | library sharing |
-| MF.15 | Open Books (list of open books) | File `miOpenNow` | — | P5.32a | todo | |
+| MF.15 | Open Books (list of open books) | File `miOpenNow` | — | P5.32a | done 2026-10-21 | one item per open book with the caption of its tab, the current one marked; the shortcuts of the first twelve are Ctrl+Cmd+F1 to F12 (the original has Ctrl+Alt+F1 to F12: Option+Cmd+F3 is Show in Browser, so the group moves to Ctrl+Cmd, DD20); the tab tool tips show them |
 | MF.16 | Recent Books | File `miOpenRecent` | — | P5.10a | todo | label stays "Recent Books" |
 | MF.17 | Restart | File `miRestart` | Ctrl+Shift+Q → Ctrl+Cmd+Shift+Q | P5.10b | todo | Cmd+Shift+Q and Option+Cmd+Shift+Q are system Log Out |
 | MF.18 | Exit | File `miExit` | Ctrl+Q → Cmd+Q | P5.10b | deviation | native: Quit lives in the app menu (chrome rule C-MENU-1) |
@@ -49,7 +49,7 @@
 | ME.14 | Refresh | Edit `miViewRefresh` | F5 | P5.20 | todo | |
 | ME.15 | Devices... | Edit `miDevices` | — | — | deferred (D4) | |
 | ME.16 | Preferences... | Edit `miPreferences` | Ctrl+F9 → Cmd+F9, alias Cmd+, | P5.22a | deviation | native: lives in the app menu as "Settings…" (C-MENU-1); Cmd+F9 kept: bound as a window key since RV8 (it reaches the same not-yet command as the disabled item, so the key is there and the dialog is P5.22a) |
-| MB.01 | Browser (show/hide browser) | Browse `miToggleBrowser` | F3 | P5.32b | todo | |
+| MB.01 | Browser (show/hide browser) | Browse `miToggleBrowser` | F3 | P5.32b | done 2026-10-21 | done early by P5.32a so that a closed dock can be opened again: F3 and the check mark follow the browser dock; P5.32b adds the other docking modes and the grip option |
 | MB.02 | Library | Browse `miViewLibrary` | F6 | P5.32b | todo | |
 | MB.03 | Folders | Browse `miViewFolders` | F7 | P5.30 | todo | |
 | MB.04 | Pages | Browse `miViewPages` | F8 | P5.23b | todo | |
@@ -74,12 +74,12 @@
 | MR.05 | Previous Book (from list) | Read `miPrevFromList` | Ctrl+Alt+P → Option+Cmd+P | P5.23a | todo | MVP perf overlay must leave Option+Cmd+P (P5.R3) |
 | MR.06 | Next Book (from list) | Read `miNextFromList` | Ctrl+Alt+N → Option+Cmd+N | P5.23a | todo | |
 | MR.07 | Random Book | Read `miRandomFromList` | Ctrl+Alt+O → Option+Cmd+O | P5.23a | todo | |
-| MR.08 | Show in Browser | Read `miSyncBrowser` | Ctrl+F3 → Option+Cmd+F3 | P5.32a | todo | Cmd+F3 is Show Desktop |
-| MR.09 | Previous Tab | Read `miPrevTab` | Ctrl+Shift+J → Cmd+Shift+J | P5.32a | todo | |
-| MR.10 | Next Tab | Read `miNextTab` | Ctrl+Shift+K → Cmd+Shift+K | P5.32a | todo | |
+| MR.08 | Show in Browser | Read `miSyncBrowser` | Ctrl+F3 → Option+Cmd+F3 | P5.32a | done 2026-10-21 | opens the browser dock, brings the main window forward, selects the book in the shown list, else in the list it was last opened from (`LastOpenedFromListId`, set when a book is opened from a list) |
+| MR.09 | Previous Tab | Read `miPrevTab` | Ctrl+Shift+J → Cmd+Shift+J | P5.32a | done 2026-10-21 | wraps around |
+| MR.10 | Next Tab | Read `miNextTab` | Ctrl+Shift+K → Cmd+Shift+K | P5.32a | done 2026-10-21 | wraps around |
 | MR.11 | Auto Scrolling | Read `miAutoScroll` | Ctrl+S → Cmd+S | P5.23d | todo | |
 | MR.12 | Double Page Auto Scrolling | Read `miDoublePageAutoScroll` | Alt+Shift+S → Option+Shift+S | P5.23d | todo | |
-| MR.13 | Track current Page | Read `miTrackCurrentPage` | Alt+Shift+T → Option+Shift+T | P5.32a | todo | |
+| MR.13 | Track current Page | Read `miTrackCurrentPage` | Alt+Shift+T → Option+Shift+T | P5.32a | done 2026-10-21 | a check item that follows `TrackCurrentPage` (saved, default on); off: the page turns do not change the current page or the last page read and the padlock (`Locked`) shows in the current page segment |
 | MD.01 | Book Display Settings... | Display `miComicDisplaySettings` | F9 | P5.23c | todo | |
 | MD.02 | Page Layout > Original Size | Display `miOriginal`, `miPageLayout` | Ctrl+1 → Cmd+1 | P5.23e | todo | Original Size comes with P5.23e; the MVP fit shortcuts are realigned (Cmd+2, 3, 5) |
 | MD.03 | Page Layout > Fit All | Display `miFitAll` | Ctrl+2 → Cmd+2 | P5.R3 | done 2026-10-21 | reader Display > Page Layout (radio mark) and Cmd+digit since P5.R3 |
@@ -105,7 +105,7 @@
 | MD.23 | Rotation > Autorotate Double Pages | Display `miAutoRotate` | — | P5.23e | todo | |
 | MD.24 | Minimal User Interface | Display `miMinimalGui` | F10 | P5.23f | todo | |
 | MD.25 | Full Screen | Display `miFullScreen` | F11, alias Ctrl+Cmd+F | P5.R3 | done 2026-10-21 | native full screen (C-WIN-2); F11 and Ctrl+Cmd+F in the library and the reader menus, checked while full screen |
-| MD.26 | Reader in own Window | Display `miReaderUndocked` | F12 | P5.32a | todo | |
+| MD.26 | Reader in own Window | Display `miReaderUndocked` | F12 | P5.32a | done 2026-10-21 | F12 and the key D: the reader area moves into a window of its own that shows the current tab (the main window keeps the tab strip, the status bar and the browser, which fills it); closing that window docks the reader again; the state and the frame are saved |
 | MD.27 | Magnifier | Display `miMagnify` | Ctrl+M → Option+Cmd+M | P5.23d | todo | Cmd+M is Minimize |
 | MH.01 | Help (internal, hidden) | Help `miHelp` | — | — | deviation | native: hidden in the original too; nothing to port |
 | MH.02 | ComicRack Documentation... | Help `miWebHelp` | F1, alias Cmd+? | P5.31 | todo | item and shortcuts in place since P5.R1; the action reports "not available yet" until P5.31 |
@@ -137,13 +137,13 @@
 | TB.08 | Full Screen button | `tbFullScreen` | — | P5.R3 | done 2026-10-21 | checked while full screen |
 | TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools`, `tbOpenComic`, `tbOpenRemoteLibrary`, `tbShowInfo`, `tsWorkspaces`, `tsSaveWorkspace`, `tsEditWorkspaces`, `tbBookmarks`, `tbSetBookmark`, `tbRemoveBookmark`, `tbAutoScroll`, `tbMinimalGui`, `tbReaderUndocked`, `tbScan`, `tbUpdateAllComicFiles`, `tbUpdateWebComics`, `tbCacheThumbnails`, `tsSynchronizeDevices`, `tbComicDisplaySettings`, `tbPreferences`, `tbAbout`, `tbExit` | items as their menu rows | P5.22a | todo | the drop-down has About... and Exit since P5.R3; the other items arrive with their tasks (Preferences P5.22a, Open Book P5.10a, Info P5.7a, Book Display Settings P5.23c, workspaces, bookmarks, scan items) |
 | TB.10 | Show Main Menu (toggle menu strip) | `tbShowMainMenu` | Shift+F10 | P5.23f | deviation | impossible: the macOS menu bar cannot be removed from a window; in full screen it auto-hides natively |
-| TC.01 | Book tabs bar (one tab per open book, current tab, close box) | `fileTabs` (`TabBar`) | — | P5.32a | todo | original TabBar look (C-TAB-1) |
-| TC.02 | Tab menu: Close | `cmClose` | as MF.02 | P5.32a | todo | |
-| TC.03 | Tab menu: Close All But This | `cmCloseAllButThis` | — | P5.32a | todo | |
-| TC.04 | Tab menu: Close All to the Right | `cmCloseAllToTheRight` | — | P5.32a | todo | |
-| TC.05 | Tab menu: Show in Browser | `cmSyncBrowser` | as MR.08 | P5.32a | todo | |
+| TC.01 | Book tabs bar (one tab per open book, current tab, close box) | `fileTabs` (`TabBar`) | — | P5.32a | done 2026-10-21 | `CrTabBar` in the main window: one tab per open book (cover icon later, section 9), the close box, 100 wide at least, the tool tip with the caption and the shortcut, the New Tab button at the right end, scroll arrows and a drop-down list when the tabs do not fit (`TabBar.ShowDropDown`); the tabs cannot be dragged to a new order yet (section 9) |
+| TC.02 | Tab menu: Close | `cmClose` | as MF.02 | P5.32a | done 2026-10-21 | right click on a tab selects it and opens the menu |
+| TC.03 | Tab menu: Close All But This | `cmCloseAllButThis` | — | P5.32a | done 2026-10-21 |  |
+| TC.04 | Tab menu: Close All to the Right | `cmCloseAllToTheRight` | — | P5.32a | done 2026-10-21 |  |
+| TC.05 | Tab menu: Show in Browser | `cmSyncBrowser` | as MR.08 | P5.32a | done 2026-10-21 |  |
 | TC.06 | Tab menu: Reveal in Explorer | `cmRevealInExplorer` | Ctrl+G → Cmd+G | P5.32a | deviation | native: label "Reveal in Finder" (platform name) |
-| TC.07 | Tab menu: Copy Full Path to Clipboard | `cmCopyPath` | — | P5.32a | todo | |
+| TC.07 | Tab menu: Copy Full Path to Clipboard | `cmCopyPath` | — | P5.32a | done 2026-10-21 |  |
 | PC.01 | Page menu: Info... | `pageContextMenu.cmShowInfo` | Cmd+I | P5.7a | todo | the item and Cmd+I are not shown until the Info dialog exists (RV8 hid them: an item that does nothing is not a feature); P5.7a adds the item, the key and the dialog together (`ReaderViewModel.ShowInfo` and its event are there) |
 | PC.02 | Page menu: My Rating | `cmRating` → `contextRating2`, `cmRate0`, `cmRate1`, `cmRate2`, `cmRate3`, `cmRate4`, `cmRate5`, `cmQuickRating` | — | P5.5 | todo | None and 1 to 5 stars, radio mark, written to the book (P5.R3); since RV8 Option+Shift+0 to 5 also rate from the keyboard (`ReaderViewModel.HandleKey`, the shortcuts of `cmRate0` to `cmRate5`), not only while the menu is open; Quick Rating and Review... arrive with P5.5 |
 | PC.03 | Page menu: Page Type, Page Rotation | `cmPageType`, `cmPageRotate` | — | P5.23b | todo | |
@@ -160,14 +160,14 @@
 | SB.01 | Status text ("Ready", messages) | `tsText` | — | P5.R1 | done 2026-10-20 | the browser's `SelectionInfo` (list name, books, filtered, size, selection) while a library is open, else the app's message |
 | SB.02 | Activity icons: backup, export, read info, write info, page reading, scanning (animated) | `tsBackupActivity`, `tsExportActivity`, `tsReadInfoActivity`, `tsWriteInfoActivity`, `tsPageActivity`, `tsScanActivity` | — | P5.26 | todo | original animated images |
 | SB.03 | Activity icons: device sync, server, data source state | `tsDeviceSyncActivity`, `tsServerActivity`, `tsDataSourceState` | — | — | deferred (D4) | |
-| SB.04 | Book / Page / page count segments | `tsBook`, `tsCurrentPage`, `tsPageCount` | — | P5.32a | todo | segments and texts (None, NA, NA) in the library window since P5.R1; they follow the open book when the main window hosts the reader (P5.32a) |
+| SB.04 | Book / Page / page count segments | `tsBook`, `tsCurrentPage`, `tsPageCount` | — | P5.32a | done 2026-10-21 | the segments follow the book of the current tab; the padlock of `tsCurrentPage` shows while Track current Page is off; the index retrieval image of `tsPageCount` is not drawn |
 | SB.05 | Thumbnail size slider (visible when the browser is shown) | `ToolStripThumbSize` inserted at `MainForm.cs:963` | — | P5.R1 | done 2026-10-20 | the slider is the last segment of the status bar |
 
 ## Main view: browser docking and browser tabs (`ComicRack/Views/MainView.Designer.cs`, `MainForm.cs`)
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| MV.01 | Main window = reader area (book tabs, Quick Open) plus a dockable browser panel | `MainForm` (`mainViewContainer`, `panelReader`) | — | P5.32a | todo | MVP separate reader windows become "Reader in own Window" |
+| MV.01 | Main window = reader area (book tabs, Quick Open) plus a dockable browser panel | `MainForm` (`mainViewContainer`, `panelReader`) | — | P5.32a | done 2026-10-21 | the main window is the tab strip with the reader toolbar, the reader area (the Quick Open pane while no book is open, P5.29) and the browser docked at the bottom (250 high, grip, collapsible; the other docking modes are P5.32b); the reader in its own window is MD.26 |
 | MV.02 | Browser tab strip (Library, Folders, Pages, lists opened in tabs) | `MainView.tabStrip` | — | P5.32b | todo | |
 | MV.03 | Docking Mode: Dock Bottom / Left / Right / Fill / Info Panel Right | `tsbAlignBottom..tsbInfoPanelLeft`, `tsbAlignment`, `tsbAlignLeft`, `tsbAlignRight`, `tsbAlignFill` | Ctrl+Shift+1..5 → Option+Cmd+Shift+1..5 | P5.32b | todo | Cmd+Shift+3/4/5 are screenshots; the group stays consistent |
 | MV.04 | Browser docking grip, animated expand/collapse (`AnimatePanels`) | `SizableContainer` | — | P5.32b | todo | |
@@ -201,7 +201,7 @@
 | BV.11 | Rubber band (marquee) selection: drag a rectangle from the empty area; Shift adds, Cmd flips; auto scroll beyond the view edge | `ItemView.UpdateSelection`, `OnMouseDownView`, `OnPaint` | Ctrl → Cmd | RV6 | done 2026-10-21 | `BookGridView` + `SelectionModel.UpdateMarquee` + `CrSelectionRectangle` (fill Highlight alpha 128, one unit Highlight line); empty area = outside what an item draws (`CrThumbnailItem.HitRegion`: cover picture and caption text, as `CoverViewItem.Contains`); only books on screen are re-evaluated (as the original); the 20 ms auto scroll of `ScrollControl` (10 + a tenth of the distance beyond 10); the focus goes to the book under the pointer; right button press on the empty area clears but starts no band (a right drag has no band on the Mac: the secondary button is the context click) |
 | BV.12 | Drag the selected books out of the browser (books for the lists, files for Finder) | `ItemView.OnItemDrag`, `ComicBrowserControl.itemView_ItemDrag` | — | RV6 | done 2026-10-21 | drop targets: P5.16c and P5.18; left button, more than 4 units from the press; carries a `ComicBookContainer` (in-process format) and the files of the linked books (Finder); Copy only: Move and removal from an editable list, the grid as a drop target for reordering and the drag cursor picture (`DragDropCursorAlpha`) are P5.16c; the drag image is the system's (Avalonia offers no custom image); a right button drag is not a drag (see BV.11); the file count is not limited (50 books checked on screen) |
 | BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | todo | |
-| BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.32a | todo | |
+| BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.5 | todo | the command and Cmd+Shift+O are in place (`BrowserViewModel.OpenSelectedInNewTab`, a window key binding); a held Cmd or Shift on Return or a double click does the opposite of Open in new Tab as the original does; the item of the context menu arrives with the menu (P5.5) |
 | BC.03 | Context: Open With (programs, Manage Programs...) | `miOpenWith`, `contextOpenWith`, `miOpenWithManager` | — | P5.21 | todo | |
 | BC.04 | Context: Info... | `miProperties` | Cmd+I | P5.5 | todo | |
 | BC.05 | Context: Web... (open the book's Web field) | `miShowWeb` | Ctrl+R → Cmd+R | P5.20 | todo | |
@@ -267,18 +267,18 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | RK.01 | Next Book (`NextComic`) | N | N | P5.23a | todo | |
 | RK.02 | Previous Book (`PrevComic`) | P | P | P5.23a | todo | |
 | RK.03 | Random Book (`RandomComic`) | L | L | P5.23a | todo | |
-| RK.04 | Show Browser (`ShowBrowser`) | Mouse left (on the browser grip), Escape | same | P5.32b | todo | |
+| RK.04 | Show Browser (`ShowBrowser`) | Mouse left (on the browser grip), Escape | same | P5.32b | todo | Esc in the reader already opens and closes the browser dock since P5.32a (leaves full screen first); the click on the page is P5.32b |
 | RK.05 | First Page / Last Page (`MoveToFirstPage`, `MoveToLastPage`) | Ctrl+Home, Ctrl+End; double gestures 1/3 | Cmd+Home/End (fn+Cmd+Left/Right on laptops) | P5.R3 | done 2026-10-21 | Cmd+Home and Cmd+End |
 | RK.06 | Previous / Next Page (`MoveToPreviousPage`, `MoveToNextPage`) | PageUp/PageDown, Alt+Left/Right, gestures 1/3, flicks | PageUp/PageDown, Option+Left/Right, two-finger swipe | P5.R3 | done 2026-10-21 | PageUp, PageDown, Option+Left, Option+Right and the two-finger swipe (the arrows scroll now) |
 | RK.07 | Previous / Next Bookmark | Ctrl+PageUp/PageDown | Cmd+PageUp/PageDown | P5.23a | todo | |
-| RK.08 | Previous / Next Tab | Shift+Tab, Tab | same | P5.32a | todo | |
+| RK.08 | Previous / Next Tab | Shift+Tab, Tab | same | P5.32a | done 2026-10-21 | Tab shows the next tab, Shift+Tab the previous one, in the reader |
 | RK.09 | Single Page Back / Forward | Shift+PageUp/PageDown | same | P5.23f | todo | Shift+PageUp and Shift+PageDown turn by a spread in the two-page layouts (the pairing is fixed for the book, full-port.md section 9) |
 | RK.10 | Previous Part / Next Part | Shift+Space, Space (gestures 7/9) | same | P5.R3 | done 2026-10-21 | Space and Shift+Space |
 | RK.11 | Page Start / Page End | Home, End | same | P5.R3 | done 2026-10-21 | Home and End go to the start and end of the page; with Shift they are no command (the keyboard map matches a key and its modifiers exactly, RV8) |
 | RK.12 | Move Part 10% down / up | V, Ctrl+Down; B, Ctrl+Up | V, Cmd+Down; B, Cmd+Up | P5.23d | todo | |
 | RK.13 | Toggle Auto Scrolling / Double Page Auto Scroll | S; Shift+S | same | P5.23d | todo | |
 | RK.14 | Up / Down / Left / Right (scroll) | arrows, mouse wheel, tilt | arrows, scroll | P5.R3 | done 2026-10-21 | the arrows scroll (not with Shift: no Shift+arrow command in the original, RV8); turning the page at the edge (ScrollingDoesBrowse, PB.13) is P5.23d |
-| RK.15 | Toggle Undock Reader | D | D | P5.32a | todo | |
+| RK.15 | Toggle Undock Reader | D | D | P5.32a | done 2026-10-21 | D toggles Reader in own Window |
 | RK.16 | Toggle Full Screen | F, mouse double click, gesture 2 | F, double click | P5.R3 | done 2026-10-21 | F, F11, Ctrl+Cmd+F and a double click |
 | RK.17 | Toggle Two Pages | T | T | P5.R3 | done 2026-10-21 | T cycles one page, two pages, two pages (adaptive) |
 | RK.18 | Toggle Realistic Display (page ornaments) | Shift+D | Shift+D | P5.23f | todo | §8 item 132 reinstated by R9 |
@@ -330,7 +330,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.25 | Match Value | `ValueEditorDialog` | P5.17c | todo | |
 | DL.26 | Custom Zoom | `ZoomDialog` | P5.23e | todo | |
 | DL.27 | Script Output | `ScriptOutputForm` | P4.5 | todo | |
-| DL.28 | Reader in own window | `ReaderForm` | P5.32a | todo | |
+| DL.28 | Reader in own window | `ReaderForm` | P5.32a | done 2026-10-21 | `ReaderWindow` around the reader area (title = the caption of the book) |
 | DL.29 | Browser in own window (Open in New Window) | `ComicBrowserForm` | P5.16a | todo | |
 | DL.30 | Question dialogs with "do not show again" (`HiddenMessageBoxes`) | `QuestionDialog` | P5.5 | todo | reset in Preferences > Advanced (PR.27) |
 | DL.31 | Select item / text input dialogs | `SelectItemDialog` | P5.16a | todo | used by bookmarks, names, external programs |
@@ -382,14 +382,14 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | ID | Category | Option (property) | Default | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
 | PB.01 | Starting ComicRack | Show Splash Screen (`ShowSplash`) | true | P5.31 | todo | |
-| PB.02 | Starting ComicRack | Reopen Books from last session (`OpenLastFile`) | true | P5.32a | todo | |
+| PB.02 | Starting ComicRack | Reopen Books from last session (`OpenLastFile`) | true | P5.32a | done 2026-10-21 | the open books are saved when the app quits (`LastOpenBooks`) and reopened in their tabs at the next start, without counting another opening |
 | PB.03 | Starting ComicRack | Rescan the Book Folders for new Books (`ScanStartup`) | false | P5.19b | todo | |
 | PB.04 | Starting ComicRack | Update Web Comics (`UpdateWebComicsStartup`) | false | P5.19b | todo | |
 | PB.05 | Starting ComicRack | Check for latest news (`NewsStartup`) | true | P5.31 | todo | |
 | PB.06 | Opening a Book | Open the Book at the page where it was closed (`OpenLastPage`) | true | P5.23a | todo | |
 | PB.07 | Opening a Book | Close the Browser when a new Book is opened (`CloseBrowserOnOpen`) | false | P5.32b | todo | |
 | PB.08 | Opening a Book | Opened Files are added to the Library (`AddToLibraryOnOpen`) | false | P5.10a | todo | |
-| PB.09 | Opening a Book | Open in new Tab (`OpenInNewTab`) | false | P5.32a | todo | |
+| PB.09 | Opening a Book | Open in new Tab (`OpenInNewTab`) | false | P5.32a | done 2026-10-21 | Return or a double click opens in a tab of its own when on; Cmd or Shift reverses it (default off: the book takes the place of the book of the current tab) |
 | PB.10 | Reading | Hide the mouse cursor in Full Screen (`HideCursorFullScreen`) | true | P5.R3 | done 2026-10-21 | the option works (5 s without movement, the original's `AutoHideCursorDuration`); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.11 | Reading | Reading beyond start or end opens the next Book (`AutoNavigateComics`) | true | P5.23a | todo | |
 | PB.12 | Reading | Wheel and cursor key delay on page transitions (`PageChangeDelay`) | true | P5.23d | todo | |

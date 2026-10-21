@@ -17,10 +17,10 @@ bar 31 high, full width, background TabBarBack
 ```
 
 ## 3. Controls
-Tab items: text, close box (`CanClose`), optional 16 px image (resource name). Events: selected tab changed, close requested. Not in this foundation: scroll arrows and the drop-down list of overflowing tabs (P5.32a), drag to reorder, tab tooltips.
+Tab items: text, close box (`CanClose`), optional 16 px image (resource name), `MinimumWidth` (60; 100 for a book tab, 32 for the New Tab button), `AdjustWidth`, `ShowText`, `ToolTipText`, `Selectable` (false = a button: a click raises `Clicked`, never selects: the New Tab button). Events: selected tab changed, close requested, tab menu opening (a right click selects the tab and opens `TabMenu`). P5.32a added the scroll arrows (16 wide at both ends of the tab area, 20 units a press, repeated every 25 ms while held), the drop-down button (16 wide, lists the selectable tabs) and the keeping of the selected tab in view (`TabBar.EnsureVisible`); the width of the drop-down button is reserved at the right of the tab area also while it is not drawn, as in the original. Not done: drag to reorder (`DragDropReorder`), drop of files on the strip, the tool tip card.
 
 ## 5. Icons
-`<Close>` (ComicRack), `<SimpleArrowLeft>`, `<SimpleArrowRight>`, `<SimpleArrowDown>` (arrows, P5.32a).
+`<Close>` (ComicRack), `<SimpleArrowLeft>`, `<SimpleArrowRight>`, `<SimpleArrowDown>` (cYo.Common.Windows, the scroll and drop-down buttons), `<AddTab>` (the New Tab button), `<Original>` (the image of a book tab until the cover thumbnail is drawn there).
 
 ## 6. Tokens and metrics
 Tokens: Cr.TabBarBack (transparent in light, Window in dark), Cr.TabBarSelectedBack, Cr.TabPageBorder (the visual-style border colour of the original, light value assumed per chrome-guidelines 2.5), Cr.TabPageOther (unselected tab fill), Cr.ButtonHoverBack and Cr.ButtonHoverBorder (hot tab), Cr.ControlText. Metrics: chrome-guidelines section 4, row "Book tab bar".

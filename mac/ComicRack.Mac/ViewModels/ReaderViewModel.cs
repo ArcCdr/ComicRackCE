@@ -91,9 +91,18 @@ namespace ComicRack.Mac.ViewModels
 
 		public IReadingSession Session => session;
 
-		/// <summary>The window title.</summary>
+		/// <summary>The caption of the book: the text of its tab and of the window title.</summary>
 		[ObservableProperty]
 		public partial string Title { get; set; }
+
+		/// <summary>Reads the caption of the book again (the book was edited).</summary>
+		public void RefreshTitle()
+		{
+			if (!disposed)
+			{
+				Title = session.Title;
+			}
+		}
 
 		/// <summary>"12 / 24", or empty before the book is open.</summary>
 		[ObservableProperty]
@@ -361,8 +370,20 @@ namespace ComicRack.Mac.ViewModels
 			}
 		}
 
-		/// <summary>Raised when the reader wants its window closed (Esc, Cmd+W, the menu).</summary>
+		/// <summary>Raised when the reader wants its book closed (Cmd+W, the menu, the close box of its tab): the owner of the tabs closes the tab.</summary>
 		public event EventHandler CloseRequested;
+
+		/// <summary>Tab (<c>NextTab</c>, RK.08): the owner of the tabs shows the next book tab.</summary>
+		public event EventHandler NextTabRequested;
+
+		/// <summary>Shift+Tab (<c>PrevTab</c>, RK.08): the owner of the tabs shows the previous book tab.</summary>
+		public event EventHandler PreviousTabRequested;
+
+		/// <summary>Esc (<c>ShowBrowser</c>, RK.04): the owner of the browser panel shows or hides it.</summary>
+		public event EventHandler ToggleBrowserRequested;
+
+		/// <summary>D (<c>ToggleUndockReader</c>, RK.15): the owner of the reader area moves it into its own window or back.</summary>
+		public event EventHandler ToggleUndockRequested;
 
 		/// <summary>Raised after the fit mode changed (the app remembers it for the next reader).</summary>
 		public event EventHandler FitChanged;
@@ -1127,7 +1148,7 @@ namespace ComicRack.Mac.ViewModels
 		/// arrows scroll; F, F11 and Ctrl+Cmd+F toggle full screen; T cycles the page layout; 7, 8, 9 and 0 choose one page, two pages, two pages
 		/// (adaptive) and right to left, 2, 3 and 5 Fit All, Fit Width and Fit Height; Q quits the application. With Cmd: B, P, N and E first,
 		/// previous, next and last page (the Read menu), 2, 3, 5, 7, 8, 9 and 0 as the Display menu says, Cmd+= and Cmd+- zoom, Cmd+W closes.
-		/// Option+Shift+0 to 5 rate the book (My Rating). Esc leaves full screen first and then closes the reader. Returns true if the key was used.
+		/// Option+Shift+0 to 5 rate the book (My Rating). Esc leaves full screen, else asks the owner to show or hide the browser; Tab and Shift+Tab ask for the next and previous book tab; D asks to undock the reader. Returns true if the key was used.
 		/// </summary>
 		public bool HandleKey(Key key, KeyModifiers modifiers)
 		{
@@ -1297,14 +1318,19 @@ namespace ComicRack.Mac.ViewModels
 					ScrollSideways(-options.ArrowScrollStep);
 					return true;
 				case Key.Escape:
+					// Esc leaves full screen; otherwise it is the original's ShowBrowser (ToggleBrowserFromReader): the browser panel opens or closes.
 					if (IsFullScreen)
 					{
 						IsFullScreen = false;
 					}
 					else
 					{
-						Close();
+						ToggleBrowserRequested?.Invoke(this, EventArgs.Empty);
 					}
+					return true;
+				case Key.Tab:
+					// NextTab (Tab) and PrevTab (Shift+Tab)
+					(shift ? PreviousTabRequested : NextTabRequested)?.Invoke(this, EventArgs.Empty);
 					return true;
 				case Key.F11:
 					ToggleFullScreen();
@@ -1318,6 +1344,9 @@ namespace ComicRack.Mac.ViewModels
 			{
 				case Key.F:
 					ToggleFullScreen();
+					return true;
+				case Key.D:
+					ToggleUndockRequested?.Invoke(this, EventArgs.Empty);
 					return true;
 				case Key.T:
 					TogglePageLayout();

@@ -512,7 +512,7 @@ namespace ComicRack.Mac.Views
 				{
 					selection.Click(index, toggle: false, extend: false);
 				}
-				model.OpenSelected();
+				model.OpenSelected(OpenModeOf(e.KeyModifiers));
 				e.Handled = true;
 				return;
 			}
@@ -785,6 +785,14 @@ namespace ComicRack.Mac.Views
 
 		// ---- keyboard --------------------------------------------------------------------------------------------------------------
 
+		// Opening with Cmd (Ctrl of OpenComic) or Shift (NavigatorManager.Open) held does the opposite of the setting Open in new Tab; both held cancel out.
+		private static OpenTabMode OpenModeOf(KeyModifiers modifiers)
+		{
+			bool cmd = (modifiers & KeyModifiers.Meta) != 0;
+			bool shift = (modifiers & KeyModifiers.Shift) != 0;
+			return cmd ^ shift ? OpenTabMode.Invert : OpenTabMode.Default;
+		}
+
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -814,7 +822,7 @@ namespace ComicRack.Mac.Views
 				case Key.Enter:
 					if (current >= 0)
 					{
-						model.OpenSelected();
+						model.OpenSelected(OpenModeOf(e.KeyModifiers));
 						e.Handled = true;
 					}
 					return;

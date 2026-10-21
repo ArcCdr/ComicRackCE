@@ -30,13 +30,29 @@ for n in Services "Hide $APP_NAME" "Hide Others" "Show All"; do
 	if printf '%s\n' "$app_items" | awk -F'\t' -v n="$n" '$1 == n { f = 1 } END { exit !f }'; then ok "app menu: $n"; else bad "app menu: $n is missing"; fi
 done
 
-# File: MF.05 (the MVP's Open Folder) and the Mac-only import (MA.04)
+# File: MF.02 to MF.04 (the tabs), MF.05 (the MVP's Open Folder) and the Mac-only import (MA.04)
+expect_item File "Close" "Option+Cmd+X"
+expect_item File "Close All" "Shift+Cmd+X"
+expect_item File "New Tab" "Cmd+T"
 expect_item File "Add Folder to Library..." "Shift+Cmd+A"
 expect_item File "Import Windows Library…" ""
-# Browse: MB.05 Sidebar, Shift+F6, checked while the side panel shows
+# Browse: MB.01 Browser (F3, checked while the browser dock is open) and MB.05 Sidebar, Shift+F6, checked while the side panel shows
+expect_item Browse "Browser" "*" "✓"
 expect_item Browse "Sidebar" "*" "✓"
-# Display: MD.25 Full Screen, F11 (alias Ctrl+Cmd+F is a key binding of the window)
+# Read: the page commands (MR.01 to MR.04), Show in Browser (MR.08), the tabs (MR.09, MR.10) and Track current Page (MR.13)
+expect_item Read "First Page" "Cmd+B"
+expect_item Read "Previous Page" "Cmd+P"
+expect_item Read "Next Page" "Cmd+N"
+expect_item Read "Last Page" "Cmd+E"
+expect_item Read "Show in Browser" "*"
+expect_item Read "Previous Tab" "Shift+Cmd+J"
+expect_item Read "Next Tab" "Shift+Cmd+K"
+expect_item Read "Track current Page" "Option+Shift+T" "✓"
+# Display: MD.25 Full Screen, F11 (alias Ctrl+Cmd+F is a key binding of the window), MD.26 Reader in own Window, F12
 expect_item Display "Full Screen" "*" ""
+expect_item Display "Reader in own Window" "*" ""
+expect_item Display "Page Layout" ""
+expect_item Display "Zoom" ""
 # Window: Mac-only (C-MENU-2) with the performance overlay, which left Option+Cmd+P to the original's Previous Book (MR.05)
 expect_item Window "Minimize" "Cmd+M"
 expect_item Window "Zoom" ""

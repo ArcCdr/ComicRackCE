@@ -136,11 +136,11 @@ namespace ComicRack.Mac.Views
 		}
 
 		/// <summary>The Tools button (TB.09): the items of <c>toolsContextMenu</c> that exist: About and Exit.</summary>
-		public static MenuFlyout Tools(ReaderViewModel vm)
+		public static MenuFlyout Tools(MainViewModel vm)
 		{
 			return Flyout(new Control[]
 			{
-				Item(Text("tbAbout", "&About..."), "About", vm.ShowAboutCommand, Key.F1, KeyModifiers.Alt),
+				Item(Text("tbAbout", "&About..."), "About", vm.AboutCommand, Key.F1, KeyModifiers.Alt),
 				Line(),
 				Item(Text("tbExit", "&Exit"), null, vm.ExitCommand, Key.Q),
 			});

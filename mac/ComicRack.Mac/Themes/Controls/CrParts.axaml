@@ -14,6 +14,10 @@
   <Style Selector="Border.cr-panel">
     <Setter Property="Background" Value="{DynamicResource Cr.WindowBrush}" />
   </Style>
+  <!-- The reader area when no book is open (panelReader on the reader background): the Quick Open pane sits on it -->
+  <Style Selector="Border.cr-reader-paper">
+    <Setter Property="Background" Value="{DynamicResource Cr.ReaderBackgroundBrush}" />
+  </Style>
   <!-- The paper of the browser's item views (itemView.BackColor = ThemeColors.ItemView.MainBack) -->
   <Style Selector="ScrollViewer.cr-item-view">
     <Setter Property="Background" Value="{DynamicResource Cr.ItemViewMainBackBrush}" />

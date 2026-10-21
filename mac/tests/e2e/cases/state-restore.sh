@@ -2,6 +2,8 @@
 # state-restore (P5.1): the library window is moved and resized and the side panel is hidden; the settings are saved after the change (not only at quit);
 # after Cmd+Q and a relaunch the window is back at the same position and size and the panel is still hidden. A saved frame on a monitor that is gone
 # comes back on a screen, and a damaged Settings.xml starts the app with the defaults and keeps a .bad copy.
+# the default dock: an untouched window writes no Settings.xml (--browser-height would be saved like a drag of the grip)
+E2E_BROWSER_HEIGHT=
 . "$(dirname "$0")/../lib.sh"; e2e_begin
 
 SETTINGS="$E2E_DATA/Data/Settings.xml"

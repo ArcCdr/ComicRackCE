@@ -206,25 +206,24 @@ namespace ComicRack.Mac.Tests.Reader
 						launch.ViewModel.Browser.SelectedIndex = Array.IndexOf(launch.ViewModel.Browser.Items, item);
 						launch.ViewModel.Browser.OpenSelected();
 						ReaderManager manager = (ReaderManager)launch.ViewModel.Readers;
-						await WaitFor(() => manager.Windows.Count == 1, "reader window");
-						ReaderWindow window = manager.Windows.Single();
-						await WaitFor(() => window.Model.IsOpen && window.Model.Scene != null, "first page");
+						await WaitFor(() => manager.CurrentModel != null, "reader tab");
+						ReaderViewModel model = manager.CurrentModel;
+						await WaitFor(() => model.IsOpen && model.Scene != null, "first page");
 						// The command of a cached page turn runs on the UI thread from the key to the new scene: time it directly.
 						var commands = new List<double>();
 						for (int i = 0; i < 20; i++)
 						{
-							await WaitFor(() => PrefetchReady(window.Model, window.Model.CurrentPage + 1, 1), "prefetch");
+							await WaitFor(() => PrefetchReady(model, model.CurrentPage + 1, 1), "prefetch");
 							var watch = Stopwatch.StartNew();
-							window.Model.NextPage();
+							model.NextPage();
 							commands.Add(watch.Elapsed.TotalMilliseconds);
-							Assert.True(window.Model.WhenSettled.IsCompleted);
+							Assert.True(model.WhenSettled.IsCompleted);
 						}
 						output.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture,
 							"cached page turn command on the UI thread in the big library (record the page, move the window, publish the scene): median {0:0.00} ms, p95 {1:0.00} ms, max {2:0.00} ms",
 							Percentile(commands, 0.5), Percentile(commands, 0.95), commands.Max()));
 						Assert.True(Percentile(times, 0.95) < 20, "CurrentPage write p95 " + Percentile(times, 0.95) + " ms");
 						Assert.True(Percentile(commands, 0.95) < 30, "page turn command p95 " + Percentile(commands, 0.95) + " ms");
-						window.Close();
 						launch.Quit();
 					}
 				});

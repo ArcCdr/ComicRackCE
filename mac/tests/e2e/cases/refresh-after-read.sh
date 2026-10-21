@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# refresh-after-read (P5.2): the library window follows the library while it changes. Three pages of a book are read in a reader window and the reader is closed:
+# refresh-after-read (P5.2): the library window follows the library while it changes. Three pages of a book are read in a tab of the main window and the tab is closed:
 # the lists are counted again without a reload (log "Live refresh: ... Counters ... Reading 1/..."), the cover of the book is drawn again with its reading state, and
 # the sidebar's "Reading" list holds the book. Before the reading no list is called "Reading" in the counters.
 . "$(dirname "$0")/../lib.sh"; e2e_begin
@@ -16,7 +16,7 @@ shot before-reading
 
 # select the first book and open it (Return), read three pages, close the reader
 front_app
-must click 700 400   # an empty-looking spot in the grid: focuses it
+must click 700 462   # a spot in the grid: focuses it
 must key home; sleep 0.3
 must key return
 expect_log "Reader opened" 30

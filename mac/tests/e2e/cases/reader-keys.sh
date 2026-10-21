@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# reader-keys: page-turn keys, the fit and layout shortcuts and the Display > Page Layout radio marks of a reader window
+# reader-keys: page-turn keys, the fit and layout shortcuts and the Display > Page Layout radio marks of the book in the main window
 # (mvp-acceptance.md 5.2, 5.10, 5.11; P5.R3: PageDown/PageUp turn, the arrows scroll, Cmd+2/3/5 fit, Cmd+7/8/9 layout, Cmd+B/P/N/E page commands).
 # The book is opened with --read-book (24 pages, no library needed).
+E2E_BROWSER_HEIGHT=
 . "$(dirname "$0")/../lib.sh"; e2e_begin
 BOOK="$FIXTURES/BD-reader/Amargo/Amargo - 01 - Le bal des vautours.cbz"; need "$BOOK"
 
@@ -11,11 +12,11 @@ pages=$(printf '%s' "$LAST_OUT" | sed -n 's/.*, \([0-9]*\) pages.*/\1/p')
 ok "book has $pages pages"
 sleep 1
 front_app
-R=$(other_window_id)
-[ -n "$R" ] || { bad "no reader window"; e2e_end; }
-ok "reader window id $R"
+R=$(main_window_id)
+[ -n "$R" ] || { bad "no main window"; e2e_end; }
+ok "main window id $R (the book is in a tab)"
 shot page-first "$R"
-# The reader's own menu bar replaces the library's while the reader is the front window.
+# The Read and Display menus of the main window work on the book of the current tab.
 before=$(log_count '\] Page turn ')
 for i in 1 2 3 4 5; do press pagedown; sleep 0.6; done
 sleep 1

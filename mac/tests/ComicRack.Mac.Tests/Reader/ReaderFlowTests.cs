@@ -91,22 +91,22 @@ namespace ComicRack.Mac.Tests.Reader
 
 		private static ReaderManager Manager(Launch launch) => (ReaderManager)launch.ViewModel.Readers;
 
-		private static void Press(Window window, Key key)
+		private static void Press(ReaderViewModel model, Key key)
 		{
-			window.KeyPress(key, RawInputModifiers.None, key == Key.PageDown ? PhysicalKey.PageDown : key == Key.Escape ? PhysicalKey.Escape : PhysicalKey.None, null);
+			model.HandleKey(key, KeyModifiers.None);
 			Dispatcher.UIThread.RunJobs();
 		}
 
-		private static async Task<ReaderWindow> OpenFirstBook(Launch launch, int expectedBooks)
+		private static async Task<ReaderViewModel> OpenFirstBook(Launch launch, int expectedBooks)
 		{
 			await FixtureLibrary.WaitForGrid(launch.ViewModel, expectedBooks);
 			launch.ViewModel.Browser.SelectedIndex = 0;
 			launch.ViewModel.Browser.OpenSelected();
 			ReaderManager manager = Manager(launch);
-			await WaitFor(() => manager.Windows.Count == 1, "reader window");
-			ReaderWindow window = manager.Windows.Single();
-			await WaitFor(() => window.Model.IsOpen && window.Model.Scene != null, "first page shown");
-			return window;
+			await WaitFor(() => manager.CurrentModel != null, "reader tab");
+			ReaderViewModel model = manager.CurrentModel;
+			await WaitFor(() => model.IsOpen && model.Scene != null, "first page shown");
+			return model;
 		}
 
 		[FixtureFact("BD-reader")]
@@ -125,10 +125,10 @@ namespace ComicRack.Mac.Tests.Reader
 					{
 						await first.ViewModel.ScanFolderAsync(library);
 						Assert.Equal(3, first.ViewModel.BookCount);
-						ReaderWindow window = await OpenFirstBook(first, 3);
+						ReaderViewModel window = await OpenFirstBook(first, 3);
 						ComicBook book = first.ViewModel.Browser.SelectedItem.Book;
 						bookFile = book.FilePath;
-						Assert.Equal(0, window.Model.CurrentPage);
+						Assert.Equal(0, window.CurrentPage);
 						Assert.Equal(1, book.OpenedCount);
 						Assert.Contains("Reading", first.ViewModel.StatusText);
 
@@ -136,14 +136,14 @@ namespace ComicRack.Mac.Tests.Reader
 						{
 							Press(window, Key.PageDown);
 						}
-						await window.Model.WhenSettled;
-						Assert.Equal(4, window.Model.CurrentPage);
-						Assert.Equal("5 / 24", window.Model.PageText);
+						await window.WhenSettled;
+						Assert.Equal(4, window.CurrentPage);
+						Assert.Equal("5 / 24", window.PageText);
 						Assert.Equal(4, book.CurrentPage);
 
-						Press(window, Key.Escape); // closes the reader
+						window.Close(); // closes the book's tab
 						Assert.Equal(0, Manager(first).OpenCount);
-						Assert.True(window.Model.IsDisposed);
+						Assert.True(window.IsDisposed);
 						Assert.Equal(4, book.LastPageRead);
 
 						SaveVerification quit = first.Quit();
@@ -153,15 +153,15 @@ namespace ComicRack.Mac.Tests.Reader
 					using (var second = await Launch.Start(data, svc => new ReaderManager(svc)))
 					{
 						Assert.Equal(3, second.ViewModel.BookCount);
-						ReaderWindow window = await OpenFirstBook(second, 3);
+						ReaderViewModel window = await OpenFirstBook(second, 3);
 						ComicBook book = second.ViewModel.Browser.SelectedItem.Book;
 						Assert.Equal(bookFile, book.FilePath);
-						Assert.Equal(4, window.Model.CurrentPage); // resumed
-						Assert.Equal(4, window.Model.Scene.Position);
-						Assert.Equal("5 / 24", window.Model.PageText);
+						Assert.Equal(4, window.CurrentPage); // resumed
+						Assert.Equal(4, window.Scene.Position);
+						Assert.Equal("5 / 24", window.PageText);
 						Assert.Equal(2, book.OpenedCount);
 						Assert.Equal(4, book.LastPageRead);
-						Press(window, Key.Escape);
+						window.Close();
 						second.Quit();
 					}
 					Assert.Equal(errorsBefore, AppLog.ErrorCount);
@@ -182,20 +182,20 @@ namespace ComicRack.Mac.Tests.Reader
 					using (var first = await Launch.Start(data, svc => new ReaderManager(svc)))
 					{
 						await first.ViewModel.ScanFolderAsync(library);
-						ReaderWindow window = await OpenFirstBook(first, 3);
+						ReaderViewModel window = await OpenFirstBook(first, 3);
 						Press(window, Key.PageDown);
 						Press(window, Key.PageDown);
-						await window.Model.WhenSettled;
+						await window.WhenSettled;
 						Assert.Equal(1, Manager(first).OpenCount);
 						Assert.True(first.Quit().Ok); // Cmd+Q with the reader still open
 						Assert.Equal(0, Manager(first).OpenCount);
-						Assert.True(window.Model.IsDisposed);
+						Assert.True(window.IsDisposed);
 					}
 					using (var second = await Launch.Start(data, svc => new ReaderManager(svc)))
 					{
-						ReaderWindow window = await OpenFirstBook(second, 3);
-						Assert.Equal(2, window.Model.CurrentPage);
-						Press(window, Key.Escape);
+						ReaderViewModel window = await OpenFirstBook(second, 3);
+						Assert.Equal(2, window.CurrentPage);
+						window.Close();
 						second.Quit();
 					}
 				});
@@ -203,7 +203,7 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[FixtureFact("BD-reader")]
-		public async Task Opening_a_book_that_is_already_open_brings_its_window_forward_instead_of_making_another()
+		public async Task Opening_a_book_that_is_already_open_shows_its_tab_a_second_book_takes_the_place_of_the_current_one_and_Open_in_new_Tab_adds_a_tab_at_the_left()
 		{
 			using (new RealLibraryGuard())
 			using (var temp = new TempDir())
@@ -213,19 +213,82 @@ namespace ComicRack.Mac.Tests.Reader
 					using (var launch = await Launch.Start(temp.Combine("app"), svc => new ReaderManager(svc)))
 					{
 						await launch.ViewModel.ScanFolderAsync(MakeLibrary(temp));
-						ReaderWindow window = await OpenFirstBook(launch, 3);
+						ReaderViewModel first = await OpenFirstBook(launch, 3);
+						ReaderManager manager = Manager(launch);
 						launch.ViewModel.Browser.OpenSelected();
 						launch.ViewModel.Browser.OpenSelected();
 						await Task.Delay(50);
-						Assert.Equal(1, Manager(launch).OpenCount);
-						Assert.Equal(1, window.Model.Session is CoreReadingSession s ? s.Book.OpenedCount : -1); // counted once
+						Assert.Equal(1, manager.OpenCount);
+						Assert.Equal(1, first.Session is CoreReadingSession s ? s.Book.OpenedCount : -1); // counted once
 
-						// a second book gets a second window
+						// a second book takes the place of the book of the current tab (NavigatorManager.Open without OpenInNewSlot): the first reader is closed
 						launch.ViewModel.Browser.SelectedIndex = 1;
+						ComicBook second = launch.ViewModel.Browser.SelectedItem.Book;
 						launch.ViewModel.Browser.OpenSelected();
-						await WaitFor(() => Manager(launch).OpenCount == 2, "second window");
+						await WaitFor(() => ReferenceEquals(manager.Current?.Book, second), "second book in the tab");
+						Assert.Equal(1, manager.OpenCount);
+						Assert.True(first.IsDisposed);
+
+						// Open in new Tab (Cmd+Shift+O) adds a tab at the left end, which becomes the current one
+						launch.ViewModel.Browser.SelectedIndex = 2;
+						ComicBook third = launch.ViewModel.Browser.SelectedItem.Book;
+						launch.ViewModel.Browser.OpenSelectedInNewTab();
+						await WaitFor(() => manager.OpenCount == 2, "second tab");
+						Assert.Same(third, manager.Slots[0].Book);
+						Assert.Same(second, manager.Slots[1].Book);
+						Assert.Equal(0, manager.CurrentSlot);
+
+						// with Cmd or Shift the setting is reversed: a plain Open now (setting off) opens in a new tab
+						launch.ViewModel.Browser.SelectedIndex = 0;
+						launch.ViewModel.Browser.OpenSelected(OpenTabMode.Invert);
+						await WaitFor(() => manager.OpenCount == 3, "third tab");
 						launch.Quit();
-						Assert.Equal(0, Manager(launch).OpenCount);
+						Assert.Equal(0, manager.OpenCount);
+					}
+				});
+			}
+		}
+
+		[FixtureFact("BD-reader")]
+		public async Task The_open_books_are_remembered_at_quit_and_reopened_in_their_tabs_at_the_next_start_unless_Reopen_Books_is_off()
+		{
+			using (new RealLibraryGuard())
+			using (var temp = new TempDir())
+			{
+				await Ui.Run(async () =>
+				{
+					string data = temp.Combine("app");
+					string[] files;
+					using (var first = await Launch.Start(data, svc => new ReaderManager(svc, svc.Preferences.Current)))
+					{
+						await first.ViewModel.ScanFolderAsync(MakeLibrary(temp));
+						await OpenFirstBook(first, 3);
+						first.ViewModel.Browser.SelectedIndex = 1;
+						first.ViewModel.Browser.OpenSelectedInNewTab();
+						ReaderManager manager = Manager(first);
+						await WaitFor(() => manager.OpenCount == 2, "second tab");
+						await WaitFor(() => manager.Slots.All(s => s.Model.IsOpen), "both books open");
+						files = manager.OpenFiles.ToArray();
+						Assert.Equal(2, files.Length);
+						Assert.True(first.Quit().Ok);
+						Assert.Equal(files, first.Service.Preferences.Current.LastOpenBooks);
+					}
+					// the next start reopens them in the same order, the last one current, without counting another opening
+					using (var second = await Launch.Start(data, svc => new ReaderManager(svc, svc.Preferences.Current)))
+					{
+						ReaderManager manager = Manager(second);
+						Assert.Equal(files, manager.OpenFiles.ToArray());
+						Assert.Equal(1, manager.CurrentSlot);
+						await WaitFor(() => manager.Slots.All(s => s.Model.IsOpen), "both books open");
+						Assert.All(manager.Slots, s => Assert.Equal(1, ((CoreReadingSession)s.Model.Session).Book.OpenedCount));
+						second.Service.Preferences.Current.OpenLastFile = false;
+						Assert.True(second.Quit().Ok);
+					}
+					// Reopen Books from last session off: nothing is opened
+					using (var third = await Launch.Start(data, svc => new ReaderManager(svc, svc.Preferences.Current)))
+					{
+						Assert.Equal(0, Manager(third).OpenCount);
+						Assert.False(third.ViewModel.HasBook);
 					}
 				});
 			}
@@ -242,15 +305,15 @@ namespace ComicRack.Mac.Tests.Reader
 					using (var launch = await Launch.Start(temp.Combine("app"), svc => new ReaderManager(svc)))
 					{
 						await launch.ViewModel.ScanFolderAsync(MakeLibrary(temp));
-						ReaderWindow window = await OpenFirstBook(launch, 3);
+						ReaderViewModel window = await OpenFirstBook(launch, 3);
 						Press(window, Key.PageDown);
-						await window.Model.WhenSettled;
-						ComicBook book = ((CoreReadingSession)window.Model.Session).Book;
+						await window.WhenSettled;
+						ComicBook book = ((CoreReadingSession)window.Session).Book;
 
 						var request = new ImportRequest(Fixtures.ComicDb, new[] { new PathRemapRule(@"S:\media\BD\", Fixtures.BD + "/") });
 						await launch.ViewModel.ImportLibraryAsync(request);
 						Assert.Equal(0, Manager(launch).OpenCount);
-						Assert.True(window.Model.IsDisposed);
+						Assert.True(window.IsDisposed);
 						Assert.Equal(1, book.CurrentPage); // recorded before the old library was saved away
 						Assert.Equal(14706, launch.ViewModel.BookCount);
 						launch.Quit();

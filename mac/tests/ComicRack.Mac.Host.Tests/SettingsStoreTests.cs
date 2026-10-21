@@ -102,6 +102,11 @@ namespace ComicRack.Mac.Host.Tests
 				ReaderLayout = "DoubleAdaptive",
 				RightToLeftDefault = true,
 				LastFolder = "/tmp/some comics/ünïcode & <more>",
+				TrackCurrentPage = false,
+				LastOpenBooks = new[] { "/books/one.cbz", "/books/ünï & two.cbz" },
+				BrowserDockHeight = 321.5,
+				BrowserDockExpanded = false,
+				ReaderUndocked = true,
 			};
 			SettingsStore.Save(SettingsFile, written);
 
@@ -111,8 +116,10 @@ namespace ComicRack.Mac.Host.Tests
 			{
 				object expected = property.GetValue(written);
 				object actual = property.GetValue(read);
-				Assert.True(Equals(expected, actual), property.Name + ": wrote " + expected + ", read " + actual);
+				bool same = expected is System.Array a && actual is System.Array b ? a.Cast<object>().SequenceEqual(b.Cast<object>()) : Equals(expected, actual);
+				Assert.True(same, property.Name + ": wrote " + expected + ", read " + actual);
 			}
+			Assert.Equal(new[] { "/books/one.cbz", "/books/ünï & two.cbz" }, read.LastOpenBooks);
 			Assert.True(new WindowFrame(-1440, 25, 1100.5, 720, true).Equals(read.LibraryWindow));
 		}
 
@@ -125,6 +132,11 @@ namespace ComicRack.Mac.Host.Tests
 			Assert.DoesNotContain("ShowSplash", xml);
 			Assert.DoesNotContain("SidebarWidth", xml);
 			Assert.DoesNotContain("LibraryWindow", xml);
+			// the tab and dock state is not written while it is the default either
+			Assert.DoesNotContain("LastOpenBooks", xml);
+			Assert.DoesNotContain("BrowserDock", xml);
+			Assert.DoesNotContain("ReaderUndocked", xml);
+			Assert.DoesNotContain("TrackCurrentPage", xml);
 		}
 
 		[Fact]

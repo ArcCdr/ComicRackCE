@@ -88,7 +88,7 @@ namespace ComicRack.Mac
 				WindowFrameTracker.Attach(window, frame => preferences.LibraryWindow = frame, placed);
 				AppLog.Info(placed == null ? "Library window: no saved frame." : "Library window restored to " + placed + " (saved " + preferences.LibraryWindow + ").");
 				perf = new PerfOverlayController(new PerfSources(), new AvaloniaPerfTicker(), StopwatchClock.Now, AppLog.Info);
-				readers = new ReaderManager(hostService, perf, preferences);
+				readers = new ReaderManager(hostService, preferences);
 				perf.Sources.DecodeMilliseconds = readers.LastDecodeMilliseconds;
 				perf.Sources.CachedTurnMilliseconds = readers.LastCachedTurnMilliseconds;
 				perf.Sources.Thumbnails = () =>
@@ -99,8 +99,13 @@ namespace ComicRack.Mac
 				window.AttachPerfOverlay(perf);
 				viewModel = new MainViewModel(new WindowShell(window), hostService, new AvaloniaLibraryDialogs(window), readers, preferences);
 				window.DataContext = viewModel;
+				if (options.BrowserHeight.HasValue)
+				{
+					viewModel.BrowserDockHeight = options.BrowserHeight.Value;
+				}
 				viewModel.EnableLiveRefresh();
 				ViewRegistry.Library = viewModel;
+				ViewRegistry.MainWindow = window;
 				// Avalonia.Native has made the app menu before this runs and ignores a menu set now: its items are changed in place (MainMenu.FillAppMenu).
 				NativeMenu appMenu = NativeMenu.GetMenu(this);
 				if (appMenu != null)
@@ -216,33 +221,33 @@ namespace ComicRack.Mac
 					return;
 				}
 				readers.Open(book);
-				ReaderWindow reader = readers.Windows.FirstOrDefault(w => ReferenceEquals(((CoreReadingSession)w.Model.Session).Book, book));
+				ReaderViewModel reader = readers.Slots.FirstOrDefault(s => ReferenceEquals(s.Book, book))?.Model;
 				var watch = System.Diagnostics.Stopwatch.StartNew();
-				while (reader != null && !(reader.Model.Scene != null || reader.Model.OpenFailed) && watch.Elapsed < TimeSpan.FromSeconds(30))
+				while (reader != null && !(reader.Scene != null || reader.OpenFailed) && watch.Elapsed < TimeSpan.FromSeconds(30))
 				{
 					await Task.Delay(20);
 				}
-				ReaderScene scene = reader?.Model.Scene;
+				ReaderScene scene = reader?.Scene;
 				if (scene == null)
 				{
-					AppLog.Error("Reader: the first page of " + path + " did not show: " + (reader?.Model.Notice ?? "no window"));
+					AppLog.Error("Reader: the first page of " + path + " did not show: " + (reader?.Notice ?? "no tab"));
 					return;
 				}
 				string first = scene.Pages[0].Image.Width + " x " + scene.Pages[0].Image.Height;
 				string second = "-";
-				if (reader.Model.PageCount > 1)
+				if (reader.PageCount > 1)
 				{
-					reader.Model.NextPage();
-					await reader.Model.WhenSettled;
-					ReaderScene next = reader.Model.Scene;
+					reader.NextPage();
+					await reader.WhenSettled;
+					ReaderScene next = reader.Scene;
 					second = next != null && next.Position == 1 ? next.Pages[0].Image.Width + " x " + next.Pages[0].Image.Height : "FAILED";
 					if (next == null || next.Position != 1)
 					{
-						AppLog.Error("Reader: page 2 of " + path + " did not show: " + reader.Model.Notice);
+						AppLog.Error("Reader: page 2 of " + path + " did not show: " + reader.Notice);
 						return;
 					}
 				}
-				AppLog.Info($"Reader check: {Path.GetFileName(path)}, {reader.Model.PageCount} pages, page 1 {first}, page 2 {second}, first page after {watch.ElapsedMilliseconds} ms.");
+				AppLog.Info($"Reader check: {Path.GetFileName(path)}, {reader.PageCount} pages, page 1 {first}, page 2 {second}, first page after {watch.ElapsedMilliseconds} ms.");
 			}
 			catch (Exception ex)
 			{
@@ -260,7 +265,8 @@ namespace ComicRack.Mac
 		{
 			perf?.Hide();
 			AppLog.Info("Exit requested, code " + e.ApplicationExitCode + ".");
-			// The readers go first: each records its page in the library, which is saved when the host closes.
+			// The open books are remembered for the next start (Reopen Books from last session); then the readers go: each records its page in the library, which is saved when the host closes.
+			viewModel?.RememberOpenBooks();
 			viewModel?.CloseReaders();
 			// A running scan stops at its next file; the host then closes and saves the library (and the save is checked).
 			viewModel?.CancelRunningOperation();

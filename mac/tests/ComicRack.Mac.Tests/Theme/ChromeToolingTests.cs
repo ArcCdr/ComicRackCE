@@ -54,6 +54,20 @@ namespace ComicRack.Mac.Tests.Theme
 		}
 
 		[Fact]
+		public void The_browser_height_of_the_dock_is_a_number_and_needs_a_private_data_folder()
+		{
+			using (var data = new TempDir())
+			{
+				Assert.Equal(640.0, AppOptions.Parse(new[] { "--browser-height", "640", "--data-dir", data.Path }).BrowserHeight);
+				Assert.Equal(300.5, AppOptions.Parse(new[] { "--browser-height=300.5", "--data-dir", data.Path }).BrowserHeight);
+				Assert.Null(AppOptions.Parse(new string[0]).BrowserHeight);
+				Assert.Contains("--data-dir", AppOptions.Parse(new[] { "--browser-height", "640" }).Error);
+				Assert.Contains("26 to 5000", AppOptions.Parse(new[] { "--browser-height", "10", "--data-dir", data.Path }).Error);
+				Assert.Contains("26 to 5000", AppOptions.Parse(new[] { "--browser-height=abc", "--data-dir", data.Path }).Error);
+			}
+		}
+
+		[Fact]
 		public void List_views_is_an_option_and_the_registry_lists_every_view_sorted()
 		{
 			Assert.True(AppOptions.Parse(new[] { "--list-views" }).ListViews);

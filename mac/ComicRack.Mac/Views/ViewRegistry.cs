@@ -18,6 +18,9 @@ namespace ComicRack.Mac.Views
 		/// <summary>The name of the library window, which is always open.</summary>
 		public const string MainWindowName = "MainWindow";
 
+		/// <summary>The main window (set by the app once it exists; null in tests): the views that live in it, such as the reader, return it.</summary>
+		public static Window MainWindow { get; set; }
+
 		/// <summary>The view model of the library window, for the views that show a part of it (set by the app once it exists; null in tests).</summary>
 		public static ViewModels.MainViewModel Library { get; set; }
 
@@ -32,17 +35,25 @@ namespace ComicRack.Mac.Views
 		}
 
 		/// <summary>
-		/// The reader of the original (<c>--show Reader</c>): the first book of the library in a reader window, opened through the same path as a double
-		/// click. Used by the contact sheet <c>chrome-sheet.sh R3 Reader</c> with a fixture library. The window is open already.
+		/// The reader of the original (<c>--show Reader</c>): the first book of the library in a tab of the main window, opened through the same path as a double
+		/// click. Used by the contact sheet <c>chrome-sheet.sh P5.32a MainWindow Reader</c> with a fixture library. The window (the main window, which hosts the reader)
+		/// is open already.
 		/// </summary>
 		private static Window OpenFirstBook()
 		{
 			ViewModels.MainViewModel library = Library ?? throw new InvalidOperationException("The library window is not open.");
+			if (library.Browser.Items.Length == 0)
+			{
+				throw new InvalidOperationException("The library has no book to read (use --fixture-library).");
+			}
 			library.Browser.SelectedIndex = 0;
 			library.Browser.OpenSelected();
 			Services.ReaderManager readers = library.Readers as Services.ReaderManager;
-			Window window = readers?.Windows.LastOrDefault();
-			return window ?? throw new InvalidOperationException("The library has no book to read (use --fixture-library).");
+			if (readers == null || readers.OpenCount == 0)
+			{
+				throw new InvalidOperationException("The library has no book to read (use --fixture-library).");
+			}
+			return MainWindow ?? throw new InvalidOperationException("The library window is not open.");
 		}
 
 		/// <summary>Adds (or replaces) a view. The factory runs on the UI thread and returns a window that is not shown yet.</summary>
