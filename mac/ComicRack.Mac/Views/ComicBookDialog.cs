@@ -24,7 +24,7 @@ namespace ComicRack.Mac.Views
 	/// <summary>
 	/// The Info dialog (DL.01, <c>ComicRack/Dialogs/ComicBookDialog.cs</c>): the tabs Summary, Details, Plot &amp; Notes, Catalog, Custom, Pages and Colors in the original's order, Previous and
 	/// Next at the left of the buttons, OK, Cancel and Apply at the right. The dialog edits the library's own book through <see cref="BookEditorModel"/>: OK, Apply, Previous and Next
-	/// write it, Cancel does not. P5.7a builds the frame, Summary and Details; the other tabs are filled by P5.7b and P5.7c. The window is 593 x 517 at least (the Designer's client
+	/// write it, Cancel does not. P5.7a builds the frame, Summary and Details, P5.7b Plot &amp; Notes, Catalog and Custom; Pages and Colors are filled by P5.7c. The window is 593 x 517 at least (the Designer's client
 	/// size) and can be resized; the size and the tab the user chose are kept (<c>SafeSize</c>, <c>lastActivePage</c>). The cover is the book's front cover thumbnail, drawn as the
 	/// 3D book of the Core's <c>ComicBox3D</c> unless the user clicked it to get the flat cover (<c>InformationCover3D</c>). Spec: <c>mac/specs/views/ComicBookDialog.md</c>.
 	/// </summary>
@@ -37,11 +37,16 @@ namespace ComicRack.Mac.Views
 
 		private static int lastActivePage = -1;
 
+		private static int lastActiveTextPage = -1;
+
 		private readonly BookInfoRequest request;
 		private readonly BookEditorModel model;
 		private readonly TabControl tabs = new TabControl();
 		private readonly TabItem tabSummary, tabDetails, tabPlot, tabCatalog, tabCustom, tabPages, tabColors;
-		private readonly Panel plot = new Panel(), catalog = new Panel(), custom = new Panel(), pagesPanel = new Panel(), colors = new Panel();
+		private readonly InfoPlotPage plot = new InfoPlotPage();
+		private readonly InfoCatalogPage catalog = new InfoCatalogPage();
+		private readonly InfoCustomPage custom = new InfoCustomPage();
+		private readonly Panel pagesPanel = new Panel(), colors = new Panel();
 		private readonly InfoSummaryPage summary = new InfoSummaryPage();
 		private readonly InfoDetailsPage details = new InfoDetailsPage();
 		private readonly Button previousButton = new Button();
@@ -99,6 +104,9 @@ namespace ComicRack.Mac.Views
 			Footer = navigation;
 
 			details.Initialize(model);
+			plot.Initialize(model);
+			catalog.Initialize(model);
+			custom.Initialize(model);
 			summary.DataContext = model;
 			WireModel();
 			WireSummary();
@@ -125,16 +133,29 @@ namespace ComicRack.Mac.Views
 		/// <summary>The tab pages in the original's order (Summary, Details, Plot &amp; Notes, Catalog, Custom, Pages, Colors).</summary>
 		public IReadOnlyList<TabItem> TabPages => new[] { tabSummary, tabDetails, tabPlot, tabCatalog, tabCustom, tabPages, tabColors };
 
-		/// <summary>The panels of the tabs that later tasks fill: Plot &amp; Notes and Custom (P5.7b), Catalog (P5.7b), Pages and Colors (P5.7c).</summary>
-		public Panel PlotPage => plot;
+		/// <summary>The Plot &amp; Notes, Catalog and Custom pages (P5.7b).</summary>
+		public InfoPlotPage PlotPage => plot;
 
-		public Panel CatalogPage => catalog;
+		public InfoCatalogPage CatalogPage => catalog;
 
-		public Panel CustomPage => custom;
+		public InfoCustomPage CustomPage => custom;
 
+		/// <summary>The panels of the tabs that P5.7c fills: Pages and Colors.</summary>
 		public Panel PagesPage => pagesPanel;
 
 		public Panel ColorsPage => colors;
+
+		/// <summary>Shows the tab with this key ("tabPlot", "tabCatalog", ...) if it is there (the contact sheet and the tests choose the tab this way).</summary>
+		public bool ShowTab(string key)
+		{
+			TabItem tab = TabPages.FirstOrDefault(t => (string)t.Tag == key);
+			if (tab == null || !tab.IsVisible)
+			{
+				return false;
+			}
+			tabs.SelectedItem = tab;
+			return true;
+		}
 
 		private TabItem Tab(string key, string english, Control content)
 		{
@@ -551,6 +572,10 @@ namespace ComicRack.Mac.Views
 
 		private void RestoreTab()
 		{
+			if (lastActiveTextPage >= 0 && lastActiveTextPage < plot.NotesTabs.ItemCount)
+			{
+				plot.NotesTabs.SelectedIndex = lastActiveTextPage;
+			}
 			var all = TabPages;
 			if (lastActivePage >= 0 && lastActivePage < all.Count && all[lastActivePage].IsVisible)
 			{
@@ -564,6 +589,7 @@ namespace ComicRack.Mac.Views
 
 		private void RememberTab()
 		{
+			lastActiveTextPage = plot.NotesTabs.SelectedIndex;
 			int index = TabPages.ToList().IndexOf(tabs.SelectedItem as TabItem);
 			if (index >= 0)
 			{

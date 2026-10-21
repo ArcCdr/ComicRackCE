@@ -70,6 +70,26 @@
     <Setter Property="Cursor" Value="Hand" />
   </Style>
 
+  <!-- The Custom tab of the Info dialog (customValuesData): a grid with a one unit frame, cells without a frame of their own and one unit lines between them -->
+  <Style Selector="Border.cr-grid">
+    <Setter Property="Background" Value="{DynamicResource Cr.WindowBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Cr.ControlDarkBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.cr-grid-line">
+    <Setter Property="Background" Value="{DynamicResource Cr.ControlDarkBrush}" />
+  </Style>
+  <Style Selector="TextBox.cr-grid-cell">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="3,0" />
+  </Style>
+  <Style Selector="AutoCompleteBox.cr-grid-cell /template/ TextBox#PART_TextBox">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="3,0" />
+  </Style>
+
   <!-- The performance overlay (MA.05): a translucent block in the corner with monospaced text -->
   <Style Selector=":is(Border).cr-overlay">
     <Setter Property="Padding" Value="10,6" />

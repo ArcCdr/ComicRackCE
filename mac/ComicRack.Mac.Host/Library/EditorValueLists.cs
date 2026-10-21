@@ -5,6 +5,7 @@ using System.Linq;
 using cYo.Common.IO;
 using cYo.Common.Text;
 using cYo.Projects.ComicRack.Engine;
+using cYo.Projects.ComicRack.Engine.Database;
 
 namespace ComicRack.Mac.Host.Library
 {
@@ -75,6 +76,19 @@ namespace ComicRack.Mac.Host.Library
 				values.Sort(StringComparer.CurrentCulture);
 			}
 			return values;
+		}
+
+		/// <summary>The keys of the custom values the books hold (<c>Database.CustomValues</c>, every key including the ones scripts keep under a name with a point).</summary>
+		public IEnumerable<string> GetCustomValueKeys()
+		{
+			return ComicLibrary.GetCustomFields(getBooks(), showAll: true);
+		}
+
+		/// <summary>The values the books hold under a custom key (the key is compared without regard to case), each once: the completions of the Custom tab's value cells.</summary>
+		public List<string> GetCustomValues(string key)
+		{
+			return getBooks().SelectMany(book => book.GetCustomValues()).Where(pair => pair.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Select(pair => pair.Value)
+				.Where(value => !string.IsNullOrEmpty(value)).Distinct(StringComparer.Ordinal).ToList();
 		}
 
 		/// <summary>The genres the books use, then the defaults (<c>GetGenreList</c>); with <paramref name="withSeparator"/> a separator marker sits between them.</summary>

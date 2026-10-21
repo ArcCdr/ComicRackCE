@@ -47,7 +47,14 @@ namespace ComicRack.Mac.Views
 			{
 				throw new InvalidOperationException("The library has no book to show (use --fixture-library).");
 			}
-			return new ComicBookDialog(library.CreateBookInfoRequest(items[0].Book, items.Where(i => i.Book != null).Select(i => i.Book).ToArray()));
+			var dialog = new ComicBookDialog(library.CreateBookInfoRequest(items[0].Book, items.Where(i => i.Book != null).Select(i => i.Book).ToArray()));
+			// COMICRACK_MAC_INFO_TAB=tabPlot (or tabDetails, tabCatalog, tabCustom ...) opens the dialog on that tab: the contact sheet shoots every tab this way
+			string tab = Environment.GetEnvironmentVariable("COMICRACK_MAC_INFO_TAB");
+			if (!string.IsNullOrEmpty(tab))
+			{
+				dialog.ShowTab(tab);
+			}
+			return dialog;
 		}
 
 		/// <summary>

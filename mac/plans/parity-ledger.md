@@ -303,7 +303,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 
 | ID | Dialog | Original | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|
-| DL.01 | Info (book) | `ComicBookDialog` (tabs: IN rows) | P5.7c | todo | P5.7a: the frame (tabs in the original's order, Previous/Next, OK/Cancel/Apply, size 593 x 517 and resizable), Summary and Details; P5.7b: Plot & Notes, Catalog, Custom; P5.7c: Pages and Colors. View spec `ComicBookDialog` |
+| DL.01 | Info (book) | `ComicBookDialog` (tabs: IN rows) | P5.7c | todo | P5.7a: the frame (tabs in the original's order, Previous/Next, OK/Cancel/Apply, size 593 x 517 and resizable), Summary and Details; P5.7b (done): Plot & Notes, Catalog, Custom; P5.7c: Pages and Colors. View spec `ComicBookDialog` |
 | DL.02 | Multiple Book Information | `MultipleComicBooksDialog` | P5.8 | todo | |
 | DL.03 | Paste Data to {0} Books | `ComicDataPasteDialog` | P5.20 | todo | |
 | DL.04 | Book Display Settings | `ComicDisplaySettingsDialog` | P5.23c | todo | |
@@ -339,9 +339,9 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.34 | Standard dialogs: open, save, folder, message boxes | `OpenFileDialog`, `SaveFileDialog`, `FolderBrowserDialog`, `MessageBox` | P5.R1 | deviation | native: macOS panels and alerts (C-DLG-1) |
 | IN.01 | Info: Summary tab | `ComicBookDialog` | P5.7a | done 2026-10-21 | cover tile with the 3D book (`InformationCover3D`) or the flat cover, text beside it, icons of the book; type, pages, where; My Rating and Community Rating; thumbnail and link buttons for a book without a file; web link. Not done: drag and drop of a picture or file, the ribbons and state icons of a flat cover (`full-port.md` section 9) |
 | IN.02 | Info: Details tab | `ComicBookDialog` | P5.7a | done 2026-10-21 | every field at the Designer's position, the library's values as completions and drop-downs (`DefaultLists`), icons in the Format, Age Rating, Publisher and Imprint lists, spin buttons and digit keys on the number boxes, proposed values as prompts, the list selector popup of the credits, genre and tags |
-| IN.03 | Info: Plot & Notes tab (Summary, Notes, Review sub-tabs) | `ComicBookDialog` | P5.7b | todo | |
-| IN.04 | Info: Catalog tab (`CatalogOnlyForFileless`) | `ComicBookDialog` | P5.7b | todo | |
-| IN.05 | Info: Custom tab (`ShowCustomBookFields`) | `ComicBookDialog` | P5.7b | todo | |
+| IN.03 | Info: Plot & Notes tab (Summary, Notes, Review sub-tabs) | `ComicBookDialog` | P5.7b | done 2026-10-21 | the three sub-tabs (the last one is kept), Characters, Teams, Locations and Main Character or Team with their list selectors, Scan Information (a book with a file), Web; the multi-line boxes use the line endings of the Windows edit box so the saved text is the same on every system; a line break cannot be typed in Characters. Not done: the "Search ..." entries of the text menus and the Down key that opens the selector (`full-port.md` section 9) |
+| IN.04 | Info: Catalog tab (`CatalogOnlyForFileless`) | `ComicBookDialog` | P5.7b | done 2026-10-21 | Store, Price, Age, Condition, Owner, Book Location (lists of the library and the defaults), Collection Status (list selector), ISBN, Released, Added/Purchased, Opened/Read and Pages (a book without a file), Notes about this Book; the tab is shown for a book without a file, and for one with a file only when `CatalogOnlyForFileless` is off and the book may be updated; the date boxes show nothing for "not set", Delete clears one, a chosen day keeps the time of day |
+| IN.05 | Info: Custom tab (`ShowCustomBookFields`) | `ComicBookDialog` | P5.7b | done 2026-10-21 | a grid of every custom value key of the library (Name, Value; the Name column can be resized) and an empty row for a new key; script values (a key with a point) are kept but not listed; the value cell offers the values other books have under the key; a row with a name and a value is saved. Not done: the row headers and selecting a whole row (a row is emptied instead of deleted) |
 | IN.06 | Info: Pages tab (menu: Order by Name, Order by Name numeric) | `ComicBookDialog`, `cmResetPages`, `miOrderByName`, `miOrderByNameNumeric` | P5.7c | todo | |
 | IN.07 | Info: Colors tab ("Double Click on Color to set White Point") | `ComicBookDialog` | P5.7c | todo | |
 | IN.08 | Info: thumbnail menu (Reset) and Previous/Next book buttons | `cmThumbnail`, buttons, `miResetThumbnail` | P5.7a | done 2026-10-21 | Reset and the recent picture files in the menu of the Thumbnail... split button (a book without a file); Previous and Next write the book and move to the book before or after in the shown list (also the wheel over the cover) |
@@ -412,8 +412,8 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.29 | Browser | Always display Browser Docking Grip (`AlwaysDisplayBrowserDockingGrip`) | false | P5.32b | todo | |
 | PB.30 | Browser | Disable opening files via drag-and-drop (`DisableDragDrop`) | false | P5.18 | todo | |
 | PB.31 | Application | Show Quick Open when no book is open (`ShowQuickOpen`) | true | P5.29 | todo | |
-| PB.32 | Application | Show Catalog fields only for fileless Books (`CatalogOnlyForFileless`) | true | P5.7b | todo | |
-| PB.33 | Application | Show custom Book fields (`ShowCustomBookFields`) | false | P5.7b | todo | |
+| PB.32 | Application | Show Catalog fields only for fileless Books (`CatalogOnlyForFileless`) | true | P5.7b | done 2026-10-21 | read when the dialog shows a book; the Preferences check box is P5.22a |
+| PB.33 | Application | Show custom Book fields (`ShowCustomBookFields`) | false | P5.7b | done 2026-10-21 | read when the dialog shows a book; the Preferences check box is P5.22a |
 | PB.34 | Application | Minimize moves ComicRack into the Notification Area (`MinimizeToTray`) | false | P5.33 | todo | menu bar status item |
 | PB.35 | Application | Close moves ComicRack into the Notification Area (`CloseMinimizesToTray`) | true | P5.33 | todo | |
 | PB.36 | Application | Animate expanding and collapsing Panels (`AnimatePanels`) | true | P5.32b | todo | |

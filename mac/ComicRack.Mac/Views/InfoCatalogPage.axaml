@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoCatalogPage"
+             x:DataType="e:BookEditorModel">
+  <!-- Generated from the positions of ComicBookDialog.Designer.cs (tabCatalog, page 566 x 442): a margin is the position, the alignment is the anchor; a right anchored autosize
+       label is 60 wider than the Designer's width. Texts are the Designer's English texts; the code behind replaces every Tag'd label by the original's translation
+       (TR section ComicBookDialog, key = the Tag). The Pages box is 11 narrower than the Designer's width (its spin button is hidden but still takes the room), the Collection
+       Status box 16 (its list selector button). -->
+  <Panel>
+    <Label Name="labelBookStore" Tag="labelBookStore" Content="Store:" Margin="11,21,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbBookStore" IsEditable="True" Value="{Binding BookStore, Mode=TwoWay}" Margin="11,35,405,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelBookPrice" Tag="labelBookPrice" Content="Price:" Margin="0,19,306,0" HorizontalAlignment="Right" Width="95" VerticalAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbBookPrice" IsEditable="True" Value="{Binding BookPrice, Mode=TwoWay}" Margin="0,34,273,0" HorizontalAlignment="Right" Width="126" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelReleasedTime" Tag="labelReleasedTime" Content="Released:" Margin="0,21,136,0" HorizontalAlignment="Right" Width="116" VerticalAlignment="Top" Padding="0" />
+    <CalendarDatePicker Name="dtpReleasedTime" SelectedDateFormat="Long" PlaceholderText=" " Margin="0,36,16,0" HorizontalAlignment="Right" Width="235" VerticalAlignment="Top" Height="20" MinHeight="0" />
+
+    <Label Name="labelISBN" Tag="labelISBN" Content="ISBN:" Margin="9,58,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <TextBox Name="txISBN" MinWidth="0" Text="{Binding Isbn, Mode=TwoWay}" Margin="11,73,405,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelPagesAsTextSimple" Tag="labelPagesAsTextSimple" Content="Pages:" Margin="0,58,301,0" HorizontalAlignment="Right" Width="100" VerticalAlignment="Top" Padding="0" IsVisible="{Binding ShowFilelessCatalogFields}" />
+    <TextBox Name="txPagesAsTextSimple" MinWidth="0" Text="{Binding PagesAsTextSimple, Mode=TwoWay}" Margin="0,73,284,0" HorizontalAlignment="Right" Width="115" VerticalAlignment="Top" Height="20" IsVisible="{Binding ShowFilelessCatalogFields}" />
+    <Label Name="labelAddedTime" Tag="labelAddedTime" Content="Added/Purchased:" Margin="0,58,94,0" HorizontalAlignment="Right" Width="158" VerticalAlignment="Top" Padding="0" />
+    <CalendarDatePicker Name="dtpAddedTime" SelectedDateFormat="Long" PlaceholderText=" " Margin="0,73,16,0" HorizontalAlignment="Right" Width="235" VerticalAlignment="Top" Height="20" MinHeight="0" />
+
+    <Label Name="labelBookAge" Tag="labelBookAge" Content="Age:" Margin="9,97,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbBookAge" IsEditable="True" Value="{Binding BookAge, Mode=TwoWay}" Margin="11,112,405,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelBookCondition" Tag="labelBookCondition" Content="Condition:" Margin="0,98,284,0" HorizontalAlignment="Right" Width="117" VerticalAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbBookCondition" IsEditable="True" Value="{Binding BookCondition, Mode=TwoWay}" Margin="0,112,273,0" HorizontalAlignment="Right" Width="126" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelOpenedTime" Tag="labelOpenedTime" Content="Opened/Read:" Margin="0,98,114,0" HorizontalAlignment="Right" Width="137" VerticalAlignment="Top" Padding="0" IsVisible="{Binding ShowFilelessCatalogFields}" />
+    <CalendarDatePicker Name="dtpOpenedTime" SelectedDateFormat="Long" PlaceholderText=" " Margin="0,113,16,0" HorizontalAlignment="Right" Width="234" VerticalAlignment="Top" Height="20" MinHeight="0" IsVisible="{Binding ShowFilelessCatalogFields}" />
+
+    <Label Name="labelBookOwner" Tag="labelBookOwner" Content="Owner:" Margin="9,154,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbBookOwner" IsEditable="True" Value="{Binding BookOwner, Mode=TwoWay}" Margin="11,168,273,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelBookLocation" Tag="labelBookLocation" Content="Book Location:" Margin="0,154,111,0" HorizontalAlignment="Right" Width="140" VerticalAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbBookLocation" IsEditable="True" Value="{Binding BookLocation, Mode=TwoWay}" Margin="0,168,16,0" HorizontalAlignment="Right" Width="233" VerticalAlignment="Top" Height="21" />
+
+    <Label Name="labelBookCollectionStatus" Tag="labelBookCollectionStatus" Content="Collection Status:" Margin="9,195,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="11,210,16,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20">
+      <AutoCompleteBox Name="txCollectionStatus" MinWidth="0" Text="{Binding BookCollectionStatus, Mode=TwoWay}" />
+      <Button Name="txCollectionStatusSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+    </Grid>
+
+    <Label Name="labelBookNotes" Tag="labelBookNotes" Content="Notes about this Book:" Margin="9,250,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <TextBox Name="txBookNotes" MinWidth="0" Text="{Binding BookNotes, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="11,265,16,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+  </Panel>
+</UserControl>

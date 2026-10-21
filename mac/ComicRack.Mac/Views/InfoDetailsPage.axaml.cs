@@ -147,13 +147,7 @@ namespace ComicRack.Mac.Views
 		/// <summary>Opens the list selector of a box (<c>ListSelectorControl.ShowPopup</c>); the box takes the result when the popup closes.</summary>
 		public Flyout OpenSelector(Control anchor, AutoCompleteBox box, EditorList list)
 		{
-			var selector = new ListSelectorModel(box.Text, model.Values(list));
-			var view = new ListSelectorView();
-			view.Attach(selector);
-			var flyout = new Flyout { Content = view, Placement = PlacementMode.BottomEdgeAlignedRight };
-			flyout.Closed += (sender, e) => box.Text = view.Result();
-			flyout.ShowAt(anchor);
-			return flyout;
+			return ListSelectorFlyout.Open(anchor, box.Text, model.Values(list), text => box.Text = text);
 		}
 
 		private void RegisterNumbers()

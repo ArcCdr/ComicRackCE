@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoCustomPage"
+             x:DataType="e:BookEditorModel">
+  <!-- tabCustom, page 566 x 442: customValuesData at (11,16) 537 x 410, anchored on all sides (a margin is the position, the alignment is the anchor). The header cells are
+       the grid's column headers (CustomValueName, CustomValueValue); the rows are made by the code behind. -->
+  <Border Name="customValuesData" Classes="cr-grid" Margin="11,16,18,16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid RowDefinitions="Auto,*">
+      <Grid Name="HeaderRow" ColumnDefinitions="100,4,*">
+        <c:CrHeader Name="CustomValueName" Grid.Column="0" Text="Name" TextAlignment="Left" />
+        <GridSplitter Name="NameSplitter" Grid.Column="1" ResizeDirection="Columns" MinWidth="0" Focusable="False" />
+        <c:CrHeader Name="CustomValueValue" Grid.Column="2" Text="Value" TextAlignment="Left" />
+      </Grid>
+      <ScrollViewer Name="RowsScroll" Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Name="RowsHost" />
+      </ScrollViewer>
+    </Grid>
+  </Border>
+</UserControl>

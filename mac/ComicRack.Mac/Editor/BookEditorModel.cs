@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
+using cYo.Common;
 using cYo.Common.Localize;
 using cYo.Common.Text;
 using cYo.Projects.ComicRack.Engine;
@@ -330,6 +332,104 @@ namespace ComicRack.Mac.Editor
 		[ObservableProperty]
 		public partial string EnableProposed { get; set; } = string.Empty;
 
+		// ---- Plot & Notes (P5.7b)
+
+		/// <summary>The Summary sub-tab (<c>txSummary</c>), shown with the line endings of the Windows edit box.</summary>
+		[ObservableProperty]
+		public partial string Summary { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string Notes { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string Review { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string Characters { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string Teams { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string MainCharacterOrTeam { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string Locations { get; set; } = string.Empty;
+
+		/// <summary>Shown for a book with a file only (<see cref="ShowProposedValues"/>).</summary>
+		[ObservableProperty]
+		public partial string ScanInformation { get; set; } = string.Empty;
+
+		/// <summary>The editable web address (<c>txWeblink</c>); <see cref="WebLink"/> is the link under the Summary tab, which keeps the address the book had when it was shown.</summary>
+		[ObservableProperty]
+		public partial string Web { get; set; } = string.Empty;
+
+		// ---- Catalog (P5.7b)
+
+		/// <summary>Opened/Read and Pages are the catalog fields of a book without a file (<c>labelOpenedTime</c>, <c>labelPagesAsTextSimple</c>).</summary>
+		[ObservableProperty]
+		public partial bool ShowFilelessCatalogFields { get; set; }
+
+		[ObservableProperty]
+		public partial string BookStore { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookPrice { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookAge { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookCondition { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookOwner { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookLocation { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookCollectionStatus { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string BookNotes { get; set; } = string.Empty;
+
+		[ObservableProperty]
+		public partial string Isbn { get; set; } = string.Empty;
+
+		/// <summary>The page count as the catalog edits it (digits; a book without a file only).</summary>
+		[ObservableProperty]
+		public partial string PagesAsTextSimple { get; set; } = string.Empty;
+
+		/// <summary>When the book was added or bought; <see cref="DateTime.MinValue"/> is "not set" (the box shows nothing).</summary>
+		[ObservableProperty]
+		public partial DateTime AddedTime { get; set; }
+
+		[ObservableProperty]
+		public partial DateTime ReleasedTime { get; set; }
+
+		[ObservableProperty]
+		public partial DateTime OpenedTime { get; set; }
+
+		/// <summary>What a <c>DateTimePicker</c> can hold (<c>MinDate</c> and <c>MaxDate</c>); a date outside shows as "not set" and is saved as such.</summary>
+		public static DateTime PickerValue(DateTime value)
+		{
+			return value < new DateTime(1753, 1, 1) || value > new DateTime(9998, 12, 31) ? DateTime.MinValue : value;
+		}
+
+		// ---- Custom (P5.7b)
+
+		/// <summary>
+		/// The rows of the Custom tab (<c>customValuesData</c>): a row for every custom value key the library knows, in the order of the keys, then an empty row for a new key. Script
+		/// values (keys with a point) are kept but hidden unless <see cref="ShowScriptValues"/> (<c>ExtendedSettings.ShowCustomScriptValues</c>, false by default).
+		/// </summary>
+		public ObservableCollection<CustomValueRow> CustomRows { get; } = new ObservableCollection<CustomValueRow>();
+
+		/// <summary><c>ExtendedSettings.ShowCustomScriptValues</c>: the Custom tab lists the values scripts keep under a key with a point.</summary>
+		public bool ShowScriptValues { get; set; }
+
+		private HashSet<string> customKeys;
+
 		// ---- prompt texts (SetPromptTexts)
 
 		public string ProposedSeries { get; private set; } = string.Empty;
@@ -492,6 +592,7 @@ namespace ComicRack.Mac.Editor
 				ShowCatalogTab = (!comic.IsLinked || !preferences.CatalogOnlyForFileless) && (filelessOrInContainer || preferences.UpdateComicBookFiles);
 				ShowCustomTab = preferences.ShowCustomBookFields && (filelessOrInContainer || preferences.UpdateComicBookFiles);
 				ShowProposedValues = comic.IsLinked;
+				ShowFilelessCatalogFields = !comic.IsLinked;
 				RatingEnabled = ProposedEnabled = SeriesCompleteEnabled = filelessOrInContainer || preferences.UpdateComicBookFiles;
 				if (!canEditProperties)
 				{
@@ -559,7 +660,74 @@ namespace ComicRack.Mac.Editor
 			Languages = BuildLanguages(lists?.GetComicFieldList(b => b.LanguageISO) ?? new List<string>());
 			OnPropertyChanged(nameof(Languages));
 			Language = Languages.Any(l => l.Name == comic.LanguageISO) ? comic.LanguageISO : string.Empty;
+			// Plot & Notes, Catalog and Custom (P5.7b); the multi-line boxes get the line endings of the Windows edit box (StringUtility.MakeEditBoxMultiline)
+			Summary = StringUtility.MakeEditBoxMultiline(comic.Summary) ?? string.Empty;
+			Notes = StringUtility.MakeEditBoxMultiline(comic.Notes) ?? string.Empty;
+			Review = StringUtility.MakeEditBoxMultiline(comic.Review) ?? string.Empty;
+			Characters = comic.Characters ?? string.Empty;
+			Teams = comic.Teams ?? string.Empty;
+			MainCharacterOrTeam = comic.MainCharacterOrTeam ?? string.Empty;
+			Locations = comic.Locations ?? string.Empty;
+			ScanInformation = comic.ScanInformation ?? string.Empty;
+			Web = comic.Web ?? string.Empty;
+			BookAge = comic.BookAge ?? string.Empty;
+			BookStore = comic.BookStore ?? string.Empty;
+			BookOwner = comic.BookOwner ?? string.Empty;
+			BookCondition = comic.BookCondition ?? string.Empty;
+			BookPrice = comic.BookPriceAsText ?? string.Empty;
+			BookLocation = comic.BookLocation ?? string.Empty;
+			BookCollectionStatus = comic.BookCollectionStatus ?? string.Empty;
+			BookNotes = StringUtility.MakeEditBoxMultiline(comic.BookNotes) ?? string.Empty;
+			Isbn = comic.ISBN ?? string.Empty;
+			PagesAsTextSimple = comic.PagesAsTextSimple ?? string.Empty;
+			AddedTime = PickerValue(comic.AddedTime);
+			ReleasedTime = PickerValue(comic.ReleasedTime);
+			OpenedTime = PickerValue(comic.OpenedTime);
+			LoadCustomRows(comic);
 			SetPromptTexts(comic, comic.EnableProposed);
+		}
+
+		private void LoadCustomRows(ComicBook comic)
+		{
+			CustomRows.Clear();
+			foreach (string key in CustomKeys(comic).OrderBy(k => k))
+			{
+				CustomRows.Add(new CustomValueRow(key, comic.GetCustomValue(key) ?? string.Empty, hidden: !ShowScriptValues && key.Contains('.')));
+			}
+			CustomRows.Add(new CustomValueRow(string.Empty, string.Empty, hidden: false));
+		}
+
+		// Database.CustomValues: the keys of every book of the library (kept up to date as books change), here read once and extended by what this dialog saves
+		private IEnumerable<string> CustomKeys(ComicBook comic)
+		{
+			if (customKeys == null)
+			{
+				customKeys = new HashSet<string>(lists?.GetCustomValueKeys() ?? Enumerable.Empty<string>());
+			}
+			foreach (ComicBook book in new[] { comic, current })
+			{
+				foreach (StringPair pair in book.GetCustomValues())
+				{
+					customKeys.Add(pair.Key);
+				}
+			}
+			return customKeys;
+		}
+
+		/// <summary>The values the library holds under a custom key, offered as completions while a value is typed (<c>customValuesData_EditingControlShowing</c>).</summary>
+		public List<string> CustomValueSuggestions(string key)
+		{
+			return string.IsNullOrEmpty(key) || lists == null ? new List<string>() : lists.GetCustomValues(key);
+		}
+
+		/// <summary>Adds the empty row for a new key when the last row has been used (the grid's "new row" moves down when its first cell is edited).</summary>
+		public void EnsureNewCustomRow()
+		{
+			CustomValueRow last = CustomRows.LastOrDefault();
+			if (last == null || !last.IsEmpty)
+			{
+				CustomRows.Add(new CustomValueRow(string.Empty, string.Empty, hidden: false));
+			}
 		}
 
 		private void SetPromptTexts(ComicBook comic, bool enabled)
@@ -626,6 +794,7 @@ namespace ComicRack.Mac.Editor
 			comic.StoryArc = StoryArc.Trim();
 			comic.SeriesGroup = SeriesGroup.Trim();
 			comic.Writer = Writer.Trim();
+			comic.Summary = Summary.Trim();
 			comic.Penciller = Penciller.Trim();
 			comic.Inker = Inker.Trim();
 			comic.Letterer = Letterer.Trim();
@@ -634,6 +803,14 @@ namespace ComicRack.Mac.Editor
 			comic.Translator = Translator.Trim();
 			comic.Colorist = Colorist.Trim();
 			comic.Genre = Genre.Trim();
+			comic.Characters = Characters.Trim();
+			comic.Teams = Teams.Trim();
+			comic.MainCharacterOrTeam = MainCharacterOrTeam.Trim();
+			comic.Locations = Locations.Trim();
+			comic.Notes = Notes.Trim();
+			comic.Review = Review.Trim();
+			comic.ScanInformation = ScanInformation.Trim();
+			comic.Web = Web.Trim();
 			comic.Tags = Tags.Trim();
 			comic.SeriesComplete = EditControls.GetYesNo(SeriesComplete);
 			comic.Count = EditControls.GetNumber(Count);
@@ -664,6 +841,46 @@ namespace ComicRack.Mac.Editor
 			{
 				comic.AgeRating = ageRating;
 			}
+			string bookAge = BookAge.Trim();
+			if (comic.BookAge != bookAge)
+			{
+				comic.BookAge = bookAge;
+			}
+			string bookStore = BookStore.Trim();
+			if (comic.BookStore != bookStore)
+			{
+				comic.BookStore = bookStore;
+			}
+			string bookOwner = BookOwner.Trim();
+			if (comic.BookOwner != bookOwner)
+			{
+				comic.BookOwner = bookOwner;
+			}
+			string bookPrice = BookPrice.Trim();
+			if (comic.BookPriceAsText != bookPrice)
+			{
+				comic.BookPrice = EditControls.GetRealNumber(bookPrice);
+			}
+			string bookCondition = BookCondition.Trim();
+			if (comic.BookCondition != bookCondition)
+			{
+				comic.BookCondition = bookCondition;
+			}
+			string bookLocation = BookLocation.Trim();
+			if (comic.BookLocation != bookLocation)
+			{
+				comic.BookLocation = bookLocation;
+			}
+			comic.BookNotes = BookNotes.Trim();
+			comic.BookCollectionStatus = BookCollectionStatus.Trim();
+			comic.ISBN = Isbn.Trim();
+			if (!comic.IsLinked)
+			{
+				comic.PagesAsTextSimple = PagesAsTextSimple;
+				comic.OpenedTime = OpenedTime;
+			}
+			comic.AddedTime = AddedTime;
+			comic.ReleasedTime = ReleasedTime;
 			comic.LanguageISO = Language ?? string.Empty;
 			comic.Rating = (float)Rating;
 			comic.CommunityRating = (float)CommunityRating;
@@ -671,6 +888,22 @@ namespace ComicRack.Mac.Editor
 			comic.BlackAndWhite = EditControls.GetYesNo(BlackAndWhite);
 			comic.EnableProposed = EditControls.GetYesNo(EnableProposed) == YesNo.Yes;
 			comic.EnableDynamicUpdate = EditControls.GetYesNo(EnableDynamicUpdate) == YesNo.Yes;
+			comic.CustomValuesStore = CustomValuesStore();
+		}
+
+		// the rows with a name and a value, in the order of the grid (hidden script values included); not set one by one, so that the book is not marked changed in between
+		private string CustomValuesStore()
+		{
+			string store = string.Empty;
+			foreach (CustomValueRow row in CustomRows)
+			{
+				if (!string.IsNullOrEmpty(row.Name?.Trim()) && !string.IsNullOrEmpty(row.Value))
+				{
+					store = ComicBook.SetCustomValueInStore(row.Name, row.Value, store);
+					customKeys?.Add(row.Name);
+				}
+			}
+			return store;
 		}
 
 		// ---- the buttons
@@ -758,6 +991,28 @@ namespace ComicRack.Mac.Editor
 				loading = false;
 			}
 		}
+	}
+
+	/// <summary>One row of the Custom tab: the key of a custom value and its value for the book.</summary>
+	public sealed partial class CustomValueRow : ObservableObject
+	{
+		public CustomValueRow(string name, string value, bool hidden)
+		{
+			Name = name ?? string.Empty;
+			Value = value ?? string.Empty;
+			Hidden = hidden;
+		}
+
+		[ObservableProperty]
+		public partial string Name { get; set; }
+
+		[ObservableProperty]
+		public partial string Value { get; set; }
+
+		/// <summary>A script value (key with a point) while the Custom tab does not list those: the row stays in the list and is saved with it.</summary>
+		public bool Hidden { get; }
+
+		public bool IsEmpty => string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(Value);
 	}
 
 	/// <summary>The texts the model needs that come from the shared message section.</summary>

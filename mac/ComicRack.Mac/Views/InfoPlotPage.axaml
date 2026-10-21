@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoPlotPage"
+             x:DataType="e:BookEditorModel">
+  <!-- Generated from the positions of ComicBookDialog.Designer.cs (tabPlot, page 566 x 442): a margin is the position, the alignment is the anchor; a right anchored autosize
+       label is 60 wider than the Designer's width. Texts are the Designer's English texts; the code behind replaces every Tag'd label by the original's translation
+       (TR section ComicBookDialog, key = the Tag). The boxes that hold a list are 16 narrower than the Designer's width and have the selector button beside them
+       (ListSelectorControl.Register). -->
+  <Panel>
+    <TabControl Name="tabNotes" Padding="3,0,3,3" Margin="11,15,16,194" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      <TabItem Name="tabPageSummary">
+        <TextBox Name="txSummary" Text="{Binding Summary, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </TabItem>
+      <TabItem Name="tabPageNotes">
+        <TextBox Name="txNotes" Text="{Binding Notes, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </TabItem>
+      <TabItem Name="tabPageReview">
+        <TextBox Name="txReview" Text="{Binding Review, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </TabItem>
+    </TabControl>
+
+    <Label Name="labelCharacters" Tag="labelCharacters" Content="Characters:" Margin="9,0,0,167" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="11,0,295,71" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="93">
+      <TextBox Name="txCharacters" MinWidth="0" Text="{Binding Characters, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+      <Button Name="txCharactersSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+    </Grid>
+    <Label Name="labelScanInformation" Tag="labelScanInformation" Content="Scan Information:" Margin="9,0,0,33" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="0" IsVisible="{Binding ShowProposedValues}" />
+    <AutoCompleteBox Name="txScanInformation" MinWidth="0" Text="{Binding ScanInformation, Mode=TwoWay}" Margin="11,0,295,10" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20" IsVisible="{Binding ShowProposedValues}" />
+
+    <Label Name="labelMainCharacterOrTeam" Tag="labelMainCharacterOrTeam" Content="Main Character or Team:" Margin="0,0,92,167" HorizontalAlignment="Right" Width="190" VerticalAlignment="Bottom" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="0,0,16,144" HorizontalAlignment="Right" Width="264" VerticalAlignment="Bottom" Height="20">
+      <AutoCompleteBox Name="txMainCharacterOrTeam" MinWidth="0" Text="{Binding MainCharacterOrTeam, Mode=TwoWay}" />
+      <Button Name="txMainCharacterOrTeamSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+    </Grid>
+    <Label Name="labelTeams" Tag="labelTeams" Content="Teams:" Margin="0,0,180,129" HorizontalAlignment="Right" Width="102" VerticalAlignment="Bottom" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="0,0,16,106" HorizontalAlignment="Right" Width="264" VerticalAlignment="Bottom" Height="20">
+      <AutoCompleteBox Name="txTeams" MinWidth="0" Text="{Binding Teams, Mode=TwoWay}" />
+      <Button Name="txTeamsSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+    </Grid>
+    <Label Name="labelLocations" Tag="labelLocations" Content="Locations:" Margin="0,0,163,94" HorizontalAlignment="Right" Width="118" VerticalAlignment="Bottom" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="0,0,16,71" HorizontalAlignment="Right" Width="263" VerticalAlignment="Bottom" Height="20">
+      <AutoCompleteBox Name="txLocations" MinWidth="0" Text="{Binding Locations, Mode=TwoWay}" />
+      <Button Name="txLocationsSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+    </Grid>
+    <Label Name="labelWeb" Tag="labelWeb" Content="Web:" Margin="0,0,190,33" HorizontalAlignment="Right" Width="91" VerticalAlignment="Bottom" Padding="0" />
+    <TextBox Name="txWeblink" MinWidth="0" Text="{Binding Web, Mode=TwoWay}" Margin="0,0,16,10" HorizontalAlignment="Right" Width="263" VerticalAlignment="Bottom" Height="20" />
+  </Panel>
+</UserControl>
