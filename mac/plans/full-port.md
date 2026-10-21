@@ -14,11 +14,11 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: RV5b)
 | P2 Platform pieces | 9 | 2 | P2.4a | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 66 | 12 | P5.32a | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 66 | 13 | P5.5 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
 | RV Review fixes and upstream sync | 11 | 10 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **168** | **42** | | estimate in §10 |
+| **Total** | **168** | **43** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 

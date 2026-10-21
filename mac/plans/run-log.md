@@ -47,3 +47,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-21 03:56 | RV7 | done | a61b4e5 |  | Review fixes (settings never overwrite an unreadable file, saves off the setter path with a sequence number, ui-drive drag re-checks, caps and signal release... |
 | 2026-10-21 04:35 | RV8 | done | 42d9ff3 |  | Review fixes: parity and UI correctness (Arrange flips the sort order, toolbar overflow with the quick search at the right end, reader rating keys, last-open... |
 | 2026-10-21 04:53 | RV9 | done | 8528688 |  | Launch.Start double OnHostOpened race (one announcement per host in Launch, first database access made on the opening thread, regression test) |
+| 2026-10-21 11:50 | P5.32a | done | 287b96a |  | Main window hosts the reader: book tabs, Reader in own Window (tabs as NavigatorManager, reader area in the main window, browser dock at the bottom, tab menu... |
