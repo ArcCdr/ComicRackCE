@@ -14,11 +14,11 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: RV5b)
 | P2 Platform pieces | 9 | 1 | P2.1 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 66 | 8 | P5.1 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 66 | 11 | P5.4 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 7 | 6 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **164** | **33** | | estimate in §10 |
+| RV Review fixes and upstream sync | 8 | 6 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **165** | **36** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -547,6 +547,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **P3.H** (HiDPI 1x/2x test harness) runs right after P0.7b and before any P5 task.
 - **RV5** (chrome isolation) runs right after P5.R1 and before P5.R2/P5.R3 and all further screens.
 - **RV5b** runs at the end of wave B, before C2.
+- **RV6** runs right after P5.3, before P5.4.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`RV<n>`, formerly `R<n>`; renamed because R1 to R9 are the owner requirements of §1.1) go to the **front** of the list.
 
 ---
@@ -607,6 +608,11 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Goal: finish what RV5 left: every element listed in `ChromeVariants` is switchable Original|Native without editing views (Buttons, ComboBox, Menus have global base-theme overrides today; toolbar, tab bar, header, group box, side panel and tree have no Native variant). Native = a reasonable macOS-leaning look built from stock Fluent/native controls, not pixel-perfect AppKit.
 - Do: convert the global overrides into per-control ControlThemes selected by variant; add Native variants for the remaining elements per `chrome-guidelines.md` §10; tests: flip each element, view tree unchanged, default look unchanged (snapshot baselines), light and dark, 1x and 2x.
 - Accept: `dotnet test mac/tests/ComicRack.Mac.Tests --filter "ChromeVariant|ChromeArchitecture|ChromeSnapshot"`; `mac/tools/verify.sh`; contact sheet with all-Native next to all-Original in `mac/artifacts/chrome/RV5b/`.
+
+#### RV6 Browser selection parity: first arrow key, rubber band, drag-out
+- Depends: P5.3 · Effort: high · Unattended: yes · Status: todo
+- Goal: R9 says behaviour must be identical to the Windows app. P5.3 left three deviations: (1) with nothing focused the original's first arrow key moves relative to item 0 (Right selects the second book); the Mac grid selects the first book; (2) rubber band (marquee) selection is missing; (3) dragging the selection out of the grid (drag-and-drop source) is missing. Derive the exact behaviour from `cYo.Common.Windows/Forms/ItemView*.cs` (read-only) and implement it in the Mac grid with tests; keep any remaining true deviation in the parity ledger with a reason.
+- Accept: new tests for each (model + real keys/pointer events, 1x and 2x for the marquee drawing); `mac/tools/verify.sh`; ledger rows BV.* updated.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
