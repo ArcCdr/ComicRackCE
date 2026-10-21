@@ -1,0 +1,88 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+        xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- The Original look of the Tree element (C-TREE-1): the tree item with rows of the item font height plus 8, the original's chevron images, the
+       StyledRenderer selection and a bold selected label. ChromeVariants adds this file for Original and removes it for Native (the stock tree item). -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <!-- The chevron of a tree item: the original's SimpleArrowRight and SimpleArrowDown images. -->
+      <ControlTheme x:Key="CrTreeChevron" TargetType="ToggleButton">
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Panel Background="Transparent">
+              <c:CrIcon Name="Right" IconName="SimpleArrowRight" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              <c:CrIcon Name="Down" IconName="SimpleArrowDown" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="False" />
+            </Panel>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked /template/ c|CrIcon#Right">
+          <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:checked /template/ c|CrIcon#Down">
+          <Setter Property="IsVisible" Value="True" />
+        </Style>
+      </ControlTheme>
+
+      <!-- Tree item: rows are the item font height plus 8, the selected label is bold, the arrow is the original's image, and the selection is the
+           StyledRenderer look (frame and flat fill, focused or unfocused colour). -->
+      <ControlTheme x:Key="CrTreeViewItem.Original" TargetType="TreeViewItem">
+        <ControlTheme.Resources>
+          <conv:MarginMultiplierConverter x:Key="CrTreeIndent" Indent="16" Left="True" />
+        </ControlTheme.Resources>
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource Cr.WindowTextBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource Cr.FontSize.Item}" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <StackPanel>
+              <Border Name="PART_LayoutRoot"
+                      Height="{x:Static c:ChromeMetrics.DefaultTreeRowHeight}"
+                      Background="Transparent"
+                      Focusable="True"
+                      TemplatedControl.IsTemplateFocusTarget="True">
+                <Panel>
+                  <c:StyledSelectionVisual />
+                  <Grid Name="PART_Header"
+                        ColumnDefinitions="16,*"
+                        Margin="{TemplateBinding Level, Converter={StaticResource CrTreeIndent}}">
+                    <ToggleButton Name="PART_ExpandCollapseChevron"
+                                  Theme="{StaticResource CrTreeChevron}"
+                                  IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+                    <ContentPresenter Name="PART_HeaderPresenter"
+                                      Grid.Column="1"
+                                      Margin="2,0,2,0"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      Foreground="{TemplateBinding Foreground}" />
+                  </Grid>
+                </Panel>
+              </Border>
+              <ItemsPresenter Name="PART_ItemsPresenter"
+                              IsVisible="{TemplateBinding IsExpanded}"
+                              ItemsPanel="{TemplateBinding ItemsPanel}" />
+            </StackPanel>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:empty /template/ ToggleButton#PART_ExpandCollapseChevron">
+          <Setter Property="Opacity" Value="0" />
+          <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="^:selected /template/ ContentPresenter#PART_HeaderPresenter">
+          <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style Selector="^:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+          <Setter Property="Foreground" Value="{DynamicResource Cr.GrayTextBrush}" />
+        </Style>
+      </ControlTheme>
+    </ResourceDictionary>
+  </Styles.Resources>
+  <Style Selector="TreeViewItem">
+    <Setter Property="Theme" Value="{StaticResource CrTreeViewItem.Original}" />
+  </Style>
+</Styles>

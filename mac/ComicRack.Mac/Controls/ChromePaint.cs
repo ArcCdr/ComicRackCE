@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using ComicRack.Mac.Themes;
 
 namespace ComicRack.Mac.Controls
@@ -49,10 +50,55 @@ namespace ComicRack.Mac.Controls
 			return null;
 		}
 
-		/// <summary>A solid brush in the colour of a token (alpha kept), cached per appearance.</summary>
+		/// <summary>
+		/// The chrome element a control (or the control it is part of) belongs to, or null for a plain control. The first <see cref="IChromeElement"/> on
+		/// the way up the visual tree decides, so the parts of a chrome control (the overflow button of a toolbar) follow their control.
+		/// </summary>
+		public static ChromeElement? ElementOf(Control control)
+		{
+			for (Visual v = control; v != null; v = v.GetVisualParent())
+			{
+				if (v is IChromeElement chrome)
+				{
+					return chrome.Element;
+				}
+			}
+			return null;
+		}
+
+		/// <summary>True while the element the control belongs to has the Native variant (RV5b).</summary>
+		public static bool IsNative(Control control)
+		{
+			if (!ChromeVariants.AnyNative)
+			{
+				return false;
+			}
+			ChromeElement? element = ElementOf(control);
+			return element.HasValue && ChromeVariants.IsNative(element.Value);
+		}
+
+		/// <summary>The stock theme's brush (<c>SystemControl*</c>) for the appearance of a control, or null.</summary>
+		public static IBrush StockBrush(Control control, string key) => ChromeNativePalette.StockBrush(VariantOf(control), key);
+
+		/// <summary>A solid brush in the colour of a token (alpha kept), cached per appearance. For the Native variant: the palette's stock brush.</summary>
 		public static IBrush Brush(Control control, string token)
 		{
 			ThemeVariant variant = VariantOf(control);
+			if (IsNative(control) && ChromeNativePalette.Brush(variant, token) is IBrush native)
+			{
+				return native;
+			}
+			return brushes.GetOrAdd((variant, token), key => new ImmutableSolidColorBrush(ThemeTokens.Get(key.Item2, key.Item1)));
+		}
+
+		/// <summary>The same for an element other than the control's own (a header drawn by the page list is a <see cref="ChromeElement.ListHeader"/>).</summary>
+		public static IBrush Brush(ChromeElement element, Control control, string token)
+		{
+			ThemeVariant variant = VariantOf(control);
+			if (ChromeVariants.IsNative(element) && ChromeNativePalette.Brush(variant, token) is IBrush native)
+			{
+				return native;
+			}
 			return brushes.GetOrAdd((variant, token), key => new ImmutableSolidColorBrush(ThemeTokens.Get(key.Item2, key.Item1)));
 		}
 
@@ -60,6 +106,10 @@ namespace ComicRack.Mac.Controls
 		public static IBrush Brush(Control control, string token, byte alpha)
 		{
 			ThemeVariant variant = VariantOf(control);
+			if (IsNative(control) && ChromeNativePalette.Brush(variant, token, alpha) is IBrush native)
+			{
+				return native;
+			}
 			return brushes.GetOrAdd((variant, token + "@" + alpha), key =>
 			{
 				Avalonia.Media.Color c = ThemeTokens.Get(token, key.Item1);
@@ -67,17 +117,28 @@ namespace ComicRack.Mac.Controls
 			});
 		}
 
-		/// <summary>A top to bottom gradient through the given token colours (evenly spaced), cached per appearance.</summary>
+		/// <summary>
+		/// A top to bottom gradient through the given token colours (evenly spaced), cached per appearance. The Native variant is flat: the palette's
+		/// brush of the middle token (when the palette maps it).
+		/// </summary>
 		public static IBrush VerticalGradient(Control control, params string[] tokens)
 		{
 			ThemeVariant variant = VariantOf(control);
+			if (IsNative(control) && ChromeNativePalette.Brush(variant, tokens[(tokens.Length - 1) / 2]) is IBrush native)
+			{
+				return native;
+			}
 			return brushes.GetOrAdd((variant, "gradient:v:" + string.Join("|", tokens)), key => CreateGradient(key.Item1, tokens, new RelativePoint(0, 0, RelativeUnit.Relative), new RelativePoint(0, 1, RelativeUnit.Relative)));
 		}
 
-		/// <summary>A left to right gradient (<c>LinearGradientBrush</c> with angle 0 of the original), cached per appearance.</summary>
+		/// <summary>A left to right gradient (<c>LinearGradientBrush</c> with angle 0 of the original), cached per appearance. Flat for Native, as <see cref="VerticalGradient"/>.</summary>
 		public static IBrush HorizontalGradient(Control control, params string[] tokens)
 		{
 			ThemeVariant variant = VariantOf(control);
+			if (IsNative(control) && ChromeNativePalette.Brush(variant, tokens[(tokens.Length - 1) / 2]) is IBrush native)
+			{
+				return native;
+			}
 			return brushes.GetOrAdd((variant, "gradient:h:" + string.Join("|", tokens)), key => CreateGradient(key.Item1, tokens, new RelativePoint(0, 0, RelativeUnit.Relative), new RelativePoint(1, 0, RelativeUnit.Relative)));
 		}
 
@@ -138,6 +199,54 @@ namespace ComicRack.Mac.Controls
 			Frame(context, new ImmutableSolidColorBrush(style.Frame), rect);
 		}
 
+		/// <summary>The selection of a control that belongs to a chrome element: the original's, or for the Native variant of the element a rounded one (<see cref="NativeSelection"/>).</summary>
+		public static void Selection(Control control, DrawingContext context, Rect rect, StyledSelection style)
+		{
+			if (IsNative(control))
+			{
+				NativeSelection(control, context, rect, style);
+			}
+			else
+			{
+				Selection(context, rect, style);
+			}
+		}
+
+		/// <summary>The same for an element other than the control's own.</summary>
+		public static void Selection(ChromeElement element, Control control, DrawingContext context, Rect rect, StyledSelection style)
+		{
+			if (ChromeVariants.IsNative(element))
+			{
+				NativeSelection(control, context, rect, style);
+			}
+			else
+			{
+				Selection(context, rect, style);
+			}
+		}
+
+		/// <summary>
+		/// The Native selection: a rounded rectangle (<see cref="ToolPaint.NativeRadius"/>) filled with the system accent while the view has the focus and
+		/// with the stock line colour while it has not, at half the alpha of the original's frame; a focused item without selection gets a rounded accent frame.
+		/// </summary>
+		public static void NativeSelection(Control control, DrawingContext context, Rect rect, StyledSelection style)
+		{
+			if (style.State == SelectionState.None)
+			{
+				return;
+			}
+			ThemeVariant variant = VariantOf(control);
+			bool viewFocused = style.BaseColor == ThemeTokens.Get(ThemeTokens.Names.SelectionFocused, variant);
+			IBrush stock = StockBrush(control, ChromeNativePalette.KeyOf(viewFocused ? ChromeNativePalette.Role.Accent : ChromeNativePalette.Role.Line));
+			Avalonia.Media.Color c = (stock as ISolidColorBrush)?.Color ?? style.BaseColor;
+			if (style.State == SelectionState.Focused)
+			{
+				context.DrawRectangle(null, new Pen(new ImmutableSolidColorBrush(Avalonia.Media.Color.FromArgb(160, c.R, c.G, c.B)), 1), rect.Deflate(0.5), ToolPaint.NativeRadius, ToolPaint.NativeRadius);
+				return;
+			}
+			context.DrawRectangle(new ImmutableSolidColorBrush(Avalonia.Media.Color.FromArgb((byte)(style.FrameAlpha / 2), c.R, c.G, c.B)), null, rect, ToolPaint.NativeRadius, ToolPaint.NativeRadius);
+		}
+
 		/// <summary>An image of the original drawn into a rectangle (its own size when the rectangle has it) with high-quality filtering.</summary>
 		public static void Image(DrawingContext context, Avalonia.Media.Imaging.Bitmap bitmap, Rect target, double opacity = 1)
 		{
@@ -151,6 +260,31 @@ namespace ComicRack.Mac.Controls
 			{
 				context.DrawImage(bitmap, source, target);
 			}
+		}
+
+		/// <summary>
+		/// An icon of the original (a picture from <see cref="Icons"/>). For the Native variant of <see cref="ChromeElement.Icons"/> it is drawn without its
+		/// colours (<see cref="Icons.Monochrome"/>): the flat grey glyphs of the macOS toolbars instead of the coloured pictures of the original.
+		/// </summary>
+		public static void Icon(Control control, DrawingContext context, Avalonia.Media.Imaging.Bitmap bitmap, Rect target, double opacity = 1)
+		{
+			if (bitmap == null)
+			{
+				return;
+			}
+			Image(context, ChromeVariants.IsNative(ChromeElement.Icons) ? Icons.Monochrome(bitmap) : bitmap, target, opacity);
+		}
+
+		/// <summary>The text colour of the reader overlays: the white of the glass panels, or for the Native variant the stock text colour (the Native panel is a stock surface).</summary>
+		public static IBrush ReaderText(Control control)
+		{
+			return IsNative(control) ? StockBrush(control, ChromeNativePalette.KeyOf(ChromeNativePalette.Role.Text)) : ResourceBrush(control, "Cr.Reader.OverlayTextBrush");
+		}
+
+		/// <summary>The colour of the icons on the glass buttons (black on the glass), or for the Native variant the stock text colour.</summary>
+		public static IBrush ReaderGlassIcon(Control control)
+		{
+			return IsNative(control) ? StockBrush(control, ChromeNativePalette.KeyOf(ChromeNativePalette.Role.Text)) : ResourceBrush(control, "Cr.Reader.GlassIconBrush");
 		}
 
 		/// <summary>A rectangle of the given size centred in <paramref name="area"/> on whole units.</summary>

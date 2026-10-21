@@ -1,0 +1,52 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- The lightweight styling keys of the Fluent themes for combo boxes, each a brush whose colour is a Cr token of this appearance
+       (Light theme). Part of the Original look of the ComboBox element: ChromeVariants adds the pack (CrComboBox.Original.axaml) to the application
+       styles for Original and removes it for Native, which leaves the stock theme's own brushes (chrome-guidelines section 10). -->
+  <SolidColorBrush x:Key="ComboBoxBackground" Color="{DynamicResource Cr.Window}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="{DynamicResource Cr.Window}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="{DynamicResource Cr.Window}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="{DynamicResource Cr.Control}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundUnfocused" Color="{DynamicResource Cr.Window}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundBorderBrushFocused" Color="{DynamicResource Cr.EditFocusFrame}" />
+  <SolidColorBrush x:Key="ComboBoxBackgroundBorderBrushUnfocused" Color="{DynamicResource Cr.EditFrame}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{DynamicResource Cr.EditFrame}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="{DynamicResource Cr.EditHoverFrame}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="{DynamicResource Cr.EditFocusFrame}" />
+  <SolidColorBrush x:Key="ComboBoxBorderBrushDisabled" Color="{DynamicResource Cr.ControlDark}" />
+  <SolidColorBrush x:Key="ComboBoxForeground" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxForegroundFocusedPressed" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{DynamicResource Cr.Window}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{DynamicResource Cr.EditFrame}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundDisabled" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundFocused" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundFocusedPressed" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBackground" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemForeground" Color="{DynamicResource Cr.ControlText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="{DynamicResource Cr.Highlight}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushPointerOver" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundPressed" Color="{DynamicResource Cr.Highlight}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundPressed" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushPressed" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundDisabled" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundDisabled" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushDisabled" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="{DynamicResource Cr.Highlight}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushSelected" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="{DynamicResource Cr.Highlight}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushSelectedPointerOver" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed" Color="{DynamicResource Cr.Highlight}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPressed" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushSelectedPressed" Color="Transparent" />
+  <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedDisabled" Color="{DynamicResource Cr.Control}" />
+  <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedDisabled" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="ComboBoxItemBorderBrushSelectedDisabled" Color="Transparent" />
+</ResourceDictionary>

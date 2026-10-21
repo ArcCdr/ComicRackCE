@@ -46,7 +46,8 @@ namespace ComicRack.Mac.Tests.Theme
 				Assert.True(ChromeVariants.Defaults.ContainsKey(element), element + " has no default");
 				Assert.Equal(ChromeVariant.Original, ChromeVariants.Defaults[element]);
 			}
-			Assert.Equal(new[] { ChromeElement.StatusBar }, ChromeVariants.NativeAvailable.ToArray());
+			// RV5b: every element has a Native variant
+			Assert.Equal(Enum.GetValues(typeof(ChromeElement)).Cast<ChromeElement>().OrderBy(e => e).ToArray(), ChromeVariants.NativeAvailable.OrderBy(e => e).ToArray());
 		}
 
 		[Fact]
@@ -61,10 +62,18 @@ namespace ComicRack.Mac.Tests.Theme
 					Assert.Null(ChromeVariants.Configure("StatusBar=Original; Toolbar=Original"));
 					Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(ChromeElement.StatusBar));
 					Assert.Null(ChromeVariants.Configure("native"));
-					Assert.Equal(ChromeVariant.Native, ChromeVariants.Get(ChromeElement.StatusBar));
-					Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(ChromeElement.Toolbar));
+					foreach (ChromeElement element in Enum.GetValues(typeof(ChromeElement)))
+					{
+						Assert.Equal(ChromeVariant.Native, ChromeVariants.Get(element));
+						Assert.True(ChromeVariants.IsNative(element));
+					}
 					Assert.Null(ChromeVariants.Configure("original"));
-					Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(ChromeElement.StatusBar));
+					foreach (ChromeElement element in Enum.GetValues(typeof(ChromeElement)))
+					{
+						Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(element));
+						Assert.False(ChromeVariants.IsNative(element));
+					}
+					Assert.False(ChromeVariants.AnyNative);
 					Assert.Null(ChromeVariants.Configure(null));
 					Assert.Null(ChromeVariants.Configure("  "));
 					foreach (string bad in new[] { "Bogus=Native", "StatusBar", "StatusBar=Pink", "StatusBar=Native=Original", "99=1" })
@@ -85,17 +94,24 @@ namespace ComicRack.Mac.Tests.Theme
 		}
 
 		[Fact]
-		public async Task An_element_without_a_native_variant_stays_original_and_says_so()
+		public async Task Every_element_can_be_set_to_native_and_back_and_reset_restores_the_defaults()
 		{
 			await Ui.Run(() =>
 			{
 				try
 				{
-					Assert.False(ChromeVariants.Set(ChromeElement.Buttons, ChromeVariant.Native));
-					Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(ChromeElement.Buttons));
-					Assert.True(ChromeVariants.Set(ChromeElement.Buttons, ChromeVariant.Original));
+					foreach (ChromeElement element in Enum.GetValues(typeof(ChromeElement)))
+					{
+						Assert.True(ChromeVariants.Set(element, ChromeVariant.Native), element + " has no Native variant");
+						Assert.Equal(ChromeVariant.Native, ChromeVariants.Get(element));
+						Assert.True(ChromeVariants.Set(element, ChromeVariant.Original));
+						Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(element));
+					}
 					Assert.True(ChromeVariants.Set(ChromeElement.StatusBar, ChromeVariant.Native));
 					Assert.Equal(ChromeVariant.Native, ChromeVariants.Get(ChromeElement.StatusBar));
+					ChromeVariants.Reset();
+					Assert.Equal(ChromeVariant.Original, ChromeVariants.Get(ChromeElement.StatusBar));
+					Assert.False(ChromeVariants.AnyNative);
 				}
 				finally
 				{

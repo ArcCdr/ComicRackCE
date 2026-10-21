@@ -133,7 +133,7 @@ namespace ComicRack.Mac.Controls
 				var icon = Icons.TryGet(IconName, ChromePaint.VariantOf(this));
 				if (icon != null)
 				{
-					ChromePaint.Image(context, icon, ChromePaint.Centered(icon.Size, area));
+					ChromePaint.Icon(this, context, icon, ChromePaint.Centered(icon.Size, area));
 				}
 			}
 			if (Sunken)

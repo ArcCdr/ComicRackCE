@@ -124,6 +124,46 @@ namespace ComicRack.Mac.Themes
 			}
 		}
 
+		private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Bitmap, Bitmap> monochrome = new System.Runtime.CompilerServices.ConditionalWeakTable<Bitmap, Bitmap>();
+
+		/// <summary>
+		/// The picture without its colours: every pixel becomes the grey of its luminance (alpha kept), the look of the Native variant of
+		/// <see cref="ChromeElement.Icons"/>. One copy per picture, kept as long as the picture lives (never dispose it). The picture itself is not changed.
+		/// </summary>
+		public static Bitmap Monochrome(Bitmap bitmap)
+		{
+			if (bitmap == null)
+			{
+				return null;
+			}
+			lock (monochrome)
+			{
+				if (monochrome.TryGetValue(bitmap, out Bitmap grey))
+				{
+					return grey;
+				}
+				var size = bitmap.PixelSize;
+				var copy = new WriteableBitmap(size, bitmap.Dpi, PixelFormat.Bgra8888, AlphaFormat.Premul);
+				using (ILockedFramebuffer buffer = copy.Lock())
+				{
+					bitmap.CopyPixels(new PixelRect(size), buffer.Address, buffer.RowBytes * size.Height, buffer.RowBytes);
+					var row = new byte[size.Width * 4];
+					for (int y = 0; y < size.Height; y++)
+					{
+						System.Runtime.InteropServices.Marshal.Copy(buffer.Address + y * buffer.RowBytes, row, 0, row.Length);
+						for (int x = 0; x < row.Length; x += 4)
+						{
+							byte luminance = (byte)Math.Round(0.114 * row[x] + 0.587 * row[x + 1] + 0.299 * row[x + 2]);
+							row[x] = row[x + 1] = row[x + 2] = luminance;
+						}
+						System.Runtime.InteropServices.Marshal.Copy(row, 0, buffer.Address + y * buffer.RowBytes, row.Length);
+					}
+				}
+				monochrome.Add(bitmap, copy);
+				return copy;
+			}
+		}
+
 		/// <summary>Sets every opaque magenta pixel (B, G, R, A = 255, 0, 255, 255) of a BGRA buffer to transparent black; returns how many.</summary>
 		public static int KeyMagenta(byte[] bgra)
 		{

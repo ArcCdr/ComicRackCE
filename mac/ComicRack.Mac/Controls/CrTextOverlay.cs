@@ -63,7 +63,7 @@ namespace ComicRack.Mac.Controls
 		private FormattedText Format()
 		{
 			double width = Math.Max(1, maxSize.Width - GlassPainter.PanelMargin.Left - GlassPainter.PanelMargin.Right);
-			var text = new FormattedText(Text ?? string.Empty, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(FontFamily.Default), ChromeFonts.OverlaySize, ChromePaint.ResourceBrush(this, "Cr.Reader.OverlayTextBrush") ?? Brushes.Transparent)
+			var text = new FormattedText(Text ?? string.Empty, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(FontFamily.Default), ChromeFonts.OverlaySize, ChromePaint.ReaderText(this) ?? Brushes.Transparent)
 			{
 				MaxTextWidth = width,
 				TextAlignment = TextAlignment.Center,

@@ -527,12 +527,16 @@ namespace ComicRack.Mac.Controls
 			string fill = pressedButton == which ? ThemeTokens.Names.TabBarSelectedBack : hotButton == which ? ThemeTokens.Names.ButtonHoverBack : ThemeTokens.Names.TabPageOther;
 			context.DrawRectangle(ChromePaint.Brush(this, fill), null, bounds);
 			IBrush frame = pressedButton != which && hotButton == which ? ChromePaint.Brush(this, ThemeTokens.Names.ButtonHoverBorder) : border;
-			ChromePaint.Frame(context, frame, bounds, Sides.Left | Sides.Top | Sides.Right);
-			ChromePaint.Frame(context, border, new Rect(bounds.X, bounds.Bottom - 1, bounds.Width, 1));
+			if (!ChromePaint.IsNative(this))
+			{
+				// the Native variant has no frames: the fills tell the states apart
+				ChromePaint.Frame(context, frame, bounds, Sides.Left | Sides.Top | Sides.Right);
+				ChromePaint.Frame(context, border, new Rect(bounds.X, bounds.Bottom - 1, bounds.Width, 1));
+			}
 			Bitmap image = Icons.TryGet("cYo.Common.Windows:" + icon, ChromePaint.VariantOf(this)) ?? Icons.TryGet(icon, ChromePaint.VariantOf(this));
 			if (image != null)
 			{
-				ChromePaint.Image(context, image, new Rect(Math.Floor(bounds.X + (bounds.Width - image.Size.Width) / 2), Math.Floor(bounds.Y + (bounds.Height - image.Size.Height) / 2), image.Size.Width, image.Size.Height));
+				ChromePaint.Icon(this, context, image, new Rect(Math.Floor(bounds.X + (bounds.Width - image.Size.Width) / 2), Math.Floor(bounds.Y + (bounds.Height - image.Size.Height) / 2), image.Size.Width, image.Size.Height));
 			}
 		}
 
@@ -543,15 +547,24 @@ namespace ComicRack.Mac.Controls
 			bool selected = index == SelectedIndex;
 			bool hot = index == hotIndex;
 			string fill = selected ? ThemeTokens.Names.TabBarSelectedBack : hot ? ThemeTokens.Names.ButtonHoverBack : ThemeTokens.Names.TabPageOther;
-			context.DrawRectangle(ChromePaint.Brush(this, fill), null, bounds);
-			IBrush frame = !selected && hot ? ChromePaint.Brush(this, ThemeTokens.Names.ButtonHoverBorder) : border;
-			// the tab has no bottom edge: the selected one runs into the page, the others into the base line
-			ChromePaint.Frame(context, frame, bounds, Sides.Left | Sides.Top | Sides.Right);
+			bool native = ChromePaint.IsNative(this);
+			if (native)
+			{
+				// Native: rounded tops and no frame; the selected tab is the pressed fill, the hot one the hot fill
+				context.DrawRectangle(ChromePaint.Brush(this, fill), null, new RoundedRect(bounds, new CornerRadius(ToolPaint.NativeRadius, ToolPaint.NativeRadius, 0, 0)));
+			}
+			else
+			{
+				context.DrawRectangle(ChromePaint.Brush(this, fill), null, bounds);
+				IBrush frame = !selected && hot ? ChromePaint.Brush(this, ThemeTokens.Names.ButtonHoverBorder) : border;
+				// the tab has no bottom edge: the selected one runs into the page, the others into the base line
+				ChromePaint.Frame(context, frame, bounds, Sides.Left | Sides.Top | Sides.Right);
+			}
 			double x = bounds.Left + 3;
 			Bitmap icon = string.IsNullOrEmpty(tab.IconName) ? null : Icons.TryGet(tab.IconName, ChromePaint.VariantOf(this));
 			if (icon != null)
 			{
-				ChromePaint.Image(context, icon, new Rect(x, Math.Floor(bounds.Top + (bounds.Height - icon.Size.Height) / 2), icon.Size.Width, icon.Size.Height));
+				ChromePaint.Icon(this, context, icon, new Rect(x, Math.Floor(bounds.Top + (bounds.Height - icon.Size.Height) / 2), icon.Size.Width, icon.Size.Height));
 				x += ChromeMetrics.ToolIconSize;
 			}
 			if (tab.ShowText)
@@ -568,7 +581,7 @@ namespace ComicRack.Mac.Controls
 			if (geometry[index].HasClose)
 			{
 				// the close box is dimmed (-0.8 brightness in the original) until the pointer is over it
-				ChromePaint.Image(context, CloseImage, close, closeHot == index ? 1 : 0.35);
+				ChromePaint.Icon(this, context, CloseImage, close, closeHot == index ? 1 : 0.35);
 			}
 		}
 

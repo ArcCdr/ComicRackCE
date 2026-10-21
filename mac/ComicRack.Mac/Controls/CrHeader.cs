@@ -147,20 +147,36 @@ namespace ComicRack.Mac.Controls
 			using (context.PushTransform(Matrix.CreateTranslation(area.X, area.Y)))
 			{
 				var local = new Rect(area.Size);
-				context.DrawRectangle(ChromePaint.Brush(owner, ThemeTokens.Names.HeaderBack), null, local);
-				var style = new StyledSelection(FrameStyle(state), ThemeTokens.Get(ThemeTokens.Names.HeaderSeparator, ChromePaint.VariantOf(owner)));
-				ChromePaint.Selection(context, local, style);
+				ChromeElement element = ChromeElement.ListHeader;
+				context.DrawRectangle(ChromePaint.Brush(element, owner, ThemeTokens.Names.HeaderBack), null, local);
+				if (ChromeVariants.IsNative(element))
+				{
+					// Native: a flat header, the state as a fill, a hairline at the right and at the bottom
+					string fill = state == HeaderState.Pressed ? ThemeTokens.Names.ButtonPressedBack : state == HeaderState.Normal ? null : ThemeTokens.Names.ButtonHoverBack;
+					if (fill != null)
+					{
+						context.DrawRectangle(ChromePaint.Brush(element, owner, fill), null, local);
+					}
+					IBrush line = ChromePaint.Brush(element, owner, ThemeTokens.Names.HeaderSeparator);
+					ChromePaint.VLine(context, line, local.Width - 1, 4, Math.Max(0, local.Height - 8));
+					ChromePaint.HLine(context, line, 0, local.Height - 1, local.Width);
+				}
+				else
+				{
+					var style = new StyledSelection(FrameStyle(state), ThemeTokens.Get(ThemeTokens.Names.HeaderSeparator, ChromePaint.VariantOf(owner)));
+					ChromePaint.Selection(context, local, style);
+				}
 				Rect inner = new Rect(2, 0, Math.Max(0, local.Width - 4), local.Height);
 				Rect textArea = inner;
 				if ((adornments & HeaderAdornments.DropDown) != 0)
 				{
 					Rect drop = DropDownBoundsOf(owner, local.Size);
-					ChromePaint.VLine(context, ChromePaint.Brush(owner, ThemeTokens.Names.ControlDark), drop.X, 4, local.Height - 8);
-					ChromePaint.VLine(context, ChromePaint.Brush(owner, ThemeTokens.Names.ControlLight), drop.X + 1, 4, local.Height - 8);
+					ChromePaint.VLine(context, ChromePaint.Brush(element, owner, ThemeTokens.Names.ControlDark), drop.X, 4, local.Height - 8);
+					ChromePaint.VLine(context, ChromePaint.Brush(element, owner, ThemeTokens.Names.ControlLight), drop.X + 1, 4, local.Height - 8);
 					Bitmap arrow = Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(owner));
 					if (arrow != null)
 					{
-						ChromePaint.Image(context, arrow, ChromePaint.Centered(arrow.Size, drop));
+						ChromePaint.Icon(owner, context, arrow, ChromePaint.Centered(arrow.Size, drop));
 					}
 					textArea = new Rect(inner.X, inner.Y, Math.Max(0, drop.X - inner.X), inner.Height);
 				}
@@ -171,12 +187,12 @@ namespace ComicRack.Mac.Controls
 					if (image != null)
 					{
 						var target = new Rect(Math.Floor(textArea.X + (textArea.Width - image.Size.Width) / 2), textArea.Y + 1, image.Size.Width, image.Size.Height);
-						ChromePaint.Image(context, image, target, 0.7);
+						ChromePaint.Icon(owner, context, image, target, 0.7);
 					}
 				}
 				if (!string.IsNullOrEmpty(text))
 				{
-					var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(family), fontSize, ChromePaint.Brush(owner, ThemeTokens.Names.ControlText))
+					var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(family), fontSize, ChromePaint.Brush(element, owner, ThemeTokens.Names.ControlText))
 					{
 						MaxTextWidth = Math.Max(0, textArea.Width),
 						Trimming = TextTrimming.CharacterEllipsis,

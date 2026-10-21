@@ -4,8 +4,8 @@
   <!-- The control themes of the chrome controls, one per control type and variant, keyed "<ControlTypeName>.<Variant>" (chrome-architecture.md
        section 4). ChromeVariants.Bind gives every chrome control the theme of its element's variant (Themes/ChromeVariants.cs), so flipping an
        element is a change of Theme and nothing else. Original is the WinForms look and exists for every control; a control that draws itself in
-       Render has an empty Original theme (its look is in C# from the Cr tokens). Native exists for the elements listed in
-       ChromeVariants.NativeAvailable and leans on the stock theme's own brushes (SystemControl*). Added after the base theme, so the
+       Render has an empty Original theme (its look is in C# from the Cr tokens). Native exists for every element (ChromeVariants.NativeAvailable)
+       and leans on the stock theme's own brushes (SystemControl*). Added after the base theme, so the
        BasedOn lookups of the stock themes work. -->
   <Styles.Resources>
     <ResourceDictionary>
@@ -40,7 +40,7 @@
         <Setter Property="Sunken" Value="False" />
       </ControlTheme>
 
-      <!-- Tree: the rows draw their own selection (StyledSelectionVisual) and counters (CrGaugeStrip); the tree item theme is CrControlThemes.axaml. -->
+      <!-- Tree: the rows draw their own selection (StyledSelectionVisual) and counters (CrGaugeStrip); the tree item theme is the Tree pack (Stock/CrTree.*.axaml). -->
       <ControlTheme x:Key="CrTreeView.Original" TargetType="c:CrTreeView" BasedOn="{StaticResource {x:Type TreeView}}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
@@ -120,6 +120,54 @@
 
       <!-- Dialog window: the base window theme (the dialog draws its surface from the Cr.Control token itself). -->
       <ControlTheme x:Key="CrDialogWindow.Original" TargetType="c:CrDialogWindow" BasedOn="{StaticResource {x:Type Window}}" />
+
+      <!-- Native variants (RV5b). The self-drawn controls draw from ChromePaint, which reads the Native palette (Themes/ChromeNativePalette.cs: the stock theme's own
+           brushes for the Cr tokens, flat instead of gradients) and the shapes the control itself branches on (rounded hot rectangles, template tinted icons);
+           so most Native themes only have to exist and wear the Original theme (the templates, sizes and bindings stay). What a theme can set it sets here. -->
+      <ControlTheme x:Key="CrToolBar.Native" TargetType="c:CrToolBar" BasedOn="{StaticResource CrToolBar.Original}" />
+      <ControlTheme x:Key="CrToolSeparator.Native" TargetType="c:CrToolSeparator" BasedOn="{StaticResource CrToolSeparator.Original}" />
+      <ControlTheme x:Key="CrSearchBox.Native" TargetType="c:CrSearchBox" BasedOn="{StaticResource CrSearchBox.Original}" />
+      <ControlTheme x:Key="CrToolButton.Native" TargetType="c:CrToolButton" BasedOn="{StaticResource CrToolButton.Original}" />
+      <ControlTheme x:Key="CrSplitButton.Native" TargetType="c:CrSplitButton" BasedOn="{StaticResource CrSplitButton.Original}" />
+      <ControlTheme x:Key="CrDropDownButton.Native" TargetType="c:CrDropDownButton" BasedOn="{StaticResource CrDropDownButton.Original}" />
+      <ControlTheme x:Key="CrTabBar.Native" TargetType="c:CrTabBar" BasedOn="{StaticResource CrTabBar.Original}" />
+      <ControlTheme x:Key="CrTreeView.Native" TargetType="c:CrTreeView" BasedOn="{StaticResource CrTreeView.Original}" />
+      <ControlTheme x:Key="StyledSelectionVisual.Native" TargetType="c:StyledSelectionVisual" BasedOn="{StaticResource StyledSelectionVisual.Original}" />
+      <ControlTheme x:Key="CrTreeRow.Native" TargetType="c:CrTreeRow" BasedOn="{StaticResource CrTreeRow.Original}" />
+      <ControlTheme x:Key="CrGaugeStrip.Native" TargetType="c:CrGaugeStrip" BasedOn="{StaticResource CrGaugeStrip.Original}" />
+      <ControlTheme x:Key="CrRatingStars.Native" TargetType="c:CrRatingStars" BasedOn="{StaticResource CrRatingStars.Original}" />
+      <ControlTheme x:Key="CrSpinButton.Native" TargetType="c:CrSpinButton" BasedOn="{StaticResource CrSpinButton.Original}" />
+      <ControlTheme x:Key="CrCheckList.Native" TargetType="c:CrCheckList" BasedOn="{StaticResource CrCheckList.Original}" />
+      <ControlTheme x:Key="CrHeader.Native" TargetType="c:CrHeader" BasedOn="{StaticResource CrHeader.Original}" />
+      <ControlTheme x:Key="CrCollapsibleGroup.Native" TargetType="c:CrCollapsibleGroup" BasedOn="{StaticResource CrCollapsibleGroup.Original}" />
+      <ControlTheme x:Key="CrSizableContainer.Native" TargetType="c:CrSizableContainer" BasedOn="{StaticResource CrSizableContainer.Original}" />
+      <ControlTheme x:Key="CrIcon.Native" TargetType="c:CrIcon" BasedOn="{StaticResource CrIcon.Original}" />
+      <ControlTheme x:Key="CrThumbnailItem.Native" TargetType="c:CrThumbnailItem" BasedOn="{StaticResource CrThumbnailItem.Original}" />
+      <ControlTheme x:Key="CoverView.Native" TargetType="c:CoverView" BasedOn="{StaticResource CoverView.Original}" />
+      <ControlTheme x:Key="CrBookToolTip.Native" TargetType="c:CrBookToolTip" BasedOn="{StaticResource CrBookToolTip.Original}" />
+      <ControlTheme x:Key="CrBookTile.Native" TargetType="c:CrBookTile" BasedOn="{StaticResource CrBookTile.Original}" />
+      <ControlTheme x:Key="CrPageList.Native" TargetType="c:CrPageList" BasedOn="{StaticResource CrPageList.Original}" />
+      <ControlTheme x:Key="CrPageViewer.Native" TargetType="c:CrPageViewer" BasedOn="{StaticResource CrPageViewer.Original}" />
+      <ControlTheme x:Key="CrSelectionRectangle.Native" TargetType="c:CrSelectionRectangle" BasedOn="{StaticResource CrSelectionRectangle.Original}" />
+      <ControlTheme x:Key="CrReaderPage.Native" TargetType="c:CrReaderPage" BasedOn="{StaticResource CrReaderPage.Original}" />
+      <ControlTheme x:Key="CrTextOverlay.Native" TargetType="c:CrTextOverlay" BasedOn="{StaticResource CrTextOverlay.Original}" />
+      <ControlTheme x:Key="CrPartOverlay.Native" TargetType="c:CrPartOverlay" BasedOn="{StaticResource CrPartOverlay.Original}" />
+      <ControlTheme x:Key="CrNavigationOverlay.Native" TargetType="c:CrNavigationOverlay" BasedOn="{StaticResource CrNavigationOverlay.Original}" />
+      <ControlTheme x:Key="CrDialogWindow.Native" TargetType="c:CrDialogWindow" BasedOn="{StaticResource CrDialogWindow.Original}" />
+
+      <!-- The editors' combo boxes: the separator line above an entry in the stock theme's line colour. -->
+      <ControlTheme x:Key="CrValueComboBox.Native" TargetType="c:CrValueComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="ItemTemplate">
+          <DataTemplate x:DataType="c:ValueItem">
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" BorderThickness="{Binding SeparatorThickness}" Padding="0,2,0,0">
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <Image Source="{Binding Icon}" IsVisible="{Binding HasIcon}" Width="24" Height="24" />
+                <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </Setter>
+      </ControlTheme>
 
     </ResourceDictionary>
   </Styles.Resources>

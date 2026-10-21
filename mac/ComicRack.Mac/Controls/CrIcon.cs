@@ -49,7 +49,7 @@ namespace ComicRack.Mac.Controls
 			Bitmap bitmap = Bitmap;
 			if (bitmap != null)
 			{
-				ChromePaint.Image(context, bitmap, ChromePaint.Centered(bitmap.Size, new Rect(Bounds.Size)));
+				ChromePaint.Icon(this, context, bitmap, ChromePaint.Centered(bitmap.Size, new Rect(Bounds.Size)));
 			}
 		}
 	}
@@ -191,7 +191,7 @@ namespace ComicRack.Mac.Controls
 
 		public override void Render(DrawingContext context)
 		{
-			ChromePaint.Selection(context, new Rect(Bounds.Size), Style);
+			ChromePaint.Selection(this, context, new Rect(Bounds.Size), Style);
 		}
 	}
 }

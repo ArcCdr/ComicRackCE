@@ -1,0 +1,25 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+        xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- The Native look of the Buttons element: the stock Fluent buttons, check boxes and radio buttons (their own colours and templates), with the macOS
+       leaning shape and size: the system font size 13, a 5 unit corner radius, 22 high. -->
+  <Style Selector="Button">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="Padding" Value="12,2" />
+  </Style>
+  <Style Selector="ToggleButton">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="Padding" Value="12,2" />
+  </Style>
+  <Style Selector="CheckBox">
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style Selector="RadioButton">
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+</Styles>

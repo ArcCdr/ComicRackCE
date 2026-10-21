@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- The lightweight styling keys of the Fluent themes for popup menus and context menus, each a brush whose colour is a Cr token of this appearance
+       (Light theme). Part of the Original look of the Menus element: ChromeVariants adds the pack (CrMenus.Original.axaml) to the application
+       styles for Original and removes it for Native, which leaves the stock theme's own brushes (chrome-guidelines section 10). -->
+  <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="{DynamicResource Cr.Menu}" />
+  <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="{DynamicResource Cr.ToolMenuBorder}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemBackground" Color="{DynamicResource Cr.Menu}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver" Color="{DynamicResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPressed" Color="{DynamicResource SystemAccentColor}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundDisabled" Color="{DynamicResource Cr.Menu}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemForeground" Color="{DynamicResource Cr.MenuText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemForegroundPointerOver" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemForegroundPressed" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemForegroundDisabled" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" Color="{DynamicResource Cr.GrayText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" Color="{DynamicResource Cr.HighlightText}" />
+  <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundDisabled" Color="{DynamicResource Cr.GrayText}" />
+</ResourceDictionary>

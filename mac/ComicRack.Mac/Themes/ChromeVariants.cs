@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Styling;
+using Avalonia.VisualTree;
 using ComicRack.Mac.Services;
 
 namespace ComicRack.Mac.Themes
@@ -111,12 +113,14 @@ namespace ComicRack.Mac.Themes
 		};
 
 		/// <summary>
-		/// The elements that have a Native variant (a theme <c>&lt;Control&gt;.Native</c> for each of their controls). A request for Native on any
-		/// other element stays Original and is logged. Add an element here when its Native themes exist.
+		/// The elements that have a Native variant (a theme <c>&lt;Control&gt;.Native</c> for each of their controls, and for the elements made of stock
+		/// controls a <c>Cr&lt;Element&gt;.Native.axaml</c> pack). Since RV5b that is every element. A request for Native on an element that is not in
+		/// this list stays Original and is logged; add an element here only when its Native themes exist.
 		/// </summary>
-		public static readonly IReadOnlyCollection<ChromeElement> NativeAvailable = new[] { ChromeElement.StatusBar };
+		public static readonly IReadOnlyCollection<ChromeElement> NativeAvailable = Enum.GetValues(typeof(ChromeElement)).Cast<ChromeElement>().ToArray();
 
 		private static readonly object sync = new object();
+		private static int nativeMask;
 		private static readonly Dictionary<ChromeElement, ChromeVariant> current = new Dictionary<ChromeElement, ChromeVariant>(Defaults);
 		private static readonly List<WeakReference<Control>> bound = new List<WeakReference<Control>>();
 
@@ -134,10 +138,26 @@ namespace ComicRack.Mac.Themes
 
 		public static bool HasNative(ChromeElement element) => NativeAvailable.Contains(element);
 
+		/// <summary>True while the element has the Native variant. Cheap and lock free: the custom-drawn controls ask it on every render.</summary>
+		public static bool IsNative(ChromeElement element) => (Volatile.Read(ref nativeMask) & (1 << (int)element)) != 0;
+
+		/// <summary>True while any element is Native (a quick test before the work of finding a control's element).</summary>
+		public static bool AnyNative => Volatile.Read(ref nativeMask) != 0;
+
+		private static void SetMask(ChromeElement element, ChromeVariant variant)
+		{
+			int bit = 1 << (int)element;
+			int mask = Volatile.Read(ref nativeMask);
+			Volatile.Write(ref nativeMask, variant == ChromeVariant.Native ? mask | bit : mask & ~bit);
+		}
+
 		/// <summary>The key of the control theme of a control type and variant: <c>CrStatusBar.Native</c>.</summary>
 		public static string ThemeKey(Type controlType, ChromeVariant variant) => controlType.Name + "." + variant;
 
-		/// <summary>Back to <see cref="Defaults"/> (a new application starts here), without touching the controls that exist.</summary>
+		/// <summary>
+		/// Back to <see cref="Defaults"/> (a new application starts here). The stock-control packs follow at once; the controls that exist are
+		/// asked to repaint, but their themes are not touched (a control made later gets the default theme).
+		/// </summary>
 		public static void Reset()
 		{
 			lock (sync)
@@ -145,7 +165,16 @@ namespace ComicRack.Mac.Themes
 				foreach (KeyValuePair<ChromeElement, ChromeVariant> entry in Defaults)
 				{
 					current[entry.Key] = entry.Value;
+					SetMask(entry.Key, entry.Value);
 				}
+			}
+			foreach (KeyValuePair<ChromeElement, ChromeVariant> entry in Defaults)
+			{
+				StockPacks.Sync(entry.Key, entry.Value);
+			}
+			foreach (Control control in Live())
+			{
+				Apply(control);
 			}
 		}
 
@@ -169,12 +198,19 @@ namespace ComicRack.Mac.Themes
 					return honoured;
 				}
 				current[element] = variant;
+				SetMask(element, variant);
 			}
+			StockPacks.Sync(element, variant);
 			foreach (Control control in Live())
 			{
 				if (control is IChromeElement chrome && chrome.Element == element)
 				{
 					Apply(control);
+				}
+				else if (element == ChromeElement.Icons)
+				{
+					// the pictures are drawn by the controls of every other element (a toolbar button, a tab, a header): they repaint, nothing else changes
+					Repaint(control);
 				}
 			}
 			Changed?.Invoke(element, variant);
@@ -296,6 +332,17 @@ namespace ComicRack.Mac.Themes
 				control.Theme = theme;
 			}
 			chrome.OnChromeVariantChanged(variant);
+			Repaint(control);
+		}
+
+		/// <summary>What a control draws itself (and its parts, which are not chrome controls) follows the variant on the next render.</summary>
+		private static void Repaint(Control control)
+		{
+			control.InvalidateVisual();
+			foreach (Visual part in control.GetVisualDescendants())
+			{
+				part.InvalidateVisual();
+			}
 		}
 	}
 }

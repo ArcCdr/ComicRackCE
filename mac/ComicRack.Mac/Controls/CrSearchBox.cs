@@ -102,6 +102,8 @@ namespace ComicRack.Mac.Controls
 
 		public ChromeElement Element => ChromeElement.Toolbar;
 
+		void IChromeElement.OnChromeVariantChanged(ChromeVariant variant) => ApplyTokens();
+
 		static CrSearchBox()
 		{
 			TextProperty.Changed.AddClassHandler<CrSearchBox>((box, e) => box.OnTextChanged());
@@ -136,6 +138,7 @@ namespace ComicRack.Mac.Controls
 			// The renderer clears the box with SystemColors.Window and draws a flat 3D border.
 			Background = ChromePaint.Brush(this, ThemeTokens.Names.Window);
 			BorderBrush = ChromePaint.Brush(this, ThemeTokens.Names.ControlDark);
+			CornerRadius = ChromePaint.IsNative(this) ? new CornerRadius(ToolPaint.NativeRadius) : default;
 			box.Foreground = ChromePaint.Brush(this, ThemeTokens.Names.WindowText);
 			Resources["TextControlPlaceholderForeground"] = ChromePaint.Brush(this, ThemeTokens.Names.GrayText);
 			Resources["TextControlPlaceholderForegroundPointerOver"] = ChromePaint.Brush(this, ThemeTokens.Names.GrayText);

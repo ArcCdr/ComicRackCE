@@ -208,6 +208,8 @@ namespace ComicRack.Mac.Controls
 
 		public ChromeElement Element => ChromeElement.Toolbar;
 
+		void IChromeElement.OnChromeVariantChanged(ChromeVariant variant) => ApplyTokens();
+
 		/// <summary>The buttons, separators and other controls, left to right.</summary>
 		[Avalonia.Metadata.Content]
 		public Avalonia.Controls.Controls Children => items.Children;
@@ -456,7 +458,7 @@ namespace ComicRack.Mac.Controls
 				Bitmap glyph = Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(this));
 				if (glyph != null)
 				{
-					ChromePaint.Image(context, glyph, ChromePaint.Centered(glyph.Size, new Rect(0, top + 2, area.Width, glyph.Size.Height)));
+					ChromePaint.Icon(this, context, glyph, ChromePaint.Centered(glyph.Size, new Rect(0, top + 2, area.Width, glyph.Size.Height)));
 				}
 			}
 		}
@@ -651,7 +653,7 @@ namespace ComicRack.Mac.Controls
 			if (icon != null)
 			{
 				double y = Math.Floor((area.Height - icon.Size.Height) / 2);
-				ChromePaint.Image(context, icon, new Rect(x, y, icon.Size.Width, icon.Size.Height), opacity);
+				ChromePaint.Icon(this, context, icon, new Rect(x, y, icon.Size.Width, icon.Size.Height), opacity);
 				x += icon.Size.Width + 3;
 			}
 			if (text != null)
@@ -676,8 +678,24 @@ namespace ComicRack.Mac.Controls
 	/// <summary>The professional renderer's button backgrounds from the <c>Cr.Tool*</c> tokens.</summary>
 	public static class ToolPaint
 	{
+		/// <summary>The corner radius of a hot, pressed or checked button in the Native variant (a rounded rectangle without a frame, as the macOS toolbars).</summary>
+		public const double NativeRadius = 4;
+
 		public static void Background(DrawingContext context, Control control, Rect area, ToolButtonState state)
 		{
+			if (ChromePaint.IsNative(control))
+			{
+				// the palette gives the stock hot and pressed fills; the frames of the original are transparent there
+				string token = state == ToolButtonState.Hot ? ThemeTokens.Names.ToolButtonSelectedHighlight
+					: state == ToolButtonState.Pressed ? ThemeTokens.Names.ToolButtonPressedGradientMiddle
+					: state == ToolButtonState.Checked || state == ToolButtonState.CheckedHot ? ThemeTokens.Names.ToolButtonCheckedHighlight
+					: null;
+				if (token != null)
+				{
+					context.DrawRectangle(ChromePaint.Brush(control, token), null, area, NativeRadius, NativeRadius);
+				}
+				return;
+			}
 			switch (state)
 			{
 				case ToolButtonState.Hot:
@@ -750,7 +768,7 @@ namespace ComicRack.Mac.Controls
 			if (glyph != null)
 			{
 				var slot = new Rect(Math.Max(0, area.Width - ChromeMetrics.DropDownArrowWidth - 2), 0, ChromeMetrics.DropDownArrowWidth + 2, area.Height);
-				ChromePaint.Image(context, glyph, ChromePaint.Centered(glyph.Size, slot), IsEffectivelyEnabled ? 1 : 0.45);
+				ChromePaint.Icon(this, context, glyph, ChromePaint.Centered(glyph.Size, slot), IsEffectivelyEnabled ? 1 : 0.45);
 			}
 		}
 	}
@@ -845,7 +863,7 @@ namespace ComicRack.Mac.Controls
 			if (glyph != null)
 			{
 				Rect target = ChromePaint.Centered(glyph.Size, ArrowBounds);
-				ChromePaint.Image(context, glyph, target, IsEffectivelyEnabled ? 1 : 0.45);
+				ChromePaint.Icon(this, context, glyph, target, IsEffectivelyEnabled ? 1 : 0.45);
 			}
 		}
 

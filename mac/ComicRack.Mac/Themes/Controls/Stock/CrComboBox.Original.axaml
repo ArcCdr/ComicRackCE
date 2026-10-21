@@ -1,0 +1,26 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+        xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- The Original look of the ComboBox element: the stock combo box (and its pop-up list) in the original's colours and metrics, 21 high, square.
+       Added to and removed from the application styles by ChromeVariants. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/Stock/CrComboBoxResources.Light.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/Stock/CrComboBoxResources.Dark.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <x:Double x:Key="ComboBoxMinHeight">21</x:Double>
+      <Thickness x:Key="ComboBoxPadding">4,1,0,1</Thickness>
+      <Thickness x:Key="ComboBoxItemThemePadding">4,2,4,2</Thickness>
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

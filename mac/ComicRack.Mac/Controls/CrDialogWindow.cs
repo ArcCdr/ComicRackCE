@@ -66,12 +66,30 @@ namespace ComicRack.Mac.Controls
 			root.Children.Add(bottom);
 			root.Children.Add(bodyHost);
 			Content = root;
-			this.Bind(BackgroundProperty, this.GetResourceObservable(ThemeTokens.BrushKey(ThemeTokens.Names.Control)));
 			RefreshButtons();
 			ChromeVariants.Bind(this);
 		}
 
 		public ChromeElement Element => ChromeElement.Dialogs;
+
+		private IDisposable backgroundBinding;
+		private bool native;
+
+		/// <summary>True while the Native variant is in force (the macOS button order and the stock window colour).</summary>
+		public bool IsNative => native;
+
+		/// <summary>
+		/// The surface is the original's <c>Cr.Control</c> colour; the Native variant uses the stock theme's chrome colour and the macOS order of the
+		/// buttons (Apply, Cancel, OK: the default button is the rightmost).
+		/// </summary>
+		void IChromeElement.OnChromeVariantChanged(ChromeVariant variant)
+		{
+			native = variant == ChromeVariant.Native;
+			backgroundBinding?.Dispose();
+			string key = native ? ChromeNativePalette.KeyOf(ChromeNativePalette.Role.Surface) : ThemeTokens.BrushKey(ThemeTokens.Names.Control);
+			backgroundBinding = this.Bind(BackgroundProperty, this.GetResourceObservable(key));
+			RefreshButtons();
+		}
 
 		private static Button CreateButton()
 		{
@@ -254,17 +272,35 @@ namespace ComicRack.Mac.Controls
 			cancelButton.Content = cancelText ?? DialogText("btCancel", "Cancel");
 			applyButton.Content = applyText ?? DialogText("btApply", "Apply");
 			buttonRow.Children.Clear();
-			if ((buttons & DialogButtons.Ok) != 0)
+			if (native)
 			{
-				buttonRow.Children.Add(okButton);
+				if ((buttons & DialogButtons.Apply) != 0)
+				{
+					buttonRow.Children.Add(applyButton);
+				}
+				if ((buttons & DialogButtons.Cancel) != 0)
+				{
+					buttonRow.Children.Add(cancelButton);
+				}
+				if ((buttons & DialogButtons.Ok) != 0)
+				{
+					buttonRow.Children.Add(okButton);
+				}
 			}
-			if ((buttons & DialogButtons.Cancel) != 0)
+			else
 			{
-				buttonRow.Children.Add(cancelButton);
-			}
-			if ((buttons & DialogButtons.Apply) != 0)
-			{
-				buttonRow.Children.Add(applyButton);
+				if ((buttons & DialogButtons.Ok) != 0)
+				{
+					buttonRow.Children.Add(okButton);
+				}
+				if ((buttons & DialogButtons.Cancel) != 0)
+				{
+					buttonRow.Children.Add(cancelButton);
+				}
+				if ((buttons & DialogButtons.Apply) != 0)
+				{
+					buttonRow.Children.Add(applyButton);
+				}
 			}
 			buttonRow.IsVisible = buttonRow.Children.Count > 0;
 			UpdateBottomBar();

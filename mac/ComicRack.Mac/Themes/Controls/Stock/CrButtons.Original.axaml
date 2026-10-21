@@ -1,0 +1,197 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+        xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- The Original look of the Buttons element (chrome-architecture.md section 4): buttons and toggle buttons (square, 23 high), check boxes and radio
+       buttons (13 unit box or circle) in the Windows 10 look of the original, drawn with the base theme's own keys set from the Cr tokens (the Light and
+       Dark resource files next to this one). ChromeVariants adds this file to the application styles for Original and removes it for Native, which leaves
+       the stock Fluent look of CrButtons.Native.axaml. Added after the base theme, so these win. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/Stock/CrButtonsResources.Light.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/Stock/CrButtonsResources.Dark.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <Thickness x:Key="ButtonPadding">8,0,8,0</Thickness>
+
+      <!-- Check box: the Windows 10 look, a 13 unit box (white with a dark border and a black check; the dark theme fills the checked box with the
+           accent), label to the right. Brushes are the base theme's own keys, which CrControlResources.* sets from the Cr tokens. -->
+      <ControlTheme x:Key="CrCheckBox.Original" TargetType="CheckBox">
+        <Setter Property="Padding" Value="4,0,0,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource CheckBoxForegroundUnchecked}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="17" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Grid ColumnDefinitions="Auto,*" Background="{TemplateBinding Background}">
+              <Border Name="PART_Box"
+                      Width="13"
+                      Height="13"
+                      Margin="0,2,0,2"
+                      VerticalAlignment="Center"
+                      BorderThickness="1"
+                      Background="{DynamicResource CheckBoxCheckBackgroundFillUnchecked}"
+                      BorderBrush="{DynamicResource CheckBoxCheckBackgroundStrokeUnchecked}">
+                <Panel>
+                  <Path Name="CheckGlyph"
+                        Data="M 2,5.5 L 4.5,8 L 9.5,3"
+                        Stroke="{DynamicResource CheckBoxCheckGlyphForegroundChecked}"
+                        StrokeThickness="1.6"
+                        IsVisible="False" />
+                  <Rectangle Name="IndeterminateGlyph"
+                             Width="7"
+                             Height="7"
+                             Fill="{DynamicResource CheckBoxCheckGlyphForegroundIndeterminate}"
+                             IsVisible="False" />
+                </Panel>
+              </Border>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Grid.Column="1"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Foreground="{TemplateBinding Foreground}"
+                                RecognizesAccessKey="True" />
+            </Grid>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Box">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillUncheckedPointerOver}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeUncheckedPointerOver}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Box">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillUncheckedPressed}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeUncheckedPressed}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Box">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeChecked}" />
+        </Style>
+        <Style Selector="^:checked:pointerover /template/ Border#PART_Box">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeCheckedPointerOver}" />
+        </Style>
+        <Style Selector="^:checked /template/ Path#CheckGlyph">
+          <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:indeterminate /template/ Border#PART_Box">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillIndeterminate}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeIndeterminate}" />
+        </Style>
+        <Style Selector="^:indeterminate /template/ Rectangle#IndeterminateGlyph">
+          <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+          <Setter Property="Foreground" Value="{DynamicResource CheckBoxForegroundUncheckedDisabled}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Box">
+          <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillUncheckedDisabled}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeUncheckedDisabled}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Path#CheckGlyph">
+          <Setter Property="Stroke" Value="{DynamicResource CheckBoxCheckGlyphForegroundCheckedDisabled}" />
+        </Style>
+      </ControlTheme>
+
+      <!-- Radio button: a 13 unit circle with a 5 unit dot. -->
+      <ControlTheme x:Key="CrRadioButton.Original" TargetType="RadioButton">
+        <Setter Property="Padding" Value="4,0,0,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource RadioButtonForeground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="17" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Grid ColumnDefinitions="Auto,*" Background="{TemplateBinding Background}">
+              <Panel Width="13" Height="13" Margin="0,2,0,2" VerticalAlignment="Center">
+                <Ellipse Name="PART_Circle"
+                         StrokeThickness="1"
+                         Fill="{DynamicResource RadioButtonOuterEllipseFill}"
+                         Stroke="{DynamicResource RadioButtonOuterEllipseStroke}" />
+                <Ellipse Name="PART_Dot"
+                         Width="5"
+                         Height="5"
+                         Fill="{DynamicResource RadioButtonCheckGlyphFill}"
+                         IsVisible="False" />
+              </Panel>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Grid.Column="1"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Foreground="{TemplateBinding Foreground}"
+                                RecognizesAccessKey="True" />
+            </Grid>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Ellipse#PART_Circle">
+          <Setter Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillPointerOver}" />
+          <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokePointerOver}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Ellipse#PART_Circle">
+          <Setter Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillPressed}" />
+          <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokePressed}" />
+        </Style>
+        <Style Selector="^:checked /template/ Ellipse#PART_Circle">
+          <Setter Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseCheckedFill}" />
+          <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseCheckedStroke}" />
+        </Style>
+        <Style Selector="^:checked /template/ Ellipse#PART_Dot">
+          <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+          <Setter Property="Foreground" Value="{DynamicResource RadioButtonForegroundDisabled}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Ellipse#PART_Circle">
+          <Setter Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillDisabled}" />
+          <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokeDisabled}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Ellipse#PART_Dot">
+          <Setter Property="Fill" Value="{DynamicResource RadioButtonCheckGlyphFillDisabled}" />
+        </Style>
+      </ControlTheme>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <Style Selector="CheckBox">
+    <Setter Property="Theme" Value="{StaticResource CrCheckBox.Original}" />
+  </Style>
+  <Style Selector="RadioButton">
+    <Setter Property="Theme" Value="{StaticResource CrRadioButton.Original}" />
+  </Style>
+
+  <!-- Buttons: square, 23 high, the Windows 10 look. -->
+  <Style Selector="Button">
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ToggleButton">
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource Cr.GrayTextBrush}" />
+  </Style>
+  <Style Selector="Button[IsDefault=true]:not(:pointerover):not(:pressed) /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="BorderBrush" Value="{DynamicResource Cr.ButtonDefaultBorderBrush}" />
+  </Style>
+</Styles>

@@ -23,6 +23,9 @@ namespace ComicRack.Mac.Controls
 		/// <summary>The resource name of the glass panel (<c>ComicRack.Engine.Display.Forms/Resources/BlackGlassPanel.png</c>).</summary>
 		public const string PanelPicture = "BlackGlassPanel";
 
+		/// <summary>The corner radius of the Native panel.</summary>
+		public const double NativeRadius = 8;
+
 		/// <summary>The rectangle of the content inside a panel of <paramref name="dest"/> (<c>PanelRenderer.GetMargin</c>).</summary>
 		public static Rect Inner(Rect dest)
 		{
@@ -32,6 +35,15 @@ namespace ComicRack.Mac.Controls
 		/// <summary>Draws the glass panel into <paramref name="dest"/> and returns the content rectangle.</summary>
 		public static Rect Panel(DrawingContext context, Control owner, Rect dest, double opacity = 1)
 		{
+			if (ChromePaint.IsNative(owner))
+			{
+				// Native: a rounded panel in the stock surface colour with a hairline, the macOS HUD instead of the glass picture (the content rectangle is the same)
+				using (opacity < 1 ? context.PushOpacity(opacity) : default(DrawingContext.PushedState))
+				{
+					context.DrawRectangle(ChromePaint.Brush(owner, ThemeTokens.Names.Control), new Pen(ChromePaint.Brush(owner, ThemeTokens.Names.ControlDark), 1), dest.Deflate(0.5), NativeRadius, NativeRadius);
+				}
+				return Inner(dest);
+			}
 			Bitmap bitmap = Icons.TryGet(PanelPicture, ChromePaint.VariantOf(owner));
 			if (bitmap != null)
 			{

@@ -1,0 +1,9 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+        xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- The Native look of the Tree element: the stock Fluent tree item (its own chevron, hover and selection colours), the item font size 13. -->
+  <Style Selector="TreeViewItem">
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+</Styles>

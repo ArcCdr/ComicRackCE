@@ -6,12 +6,12 @@
   <!-- Default = follow the system light/dark setting. -->
   <!-- C-APP-1: the Cr.* tokens of the original (Default theme = Light, Dark theme = Dark) follow the macOS appearance; the theme option (light or dark) forces one.
        Fluent is still the base control theme; the Cr control resources (CrControlResources.*) and styles (CrControls) override its colours,
-       shapes and sizes where the original has its own look (P5.T4). -->
+       shapes and sizes where the original has its own look (P5.T4). The look of buttons, combo boxes, menus and tree items is a pack per element
+       (Themes/Controls/Stock/Cr<Element>.Original.axaml or .Native.axaml) that ChromeVariants adds to these styles and removes again (RV5b). -->
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/CrMetrics.axaml" />
-        <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/CrControlThemes.axaml" />
       </ResourceDictionary.MergedDictionaries>
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">

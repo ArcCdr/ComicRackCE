@@ -346,6 +346,11 @@ namespace ComicRack.Mac.Controls
 		/// <summary>The brush of a counter: its colour at alpha 128 at the top, 192 at the bottom.</summary>
 		public static IBrush PillBrush(Control control, GaugeKind kind)
 		{
+			if (ChromePaint.IsNative(control))
+			{
+				// Native: a flat pill (the palette's stock grey for the total, the counter's own colour for unread and new)
+				return ChromePaint.Brush(control, Tokens(kind).back);
+			}
 			Color color = ChromePaint.Color(control, Tokens(kind).back);
 			var stops = new[]
 			{

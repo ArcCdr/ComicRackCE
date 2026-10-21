@@ -434,7 +434,7 @@ namespace ComicRack.Mac.Controls
 			using (context.PushClip(grip))
 			using (context.PushTransform(m))
 			{
-				ChromePaint.Image(context, image, new Rect(image.Size));
+				ChromePaint.Icon(this, context, image, new Rect(image.Size));
 			}
 		}
 

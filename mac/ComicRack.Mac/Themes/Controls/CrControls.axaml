@@ -1,31 +1,14 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="clr-namespace:ComicRack.Mac.Controls">
-  <!-- Styles that bring the base control themes to the original's look and metrics (C-CTRL-1, C-MENU-3, C-SCROLL-1, C-FOCUS-1). The colours come from the
-       Cr control resources (CrControlResources.*.axaml) through the base themes' own keys; what is set here is shape and size. Added after the base
-       theme, so these win. -->
+  <!-- Styles that bring the base control themes to the original's look and metrics (C-CTRL-1, C-SCROLL-1, C-FOCUS-1) for the controls that no chrome element
+       owns. The colours come from the Cr control resources (CrControlResources.*.axaml) through the base themes' own keys; what is set here is shape and size.
+       Added after the base theme, so these win. -->
 
-  <!-- Buttons: square, 23 high, the Windows 10 look. -->
-  <Style Selector="Button">
-    <Setter Property="CornerRadius" Value="0" />
-    <Setter Property="MinHeight" Value="23" />
-    <Setter Property="HorizontalContentAlignment" Value="Center" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
-  </Style>
-  <Style Selector="ToggleButton">
-    <Setter Property="CornerRadius" Value="0" />
-    <Setter Property="MinHeight" Value="23" />
-    <Setter Property="HorizontalContentAlignment" Value="Center" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
-  </Style>
+  <!-- Buttons, check boxes and radio buttons, combo boxes and popup menus are the Original packs of the Buttons, ComboBox and Menus elements (Stock/Cr*.Original.axaml),
+       added and removed by ChromeVariants. What stays here is shared by both variants. -->
   <Style Selector="TextBox">
     <Setter Property="VerticalContentAlignment" Value="Center" />
-  </Style>
-  <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-    <Setter Property="Foreground" Value="{DynamicResource Cr.GrayTextBrush}" />
-  </Style>
-  <Style Selector="Button[IsDefault=true]:not(:pointerover):not(:pressed) /template/ ContentPresenter#PART_ContentPresenter">
-    <Setter Property="BorderBrush" Value="{DynamicResource Cr.ButtonDefaultBorderBrush}" />
   </Style>
 
   <!-- Selection in list boxes: the system highlight, as the native list box. -->
@@ -39,14 +22,6 @@
   </Style>
   <Style Selector="ListBoxItem:pointerover:not(:selected) /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource Cr.ButtonHoverBackBrush}" />
-  </Style>
-
-  <!-- Popup menus (C-MENU-3): system font 13, rounded, the system accent as the selection; the items and their order are the original's. -->
-  <Style Selector="MenuItem">
-    <Setter Property="FontSize" Value="13" />
-  </Style>
-  <Style Selector="ContextMenu">
-    <Setter Property="FontSize" Value="13" />
   </Style>
 
   <!-- Scroll bars (C-SCROLL-1): the base theme's thin bars that grow on hover and fade; App.axaml.cs sets AllowAutoHide from the system setting. -->

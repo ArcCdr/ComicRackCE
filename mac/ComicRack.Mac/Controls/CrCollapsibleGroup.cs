@@ -77,7 +77,7 @@ namespace ComicRack.Mac.Controls
 			Bitmap arrow = Icons.TryGet(IsExpanded ? "SimpleArrowDown" : "SimpleArrowRight", ChromePaint.VariantOf(this));
 			if (arrow != null)
 			{
-				ChromePaint.Image(context, arrow, ChromePaint.Centered(arrow.Size, ToggleBounds));
+				ChromePaint.Icon(this, context, arrow, ChromePaint.Centered(arrow.Size, ToggleBounds));
 			}
 			string text = Header?.ToString();
 			if (!string.IsNullOrEmpty(text))

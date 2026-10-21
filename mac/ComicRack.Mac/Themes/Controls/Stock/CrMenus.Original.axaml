@@ -1,0 +1,29 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+        xmlns:conv="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!-- The Original look of the Menus element (C-MENU-3): popup and context menus in the original's colours, text size 13. The items and their order are the
+       original's; the menu bar is the native one. -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/Stock/CrMenusResources.Light.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceInclude Source="avares://ComicRack.Mac/Themes/Controls/Stock/CrMenusResources.Dark.axaml" />
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+  <Style Selector="MenuItem">
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style Selector="ContextMenu">
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+</Styles>

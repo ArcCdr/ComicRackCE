@@ -492,7 +492,7 @@ namespace ComicRack.Mac.Controls
 
 		private void DrawLabels(DrawingContext context, NavigationLayout layout)
 		{
-			IBrush ink = ChromePaint.ResourceBrush(this, "Cr.Reader.OverlayTextBrush");
+			IBrush ink = ChromePaint.ReaderText(this);
 			if (ink == null)
 			{
 				return;
@@ -519,7 +519,16 @@ namespace ComicRack.Mac.Controls
 		{
 			Bitmap back = Icons.TryGet("GrayGlassButton", ChromePaint.VariantOf(this));
 			bool hot = hotButton == which || pressedButton == which;
-			if (back != null)
+			if (ChromePaint.IsNative(this))
+			{
+				// Native: no glass button, a rounded fill that shows the hot and pressed state as the toolbar buttons do
+				if (hot)
+				{
+					string fill = pressedButton == which ? ThemeTokens.Names.ToolButtonPressedGradientMiddle : ThemeTokens.Names.ToolButtonSelectedHighlight;
+					context.DrawRectangle(ChromePaint.Brush(this, fill), null, rect, ToolPaint.NativeRadius, ToolPaint.NativeRadius);
+				}
+			}
+			else if (back != null)
 			{
 				double opacity = hot ? 1 : 0.9;
 				using (context.PushRenderOptions(new RenderOptions { BitmapInterpolationMode = BitmapInterpolationMode.HighQuality }))
@@ -542,7 +551,7 @@ namespace ComicRack.Mac.Controls
 			{
 				Rect area = new Rect(rect.X + 4, rect.Y + 4, rect.Width - 8, rect.Height - 8);
 				Rect target = ChromePaint.Centered(picture.Size, area);
-				GlassPainter.Silhouette(context, picture, target, ChromePaint.ResourceBrush(this, "Cr.Reader.GlassIconBrush"));
+				GlassPainter.Silhouette(context, picture, target, ChromePaint.ReaderGlassIcon(this));
 			}
 		}
 
@@ -558,7 +567,13 @@ namespace ComicRack.Mac.Controls
 			}
 			double border = SliderBorder(rect);
 			Bitmap track = Icons.TryGet("BlackGlassScrollbarBack", ChromePaint.VariantOf(this));
-			if (track != null)
+			bool native = ChromePaint.IsNative(this);
+			if (native)
+			{
+				var inside = new Rect(rect.X + border, rect.Y + border, Math.Max(0, rect.Width - 2 * border), Math.Max(0, rect.Height - 2 * border));
+				context.DrawRectangle(ChromePaint.Brush(this, ThemeTokens.Names.ControlDark), null, inside, inside.Height / 2, inside.Height / 2);
+			}
+			else if (track != null)
 			{
 				var inside = new Rect(rect.X + border, rect.Y + border, Math.Max(0, rect.Width - 2 * border), Math.Max(0, rect.Height - 2 * border));
 				GlassPainter.NineSlice(context, track, inside, new Rect(track.Size), new Thickness(3));
@@ -575,9 +590,16 @@ namespace ComicRack.Mac.Controls
 				double width = height; // the knob picture is resized to 32 x 32
 				double x = sliderValue * (rect.Width - width) / max;
 				x = mirror ? rect.Right - x - width : rect.Left + x;
-				using (context.PushRenderOptions(new RenderOptions { BitmapInterpolationMode = BitmapInterpolationMode.HighQuality }))
+				if (native)
 				{
-					context.DrawImage(knob, new Rect(knob.Size), new Rect(Math.Round(x), rect.Top, width, height));
+					context.DrawEllipse(ChromePaint.Brush(this, ThemeTokens.Names.ControlText), null, new Rect(Math.Round(x) + 3, rect.Top + 3, Math.Max(0, width - 6), Math.Max(0, height - 6)));
+				}
+				else
+				{
+					using (context.PushRenderOptions(new RenderOptions { BitmapInterpolationMode = BitmapInterpolationMode.HighQuality }))
+					{
+						context.DrawImage(knob, new Rect(knob.Size), new Rect(Math.Round(x), rect.Top, width, height));
+					}
 				}
 			}
 		}
@@ -600,7 +622,14 @@ namespace ComicRack.Mac.Controls
 		{
 			pageAreas.Clear();
 			Bitmap frame = Icons.TryGet("GradientFramedBackground", ChromePaint.VariantOf(this));
-			if (frame != null && layout.StripFrame.Width > 0)
+			if (ChromePaint.IsNative(this))
+			{
+				if (layout.StripFrame.Width > 0)
+				{
+					context.DrawRectangle(null, new Pen(ChromePaint.Brush(this, ThemeTokens.Names.ControlDark), 1), layout.StripFrame.Deflate(0.5));
+				}
+			}
+			else if (frame != null && layout.StripFrame.Width > 0)
 			{
 				GlassPainter.NineSlice(context, frame, layout.StripFrame, new Rect(frame.Size), new Thickness(0, 3, 0, 3));
 			}
@@ -707,7 +736,7 @@ namespace ComicRack.Mac.Controls
 			double opacity = strong ? 1 : 0.3;
 			if (picture == null || picture.Image == null)
 			{
-				IBrush ink = ChromePaint.ResourceBrush(this, "Cr.Reader.OverlayTextBrush");
+				IBrush ink = ChromePaint.ReaderText(this);
 				if (ink != null)
 				{
 					// NavigationOverlay.DrawPage: the page number in Times 32 pt, in the text colour of the glass at the strength of the page

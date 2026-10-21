@@ -487,7 +487,7 @@ namespace ComicRack.Mac.Controls
 				Rect r = item.CaptionHighlight;
 				if (r.Width > 0 && r.Height > 0)
 				{
-					ChromePaint.Selection(context, r, item.SelectionStyle);
+					ChromePaint.Selection(item, context, r, item.SelectionStyle);
 				}
 			}
 		}
@@ -514,7 +514,8 @@ namespace ComicRack.Mac.Controls
 				ThumbnailGeometry g = item.Geometry;
 				DrawDogEar(context, t);
 				// graphics.DrawRectangle(Pens.Black, bounds): the frame is one unit wide and one unit outside to the right and below
-				ChromePaint.Frame(context, ChromePaint.ResourceBrush(item, "Cr.Thumb.BorderBrush"), new Rect(t.X, t.Y, t.Width + 1, t.Height + 1));
+				// Native: a hairline in the stock line colour instead of the black outline
+				ChromePaint.Frame(context, ChromePaint.IsNative(item) ? ChromePaint.Brush(item, ThemeTokens.Names.ControlDark) : ChromePaint.ResourceBrush(item, "Cr.Thumb.BorderBrush"), new Rect(t.X, t.Y, t.Width + 1, t.Height + 1));
 				if (b.PageNumber > 0)
 				{
 					ThumbnailAdornments.DrawPageNumber(context, item, t, b.PageNumber);

@@ -572,7 +572,7 @@ namespace ComicRack.Mac.Controls
 				StyledSelection style = StyleOf(row);
 				if (style.State != SelectionState.None)
 				{
-					ChromePaint.Selection(context, r, style);
+					ChromePaint.Selection(this, context, r, style);
 				}
 				for (int c = 0; c < Columns.Count; c++)
 				{
@@ -705,7 +705,7 @@ namespace ComicRack.Mac.Controls
 				StyledSelection style = StyleOf(row);
 				if (style.State != SelectionState.None)
 				{
-					ChromePaint.Selection(context, cell.Deflate(1), style);
+					ChromePaint.Selection(this, context, cell.Deflate(1), style);
 				}
 				PageRowState state = source.State(row);
 				Rect inner = cell.Deflate(CellPadding);
