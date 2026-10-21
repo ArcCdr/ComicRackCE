@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: STOPPED (waiting for OA-6 free disk space, 2026-10-21)
+Run state: RUNNING (2026-10-21, orchestrator; next task: RV5b)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -17,8 +17,8 @@ Run state: STOPPED (waiting for OA-6 free disk space, 2026-10-21)
 | P5 Screens (main window parity) | 66 | 14 | P5.6 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 11 | 10 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **168** | **44** | | estimate in §10 |
+| RV Review fixes and upstream sync | 12 | 10 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **169** | **44** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -612,6 +612,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **RV5b** runs at the end of wave B, before C2.
 - **RV6** runs right after P5.3, before P5.4.
 - **RV7, RV8** (wave B review fixes) run right now, before P5.32a.
+- **RV10** (full gate after P5.5) runs first after the disk stop.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`RV<n>`, formerly `R<n>`; renamed because R1 to R9 are the owner requirements of §1.1) go to the **front** of the list.
 
 ---
@@ -692,6 +693,12 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Depends: none · Effort: medium · Unattended: yes · Status: done 2026-10-21
 - Goal: found by RV8: `Launch.Start` calls `OnHostOpened` twice and `DatabaseManager.Database` is not safe for two first accesses; the fast gate failed once with an `ObjectDisposedException` in `LibraryFlowTests.Cancelling_a_big_scan...`. Find whether this is test-only (Launch helper) or also a product path (App startup, import reopen); fix so `OnHostOpened` runs once per host and first access to the database is serialized; add a deterministic regression test (gate the second call).
 - Accept: new test fails without the fix; `LibraryFlowTests` passes 5 times in a row; `mac/tools/verify.sh`.
+
+#### RV10 Verify P5.5 on a healthy disk (full gate)
+- Depends: P5.5 · Effort: medium · Unattended: yes · Status: todo
+- Goal: P5.5 finished while the disk was full, so its fast gate was skipped and several test projects failed on disk guards. Run the full gate on the current tree and fix anything real.
+- Do: `mac/tools/verify.sh --full`; `mac/tools/e2e.sh` (retry focus losses once); `dotnet run --project mac/tools/census -- --pass B` then `git restore mac/reports`; `mac/tools/upstream-sync-check.sh --no-merge`; fix failures that come from P5.5 code or tests (not disk-guard noise); if the baseline frames for `--full` are missing, regenerate them as RV8 documents.
+- Accept: all of the above exit 0 (or SKIPPED(focus) for e2e after one retry).
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)

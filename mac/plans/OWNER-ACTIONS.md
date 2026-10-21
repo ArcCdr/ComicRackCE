@@ -15,10 +15,10 @@
 
 ## Inbox
 
-**Required now: OA-6 (free disk space).** The five optional blocks below belong to checkpoint C1. Answer any of them whenever convenient; nothing waits for them.
+**Required now: none.** The five optional blocks below belong to checkpoint C1. Answer any of them whenever convenient; nothing waits for them.
 
 ### OA-6: Free disk space (REQUIRED, stops the port)
-- **Status:** OPEN
+- **Status:** DONE 2026-10-21 (owner freed space; 24 GB free)
 - **Checkpoint / tasks:** STOP (disk) / all tasks after P5.5 · **Asked:** 2026-10-21 · **Blocks:** every remaining task (a task must not run below 3 GB free)
 - **Why now:** the Mac has only 2.0 GB free. The port itself uses little (about 1.5 GB for `mac/fixtures` + `mac/artifacts`, deleted on demand), but the temporary folder holds 16 GB of old test data from another project: `pytest-of-vince` (dated 2026-10-19 and later) inside `$TMPDIR`.
 - **What to do:**
