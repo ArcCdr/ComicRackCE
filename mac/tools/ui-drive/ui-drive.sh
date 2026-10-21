@@ -12,6 +12,9 @@ ART="${UI_DRIVE_DIR:-$ROOT/mac/artifacts/ui-drive}"
 SESSION="$ART/session.env"
 WT="$ART/windowtool"
 SHOTS="$ART/shots"
+# limits of `drag` (WindowTool.swift has the same two numbers)
+DRAG_MAX_STEPS=200
+DRAG_MAX_HOLD_MS=10000
 
 die() { local code=$1; shift; echo "ui-drive: $*" >&2; exit "$code"; }
 
@@ -669,7 +672,13 @@ cmd_drag() {
 		a=${args[$i]}
 		case "$a" in
 			--cmd|--shift) flags+=("$a") ;;
-			--steps|--hold-ms) i=$((i+1)); case "${args[$i]}" in ''|*[!0-9]*) die 2 "drag: $a needs a whole number" ;; esac; flags+=("$a" "${args[$i]}") ;;
+			--steps|--hold-ms)
+				i=$((i+1))
+				case "${args[$i]:-}" in ''|*[!0-9]*) die 2 "drag: $a needs a whole number" ;; esac
+				# at most DRAG_MAX_STEPS / DRAG_MAX_HOLD_MS (the helper checks the same limits); a long digit string is refused before it is compared
+				local limit=$DRAG_MAX_STEPS; [ "$a" = --hold-ms ] && limit=$DRAG_MAX_HOLD_MS
+				[ ${#args[$i]} -le 6 ] && [ "$((10#${args[$i]}))" -le "$limit" ] || die 2 "drag: $a ${args[$i]} is too large (at most $limit)"
+				flags+=("$a" "${args[$i]}") ;;
 			-*|'') die 2 "drag: unknown option $a" ;;
 			*) coords+=("$a") ;;
 		esac
@@ -680,12 +689,19 @@ cmd_drag() {
 	prepare_input
 	[ -n "$window" ] || window=$(main_window_id)
 	[ -n "$window" ] || die 1 "the app has no window to drag in"
-	"$WT" drag --pid "$UD_PID" --window "$window" "${coords[@]}" ${flags[@]+"${flags[@]}"}
+	# The helper runs as a child so that a signal sent to this script reaches it: it releases the mouse button at the start point and exits 130.
+	"$WT" drag --pid "$UD_PID" --window "$window" "${coords[@]}" ${flags[@]+"${flags[@]}"} &
+	local child=$!
+	trap 'kill -TERM "$child" 2>/dev/null' TERM INT HUP
+	wait "$child"
 	local rc=$?
+	while kill -0 "$child" 2>/dev/null; do wait "$child"; rc=$?; done
+	trap - TERM INT HUP
 	case $rc in
 		0) ;;
 		4) exit 4 ;;
 		5) exit 5 ;;
+		130) exit 130 ;;
 		*) exit 1 ;;
 	esac
 }

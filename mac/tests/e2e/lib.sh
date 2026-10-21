@@ -32,7 +32,30 @@ e2e_begin() {
 	trap e2e_cleanup EXIT
 }
 
+# bg_run <command...>: runs a command in the background and remembers it. e2e_cleanup ends whatever is still running (a drag that holds the mouse button
+# down gets SIGTERM, releases the button at its start point and exits), so a failed or interrupted case never leaves the button pressed.
+E2E_BG_PIDS=()
+LAST_BG=""
+bg_run() { "$@" & LAST_BG=$!; E2E_BG_PIDS+=("$LAST_BG"); }
+
+# e2e_kill_tree <pid>: TERM to the children first (the helper that holds the button), then to the process itself.
+e2e_kill_tree() {
+	local p=$1 c
+	for c in $(pgrep -P "$p" 2>/dev/null); do e2e_kill_tree "$c"; done
+	kill -TERM "$p" 2>/dev/null
+}
+
+e2e_stop_background() {
+	local p
+	for p in ${E2E_BG_PIDS[@]+"${E2E_BG_PIDS[@]}"}; do
+		if kill -0 "$p" 2>/dev/null; then e2e_kill_tree "$p"; fi
+		wait "$p" 2>/dev/null
+	done
+	E2E_BG_PIDS=()
+}
+
 e2e_cleanup() {
+	e2e_stop_background
 	if [ "$E2E_LAUNCHED" = 1 ]; then "$UI" kill >/dev/null 2>&1; E2E_LAUNCHED=0; fi
 	if [ -n "$E2E_DATA" ] && [ "${E2E_KEEP:-0}" != 1 ]; then rm -rf "$E2E_DATA"; fi
 }

@@ -86,8 +86,22 @@ namespace ComicRack.Mac.Services
 				{
 					y = holder.Y;
 				}
+				if (width != saved.Width || height != saved.Height)
+				{
+					// The size was changed to fit the screen, so the position it was saved with (made for the old size) no longer says where the window ends:
+					// move the whole frame onto the screen it overlaps most.
+					x = ClampStart(x, width * holder.Scale, holder.X, holder.Right);
+					y = ClampStart(y, (height + TitleBar) * holder.Scale, holder.Y, holder.Bottom);
+				}
 			}
 			return new WindowFrame(x, y, width, height, saved.Maximized);
+		}
+
+		// The start of a span of the given length, moved so that the span lies inside [low, high] (at the low end when it is longer than that).
+		private static int ClampStart(int start, double length, int low, int high)
+		{
+			int latest = (int)Math.Floor(high - length);
+			return Math.Max(low, Math.Min(start, latest));
 		}
 
 		private static bool TitleBarShows(int x, int y, double width, double scale, IReadOnlyList<ScreenArea> screens)

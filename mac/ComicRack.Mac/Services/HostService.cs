@@ -50,7 +50,7 @@ namespace ComicRack.Mac.Services
 						preferences = SettingsStore.Open(SettingsStore.PathIn(paths.DataFolder), log: message => AppLog.Error(message));
 						if (preferences.LoadNote != null)
 						{
-							AppLog.Info(preferences.LoadNote);
+							AppLog.Warn(preferences.LoadNote);
 						}
 					}
 					return preferences;

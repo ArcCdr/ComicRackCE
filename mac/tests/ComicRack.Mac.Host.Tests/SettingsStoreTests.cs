@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Xunit;
 
 namespace ComicRack.Mac.Host.Tests
@@ -271,6 +272,168 @@ namespace ComicRack.Mac.Host.Tests
 				store.Flush();
 				Assert.Null(store.LastSaveError);
 				Assert.False(SettingsStore.Load(SettingsFile, out _).ShowSplash);
+			}
+		}
+
+		private static readonly TimeSpan Deadline = TimeSpan.FromSeconds(15); // only bounds a hang: every wait below is released by the test itself
+
+		private static Thread Start(Action action)
+		{
+			var thread = new Thread(() => action()) { IsBackground = true };
+			thread.Start();
+			return thread;
+		}
+
+		[Fact]
+		public void A_file_that_cannot_be_read_is_never_written_over()
+		{
+			Directory.CreateDirectory(Path.GetDirectoryName(SettingsFile));
+			const string content = "<?xml version=\"1.0\"?><Settings><ShowSplash>false</ShowSplash><SidebarWidth>333</SidebarWidth></Settings>";
+			File.WriteAllText(SettingsFile, content);
+			UnixFileMode mode = File.GetUnixFileMode(SettingsFile);
+			File.SetUnixFileMode(SettingsFile, UnixFileMode.None);
+			try
+			{
+				bool readable;
+				try
+				{
+					using (File.OpenRead(SettingsFile))
+					{
+					}
+					readable = true; // running as root: permissions do not apply
+				}
+				catch (UnauthorizedAccessException)
+				{
+					readable = false;
+				}
+				if (readable)
+				{
+					return;
+				}
+				var scheduler = new ManualScheduler();
+				using (SettingsStore store = SettingsStore.Open(SettingsFile, scheduler))
+				{
+					Assert.NotNull(store.LoadNote);
+					Assert.True(store.Current.ShowSplash); // the defaults
+					Assert.False(File.Exists(SettingsFile + ".bad")); // not known to be damaged: no copy
+					Assert.False(scheduler.HasPending); // and no save to replace it
+					store.Current.SidebarWidth = 280; // a later change must not write either
+					store.Flush();
+					Assert.False(scheduler.HasPending);
+					Assert.Equal(0, store.SaveCount);
+				}
+			}
+			finally
+			{
+				File.SetUnixFileMode(SettingsFile, mode);
+			}
+			Assert.Equal(content, File.ReadAllText(SettingsFile));
+			Assert.Equal(new[] { SettingsStore.FileName }, Directory.GetFileSystemEntries(Path.GetDirectoryName(SettingsFile)).Select(Path.GetFileName).ToArray());
+		}
+
+		[Fact]
+		public void A_damaged_file_whose_copy_failed_is_left_as_it_is()
+		{
+			Directory.CreateDirectory(Path.GetDirectoryName(SettingsFile));
+			File.WriteAllText(SettingsFile, "<Settings>");
+			Directory.CreateDirectory(SettingsFile + ".bad"); // the copy cannot be made over a folder
+			var scheduler = new ManualScheduler();
+			using (SettingsStore store = SettingsStore.Open(SettingsFile, scheduler))
+			{
+				Assert.NotNull(store.LoadNote);
+				Assert.Contains("failed", store.LoadNote);
+				Assert.False(scheduler.HasPending);
+				store.Current.ShowSplash = false;
+				store.Flush();
+				Assert.False(scheduler.HasPending);
+				Assert.Equal(0, store.SaveCount);
+			}
+			Assert.Equal("<Settings>", File.ReadAllText(SettingsFile));
+		}
+
+		[Fact]
+		public void A_setting_changes_while_the_file_is_being_written_without_waiting_for_the_disk()
+		{
+			var entered = new ManualResetEventSlim();
+			var release = new ManualResetEventSlim();
+			var written = new List<byte[]>();
+			Action<string, byte[]> blocked = (path, content) =>
+			{
+				entered.Set();
+				Assert.True(release.Wait(Deadline));
+				written.Add(content);
+				File.WriteAllBytes(path, content);
+			};
+			var scheduler = new ManualScheduler();
+			using (SettingsStore store = SettingsStore.Open(SettingsFile, scheduler, null, blocked))
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(SettingsFile));
+				store.Current.SidebarWidth = 280;
+				Thread saving = Start(() => scheduler.RunPending()); // the writer is now parked on the event
+				Assert.True(entered.Wait(Deadline));
+
+				bool dirtyAfter = false;
+				Thread change = Start(() =>
+				{
+					store.Current.SidebarWidth = 300;
+					store.Current.ThumbnailSize = 150;
+					dirtyAfter = store.IsDirty;
+				});
+				Assert.True(change.Join(Deadline), "a setter waited for the file write");
+				Assert.True(dirtyAfter);
+				Assert.True(saving.IsAlive); // the write is still in progress
+
+				release.Set();
+				Assert.True(saving.Join(Deadline));
+				Assert.Single(written);
+				Assert.Equal(280, SettingsStore.Load(SettingsFile, out _).SidebarWidth); // the snapshot taken before the change
+				Assert.True(store.IsDirty);
+
+				store.Flush();
+				Assert.Equal(2, written.Count);
+				AppPreferences after = SettingsStore.Load(SettingsFile, out _);
+				Assert.Equal(300, after.SidebarWidth);
+				Assert.Equal(150, after.ThumbnailSize);
+			}
+		}
+
+		[Fact]
+		public void An_older_snapshot_never_replaces_a_newer_one()
+		{
+			var firstTaken = new ManualResetEventSlim();
+			var releaseFirst = new ManualResetEventSlim();
+			var written = new List<long>();
+			var scheduler = new ManualScheduler();
+			using (SettingsStore store = SettingsStore.Open(SettingsFile, scheduler, null, (path, content) =>
+			{
+				written.Add(content.Length);
+				File.WriteAllBytes(path, content);
+			}))
+			{
+				store.AfterSnapshot = sequence =>
+				{
+					if (sequence == 1)
+					{
+						firstTaken.Set(); // the first snapshot is taken but has not reached the file
+						Assert.True(releaseFirst.Wait(Deadline));
+					}
+				};
+				Directory.CreateDirectory(Path.GetDirectoryName(SettingsFile));
+				store.Current.SidebarWidth = 280;
+				Thread older = Start(() => store.Flush());
+				Assert.True(firstTaken.Wait(Deadline));
+
+				store.Current.SidebarWidth = 300; // a newer state, saved completely before the older one gets to write
+				store.Flush();
+				Assert.Equal(300, SettingsStore.Load(SettingsFile, out _).SidebarWidth);
+				Assert.Equal(1, store.SaveCount);
+
+				releaseFirst.Set();
+				Assert.True(older.Join(Deadline));
+				Assert.Equal(300, SettingsStore.Load(SettingsFile, out _).SidebarWidth); // the older snapshot was dropped
+				Assert.Equal(1, store.SaveCount);
+				Assert.Single(written);
+				Assert.False(store.IsDirty);
 			}
 		}
 

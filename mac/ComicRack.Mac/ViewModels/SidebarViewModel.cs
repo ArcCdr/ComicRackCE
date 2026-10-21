@@ -133,6 +133,22 @@ namespace ComicRack.Mac.ViewModels
 		[ObservableProperty]
 		public partial double Width { get; set; } = AppPreferences.DefaultSidebarWidth;
 
+		/// <summary>The narrowest saved width that is restored (a little over the grip and the least the panel itself keeps).</summary>
+		public const double MinimumRestoredWidth = 26;
+
+		/// <summary>The widest saved width that is restored.</summary>
+		public const double MaximumRestoredWidth = 1000;
+
+		/// <summary>A saved width made usable: not a number or infinite gives the default, anything else is kept between the two limits.</summary>
+		public static double ClampWidth(double saved)
+		{
+			if (double.IsNaN(saved) || double.IsInfinity(saved))
+			{
+				return AppPreferences.DefaultSidebarWidth;
+			}
+			return Math.Clamp(saved, MinimumRestoredWidth, MaximumRestoredWidth);
+		}
+
 		/// <summary><c>DisplayLibraryGauges</c>: the counters behind the list names show at all.</summary>
 		[ObservableProperty]
 		public partial bool GaugesVisible { get; set; } = true;

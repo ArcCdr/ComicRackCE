@@ -89,6 +89,45 @@ namespace ComicRack.Mac.Tests.Settings
 		}
 
 		[Fact]
+		public void A_frame_larger_than_the_screen_is_shrunk_and_moved_so_that_the_whole_window_is_on_it()
+		{
+			var small = new ScreenArea(0, 25, 1440, 875, 1);
+			WindowFrame moved = WindowPlacement.Correct(new WindowFrame(100, 300, 2400, 1300), new[] { small });
+			Assert.Equal(1440, moved.Width);
+			Assert.Equal(875 - WindowPlacement.TitleBar, moved.Height);
+			Assert.Equal(0, moved.X);
+			Assert.Equal(25, moved.Y);
+			AssertOnScreen(moved, small);
+
+			// on a 2x screen the pixels of the frame are twice its units
+			WindowFrame retina = WindowPlacement.Correct(new WindowFrame(400, 700, 2400, 1300), new[] { Retina });
+			Assert.Equal(1512, retina.Width);
+			Assert.Equal(0, retina.X);
+			Assert.Equal(38, retina.Y);
+			AssertOnScreen(retina, Retina);
+		}
+
+		[Fact]
+		public void A_window_that_is_made_larger_to_reach_its_smallest_size_is_moved_back_onto_the_screen()
+		{
+			// 120 pixels of the title bar show at the right edge, so the window is where the user left it; at 640 x 400 it would end far beyond the screen
+			WindowFrame moved = WindowPlacement.Correct(new WindowFrame(1800, 800, 200, 100), new[] { Main }, 640, 400);
+			Assert.Equal(640, moved.Width);
+			Assert.Equal(400, moved.Height);
+			AssertOnScreen(moved, Main);
+			Assert.Equal(1920 - 640, moved.X);
+			Assert.Equal(25 + 1170 - (400 + (int)WindowPlacement.TitleBar), moved.Y);
+		}
+
+		private static void AssertOnScreen(WindowFrame frame, ScreenArea screen)
+		{
+			Assert.InRange(frame.X, screen.X, screen.Right);
+			Assert.InRange(frame.X + frame.Width * screen.Scale, screen.X, screen.Right);
+			Assert.InRange(frame.Y, screen.Y, screen.Bottom);
+			Assert.InRange(frame.Y + (frame.Height + WindowPlacement.TitleBar) * screen.Scale, screen.Y, screen.Bottom);
+		}
+
+		[Fact]
 		public void The_scale_of_the_screen_turns_pixels_into_device_independent_sizes()
 		{
 			// a 2x screen of 3024 x 1860 pixels holds a client area of 1512 x 902 units at most
@@ -245,6 +284,23 @@ namespace ComicRack.Mac.Tests.Settings
 				saved.LastFolder = temp.Combine("gone");
 				Assert.Null(vm.LastFolder);
 			}
+		}
+
+		[Theory]
+		[InlineData(double.NaN, 252)]
+		[InlineData(double.PositiveInfinity, 252)]
+		[InlineData(double.NegativeInfinity, 252)]
+		[InlineData(-50, 26)]
+		[InlineData(0, 26)]
+		[InlineData(1e9, 1000)]
+		[InlineData(300, 300)]
+		public void A_saved_side_panel_width_that_is_not_usable_is_clamped_on_restore(double savedWidth, double expected)
+		{
+			var saved = new AppPreferences { SidebarWidth = savedWidth };
+			var service = new HostService(AppOptions.Parse(new[] { "--data-dir", Path.Combine(Path.GetTempPath(), "crmac-never-started") }));
+			var vm = new MainViewModel(new NullShell(), service, new FakeDialogs(), null, saved);
+			Assert.Equal(expected, vm.Sidebar.Width);
+			Assert.Equal(savedWidth, saved.SidebarWidth); // restoring does not rewrite the saved value
 		}
 
 		[Fact]

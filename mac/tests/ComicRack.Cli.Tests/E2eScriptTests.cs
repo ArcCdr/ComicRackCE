@@ -84,6 +84,30 @@ namespace ComicRack.Cli.Tests
 		}
 
 		[Fact]
+		public void The_cleanup_of_a_case_ends_background_commands_and_their_children()
+		{
+			// a drag that holds the mouse button runs in the background (bg_run); a failed or interrupted case must not leave it running
+			string lib = Path.Combine(Repo, "mac", "tests", "e2e", "lib.sh");
+			string script = "source '" + lib + "'; E2E_CASE=cleanup-test; "
+				+ "bg_run bash -c 'sleep 120; true'; top=$LAST_BG; sleep 0.5; child=$(pgrep -P $top); "
+				+ "[ -n \"$child\" ] || { echo no-child; exit 3; }; "
+				+ "e2e_stop_background; "
+				+ "kill -0 $top 2>/dev/null && echo top-alive || echo top-gone; kill -0 $child 2>/dev/null && echo child-alive || echo child-gone";
+			var r = Bash("-c", script);
+			Assert.True(r.code == 0, r.output + r.error);
+			Assert.Contains("top-gone", r.output);
+			Assert.Contains("child-gone", r.output);
+		}
+
+		[Fact]
+		public void The_marquee_case_holds_its_drag_through_the_cleanup_of_the_library()
+		{
+			string text = File.ReadAllText(Path.Combine(Repo, "mac", "tests", "e2e", "cases", "grid-marquee.sh"));
+			Assert.Contains("bg_run", text);
+			Assert.DoesNotContain(") &", text); // no unmanaged background subshell
+		}
+
+		[Fact]
 		public void Unknown_options_and_unknown_cases_exit_2_before_anything_starts()
 		{
 			string script = Path.Combine(Repo, "mac", "tools", "e2e.sh");

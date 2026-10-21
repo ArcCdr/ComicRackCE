@@ -204,7 +204,7 @@ namespace ComicRack.Mac.ViewModels
 		{
 			Sidebar.BindGauges(saved);
 			Sidebar.IsVisible = saved.SidebarVisible;
-			Sidebar.Width = saved.SidebarWidth;
+			Sidebar.Width = SidebarViewModel.ClampWidth(saved.SidebarWidth);
 			Browser.ThumbnailSize = Math.Clamp(saved.ThumbnailSize, BrowserViewModel.MinThumbnailSize, BrowserViewModel.MaxThumbnailSize);
 			Browser.SortIndex = Enum.TryParse(saved.SortBy, out BookSort sort) && Enum.IsDefined(typeof(BookSort), sort) ? (int)sort : 0;
 			Browser.ThumbnailOptions.Bind(saved);

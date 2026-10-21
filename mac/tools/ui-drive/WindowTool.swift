@@ -11,11 +11,14 @@
 //                                        screen, 2 on bad arguments. --cmd and --shift hold the Command or Shift key during the click (flags of the
 //                                        mouse events only; no key event is sent).
 //   windowtool drag --pid N --window ID X1 Y1 X2 Y2 [--cmd] [--shift] [--steps N] [--hold-ms N]
-//                                        presses the left button at (X1, Y1), drags to (X2, Y2) in N steps (default 12), waits --hold-ms with the
-//                                        button down (default 0: a screenshot of the rubber band can be taken meanwhile), releases. The same safety
-//                                        checks as click for both points; exit 5 when one fails. The cursor is put back afterwards.
+//                                        presses the left button at (X1, Y1), drags to (X2, Y2) in N steps (default 12, at most 200), waits --hold-ms
+//                                        with the button down (default 0, at most 10000: a screenshot of the rubber band can be taken meanwhile),
+//                                        releases. The same safety checks as click for both points, repeated before every dragged event, during the
+//                                        hold and before the release; when one fails the button is released at the start point and the exit code is 5.
+//                                        SIGINT, SIGTERM and SIGHUP end the drag the same way (release at the start point, exit 130). The cursor is put
+//                                        back afterwards.
 //
-// Exit codes: 0 ok, 2 bad arguments, 4 locked screen or no GUI session, 5 safety check failed.
+// Exit codes: 0 ok, 2 bad arguments, 4 locked screen or no GUI session, 5 safety check failed, 130 interrupted.
 import AppKit
 import CoreGraphics
 import Foundation
@@ -144,6 +147,43 @@ func commandClick(_ args: [String]) {
 	print("clicked \(Int(numbers[0])),\(Int(numbers[1])) in window \(windowId)")
 }
 
+let maxDragSteps = 200
+let maxDragHoldMs = 10_000
+
+// Set by the signal handler; the drag loop looks at it between two events and releases the button.
+nonisolated(unsafe) var interrupted: Int32 = 0
+
+func installSignalHandlers() {
+	for sig in [SIGINT, SIGTERM, SIGHUP] {
+		signal(sig) { _ in interrupted = 1 }
+	}
+}
+
+// A whole non-negative number within [lower, upper]; anything else (not a number, too long for an Int, out of range) is a usage error.
+func boundedOption(_ args: [String], _ name: String, lower: Int, upper: Int, fallback: Int) -> Int {
+	guard let text = option(args, name) else { return fallback }
+	guard let value = Int(text), value >= 0 else { fail("\(name) needs a whole number from \(lower) to \(upper)", 2) }
+	if value > upper { fail("\(name) \(text) is too large (at most \(upper))", 2) }
+	return max(lower, value)
+}
+
+// Why a mouse event at `point` must not be posted now, or nil when it is safe: the screen is unlocked, the application of `pid` is frontmost, its window is
+// still on screen where it was, and the topmost normal window under the point is the application's own.
+func drag_problem(pid: Int, windowId: Int, origin: CGPoint, point: CGPoint) -> String? {
+	if lockState() != "unlocked" { return "the screen was locked" }
+	guard let front = NSWorkspace.shared.frontmostApplication, Int(front.processIdentifier) == pid else {
+		return "the application (pid \(pid)) is no longer frontmost"
+	}
+	let windows = listWindows(all: false)
+	guard let target = windows.first(where: { $0.id == windowId && $0.pid == pid }) else { return "window \(windowId) is no longer on screen" }
+	if target.rect.origin != origin { return "the window moved" }
+	if !target.rect.contains(point) { return "the point is outside the window" }
+	if let top = windows.first(where: { $0.layer == 0 && $0.rect.contains(point) }), top.pid != pid {
+		return "a window of \(top.owner) covers the point"
+	}
+	return nil
+}
+
 func commandDrag(_ args: [String]) {
 	guard let pid = option(args, "--pid").flatMap({ Int($0) }), let windowId = option(args, "--window").flatMap({ Int($0) }) else {
 		fail("drag needs --pid N --window ID X1 Y1 X2 Y2", 2)
@@ -157,8 +197,8 @@ func commandDrag(_ args: [String]) {
 		if let v = Double(a) { numbers.append(v) }
 	}
 	guard numbers.count == 4 else { fail("drag needs X1 Y1 X2 Y2 (window relative points)", 2) }
-	let steps = max(1, option(args, "--steps").flatMap { Int($0) } ?? 12)
-	let holdMs = max(0, option(args, "--hold-ms").flatMap { Int($0) } ?? 0)
+	let steps = boundedOption(args, "--steps", lower: 1, upper: maxDragSteps, fallback: 12)
+	let holdMs = boundedOption(args, "--hold-ms", lower: 0, upper: maxDragHoldMs, fallback: 0)
 	if lockState() != "unlocked" { fail("screen locked or no GUI session", 4) }
 
 	guard let front = NSWorkspace.shared.frontmostApplication, Int(front.processIdentifier) == pid else {
@@ -171,29 +211,58 @@ func commandDrag(_ args: [String]) {
 	let start = CGPoint(x: target.rect.origin.x + CGFloat(numbers[0]), y: target.rect.origin.y + CGFloat(numbers[1]))
 	let end = CGPoint(x: target.rect.origin.x + CGFloat(numbers[2]), y: target.rect.origin.y + CGFloat(numbers[3]))
 	for point in [start, end] {
-		if !target.rect.contains(point) {
-			fail("a point is outside the window (\(Int(target.rect.size.width)) x \(Int(target.rect.size.height))): drag refused", 5)
-		}
-		if let top = windows.first(where: { $0.layer == 0 && $0.rect.contains(point) }), top.pid != pid {
-			fail("a window of \(top.owner) covers a point: drag refused", 5)
+		if let problem = drag_problem(pid: pid, windowId: windowId, origin: target.rect.origin, point: point) {
+			fail("\(problem): drag refused", 5)
 		}
 	}
 	var flags: CGEventFlags = []
 	if args.contains("--cmd") { flags.insert(.maskCommand) }
 	if args.contains("--shift") { flags.insert(.maskShift) }
 	let original = CGEvent(source: nil)?.location
+	var buttonDown = false
+
+	// Ends the drag early: the button goes up at the start point (never at a point that may now belong to another window), the cursor goes back.
+	func release(_ message: String, _ code: Int32) -> Never {
+		if buttonDown {
+			post(.leftMouseUp, start, .left, clicks: 1, flags: flags)
+			buttonDown = false
+			usleep(80_000)
+		}
+		if let original = original { CGWarpMouseCursorPosition(original) }
+		fail(message, code)
+	}
+	// True when the next event may be posted; otherwise the drag is ended here.
+	func checkpoint(_ point: CGPoint) {
+		if interrupted != 0 { release("interrupted: the button was released at the start point", 130) }
+		if let problem = drag_problem(pid: pid, windowId: windowId, origin: target.rect.origin, point: point) {
+			release("\(problem) during the drag: the button was released at the start point", 5)
+		}
+	}
+
+	installSignalHandlers()
 	post(.mouseMoved, start, .left)
 	usleep(80_000)
+	checkpoint(start)
 	post(.leftMouseDown, start, .left, clicks: 1, flags: flags)
+	buttonDown = true
 	usleep(60_000)
 	for i in 1...steps {
 		let t = CGFloat(i) / CGFloat(steps)
 		let point = CGPoint(x: start.x + (end.x - start.x) * t, y: start.y + (end.y - start.y) * t)
+		checkpoint(point)
 		post(.leftMouseDragged, point, .left, clicks: 1, flags: flags)
 		usleep(30_000)
 	}
-	if holdMs > 0 { usleep(UInt32(holdMs) * 1000) }
+	var held = 0
+	while held < holdMs {
+		let slice = min(50, holdMs - held)
+		usleep(UInt32(slice) * 1000)
+		held += slice
+		checkpoint(end)
+	}
+	checkpoint(end)
 	post(.leftMouseUp, end, .left, clicks: 1, flags: flags)
+	buttonDown = false
 	usleep(80_000)
 	if let original = original {
 		CGWarpMouseCursorPosition(original)

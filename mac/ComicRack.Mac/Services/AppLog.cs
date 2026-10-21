@@ -49,6 +49,12 @@ namespace ComicRack.Mac.Services
 			Write("INFO", message);
 		}
 
+		/// <summary>A problem the app copes with (it is not counted as an error).</summary>
+		public static void Warn(string message)
+		{
+			Write("WARN", message);
+		}
+
 		public static void Error(string message, Exception ex = null)
 		{
 			Interlocked.Increment(ref errorCount);

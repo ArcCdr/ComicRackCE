@@ -8,6 +8,9 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="ComicRack.Mac.Host.Tests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\cYo.Common.Core\cYo.Common.Core.csproj" />
     <ProjectReference Include="..\ComicRack.Engine.Core\ComicRack.Engine.Core.csproj" />
     <ProjectReference Include="..\ComicRack.Plugins.Core\ComicRack.Plugins.Core.csproj" />

@@ -43,8 +43,9 @@ must drag $EDGE 531 407
 expect_status '- 4 selected' "a band over two rows and two columns selects four books"
 
 # the same band while the button is held: a screenshot, and the pure Highlight colour on the left line of the band (two units in from where it started)
-(front_app; "$UI" drag $EDGE 531 407 --hold-ms 3500 >/dev/null 2>&1) &
-HOLD=$!
+held_drag() { front_app; "$UI" drag "$@" >/dev/null 2>&1; }
+bg_run held_drag $EDGE 531 407 --hold-ms 3500
+HOLD=$LAST_BG
 sleep 2
 shot marquee-held
 read -r w h < <(ui stats "$E2E_OUT/marquee-held.png" >/dev/null; printf '%s\n' "$LAST_OUT" | awk '/size:/ { split($2, d, "x"); print d[1], d[2]; exit }')
