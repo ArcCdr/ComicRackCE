@@ -58,3 +58,5 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-21 16:34 | P5.7a | done | 964c60f |  | Info editor: shell, Summary and Details (ComicBookDialog with the original's tabs, Previous/Next, OK/Cancel/Apply, 3D cover, value lists, spin buttons, list... |
 | 2026-10-21 16:53 | P5.7b | done | e59bfe2 |  | Info editor: Plot and Notes, Catalog and Custom tabs (sub-tabs Summary, Notes, Review, list selectors, catalog fields and date boxes, custom value grid; Cata... |
 | 2026-10-21 17:57 | P5.7c | done | 77c045f |  | Info editor: Pages, Colors and cover (page list with thumbnails, tiles and details, page menu, Order by Name, sorting, merge; Colors tab with the Core's colo... |
+| 2026-10-21 19:40 | RV5b | done | a22f3c3 |  | Chrome isolation part 2 (every element switchable Original/Native: stock packs for Buttons, ComboBox, Menus, Tree; Native palette and shapes for the self-dra... |
+| 2026-10-21 20:25 | P5.8 | done | 645acc9 |  | Multi-edit (MultipleComicBooksDialog: 525 x 460 form with five collapsible groups at the Designer's positions, check box in front of every box, shared values... |
