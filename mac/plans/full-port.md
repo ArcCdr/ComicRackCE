@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: RV5b)
 | P5 Screens (main window parity) | 66 | 12 | P5.32a | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 10 | 9 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **167** | **41** | | estimate in §10 |
+| RV Review fixes and upstream sync | 11 | 9 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **168** | **41** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -662,6 +662,11 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Depends: none · Effort: high · Unattended: yes · Status: done 2026-10-21
 - Do: (1) Arrange button: a click flips the sort direction and swaps the SortUp/SortDown icon (original `ComicBrowserControl.cs` `FlipSortOrder`); only the arrow opens the menu; test. (2) Toolbar: quick search right-aligned as in `ComicBrowserControl.Designer.cs`; add the overflow behaviour (`HorizontalStackWithOverflow` equivalent: overflow chevron with a drop-down of hidden items) to `CrToolBar` with 1x/2x test; correct ledger BT.01. (3) Reader: Option+Shift+0..5 and Cmd+I rating/info keys either work (map in `ReaderViewModel.HandleKey`) or are not shown; hide 'Info...' until P5.7a; correct ledger PC.02. (4) `BrowserViewModel` last-opened: call `SetLastOpened`, remove the manual `NotifyMarkersChanged` from the test; use a HashSet in the change-batch loop. (5) `SelectionModel`: reset the anchor when the list changes (original falls back to item 0). (6) Reader navigation overlay: strip centres on `sliderValue` while dragging; request thumbnails in device pixels; write the overlay-closed setting back (MainForm.cs:4389 behaviour); add tests for `CorePageThumbnails` (ref counting, eviction past 64, dispose during a load). (7) Lints: extend `NoLiteralColorsTests`/`ChromeLint` to scan `Thumbnails/`, `Reader/`, `Browser/` etc. (all of `mac/ComicRack.Mac` except the chrome layer), forbid `new SKColor`, `SKColors.*`, `Color.FromUInt32`, short `#rgb` strings, `Avalonia.Media` in Views/ViewModels; move `ThumbnailPixels.cs` placeholder colours and `ReaderView.cs` painting into the chrome layer (tokens, dark-mode aware). (8) `MacAlert`: marshal to the UI thread, map Stop/Abort correctly, add an autorelease pool. (9) Weak tests: fix `PreferencesTests` (100 then 100), `SettingsStoreTests` old-file deletion, `LiveRefreshTests` `if (cell != null)`, restore 1.5x in `GridHiDpiTests`, make `ChromeSnapshotTests` fail loudly when baselines are missing in `--full`, list all e2e cases in `E2eScriptTests`. (10) Parity details: Cmd+F9 alias for Settings; right-click honours Cmd/Shift; Shift+Home/End/arrows in the reader; `zh-Hans*` maps to `zh-CN`.
 - Accept: each fix has a test that fails without it (show once for the groups 1, 4, 5); `mac/tools/verify.sh`; ledger rows corrected; `ledger-check` passes.
+
+#### RV9 Launch.Start double OnHostOpened race (intermittent test failure)
+- Depends: none · Effort: medium · Unattended: yes · Status: todo
+- Goal: found by RV8: `Launch.Start` calls `OnHostOpened` twice and `DatabaseManager.Database` is not safe for two first accesses; the fast gate failed once with an `ObjectDisposedException` in `LibraryFlowTests.Cancelling_a_big_scan...`. Find whether this is test-only (Launch helper) or also a product path (App startup, import reopen); fix so `OnHostOpened` runs once per host and first access to the database is serialized; add a deterministic regression test (gate the second call).
+- Accept: new test fails without the fix; `LibraryFlowTests` passes 5 times in a row; `mac/tools/verify.sh`.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
