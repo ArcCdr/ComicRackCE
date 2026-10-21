@@ -33,6 +33,7 @@ namespace ComicRack.Mac.Views
 			Register("BookGrid", () => new BookGridWindow());
 			Register("Reader", OpenFirstBook);
 			Register("ComicBookDialog", InfoOfFirstBook);
+			Register("MultipleComicBooksDialog", MultiEditOfFirstBooks);
 		}
 
 		/// <summary>
@@ -55,6 +56,22 @@ namespace ComicRack.Mac.Views
 				dialog.ShowTab(tab);
 			}
 			return dialog;
+		}
+
+		/// <summary>
+		/// The multi edit dialog of the original (<c>--show MultipleComicBooksDialog</c>): the dialog over the first books of the library (at most 12; COMICRACK_MAC_MULTI_BOOKS sets the number),
+		/// shown over the library window without blocking it. It reads the books as they are and writes nothing until OK.
+		/// </summary>
+		private static Window MultiEditOfFirstBooks()
+		{
+			ViewModels.MainViewModel library = Library ?? throw new InvalidOperationException("The library window is not open.");
+			int count = int.TryParse(Environment.GetEnvironmentVariable("COMICRACK_MAC_MULTI_BOOKS"), out int n) && n > 1 ? n : 12;
+			var books = library.Browser.Items.Where(i => i.Book != null).Select(i => i.Book).Take(count).ToArray();
+			if (books.Length < 2)
+			{
+				throw new InvalidOperationException("The library has fewer than two books to edit (use --fixture-library).");
+			}
+			return new MultipleComicBooksDialog(library.CreateMultipleBooksRequest(books));
 		}
 
 		/// <summary>

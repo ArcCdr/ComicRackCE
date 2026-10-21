@@ -312,6 +312,16 @@ namespace ComicRack.Mac.Host
 			set { Set(ref removeFilesfromDatabase, value); }
 		}
 
+		private TabLayouts tabLayouts; // Settings.cs:566
+
+		/// <summary>The dialogs that show their groups as tabs (a double click on the body of a group toggles it; the multi edit dialog is <see cref="TabLayouts.Multiple"/>).</summary>
+		[DefaultValue(TabLayouts.None)]
+		public TabLayouts TabLayouts
+		{
+			get { return tabLayouts; }
+			set { Set(ref tabLayouts, value); }
+		}
+
 		private HiddenMessageBoxes hiddenMessageBoxes; // Settings.cs:200
 
 		[DefaultValue(HiddenMessageBoxes.None)]

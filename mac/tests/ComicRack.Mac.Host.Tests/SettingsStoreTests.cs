@@ -112,6 +112,7 @@ namespace ComicRack.Mac.Host.Tests
 				AlsoRemoveFromLibraryFiltered = true,
 				RemoveFilesfromDatabase = true,
 				HiddenMessageBoxes = HiddenMessageBoxes.AskClearData | HiddenMessageBoxes.RemoveFromList,
+				TabLayouts = TabLayouts.Multiple | TabLayouts.Export,
 			};
 			SettingsStore.Save(SettingsFile, written);
 
@@ -142,6 +143,7 @@ namespace ComicRack.Mac.Host.Tests
 			Assert.DoesNotContain("BrowserDock", xml);
 			Assert.DoesNotContain("ReaderUndocked", xml);
 			Assert.DoesNotContain("TrackCurrentPage", xml);
+			Assert.DoesNotContain("TabLayouts", xml);
 		}
 
 		[Fact]

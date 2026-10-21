@@ -300,5 +300,17 @@ namespace ComicRack.Mac.Tests
 			BookInfos.Add(request);
 			return BookInfoHandler != null ? BookInfoHandler(request) : Task.FromResult(false);
 		}
+
+		/// <summary>The multi edit dialogs that were opened, in order.</summary>
+		public System.Collections.Generic.List<MultipleBooksRequest> MultipleBooks { get; } = new System.Collections.Generic.List<MultipleBooksRequest>();
+
+		/// <summary>What a test does while the multi edit dialog is "open" (it edits the model, calls <c>Store</c> for OK and answers); the default answers Cancel at once.</summary>
+		public Func<MultipleBooksRequest, Task<bool>> MultipleBooksHandler { get; set; }
+
+		public Task<bool> ShowMultipleBooksAsync(MultipleBooksRequest request)
+		{
+			MultipleBooks.Add(request);
+			return MultipleBooksHandler != null ? MultipleBooksHandler(request) : Task.FromResult(false);
+		}
 	}
 }

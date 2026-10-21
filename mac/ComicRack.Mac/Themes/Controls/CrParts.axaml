@@ -90,6 +90,12 @@
     <Setter Property="Padding" Value="3,0" />
   </Style>
 
+  <!-- A panel with the one unit frame of BorderStyle.FixedSingle (MultipleComicBooksDialog: pageData and the panel of the custom fields); the frame is the WindowFrame colour -->
+  <Style Selector="Border.cr-framed-panel">
+    <Setter Property="BorderBrush" Value="{DynamicResource Cr.WindowFrameBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
   <!-- The captions of the sliders of the Colors tab (labelSaturation ... labelSharpening: Microsoft Sans Serif 6.75 pt bold) -->
   <Style Selector="Label.cr-caption">
     <Setter Property="FontSize" Value="{DynamicResource Cr.FontSize.Caption}" />

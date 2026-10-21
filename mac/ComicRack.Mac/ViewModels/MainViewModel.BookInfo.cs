@@ -72,9 +72,7 @@ namespace ComicRack.Mac.ViewModels
 			}
 			if (books.Count > 1 && books.All(b => b.EditMode.CanEditProperties()))
 			{
-				SetUndoMarker(UiText.Message("UndoEditMultipleComics", "Edit multiple Books"));
-				NotYet(UiText.Get("MainForm", "miShowInfo", "Info..."), "P5.8");
-				return false;
+				return await ShowMultipleBooksAsync(books);
 			}
 			ComicBook current = books[0];
 			ComicBook[] all = fromReader || books.Count == 1 && !Browser.Items.Any(i => ReferenceEquals(i.Book, current))
@@ -106,6 +104,53 @@ namespace ComicRack.Mac.ViewModels
 				NotifyDialogState();
 				RefreshUndoState();
 			}
+		}
+
+		/// <summary>
+		/// The multi edit dialog (<c>MainForm.ShowInfo</c> for more than one editable book): an undo marker "Edit multiple Books", the information of the books read from their files
+		/// (<c>RefreshBooksInfoFromFiles</c>, off the UI thread), then the dialog. What OK writes is one undo step. Returns true when the dialog was closed with OK.
+		/// </summary>
+		public async Task<bool> ShowMultipleBooksAsync(IReadOnlyList<ComicBook> books)
+		{
+			if (books == null || books.Count == 0 || hostService.Host == null)
+			{
+				return false;
+			}
+			SetUndoMarker(UiText.Message("UndoEditMultipleComics", "Edit multiple Books"));
+			ComicBook[] selected = books.ToArray();
+			dialogDepth++;
+			NotifyDialogState();
+			try
+			{
+				AppLog.Info($"Multi edit: refreshing the information of {selected.Length} books.");
+				await Task.Run(() =>
+				{
+					foreach (ComicBook book in selected)
+					{
+						book.RefreshInfoFromFile(RefreshInfoOptions.None);
+					}
+				});
+				MultipleBooksRequest request = CreateMultipleBooksRequest(selected);
+				AppLog.Info($"Multi edit dialog opened for {selected.Length} books.");
+				bool ok = await dialogs.ShowMultipleBooksAsync(request);
+				AppLog.Info("Multi edit dialog closed with " + (ok ? "OK" : "Cancel") + ".");
+				return ok;
+			}
+			finally
+			{
+				dialogDepth--;
+				NotifyDialogState();
+				RefreshUndoState();
+			}
+		}
+
+		/// <summary>The request for the multi edit dialog over <paramref name="books"/>.</summary>
+		public MultipleBooksRequest CreateMultipleBooksRequest(IReadOnlyList<ComicBook> books)
+		{
+			MacHost host = hostService.Host;
+			ComicDatabase database = host.DatabaseManager.Database;
+			var lists = new EditorValueLists(() => database.Books, EditorValueLists.DefaultLocations(host.Paths.DataFolder));
+			return new MultipleBooksRequest { Model = new MultiBookEditorModel(books, preferences, lists), Preferences = preferences };
 		}
 
 		/// <summary>The request for the Info dialog of <paramref name="current"/> (the browser selects the books the dialog moves to).</summary>

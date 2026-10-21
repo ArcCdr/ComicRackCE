@@ -46,6 +46,8 @@ namespace ComicRack.Mac.Tests
 			// what the Pages and Colors tabs remember for the next dialog (the application keeps it while it runs)
 			InfoPagesPage.ResetViewState();
 			InfoColorsPage.ResetViewState();
+			// and the multi edit dialog: which groups were collapsed and where the panel was scrolled
+			MultiEditViewState.Reset();
 		}
 
 		public override void After(MethodInfo methodUnderTest)

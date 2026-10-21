@@ -17,13 +17,16 @@ namespace ComicRack.Mac.Views
 		public static string Raw(string key, string english) => UiText.Raw(Section, key, english);
 
 		/// <summary>Translates the labels, buttons and check boxes below <paramref name="root"/> whose <c>Tag</c> names their key.</summary>
-		public static void Translate(Control root)
+		public static void Translate(Control root) => Translate(root, Section);
+
+		/// <summary>The same for a dialog with a section of its own (<c>MultipleComicBooksDialog</c>).</summary>
+		public static void Translate(Control root, string section)
 		{
 			foreach (ContentControl control in root.GetLogicalDescendants().OfType<ContentControl>().ToList())
 			{
 				if (control.Tag is string key && control.Content is string english)
 				{
-					control.Content = Get(key, english);
+					control.Content = UiText.Get(section, key, english);
 				}
 			}
 		}

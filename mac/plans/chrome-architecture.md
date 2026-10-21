@@ -27,7 +27,7 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 ## 3. What a view may use (the public surface)
 
 - `Cr*` controls from `ComicRack.Mac.Controls`, with their documented properties. A control that takes its content from a model names the members (`CrTreeView.IconMember`, `TextMember`, `CountMember`, `CountVisibleMember`, `ToolTipMember`, `ChildrenMember`, `ExpandedMember`): the view says which member carries what, the control decides how a row looks.
-- Style classes of `CrParts.axaml`, named for the role: `cr-window`, `cr-panel`, `cr-card`, `cr-display`, `cr-title`, `cr-heading`, `cr-bold`, `cr-small`, `cr-secondary`, `cr-hint`, `cr-error`, `cr-grid`, `cr-grid-line` and `cr-grid-cell` (the Custom tab's grid, P5.7b), `cr-caption` (the captions of the Colors tab's sliders, P5.7c), and the MVP surfaces `cr-item-view` (the paper of the browser, P5.R2), `cr-overlay*` (the performance overlay). A new role gets a new class in `CrParts.axaml`, never an attribute in a view.
+- Style classes of `CrParts.axaml`, named for the role: `cr-window`, `cr-panel`, `cr-card`, `cr-display`, `cr-title`, `cr-heading`, `cr-bold`, `cr-small`, `cr-secondary`, `cr-hint`, `cr-error`, `cr-grid`, `cr-grid-line` and `cr-grid-cell` (the Custom tab's grid, P5.7b), `cr-caption` (the captions of the Colors tab's sliders, P5.7c, and of the multi edit dialog's labels, P5.8), `cr-framed-panel` (the one unit `WindowFrame` line of a `BorderStyle.FixedSingle` panel, P5.8), and the MVP surfaces `cr-item-view` (the paper of the browser, P5.R2), `cr-overlay*` (the performance overlay). A new role gets a new class in `CrParts.axaml`, never an attribute in a view.
 - Tokens: `{DynamicResource Cr.<Token>Brush}` and `ThemeTokens.Get(...)` in code (a token is a colour of the original, not a look decision of a variant).
 - Pictures: `CrIcon IconName="<resx name>"` or `Icons.Get(name)`. `Icons` is the only way to load an image of the original.
 - Custom-drawn views take brushes by key: `ChromePaint.ResourceBrush(control, "Cr.Reader...")` or `ChromePaint.Brush(control, token)`.
@@ -56,7 +56,7 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 | StatusBar | `CrStatusBar`, `CrStatusSlot` | **yes** (proof) |
 | Tree | `CrTreeView`, `CrTreeRow`, `CrGaugeStrip`, `StyledSelectionVisual`, tree item theme (`CrControlThemes.axaml`) | **yes** (RV5b) |
 | ListHeader | `CrHeader` | **yes** (RV5b) |
-| GroupBox | `CrCollapsibleGroup` | **yes** (RV5b) |
+| GroupBox | `CrCollapsibleGroup` (the groups of the multi edit dialog, P5.8, over a panel with the Designer's positions) | **yes** (RV5b) |
 | SidePanel | `CrSizableContainer` (grip, slide, a click on the grip toggles it, `Fill` takes the whole room: the side panel and the browser dock of the main window) | **yes** (RV5b) |
 | Icons | `CrIcon`, `Icons` | **yes** (RV5b) |
 | Dialogs | `CrDialogWindow`, `AlertWindow` (the system alert is native already: `MacAlert`) | **yes** (RV5b) |

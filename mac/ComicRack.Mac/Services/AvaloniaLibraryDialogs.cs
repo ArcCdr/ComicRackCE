@@ -100,6 +100,12 @@ namespace ComicRack.Mac.Services
 			return new ComicBookDialog(request).ShowDialogAsync(owner);
 		}
 
+		/// <summary>The multi edit dialog over the main window.</summary>
+		public Task<bool> ShowMultipleBooksAsync(MultipleBooksRequest request)
+		{
+			return new MultipleComicBooksDialog(request).ShowDialogAsync(owner);
+		}
+
 		/// <summary>The Quick Rating dialog over the main window.</summary>
 		public Task<QuickRatingResult> AskQuickRatingAsync(QuickRatingRequest request)
 		{

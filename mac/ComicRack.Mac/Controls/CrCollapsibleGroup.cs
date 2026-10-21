@@ -80,7 +80,8 @@ namespace ComicRack.Mac.Controls
 				ChromePaint.Icon(this, context, arrow, ChromePaint.Centered(arrow.Size, ToggleBounds));
 			}
 			string text = Header?.ToString();
-			if (!string.IsNullOrEmpty(text))
+			// a group that is not arranged yet (or is hidden) has no width: there is no room for the text, and FormattedText refuses a text height of zero
+			if (!string.IsNullOrEmpty(text) && header.Width > ToggleBounds.Width)
 			{
 				var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(FontFamily, FontStyle.Normal, FontWeight.Bold), FontSize, ChromePaint.Brush(this, ThemeTokens.Names.CollapsibleGroupBoxHeaderText))
 				{

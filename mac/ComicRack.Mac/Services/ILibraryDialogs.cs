@@ -44,5 +44,8 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>The Info dialog (DL.01, <c>ComicBookDialog</c>): true after OK. It writes the books itself (OK, Apply, Previous and Next call the model). The default cancels.</summary>
 		Task<bool> ShowBookInfoAsync(BookInfoRequest request) => Task.FromResult(false);
+
+		/// <summary>The multi edit dialog (DL.02, <c>MultipleComicBooksDialog</c>): true after OK, which has written the checked fields into the books. The default cancels.</summary>
+		Task<bool> ShowMultipleBooksAsync(MultipleBooksRequest request) => Task.FromResult(false);
 	}
 }

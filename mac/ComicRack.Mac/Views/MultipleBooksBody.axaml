@@ -1,0 +1,232 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             x:Class="ComicRack.Mac.Views.MultipleBooksBody">
+  <!-- Generated from the positions of MultipleComicBooksDialog.Designer.cs (pageData 497 x 407 with a one unit frame; the groups are 478 wide, as they are beside the 17 wide scroll bar).
+       Every group is a CrCollapsibleGroup (24 high header) over a Panel whose controls are placed at the Designer's position minus the header: a margin is the position. In front of every
+       box is the check box that MakeCheckBox adds (16 x 17, centred on the box, the box 18 to the right and 18 narrower); the labels stay where they are, as in the original
+       (its lookup of the label finds nothing). A box with a list selector is 16 narrower (ListSelectorControl.Register), a number box 11 narrower with the spin button 1 to the right
+       of it (SpinButton.AddUpDown). Texts are the Designer's English texts; the code behind replaces every Tag'd label and group header by the original's translation
+       (TR section MultipleComicBooksDialog, key = the Tag). The Custom Fields group is filled from the code. -->
+  <Panel Name="host">
+  <Border Name="pageDataFrame" Classes="cr-framed-panel">
+    <ScrollViewer Name="pageData" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+      <StackPanel Name="groupStack" Width="478" HorizontalAlignment="Left">
+        <c:CrCollapsibleGroup Name="grpMain" Tag="grpMain" Header="Main">
+          <Panel Name="grpMainPanel" Height="376" Background="Transparent">
+      <Label Name="labelDay" Tag="labelDay" Content="Day:" Classes="cr-caption" Margin="393,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelSeriesGroup" Tag="labelSeriesGroup" Content="Series Group:" Classes="cr-caption" Margin="163,126,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelStoryArc" Tag="labelStoryArc" Content="Story Arc:" Classes="cr-caption" Margin="9,126,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelSeriesComplete" Tag="labelSeriesComplete" Content="Series complete:" Classes="cr-caption" Margin="315,128,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelRating" Tag="labelRating" Content="My Rating:" Classes="cr-caption" Margin="12,324,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelEnableProposed" Tag="labelEnableProposed" Content="Proposed Values:" Classes="cr-caption" Margin="319,245,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelFormat" Tag="labelFormat" Content="Format:" Classes="cr-caption" Margin="8,173,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelTags" Tag="labelTags" Content="Tags:" Classes="cr-caption" Margin="9,285,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelAlternateSeries" Tag="labelAlternateSeries" Content="Alternate Series or Storyline Title:" Classes="cr-caption" Margin="9,88,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelImprint" Tag="labelImprint" Content="Imprint:" Classes="cr-caption" Margin="162,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelCommunityRating" Tag="labelCommunityRating" Content="Community Rating:" Classes="cr-caption" Margin="247,325,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelAlternateNumber" Tag="labelAlternateNumber" Content="Number:" Classes="cr-caption" Margin="316,88,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelGenre" Tag="labelGenre" Content="Genre:" Classes="cr-caption" Margin="163,246,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelSeries" Tag="labelSeries" Content="Series:" Classes="cr-caption" Margin="11,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelAlternateCount" Tag="labelAlternateCount" Content="of:" Classes="cr-caption" Margin="395,88,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelPublisher" Tag="labelPublisher" Content="Publisher:" Classes="cr-caption" Margin="9,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelTitle" Tag="labelTitle" Content="Title:" Classes="cr-caption" Margin="11,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelAgeRating" Tag="labelAgeRating" Content="Age Rating:" Classes="cr-caption" Margin="161,172,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelLanguage" Tag="labelLanguage" Content="Language:" Classes="cr-caption" Margin="8,246,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelYear" Tag="labelYear" Content="Year:" Classes="cr-caption" Margin="241,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelManga" Tag="labelManga" Content="Manga:" Classes="cr-caption" Margin="315,174,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelNumber" Tag="labelNumber" Content="Number:" Classes="cr-caption" Margin="316,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBlackAndWhite" Tag="labelBlackAndWhite" Content="Black and White:" Classes="cr-caption" Margin="317,207,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelMonth" Tag="labelMonth" Content="Month:" Classes="cr-caption" Margin="316,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelVolume" Tag="labelVolume" Content="Volume:" Classes="cr-caption" Margin="241,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelCount" Tag="labelCount" Content="of:" Classes="cr-caption" Margin="396,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <CheckBox Name="chktxSeries" Margin="11,27,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <AutoCompleteBox Name="txSeries" MinWidth="0" Margin="29,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="205" Height="20" />
+      <CheckBox Name="chktxVolume" Margin="243,27,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txVolumeSpin" Margin="299,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txVolume" MinWidth="0" Margin="261,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="37" Height="20" />
+      <CheckBox Name="chktxNumber" Margin="318,27,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txNumberSpin" Margin="379,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txNumber" MinWidth="0" Margin="336,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="42" Height="20" />
+      <CheckBox Name="chktxCount" Margin="395,28,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txCountSpin" Margin="457,27,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txCount" MinWidth="0" Margin="413,27,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="43" Height="20" />
+      <CheckBox Name="chktxTitle" Margin="11,64,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <AutoCompleteBox Name="txTitle" MinWidth="0" Margin="29,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="208" Height="20" />
+      <CheckBox Name="chktxYear" Margin="243,64,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txYearSpin" Margin="299,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txYear" MinWidth="0" Margin="261,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="37" Height="20" />
+      <CheckBox Name="chktxMonth" Margin="318,64,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txMonthSpin" Margin="379,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txMonth" MinWidth="0" Margin="336,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="42" Height="20" />
+      <CheckBox Name="chktxDay" Margin="395,64,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txDaySpin" Margin="456,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txDay" MinWidth="0" Margin="413,63,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="42" Height="20" />
+      <CheckBox Name="chktxAlternateSeries" Margin="10,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <AutoCompleteBox Name="txAlternateSeries" MinWidth="0" Margin="28,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="281" Height="20" />
+      <CheckBox Name="chktxAlternateNumber" Margin="318,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txAlternateNumberSpin" Margin="378,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txAlternateNumber" MinWidth="0" Margin="336,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="41" Height="20" />
+      <CheckBox Name="chktxAlternateCount" Margin="394,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txAlternateCountSpin" Margin="456,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txAlternateCount" MinWidth="0" Margin="412,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="43" Height="20" />
+      <CheckBox Name="chktxStoryArc" Margin="11,141,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <AutoCompleteBox Name="txStoryArc" MinWidth="0" Margin="29,140,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="126" Height="20" />
+      <CheckBox Name="chktxSeriesGroup" Margin="166,142,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <AutoCompleteBox Name="txSeriesGroup" MinWidth="0" Margin="184,141,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Height="20" />
+      <CheckBox Name="chkcbSeriesComplete" Margin="317,143,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbSeriesComplete" Margin="335,141,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="131" Height="21" />
+      <CheckBox Name="chkcbManga" Margin="317,188,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbManga" Margin="335,186,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="131" Height="21" />
+      <CheckBox Name="chkcbFormat" Margin="10,189,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbFormat" IsEditable="True" Margin="28,187,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="21" />
+      <CheckBox Name="chkcbAgeRating" Margin="164,189,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbAgeRating" IsEditable="True" Margin="182,187,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="21" />
+      <CheckBox Name="chkcbBlackAndWhite" Margin="317,224,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBlackAndWhite" Margin="335,222,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="131" Height="21" />
+      <CheckBox Name="chkcbPublisher" Margin="11,226,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbPublisher" IsEditable="True" Margin="29,224,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="124" Height="21" />
+      <CheckBox Name="chkcbImprint" Margin="164,226,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbImprint" IsEditable="True" Margin="182,224,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="21" />
+      <CheckBox Name="chkcbEnableProposed" Margin="317,262,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbEnableProposed" Margin="335,260,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="131" Height="21" />
+      <CheckBox Name="chkcbLanguage" Margin="10,263,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbLanguage" Margin="28,261,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Height="21" />
+      <CheckBox Name="chktxGenre" Margin="164,262,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txGenreSelector" Margin="293,261,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txGenre" MinWidth="0" Margin="182,261,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="111" Height="20" />
+      <CheckBox Name="chktxTags" Margin="11,301,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txTagsSelector" Margin="293,300,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txTags" MinWidth="0" Margin="29,300,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="264" Height="20" />
+      <CheckBox Name="chktxRating" Margin="13,340,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrRatingStars Name="txRating" StarName="StarYellow" DrawText="True" Margin="31,339,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="205" Height="20" />
+      <CheckBox Name="chktxCommunityRating" Margin="248,341,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrRatingStars Name="txCommunityRating" StarName="StarBlue" DrawText="True" Margin="266,340,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="201" Height="20" />
+          </Panel>
+        </c:CrCollapsibleGroup>
+        <c:CrCollapsibleGroup Name="grpArtists" Tag="grpArtists" Header="Artists / People Involved">
+          <Panel Name="grpArtistsPanel" Height="180" Background="Transparent">
+      <Label Name="labelTranslator" Tag="labelTranslator" Content="Translator:" Classes="cr-caption" Margin="243,129,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelWriter" Tag="labelWriter" Content="Writer:" Classes="cr-caption" Margin="12,18,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelPenciller" Tag="labelPenciller" Content="Penciller:" Classes="cr-caption" Margin="243,18,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelInker" Tag="labelInker" Content="Inker:" Classes="cr-caption" Margin="13,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelColorist" Tag="labelColorist" Content="Colorist:" Classes="cr-caption" Margin="243,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelLetterer" Tag="labelLetterer" Content="Letterer:" Classes="cr-caption" Margin="12,92,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelCoverArtist" Tag="labelCoverArtist" Content="Cover Artist:" Classes="cr-caption" Margin="243,92,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelEditor" Tag="labelEditor" Content="Editor:" Classes="cr-caption" Margin="13,128,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <CheckBox Name="chktxWriter" Margin="13,34,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txWriterSelector" Margin="217,33,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txWriter" MinWidth="0" Margin="31,33,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxPenciller" Margin="245,34,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txPencillerSelector" Margin="449,33,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txPenciller" MinWidth="0" Margin="263,33,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxInker" Margin="13,70,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txInkerSelector" Margin="217,69,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txInker" MinWidth="0" Margin="31,69,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxColorist" Margin="245,70,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txColoristSelector" Margin="449,69,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txColorist" MinWidth="0" Margin="263,69,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxLetterer" Margin="13,106,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txLettererSelector" Margin="217,105,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txLetterer" MinWidth="0" Margin="31,105,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxCoverArtist" Margin="245,107,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txCoverArtistSelector" Margin="449,106,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txCoverArtist" MinWidth="0" Margin="263,106,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxEditor" Margin="13,144,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txEditorSelector" Margin="217,143,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txEditor" MinWidth="0" Margin="31,143,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+      <CheckBox Name="chktxTranslator" Margin="245,144,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txTranslatorSelector" Margin="449,143,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txTranslator" MinWidth="0" Margin="263,143,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Height="20" />
+          </Panel>
+        </c:CrCollapsibleGroup>
+        <c:CrCollapsibleGroup Name="grpPlotNotes" Tag="grpPlotNotes" Header="Plot &amp; Notes">
+          <Panel Name="grpPlotNotesPanel" Height="241" Background="Transparent">
+      <Label Name="labelMainCharacterOrTeam" Tag="labelMainCharacterOrTeam" Content="Main Character/Team:" Classes="cr-caption" Margin="247,9,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelReview" Tag="labelReview" Content="Review:" Classes="cr-caption" Margin="16,158,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelScanInformation" Tag="labelScanInformation" Content="Scan Information:" Classes="cr-caption" Margin="243,158,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelSummary" Tag="labelSummary" Content="Summary:" Classes="cr-caption" Margin="15,9,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelNotes" Tag="labelNotes" Content="Notes:" Classes="cr-caption" Margin="15,85,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelCharacters" Tag="labelCharacters" Content="Characters:" Classes="cr-caption" Margin="245,45,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelWeb" Tag="labelWeb" Content="Web:" Classes="cr-caption" Margin="244,193,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelTeams" Tag="labelTeams" Content="Teams:" Classes="cr-caption" Margin="244,86,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelLocations" Tag="labelLocations" Content="Locations:" Classes="cr-caption" Margin="244,122,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <CheckBox Name="chktxSummary" Margin="13,43,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <TextBox Name="txSummary" MinWidth="0" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="31,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="55" />
+      <CheckBox Name="chktxMainCharacterOrTeam" Margin="243,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txMainCharacterOrTeamSelector" Margin="451,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txMainCharacterOrTeam" MinWidth="0" Margin="261,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" Height="20" />
+      <CheckBox Name="chktxCharacters" Margin="244,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txCharactersSelector" Margin="451,59,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txCharacters" MinWidth="0" Margin="262,59,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="20" />
+      <CheckBox Name="chktxNotes" Margin="13,118,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <TextBox Name="txNotes" MinWidth="0" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="31,99,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="55" />
+      <CheckBox Name="chktxTeams" Margin="243,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txTeamsSelector" Margin="451,99,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txTeams" MinWidth="0" Margin="261,99,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" Height="20" />
+      <CheckBox Name="chktxLocations" Margin="243,136,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txLocationsSelector" Margin="450,135,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txLocations" MinWidth="0" Margin="261,135,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="20" />
+      <CheckBox Name="chktxReview" Margin="14,191,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <TextBox Name="txReview" MinWidth="0" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="32,172,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="55" />
+      <CheckBox Name="chktxScanInformation" Margin="244,173,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <AutoCompleteBox Name="txScanInformation" MinWidth="0" Margin="262,172,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="204" Height="20" />
+      <CheckBox Name="chktxWeb" Margin="245,208,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <TextBox Name="txWeb" MinWidth="0" Margin="263,207,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="203" Height="20" />
+          </Panel>
+        </c:CrCollapsibleGroup>
+        <c:CrCollapsibleGroup Name="grpCatalog" Tag="grpCatalog" Header="Catalog">
+          <Panel Name="grpCatalogPanel" Height="368" Background="Transparent">
+      <Label Name="labelReleasedTime" Tag="labelReleasedTime" Content="Released:" Classes="cr-caption" Margin="14,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelOpenedTime" Tag="labelOpenedTime" Content="Opened/Read:" Classes="cr-caption" Margin="248,205,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelAddedTime" Tag="labelAddedTime" Content="Added/Purchased:" Classes="cr-caption" Margin="246,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelPagesAsTextSimple" Tag="labelPagesAsTextSimple" Content="Pages:" Classes="cr-caption" Margin="245,43,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelISBN" Tag="labelISBN" Content="ISBN:" Classes="cr-caption" Margin="13,43,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookNotes" Tag="labelBookNotes" Content="Notes about this Book:" Classes="cr-caption" Margin="13,288,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookLocation" Tag="labelBookLocation" Content="Book Location:" Classes="cr-caption" Margin="245,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookPrice" Tag="labelBookPrice" Content="Price:" Classes="cr-caption" Margin="244,6,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookAge" Tag="labelBookAge" Content="Age:" Classes="cr-caption" Margin="12,82,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookCollectionStatus" Tag="labelBookCollectionStatus" Content="Collection Status:" Classes="cr-caption" Margin="12,247,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookCondition" Tag="labelBookCondition" Content="Condition:" Classes="cr-caption" Margin="244,82,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookStore" Tag="labelBookStore" Content="Store:" Classes="cr-caption" Margin="11,6,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <Label Name="labelBookOwner" Tag="labelBookOwner" Content="Owner:" Classes="cr-caption" Margin="13,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+      <CheckBox Name="chkcbBookPrice" Margin="246,22,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBookPrice" IsEditable="True" Margin="264,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="21" />
+      <CheckBox Name="chkcbBookStore" Margin="13,23,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBookStore" IsEditable="True" Margin="31,21,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="21" />
+      <CheckBox Name="chktxISBN" Margin="13,59,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <TextBox Name="txISBN" MinWidth="0" Margin="31,58,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="20" />
+      <CheckBox Name="chktxPagesAsTextSimple" Margin="246,59,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrSpinButton Name="txPagesAsTextSimpleSpin" Margin="454,58,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="11" Height="20" />
+      <TextBox Name="txPagesAsTextSimple" MinWidth="0" Margin="264,58,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="20" />
+      <CheckBox Name="chkcbBookCondition" Margin="246,98,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBookCondition" IsEditable="True" Margin="264,96,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="21" />
+      <CheckBox Name="chkcbBookAge" Margin="13,99,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBookAge" IsEditable="True" Margin="31,97,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="21" />
+      <CheckBox Name="chkcbBookOwner" Margin="13,136,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBookOwner" IsEditable="True" Margin="31,134,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="21" />
+      <CheckBox Name="chkcbBookLocation" Margin="246,136,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <c:CrValueComboBox Name="cbBookLocation" IsEditable="True" Margin="264,134,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="21" />
+      <CheckBox Name="chkdtpReleasedTime" Margin="13,183,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <CalendarDatePicker Name="dtpReleasedTime" SelectedDateFormat="Long" PlaceholderText=" " MinHeight="0" Margin="31,182,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="202" Height="20" />
+      <CheckBox Name="chkdtpAddedTime" Margin="246,183,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <CalendarDatePicker Name="dtpAddedTime" SelectedDateFormat="Long" PlaceholderText=" " MinHeight="0" Margin="264,182,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="20" />
+      <CheckBox Name="chkdtpOpenedTime" Margin="246,221,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <CalendarDatePicker Name="dtpOpenedTime" SelectedDateFormat="Long" PlaceholderText=" " MinHeight="0" Margin="264,220,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="20" />
+      <CheckBox Name="chktxCollectionStatus" Margin="13,263,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <Button Name="txCollectionStatusSelector" Margin="448,262,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="20" Padding="0" MinWidth="0" MinHeight="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      <AutoCompleteBox Name="txCollectionStatus" MinWidth="0" Margin="31,262,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="417" Height="20" />
+      <CheckBox Name="chktxBookNotes" Margin="13,319,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="17" MinWidth="0" MinHeight="0" Padding="0" Focusable="False" />
+      <TextBox Name="txBookNotes" MinWidth="0" AcceptsReturn="True" TextWrapping="Wrap" NewLine="&#13;&#10;" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="31,303,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="434" Height="50" />
+          </Panel>
+        </c:CrCollapsibleGroup>
+        <c:CrCollapsibleGroup Name="grpCustom" Tag="grpCustom" Header="Custom Fields">
+          <Border Name="customGroupsPanel" Classes="cr-framed-panel" Height="67">
+            <Canvas Name="customFieldsCanvas" Background="Transparent" />
+          </Border>
+        </c:CrCollapsibleGroup>
+      </StackPanel>
+    </ScrollViewer>
+  </Border>
+  </Panel>
+</UserControl>

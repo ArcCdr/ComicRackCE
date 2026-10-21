@@ -89,7 +89,7 @@ namespace ComicRack.Mac.Tests.Editor
 		}
 
 		[Fact]
-		public async Task More_than_one_selected_book_asks_for_the_multi_edit_dialog_of_P5_8()
+		public async Task More_than_one_selected_book_opens_the_multi_edit_dialog_and_one_Undo_takes_back_what_OK_wrote_in_all_of_them()
 		{
 			await Ui.Run(async () =>
 			{
@@ -97,11 +97,59 @@ namespace ComicRack.Mac.Tests.Editor
 				using (Launch launch = await Launch.Start(temp.Combine("app")))
 				{
 					MainViewModel vm = launch.ViewModel;
-					await Fill(launch, 3);
-					vm.Browser.Selection.SelectBooks(vm.Browser.Items.Take(2).Select(i => i.Book).ToArray());
+					ComicBook[] books = await Fill(launch, 3);
+					ComicBook[] chosen = vm.Browser.Items.Take(2).Select(i => i.Book).ToArray();
+					vm.Browser.Selection.SelectBooks(chosen);
+					string[] was = chosen.Select(b => b.Publisher).ToArray();
+					launch.Dialogs.MultipleBooksHandler = request =>
+					{
+						Assert.Equal(2, request.Model.Count);
+						Assert.Equal(chosen, request.Model.Books);
+						Assert.True(vm.IsInfoDialogOpen); // Undo, Redo and Info are off while the dialog is open
+						request.Model["cbPublisher"].Text = "Multi Press";
+						request.Model["txYear"].Text = "1999";
+						Assert.True(request.Model.Store() >= 2); // every box the books share is checked and written too, with the value it has
+						return Task.FromResult(true);
+					};
 					await vm.ShowInfoCommand.ExecuteAsync(null);
 					Assert.Empty(launch.Dialogs.BookInfos);
-					Assert.Contains("P5.8", vm.StatusText);
+					Assert.Single(launch.Dialogs.MultipleBooks);
+					Assert.All(chosen, b => Assert.Equal("Multi Press", b.Publisher));
+					Assert.All(chosen, b => Assert.Equal(1999, b.Year));
+					Assert.NotEqual("Multi Press", books.Except(chosen).Single().Publisher); // the third book was not selected
+					await WaitFor(() => vm.CanUndo, "the undo list follows the change");
+					Assert.Equal("Undo: Edit multiple Books", vm.UndoText);
+					vm.UndoCommand.Execute(null);
+					Assert.Equal(was, chosen.Select(b => b.Publisher).ToArray());
+					Assert.All(chosen, b => Assert.Equal(-1, b.Year));
+					Assert.Equal("Redo: Edit multiple Books", vm.RedoText);
+					vm.RedoCommand.Execute(null);
+					Assert.All(chosen, b => Assert.Equal("Multi Press", b.Publisher));
+				}
+			});
+		}
+
+		[Fact]
+		public async Task Cancel_in_the_multi_edit_dialog_writes_nothing_and_the_dialog_state_is_off_again()
+		{
+			await Ui.Run(async () =>
+			{
+				using (var temp = new TempDir())
+				using (Launch launch = await Launch.Start(temp.Combine("app")))
+				{
+					MainViewModel vm = launch.ViewModel;
+					await Fill(launch, 2);
+					ComicBook[] chosen = vm.Browser.Items.Select(i => i.Book).ToArray();
+					vm.Browser.Selection.SelectBooks(chosen);
+					launch.Dialogs.MultipleBooksHandler = request =>
+					{
+						request.Model["cbPublisher"].Text = "Never written";
+						return Task.FromResult(false); // Cancel: OK is what calls Store
+					};
+					Assert.False(await vm.ShowMultipleBooksAsync(chosen));
+					Assert.All(chosen, b => Assert.NotEqual("Never written", b.Publisher));
+					Assert.False(vm.IsInfoDialogOpen);
+					Assert.Single(launch.Dialogs.MultipleBooks);
 				}
 			});
 		}
