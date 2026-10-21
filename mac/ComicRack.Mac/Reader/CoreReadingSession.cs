@@ -51,6 +51,12 @@ namespace ComicRack.Mac.Reader
 		/// </summary>
 		public bool IncreaseOpenedCount { get; set; } = true;
 
+		/// <summary>
+		/// <c>OpenComicOptions.DisableAll</c> of the small preview (<c>SmallComicPreview.ShowPreview</c>): the book is read from its first page and nothing is written back:
+		/// the file info is not refreshed, the opened count, the opened time and the new pages are left alone, and the current page and the furthest page read are not recorded.
+		/// </summary>
+		public bool IsPreview { get; set; }
+
 		public float Rating => book.Rating;
 
 		public void SetRating(float rating)
@@ -108,7 +114,10 @@ namespace ComicRack.Mac.Reader
 					try
 					{
 						// As NavigatorManager.OpenComic does. Failures here (a locked file, a bad ComicInfo) do not stop the book from opening.
-						book.RefreshInfoFromFile();
+						if (!IsPreview)
+						{
+							book.RefreshInfoFromFile();
+						}
 					}
 					catch (Exception)
 					{
@@ -149,8 +158,12 @@ namespace ComicRack.Mac.Reader
 			navigator = created;
 			decoder = new CorePageDecoder(navigator, pool, maxPixels);
 			pageCount = navigator.ProviderPageCount;
-			resumePage = Math.Max(0, Math.Min(book.CurrentPage, pageCount - 1));
+			resumePage = IsPreview ? 0 : Math.Max(0, Math.Min(book.CurrentPage, pageCount - 1));
 
+			if (IsPreview)
+			{
+				return;
+			}
 			if (IncreaseOpenedCount)
 			{
 				book.OpenedCount++;
@@ -166,7 +179,7 @@ namespace ComicRack.Mac.Reader
 		public void ReportPage(int page)
 		{
 			ComicBookNavigator nav = navigator;
-			if (nav == null || disposed)
+			if (nav == null || disposed || IsPreview)
 			{
 				return;
 			}
@@ -211,7 +224,7 @@ namespace ComicRack.Mac.Reader
 
 		public void ReportFurthest(int page)
 		{
-			if (navigator == null || disposed || !ComicBookNavigator.TrackCurrentPage)
+			if (navigator == null || disposed || IsPreview || !ComicBookNavigator.TrackCurrentPage)
 			{
 				return;
 			}
@@ -228,7 +241,7 @@ namespace ComicRack.Mac.Reader
 		public void ReportEndReached()
 		{
 			ComicBookNavigator nav = navigator;
-			if (nav == null || disposed || pageCount != 1)
+			if (nav == null || disposed || IsPreview || pageCount != 1)
 			{
 				return;
 			}

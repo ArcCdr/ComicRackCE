@@ -55,13 +55,20 @@
         <!-- Side panel with the library tree (LT.01). The grip (right) resizes it and the Sidebar button, Browse > Sidebar and Shift+F6 collapse it. -->
         <c:CrSizableContainer Name="SidebarPanel" DockPanel.Dock="Left" Grip="Right"
                               ExpandedExtent="{Binding Sidebar.Width, Mode=TwoWay}" IsExpanded="{Binding Sidebar.IsVisible, Mode=TwoWay}">
-          <Border Classes="cr-panel">
-            <c:CrTreeView Name="SidebarTree" ItemsSource="{Binding Sidebar.Roots}" SelectedItem="{Binding Sidebar.SelectedNode, Mode=TwoWay}"
-                          IconMember="IconName" TextMember="Name" TotalMember="Count" UnreadMember="UnreadCount" NewMember="NewCount" ToolTipMember="Badge"
-                          ChildrenMember="Children" ExpandedMember="IsExpanded"
-                          GaugesVisible="{Binding Sidebar.GaugesVisible}" GaugeTotal="{Binding Sidebar.GaugeTotal}" GaugeUnread="{Binding Sidebar.GaugeUnread}"
-                          GaugeNew="{Binding Sidebar.GaugeNew}" GaugeNumeric="{Binding Sidebar.GaugeNumeric}" />
-          </Border>
+          <DockPanel>
+            <!-- previewPane (ComicExplorerView.Designer.cs): the small preview under the tree, 207 high with the grip on top and a flat border; closed it keeps its grip (Browse > Small Preview, Shift+F7) -->
+            <c:CrSizableContainer Name="PreviewPanel" DockPanel.Dock="Bottom" Grip="Top" FlatBorder="True" KeepGripVisible="True"
+                                  ExpandedExtent="{Binding SmallPreview.Extent, Mode=TwoWay}" IsExpanded="{Binding SmallPreview.IsVisible, Mode=TwoWay}">
+              <views:SmallPreviewPane Name="PreviewPane" DataContext="{Binding SmallPreview}" />
+            </c:CrSizableContainer>
+            <Border Classes="cr-panel">
+              <c:CrTreeView Name="SidebarTree" ItemsSource="{Binding Sidebar.Roots}" SelectedItem="{Binding Sidebar.SelectedNode, Mode=TwoWay}"
+                            IconMember="IconName" TextMember="Name" TotalMember="Count" UnreadMember="UnreadCount" NewMember="NewCount" ToolTipMember="Badge"
+                            ChildrenMember="Children" ExpandedMember="IsExpanded"
+                            GaugesVisible="{Binding Sidebar.GaugesVisible}" GaugeTotal="{Binding Sidebar.GaugeTotal}" GaugeUnread="{Binding Sidebar.GaugeUnread}"
+                            GaugeNew="{Binding Sidebar.GaugeNew}" GaugeNumeric="{Binding Sidebar.GaugeNumeric}" />
+            </Border>
+          </DockPanel>
         </c:CrSizableContainer>
 
         <Grid RowDefinitions="Auto,*">

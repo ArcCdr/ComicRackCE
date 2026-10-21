@@ -108,6 +108,9 @@ namespace ComicRack.Mac.Controls
 		/// <summary>Segoe UI 12 pt: reader messages and overlays.</summary>
 		public const double OverlaySize = 16;
 
+		/// <summary>Arial 15.75 pt italic: the message of the small preview's page viewer ("Nothing Selected").</summary>
+		public const double PreviewMessageSize = 21;
+
 		/// <summary>The height of one line of text at a size in the default (system) font, as the original's <c>Font.Height</c>.</summary>
 		public static double LineHeight(double fontSize, FontWeight weight = FontWeight.Normal)
 		{

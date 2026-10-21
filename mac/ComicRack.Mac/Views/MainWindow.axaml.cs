@@ -167,6 +167,12 @@ namespace ComicRack.Mac.Views
 		/// <summary>The reader area in the window; its DataContext is the reader of the current tab while the reader is docked.</summary>
 		public ReaderArea Reader => ReaderPane;
 
+		/// <summary>The small preview under the tree (<c>smallComicPreview</c>).</summary>
+		public SmallPreviewPane Preview => PreviewPane;
+
+		/// <summary>The container of the small preview, with its grip and flat border (<c>previewPane</c>).</summary>
+		public CrSizableContainer PreviewDock => PreviewPanel;
+
 		/// <summary>The context menu of the book grid (<c>contextMenuItems</c>).</summary>
 		public BrowserContextMenu BookContextMenu => contextMenu;
 

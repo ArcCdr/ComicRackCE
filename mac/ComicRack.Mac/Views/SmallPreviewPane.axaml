@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ComicRack.Mac.ViewModels"
+             xmlns:views="using:ComicRack.Mac.Views"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             x:Class="ComicRack.Mac.Views.SmallPreviewPane"
+             x:DataType="vm:SmallPreviewViewModel">
+  <!-- SmallComicPreview.Designer.cs: the toolbar (toolStripPreview, 25 high: Open | First, Previous, Next, Last | Two Pages | Refresh, and Close at the right end, never in the
+       overflow) above the page viewer (pageViewer, Fill). The page viewer is the reading surface of the reader with the look of the small preview and no overlays. Chrome only
+       through the Cr controls (chrome-architecture.md). -->
+  <DockPanel>
+    <c:CrToolBar Name="PreviewToolBar" DockPanel.Dock="Top">
+      <c:CrToolButton Name="PreviewOpenButton" IconName="Open" Command="{Binding OpenCommand}" />
+      <c:CrToolSeparator />
+      <c:CrToolButton Name="PreviewFirstButton" IconName="GoFirst" Command="{Binding FirstCommand}" />
+      <c:CrToolButton Name="PreviewPreviousButton" IconName="GoPrevious" Command="{Binding PreviousCommand}" />
+      <c:CrToolButton Name="PreviewNextButton" IconName="GoNext" Command="{Binding NextCommand}" />
+      <c:CrToolButton Name="PreviewLastButton" IconName="GoLast" Command="{Binding LastCommand}" />
+      <c:CrToolSeparator />
+      <c:CrToolButton Name="PreviewTwoPagesButton" IconName="TwoPage" IsChecked="{Binding TwoPageDisplay, Mode=OneWay}" Command="{Binding TwoPagesCommand}" />
+      <c:CrToolSeparator />
+      <c:CrToolButton Name="PreviewRefreshButton" IconName="Refresh" Command="{Binding RefreshCommand}" />
+      <c:CrToolButton Name="PreviewCloseButton" IconName="SmallClose" Command="{Binding CloseCommand}" c:CrToolBar.Alignment="Right" c:CrToolBar.Overflow="Never" />
+    </c:CrToolBar>
+    <views:ReaderView Name="PageView" Look="SmallPreview" DoubleClickTogglesFullScreen="False" WheelOnlyScrolls="True" />
+  </DockPanel>
+</UserControl>

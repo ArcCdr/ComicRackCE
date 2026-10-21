@@ -113,6 +113,8 @@ namespace ComicRack.Mac
 					BrowserItem(vm),
 					new NativeMenuItemSeparator(),
 					SidebarItem(vm),
+					// MB.06: Shift+F7, a check mark that follows the small preview
+					SmallPreviewItem(vm),
 				}),
 				Submenu(Text("readMenu", "&Read"), new NativeMenu
 				{
@@ -365,6 +367,22 @@ namespace ComicRack.Mac
 				if (e.PropertyName == nameof(SidebarViewModel.IsVisible))
 				{
 					item.IsChecked = vm.Sidebar.IsVisible;
+				}
+			};
+			return item;
+		}
+
+		// Browse > Small Preview (Shift+F7, MB.06): a check mark that follows the preview pane under the tree.
+		private static NativeMenuItem SmallPreviewItem(MainViewModel vm)
+		{
+			NativeMenuItem item = Item(Text("miSmallPreview", "S&mall Preview"), vm.ToggleSmallPreviewCommand, Key.F7, KeyModifiers.Shift);
+			item.ToggleType = MenuItemToggleType.CheckBox;
+			item.IsChecked = vm.IsSmallPreviewVisible;
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(MainViewModel.IsSmallPreviewVisible))
+				{
+					item.IsChecked = vm.IsSmallPreviewVisible;
 				}
 			};
 			return item;

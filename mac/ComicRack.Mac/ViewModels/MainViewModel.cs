@@ -67,6 +67,7 @@ namespace ComicRack.Mac.ViewModels
 			}
 			WireTabs();
 			WireBooks();
+			WirePreview();
 		}
 
 		// ---- live refresh (P5.2)
@@ -294,6 +295,7 @@ namespace ComicRack.Mac.ViewModels
 			closingEverything = true; // no quick review dialog for the books that close with the application or the library
 			try
 			{
+				SmallPreview?.Close();
 				readers?.CloseAll();
 			}
 			finally

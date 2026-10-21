@@ -31,6 +31,21 @@ namespace ComicRack.Mac.Views
 		private int autoHideDelay = 5000;
 		private DispatcherTimer cursorTimer;
 
+		/// <summary>
+		/// True (the main reader) lets a double click toggle full screen (<c>CommandKey.MouseDoubleLeft</c>); false (the small preview, whose keyboard map maps it to
+		/// <c>OpenBook</c>) raises <see cref="DoubleClicked"/> instead.
+		/// </summary>
+		public bool DoubleClickTogglesFullScreen { get; set; } = true;
+
+		/// <summary>A double click with the left button when <see cref="DoubleClickTogglesFullScreen"/> is off.</summary>
+		public event EventHandler DoubleClicked;
+
+		/// <summary>
+		/// True (the small preview, whose keyboard map has only <c>MoveUp</c> and <c>MoveDown</c> on the wheel) lets the wheel scroll the page up and down and nothing else:
+		/// no turning of the page by a swipe, no zoom.
+		/// </summary>
+		public bool WheelOnlyScrolls { get; set; }
+
 		public ReaderView()
 		{
 			Focusable = true;
@@ -104,7 +119,14 @@ namespace ComicRack.Mac.Views
 			if (model != null && properties.IsLeftButtonPressed && e.ClickCount == 2)
 			{
 				// RK.16: a double click with the left mouse button toggles full screen (CommandKey.MouseDoubleLeft)
-				model.ToggleFullScreen();
+				if (DoubleClickTogglesFullScreen)
+				{
+					model.ToggleFullScreen();
+				}
+				else
+				{
+					DoubleClicked?.Invoke(this, EventArgs.Empty);
+				}
 				e.Handled = true;
 				return;
 			}
@@ -291,6 +313,12 @@ namespace ComicRack.Mac.Views
 			base.OnPointerWheelChanged(e);
 			if (model == null)
 			{
+				return;
+			}
+			if (WheelOnlyScrolls)
+			{
+				model.ScrollBy(-e.Delta.Y * model.Options.WheelScrollStep);
+				e.Handled = true;
 				return;
 			}
 			if ((e.KeyModifiers & KeyModifiers.Meta) != 0)

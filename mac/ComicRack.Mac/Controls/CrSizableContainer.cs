@@ -41,6 +41,11 @@ namespace ComicRack.Mac.Controls
 
 		public static readonly StyledProperty<bool> FillProperty = AvaloniaProperty.Register<CrSizableContainer, bool>(nameof(Fill));
 
+		public static readonly StyledProperty<bool> FlatBorderProperty = AvaloniaProperty.Register<CrSizableContainer, bool>(nameof(FlatBorder));
+
+		/// <summary>The border of <c>ExtendedBorderStyle.Flat</c> (<c>BorderUtility.AdjustBorder</c>): the child is two units inside the panel and a one unit frame surrounds it, one unit from the child.</summary>
+		public const double FlatBorderInset = 2;
+
 		/// <summary><c>SizableContainer.EnableAnimation</c>: switches every slide off (tests, reduced motion).</summary>
 		public static bool EnableAnimation { get; set; } = true;
 
@@ -65,11 +70,12 @@ namespace ComicRack.Mac.Controls
 		private Stopwatch watch;
 		private Point pressPoint;
 		private double pressExtent;
+		private Rect frame;
 
 		static CrSizableContainer()
 		{
-			AffectsMeasure<CrSizableContainer>(GripProperty, GripWidthProperty, ExpandedExtentProperty, IsExpandedProperty, FillProperty);
-			AffectsRender<CrSizableContainer>(GripProperty, IsExpandedProperty, FillProperty);
+			AffectsMeasure<CrSizableContainer>(GripProperty, GripWidthProperty, ExpandedExtentProperty, IsExpandedProperty, FillProperty, FlatBorderProperty);
+			AffectsRender<CrSizableContainer>(GripProperty, IsExpandedProperty, FillProperty, FlatBorderProperty);
 		}
 
 		public CrSizableContainer()
@@ -108,6 +114,13 @@ namespace ComicRack.Mac.Controls
 		{
 			get => GetValue(FillProperty);
 			set => SetValue(FillProperty, value);
+		}
+
+		/// <summary><c>BorderStyle = ExtendedBorderStyle.Flat</c> (the small preview pane): a one unit frame in the border colour around the child, with one unit of the panel colour inside it.</summary>
+		public bool FlatBorder
+		{
+			get => GetValue(FlatBorderProperty);
+			set => SetValue(FlatBorderProperty, value);
 		}
 
 		/// <summary>True (the default, as in the original) lets a click on the grip that did not move the pointer more than 4 units collapse or expand the panel.</summary>
@@ -222,8 +235,9 @@ namespace ComicRack.Mac.Controls
 			if (Child != null)
 			{
 				double g = Grip == GripPosition.None ? 0 : GripWidth;
-				Child.Measure(Vertical ? new Size(Math.Max(0, ExpandedExtent - g), availableSize.Height) : new Size(availableSize.Width, Math.Max(0, ExpandedExtent - g)));
-				content = Child.DesiredSize;
+				double inset = FlatBorder ? FlatBorderInset * 2 : 0;
+				Child.Measure(Vertical ? new Size(Math.Max(0, ExpandedExtent - g - inset), Math.Max(0, availableSize.Height - inset)) : new Size(Math.Max(0, availableSize.Width - inset), Math.Max(0, ExpandedExtent - g - inset)));
+				content = new Size(Child.DesiredSize.Width + inset, Child.DesiredSize.Height + inset);
 			}
 			if (Vertical)
 			{
@@ -265,7 +279,8 @@ namespace ComicRack.Mac.Controls
 						break;
 				}
 				// the grip side stays attached to the visible edge: content is laid out from the side opposite to the grip
-				Child.Arrange(rect);
+				frame = FlatBorder ? rect : default;
+				Child.Arrange(FlatBorder ? rect.Deflate(FlatBorderInset) : rect);
 				ClipToBounds = true;
 			}
 			return finalSize;
@@ -378,8 +393,17 @@ namespace ComicRack.Mac.Controls
 			}
 		}
 
+		/// <summary>The rectangle the flat border surrounds (the child's area with the border), or an empty rectangle without the border.</summary>
+		public Rect FrameRectangle => FlatBorder ? frame : default;
+
 		public override void Render(DrawingContext context)
 		{
+			if (FlatBorder && frame.Width > 0 && frame.Height > 0)
+			{
+				// the border of ExtendedBorderStyle.Flat: ControlDark in the light theme, the dark theme's border colour (DarkControlPaint.DrawBorder) in the dark one
+				string border = ChromePaint.VariantOf(this) == Avalonia.Styling.ThemeVariant.Dark ? ThemeTokens.Names.BorderDefault : ThemeTokens.Names.ControlDark;
+				ChromePaint.Frame(context, ChromePaint.Brush(this, border), frame);
+			}
 			Rect grip = GripRectangle;
 			if (grip.Width <= 0 || grip.Height <= 0)
 			{

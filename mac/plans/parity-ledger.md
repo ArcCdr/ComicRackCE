@@ -54,9 +54,9 @@
 | MB.03 | Folders | Browse `miViewFolders` | F7 | P5.30 | todo | |
 | MB.04 | Pages | Browse `miViewPages` | F8 | P5.23b | todo | |
 | MB.05 | Sidebar | Browse `miSidebar` | Shift+F6 | P5.R1 | done 2026-10-20 | check item that follows the side panel; the toolbar button `tbSidebar` (BT.01) does the same |
-| MB.06 | Small Preview | Browse `miSmallPreview` | Shift+F7 | P5.6 | todo | |
+| MB.06 | Small Preview | Browse `miSmallPreview` | Shift+F7 | P5.6a | done 2026-10-21 | check item that follows the preview pane (Browse > Small Preview); the pane lives in the side panel |
 | MB.07 | Search Browser | Browse `miSearchBrowser` | Shift+F8 | P5.15b | todo | |
-| MB.08 | Info Panel | Browse `miInfoPanel` | Shift+F9 | P5.6 | todo | |
+| MB.08 | Info Panel | Browse `miInfoPanel` | Shift+F9 | P5.6b | todo | |
 | MB.09 | Previous List | Browse `miPreviousList` | Ctrl+J → Cmd+J | P5.32b | todo | |
 | MB.10 | Next List | Browse `miNextList` | Ctrl+K → Cmd+K | P5.32b | todo | |
 | MB.11 | Workspaces > Save Workspace... | Browse `miSaveWorkspace` | Ctrl+W → Option+Cmd+W | P5.32c | todo | Cmd+W is Close (MF.02) |
@@ -254,8 +254,8 @@
 | PV.04 | Pages menu: Move to Top / Move to Bottom / Reset original Order | `miMoveToTop`, `miMoveToBottom`, `miResetOriginalOrder` | Ctrl+Alt+T/B → Option+Cmd+T/B | P5.23b | todo | |
 | PV.05 | Pages menu: Copy Page, Merge Pages, Select All, Invert Selection, Refresh, Mark as Deleted | `miCopy`, `miMergePages`, `miSelectAll`, `miInvertSelection`, `miRefreshThumbnail`, `miMarkDeleted` | Ctrl+C, Ctrl+A, Delete → Cmd+C, Cmd+A, Delete | P5.23b | todo | |
 | SR.01 | Search browser (value columns with counts, multi-select narrowing) | `ComicRack.Engine/Controls/SearchBrowserControl.cs` | — | P5.15b | todo | |
-| SP.01 | Small preview (page viewer, toolbar: Open, First, Previous, Next, Last, Two Pages, Refresh, Close) | `SmallComicPreview`, `tsbOpen`, `tsbFirst`, `tsbPrev`, `tsbNext`, `tsbLast`, `tsbTwoPages`, `tsbRefresh`, `tbClose` | — | P5.6 | todo | |
-| IP.01 | Info panel (book info page with search links, script panels) | `ComicExplorerView.pluginContainer` (`ComicPageContainerControl`) | — | P5.6, P4.11a | todo | |
+| SP.01 | Small preview (page viewer, toolbar: Open, First, Previous, Next, Last, Two Pages, Refresh, Close) | `SmallComicPreview`, `tsbOpen`, `tsbFirst`, `tsbPrev`, `tsbNext`, `tsbLast`, `tsbTwoPages`, `tsbRefresh`, `tbClose` | — | P5.6a | done 2026-10-21 | toolbar, page viewer, 500 ms timer, copy of the first selected book opened as DisableAll, Two Pages, Refresh, Open, Close, settings kept (see specs/views/SmallComicPreview.md) |
+| IP.01 | Info panel (book info page with search links, script panels) | `ComicExplorerView.pluginContainer` (`ComicPageContainerControl`) | — | P5.6b, P4.11a | todo | |
 | QO.01 | Quick Open view when no book is open (recent books, Open, Browser, Open File...) | `QuickOpenView`, Settings `ShowQuickOpen` | — | P5.29 | todo | |
 
 ## Reader keyboard and mouse map (`ComicRack/MainForm.cs:1563-1800`; editable in Preferences > Reader > Keyboard)
@@ -402,7 +402,7 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.19 | Right to Left | True right to left reading (`TrueRightToLeftReading`) | false | P5.23e | todo | |
 | PB.20 | Right to Left | Left/right movement is also reversed (`LeftRightMovementReversed`) | false | P5.23e | todo | |
 | PB.21 | Browser | Show Tooltips for Books (`ShowToolTips`) | false | P5.R2 | done 2026-10-20 | the option works (`ThumbnailOptions.ShowToolTips`); saved in Settings.xml since P5.1; the check box is P5.22a |
-| PB.22 | Browser | Show Search Links (`ShowSearchLinks`) | true | P5.6 | todo | |
+| PB.22 | Browser | Show Search Links (`ShowSearchLinks`) | true | P5.6b | todo | |
 | PB.23 | Browser | New loaded Thumbnails fade in (`FadeInThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (`CoverView` fade, 300 ms); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.24 | Browser | Selected Thumbnails have a dog-ear (`DogEarThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (dog-ear on the selected and the hot cover); saved in Settings.xml since P5.1; the check box is P5.22a |
 | PB.25 | Browser | Thumbnails display numeric ratings (`NumericRatingThumbnails`) | true | P5.R2 | done 2026-10-20 | the option works (tags, else stars below or over the cover); saved in Settings.xml since P5.1; the check box is P5.22a |

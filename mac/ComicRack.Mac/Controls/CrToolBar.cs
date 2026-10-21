@@ -503,7 +503,7 @@ namespace ComicRack.Mac.Controls
 
 		static CrToolButton()
 		{
-			AffectsRender<CrToolButton>(IsCheckedProperty, IconNameProperty, TextProperty, IsPointerOverProperty, IsPressedProperty, IsEnabledProperty);
+			AffectsRender<CrToolButton>(IsCheckedProperty, IconNameProperty, TextProperty, IsPointerOverProperty, IsPressedProperty, IsEnabledProperty, IsEffectivelyEnabledProperty);
 			AffectsMeasure<CrToolButton>(IconNameProperty, TextProperty);
 		}
 
@@ -583,7 +583,7 @@ namespace ComicRack.Mac.Controls
 				{
 					return displayState.Value;
 				}
-				if (!IsEnabled)
+				if (!IsEffectivelyEnabled)
 				{
 					return ToolButtonState.Disabled;
 				}
@@ -645,7 +645,7 @@ namespace ComicRack.Mac.Controls
 		{
 			Bitmap icon = IconBitmap;
 			FormattedText text = MeasureText();
-			double opacity = IsEnabled ? 1 : 0.45;
+			double opacity = IsEffectivelyEnabled ? 1 : 0.45;
 			double contentWidth = (icon?.Size.Width ?? 0) + (text != null ? (icon != null ? 3 : 0) + Math.Ceiling(text.Width) : 0);
 			double x = Math.Floor(area.X + (area.Width - contentWidth) / 2);
 			if (icon != null)
@@ -656,7 +656,7 @@ namespace ComicRack.Mac.Controls
 			}
 			if (text != null)
 			{
-				text.SetForegroundBrush(ChromePaint.Brush(this, IsEnabled ? ThemeTokens.Names.ControlText : ThemeTokens.Names.GrayText));
+				text.SetForegroundBrush(ChromePaint.Brush(this, IsEffectivelyEnabled ? ThemeTokens.Names.ControlText : ThemeTokens.Names.GrayText));
 				context.DrawText(text, new Point(x, Math.Floor((area.Height - text.Height) / 2)));
 			}
 		}
@@ -750,7 +750,7 @@ namespace ComicRack.Mac.Controls
 			if (glyph != null)
 			{
 				var slot = new Rect(Math.Max(0, area.Width - ChromeMetrics.DropDownArrowWidth - 2), 0, ChromeMetrics.DropDownArrowWidth + 2, area.Height);
-				ChromePaint.Image(context, glyph, ChromePaint.Centered(glyph.Size, slot), IsEnabled ? 1 : 0.45);
+				ChromePaint.Image(context, glyph, ChromePaint.Centered(glyph.Size, slot), IsEffectivelyEnabled ? 1 : 0.45);
 			}
 		}
 	}
@@ -845,7 +845,7 @@ namespace ComicRack.Mac.Controls
 			if (glyph != null)
 			{
 				Rect target = ChromePaint.Centered(glyph.Size, ArrowBounds);
-				ChromePaint.Image(context, glyph, target, IsEnabled ? 1 : 0.45);
+				ChromePaint.Image(context, glyph, target, IsEffectivelyEnabled ? 1 : 0.45);
 			}
 		}
 

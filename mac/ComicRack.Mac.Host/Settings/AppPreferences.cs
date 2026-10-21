@@ -771,9 +771,15 @@ namespace ComicRack.Mac.Host
 		private double browserDockHeight = DefaultBrowserDockHeight;
 		private bool browserDockExpanded = true;
 		private bool readerUndocked;
+		private bool showPreview;
+		private double previewSplit = DefaultPreviewSplit;
+		private bool twoPagePreview;
 
 		/// <summary>The width of the side panel when it is open (<c>ComicExplorerView</c>'s <c>SizableContainer</c>, 252).</summary>
 		public const double DefaultSidebarWidth = 252;
+
+		/// <summary>The height of the small preview under the tree when it is open (<c>ComicExplorerView.previewPane</c>, 207 high, grip included).</summary>
+		public const double DefaultPreviewSplit = 207;
 
 		/// <summary>The height of a cover in the grid, in device independent pixels (the status bar slider, 80 to 360).</summary>
 		public const double DefaultThumbnailSize = 200;
@@ -918,6 +924,33 @@ namespace ComicRack.Mac.Host
 		{
 			get { return readerUndocked; }
 			set { Set(ref readerUndocked, value); }
+		}
+
+		/// <summary>Browse &gt; Small Preview is on (<c>ComicExplorerViewSettings.ShowPreview</c>, off by default).</summary>
+		[MacOnly]
+		[DefaultValue(false)]
+		public bool ShowPreview
+		{
+			get { return showPreview; }
+			set { Set(ref showPreview, value); }
+		}
+
+		/// <summary>The height of the small preview when it is open (<c>ComicExplorerViewSettings.PreviewSplit</c>; a drag of its grip sets it).</summary>
+		[MacOnly]
+		[DefaultValue(DefaultPreviewSplit)]
+		public double PreviewSplit
+		{
+			get { return previewSplit; }
+			set { Set(ref previewSplit, value); }
+		}
+
+		/// <summary>The small preview shows two pages (<c>ComicExplorerViewSettings.TwoPagePreview</c>, the Two Pages button; off by default).</summary>
+		[MacOnly]
+		[DefaultValue(false)]
+		public bool TwoPagePreview
+		{
+			get { return twoPagePreview; }
+			set { Set(ref twoPagePreview, value); }
 		}
 	}
 }

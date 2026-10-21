@@ -851,6 +851,21 @@ namespace ComicRack.Mac.ViewModels
 			return moved;
 		}
 
+		/// <summary>True when there is a page or spread before the current one (<c>ComicBookNavigator.CanNavigate(-1)</c>).</summary>
+		public bool CanGoBack => opened && !disposed && layout.Previous(CurrentPage, PageCount) >= 0;
+
+		/// <summary>True when there is a page or spread after the current one (<c>ComicBookNavigator.CanNavigate(1)</c>).</summary>
+		public bool CanGoForward => opened && !disposed && layout.Next(CurrentPage, PageCount) >= 0;
+
+		/// <summary>Shows the current page or spread again (<c>ComicDisplay.RefreshDisplay</c>, the Refresh button of the small preview).</summary>
+		public void Refresh()
+		{
+			if (opened && !disposed)
+			{
+				_ = GoToAsync(CurrentPage);
+			}
+		}
+
 		// ---- Zoom
 
 		/// <summary>Enlarges the page by one step (Cmd+=), about the centre of the reading area.</summary>
