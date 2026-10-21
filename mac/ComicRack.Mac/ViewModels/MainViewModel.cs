@@ -68,6 +68,7 @@ namespace ComicRack.Mac.ViewModels
 			WireTabs();
 			WireBooks();
 			WirePreview();
+			WireInfo();
 		}
 
 		// ---- live refresh (P5.2)

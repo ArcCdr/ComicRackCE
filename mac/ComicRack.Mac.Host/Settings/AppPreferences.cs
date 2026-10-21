@@ -774,12 +774,17 @@ namespace ComicRack.Mac.Host
 		private bool showPreview;
 		private double previewSplit = DefaultPreviewSplit;
 		private bool twoPagePreview;
+		private bool showInfo;
+		private double infoBrowserSize = DefaultInfoBrowserSize;
 
 		/// <summary>The width of the side panel when it is open (<c>ComicExplorerView</c>'s <c>SizableContainer</c>, 252).</summary>
 		public const double DefaultSidebarWidth = 252;
 
 		/// <summary>The height of the small preview under the tree when it is open (<c>ComicExplorerView.previewPane</c>, 207 high, grip included).</summary>
 		public const double DefaultPreviewSplit = 207;
+
+		/// <summary>The height of the info panel under the browser when it is open (<c>ComicExplorerView.pluginContainer</c>, 162 high, grip included).</summary>
+		public const double DefaultInfoBrowserSize = 162;
 
 		/// <summary>The height of a cover in the grid, in device independent pixels (the status bar slider, 80 to 360).</summary>
 		public const double DefaultThumbnailSize = 200;
@@ -951,6 +956,24 @@ namespace ComicRack.Mac.Host
 		{
 			get { return twoPagePreview; }
 			set { Set(ref twoPagePreview, value); }
+		}
+
+		/// <summary>Browse &gt; Info Panel is on (<c>ComicExplorerViewSettings.ShowInfo</c>, off by default).</summary>
+		[MacOnly]
+		[DefaultValue(false)]
+		public bool ShowInfo
+		{
+			get { return showInfo; }
+			set { Set(ref showInfo, value); }
+		}
+
+		/// <summary>The height of the info panel when it is open (<c>ComicExplorerViewSettings.InfoBrowserSize</c>; a drag of its grip sets it).</summary>
+		[MacOnly]
+		[DefaultValue(DefaultInfoBrowserSize)]
+		public double InfoBrowserSize
+		{
+			get { return infoBrowserSize; }
+			set { Set(ref infoBrowserSize, value); }
 		}
 	}
 }

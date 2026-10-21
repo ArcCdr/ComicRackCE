@@ -173,6 +173,12 @@ namespace ComicRack.Mac.Views
 		/// <summary>The container of the small preview, with its grip and flat border (<c>previewPane</c>).</summary>
 		public CrSizableContainer PreviewDock => PreviewPanel;
 
+		/// <summary>The info panel under the browser (<c>comicInfo</c>).</summary>
+		public InfoPanelPane Info => InfoPane;
+
+		/// <summary>The container of the info panel, with its grip (<c>pluginContainer</c>).</summary>
+		public CrSizableContainer InfoDock => InfoPanelDock;
+
 		/// <summary>The context menu of the book grid (<c>contextMenuItems</c>).</summary>
 		public BrowserContextMenu BookContextMenu => contextMenu;
 

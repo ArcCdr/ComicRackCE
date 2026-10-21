@@ -115,6 +115,8 @@ namespace ComicRack.Mac
 					SidebarItem(vm),
 					// MB.06: Shift+F7, a check mark that follows the small preview
 					SmallPreviewItem(vm),
+					// MB.08: Shift+F9, enabled once a script has added a page; a check mark that follows the panel
+					InfoPanelItem(vm),
 				}),
 				Submenu(Text("readMenu", "&Read"), new NativeMenu
 				{
@@ -383,6 +385,27 @@ namespace ComicRack.Mac
 				if (e.PropertyName == nameof(MainViewModel.IsSmallPreviewVisible))
 				{
 					item.IsChecked = vm.IsSmallPreviewVisible;
+				}
+			};
+			return item;
+		}
+
+		// Browse > Info Panel (Shift+F9, MB.08): disabled while the panel has no page (CheckInfoPanelAvailable), a check mark that follows the panel under the browser.
+		private static NativeMenuItem InfoPanelItem(MainViewModel vm)
+		{
+			NativeMenuItem item = Item(Text("miInfoPanel", "Info Panel"), vm.ToggleInfoPanelCommand, Key.F9, KeyModifiers.Shift);
+			item.ToggleType = MenuItemToggleType.CheckBox;
+			item.IsChecked = vm.IsInfoPanelVisible;
+			item.IsEnabled = vm.HasInfoPanels;
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(MainViewModel.IsInfoPanelVisible))
+				{
+					item.IsChecked = vm.IsInfoPanelVisible;
+				}
+				else if (e.PropertyName == nameof(MainViewModel.HasInfoPanels))
+				{
+					item.IsEnabled = vm.HasInfoPanels;
 				}
 			};
 			return item;

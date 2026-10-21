@@ -83,6 +83,12 @@ namespace ComicRack.Mac
 		/// </summary>
 		public double? BrowserHeight { get; private set; }
 
+		/// <summary>
+		/// Hidden <c>--test-info-page</c>: adds a test page to the info panel (the original's pages come only from scripts, P4.11a), so Browse &gt; Info Panel can be tried and tested.
+		/// It needs a private data folder.
+		/// </summary>
+		public bool TestInfoPage { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -188,6 +194,10 @@ namespace ComicRack.Mac
 				{
 					options.FixtureLibrary = Path.GetFullPath(arg.Substring("--fixture-library=".Length));
 				}
+				else if (arg == "--test-info-page")
+				{
+					options.TestInfoPage = true;
+				}
 				else if ((arg == "--browser-height" && i + 1 < args.Length) || arg.StartsWith("--browser-height=", StringComparison.Ordinal))
 				{
 					string value = arg == "--browser-height" ? args[++i] : arg.Substring("--browser-height=".Length);
@@ -255,6 +265,11 @@ namespace ComicRack.Mac
 			if (options.BrowserHeight != null && options.DataDirectory == null)
 			{
 				options.Error = "--browser-height needs a private data folder: add --data-dir DIR (or --smoke-test).";
+				return options;
+			}
+			if (options.TestInfoPage && options.DataDirectory == null)
+			{
+				options.Error = "--test-info-page needs a private data folder: add --data-dir DIR (or --smoke-test).";
 				return options;
 			}
 			if (options.FixtureLibrary != null)

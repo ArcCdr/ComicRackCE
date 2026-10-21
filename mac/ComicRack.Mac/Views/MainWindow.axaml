@@ -71,6 +71,17 @@
           </DockPanel>
         </c:CrSizableContainer>
 
+        <!-- pluginContainer (ComicExplorerView.Designer.cs): the info panel under the browser, 162 high with the grip on top, hidden until a script adds a page (Browse > Info
+             Panel, Shift+F9); 6 units stay free at the bottom of the browser area (pluginPlaceholder, or the container's own bottom padding). -->
+        <c:CrSizableContainer Name="InfoPanelDock" DockPanel.Dock="Bottom" Grip="Top" KeepGripVisible="True"
+                              ExpandedExtent="{Binding InfoPanel.Extent, Mode=TwoWay}" IsExpanded="{Binding InfoPanel.IsVisible, Mode=TwoWay}"
+                              IsVisible="{Binding InfoPanel.ContainerVisible}">
+          <Border Padding="0,0,0,6">
+            <views:InfoPanelPane Name="InfoPane" DataContext="{Binding InfoPanel}" />
+          </Border>
+        </c:CrSizableContainer>
+        <Border Name="InfoPlaceholder" DockPanel.Dock="Bottom" Height="6" Classes="cr-panel" IsVisible="{Binding !InfoPanel.ContainerVisible}" />
+
         <Grid RowDefinitions="Auto,*">
           <!-- Browser toolbar (BT.*), in the original's order (ComicBrowserControl.Designer.cs, toolStrip, HorizontalStackWithOverflow): Sidebar, Previous, Next |
                Views, Group, Stack, Arrange, List Layouts | Duplicate | Undo, Redo, and the quick search at the right end (Alignment Right, Overflow Never). When the

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ComicRack.Mac.ViewModels"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             x:Class="ComicRack.Mac.Views.InfoPanelPane"
+             x:DataType="vm:InfoPanelViewModel">
+  <!-- ComicPageContainerControl (comicInfo, Dock Fill in pluginContainer): the tab strip (31 high, shown with two pages or more) above the page that is showing, which fills the rest.
+       The pages come from scripts (P4.11a); the container has no page of its own. Chrome only through the Cr controls (chrome-architecture.md). -->
+  <DockPanel>
+    <c:CrTabBar Name="InfoTabBar" DockPanel.Dock="Top" IsVisible="{Binding TabsVisible}" />
+    <Border Name="InfoPageHost" Classes="cr-panel" />
+  </DockPanel>
+</UserControl>

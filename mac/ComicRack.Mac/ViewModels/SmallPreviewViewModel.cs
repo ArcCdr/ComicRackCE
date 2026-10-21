@@ -183,7 +183,7 @@ namespace ComicRack.Mac.ViewModels
 			}
 			pending?.Dispose();
 			IDisposable mine = null;
-			mine = Scheduler.Schedule(ShowDelay, () => UiDispatch.Post(() =>
+			mine = Scheduler.Schedule(ShowDelay, () => PostUpdate(() =>
 			{
 				if (ReferenceEquals(pending, mine))
 				{
@@ -192,6 +192,21 @@ namespace ComicRack.Mac.ViewModels
 				}
 			}));
 			pending = mine;
+		}
+
+		// The timer fires on a pool thread. A UI thread that is already gone (the window or the test is over) refuses the post; nobody is left to show the update to.
+		private static void PostUpdate(Action action)
+		{
+			try
+			{
+				UiDispatch.Post(action);
+			}
+			catch (NullReferenceException)
+			{
+			}
+			catch (InvalidOperationException)
+			{
+			}
 		}
 
 		/// <summary>Updates the preview at once (<c>sidePanel_ExpandedChanged</c> and <c>previewPane.ExpandedChanged</c> do not wait for the timer).</summary>

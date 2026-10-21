@@ -103,6 +103,10 @@ namespace ComicRack.Mac
 				{
 					viewModel.BrowserDockHeight = options.BrowserHeight.Value;
 				}
+				if (options.TestInfoPage)
+				{
+					viewModel.InfoPanel.AddPage(new Info.TestInfoPage());
+				}
 				viewModel.EnableLiveRefresh();
 				ViewRegistry.Library = viewModel;
 				ViewRegistry.MainWindow = window;

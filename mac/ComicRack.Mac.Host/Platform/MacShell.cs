@@ -106,6 +106,23 @@ namespace ComicRack.Mac.Host.Platform
 			return existing.Count != 0 && RunOpen(existing);
 		}
 
+		/// <summary>
+		/// Opens a web address with the default browser (<c>Process.Start(address)</c> of the original's search links, <c>open</c> here). Only http, https and mailto
+		/// addresses are passed on; anything else (a file path, another scheme) returns false.
+		/// </summary>
+		public static bool OpenUrl(string address)
+		{
+			if (string.IsNullOrWhiteSpace(address) || !Uri.TryCreate(address.Trim(), UriKind.Absolute, out Uri uri))
+			{
+				return false;
+			}
+			if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeMailto)
+			{
+				return false;
+			}
+			return RunOpen(new List<string> { uri.AbsoluteUri });
+		}
+
 		private static List<string> Existing(string[] paths)
 		{
 			var list = new List<string>();
