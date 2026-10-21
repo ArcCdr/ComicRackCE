@@ -79,6 +79,7 @@
       <ControlTheme x:Key="CrThumbnailItem.Original" TargetType="c:CrThumbnailItem" />
       <ControlTheme x:Key="CoverView.Original" TargetType="c:CoverView" />
       <ControlTheme x:Key="CrBookToolTip.Original" TargetType="c:CrBookToolTip" />
+      <ControlTheme x:Key="CrSelectionRectangle.Original" TargetType="c:CrSelectionRectangle" />
 
       <!-- Reader overlays: they draw the glass pictures and the text themselves (CrTextOverlay, CrPartOverlay, CrNavigationOverlay). -->
       <ControlTheme x:Key="CrTextOverlay.Original" TargetType="c:CrTextOverlay" />

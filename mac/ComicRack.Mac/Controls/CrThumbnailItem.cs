@@ -269,24 +269,57 @@ namespace ComicRack.Mac.Controls
 		{
 			get
 			{
-				string text = caption.Text;
-				if (string.IsNullOrEmpty(text) || SelectionStyle.State == SelectionState.None)
+				if (string.IsNullOrEmpty(caption.Text) || SelectionStyle.State == SelectionState.None)
 				{
 					return default;
 				}
+				Rect textRect = CaptionTextRectangle();
 				ThumbnailGeometry g = Geometry;
-				var layout = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(caption.FontFamily, caption.FontStyle, caption.FontWeight), caption.FontSize, caption.Foreground)
-				{
-					MaxTextWidth = Math.Max(1, g.Label.Width),
-					MaxTextHeight = Math.Max(1, g.Label.Height),
-					MaxLineCount = ThumbnailMetrics.LabelLines,
-					TextAlignment = TextAlignment.Center,
-				};
-				double width = Math.Min(g.Label.Width, Math.Ceiling(layout.Width)), height = Math.Min(g.Label.Height, Math.Ceiling(layout.Height));
-				var textRect = new Rect(g.Label.X + Math.Floor((g.Label.Width - width) / 2), g.Label.Y, width, height);
 				var textArea = new Rect(g.Inner.X, g.Area.Bottom, g.Inner.Width, g.Inner.Bottom - g.Area.Bottom);
 				return Snapped(new Rect(textRect.X - 2, textRect.Y - 2, textRect.Width + 4, textRect.Height + 4).Intersect(textArea));
 			}
+		}
+
+		// The caption as laid out (up to three centred lines in the label rectangle); empty when there is no text.
+		private Rect CaptionTextRectangle()
+		{
+			string text = caption.Text;
+			if (string.IsNullOrEmpty(text))
+			{
+				return default;
+			}
+			ThumbnailGeometry g = Geometry;
+			var layout = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(caption.FontFamily, caption.FontStyle, caption.FontWeight), caption.FontSize, caption.Foreground)
+			{
+				MaxTextWidth = Math.Max(1, g.Label.Width),
+				MaxTextHeight = Math.Max(1, g.Label.Height),
+				MaxLineCount = ThumbnailMetrics.LabelLines,
+				TextAlignment = TextAlignment.Center,
+			};
+			double width = Math.Min(g.Label.Width, Math.Ceiling(layout.Width)), height = Math.Min(g.Label.Height, Math.Ceiling(layout.Height));
+			return new Rect(g.Label.X + Math.Floor((g.Label.Width - width) / 2), g.Label.Y, width, height);
+		}
+
+		/// <summary>
+		/// What the original's item answers a hit test with (<c>CoverViewItem.Contains</c> and <c>IntersectsWith</c> over the rectangle <c>ThumbIconRenderer.Draw</c>
+		/// returns): the cover picture's rectangle together with the caption text as laid out, in the coordinates of the item. The border around the
+		/// cover, its shadow and the free part of the caption area are not part of the item: a press there is a press on the empty area of the view.
+		/// </summary>
+		public Rect HitRegion
+		{
+			get
+			{
+				Rect picture = ThumbnailBounds();
+				Rect text = CaptionTextRectangle();
+				return text.Width > 0 && text.Height > 0 ? picture.Union(text) : picture;
+			}
+		}
+
+		/// <summary>True if the point (in the coordinates of the item) is on the item as the original's hit test sees it (<see cref="HitRegion"/>, right and bottom edges excluded).</summary>
+		public bool HitTest(Point point)
+		{
+			Rect region = HitRegion;
+			return point.X >= region.X && point.X < region.Right && point.Y >= region.Y && point.Y < region.Bottom;
 		}
 
 		/// <summary>The rectangles of the item at its current size.</summary>

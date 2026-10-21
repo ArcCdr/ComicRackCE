@@ -10,6 +10,10 @@
 //                                        under the point belongs to PID. Exit 5 when one of those checks fails, 4 on a locked
 //                                        screen, 2 on bad arguments. --cmd and --shift hold the Command or Shift key during the click (flags of the
 //                                        mouse events only; no key event is sent).
+//   windowtool drag --pid N --window ID X1 Y1 X2 Y2 [--cmd] [--shift] [--steps N] [--hold-ms N]
+//                                        presses the left button at (X1, Y1), drags to (X2, Y2) in N steps (default 12), waits --hold-ms with the
+//                                        button down (default 0: a screenshot of the rubber band can be taken meanwhile), releases. The same safety
+//                                        checks as click for both points; exit 5 when one fails. The cursor is put back afterwards.
 //
 // Exit codes: 0 ok, 2 bad arguments, 4 locked screen or no GUI session, 5 safety check failed.
 import AppKit
@@ -140,8 +144,65 @@ func commandClick(_ args: [String]) {
 	print("clicked \(Int(numbers[0])),\(Int(numbers[1])) in window \(windowId)")
 }
 
+func commandDrag(_ args: [String]) {
+	guard let pid = option(args, "--pid").flatMap({ Int($0) }), let windowId = option(args, "--window").flatMap({ Int($0) }) else {
+		fail("drag needs --pid N --window ID X1 Y1 X2 Y2", 2)
+	}
+	var numbers: [Double] = []
+	var skip = false
+	for a in args.dropFirst() {
+		if skip { skip = false; continue }
+		if a == "--pid" || a == "--window" || a == "--steps" || a == "--hold-ms" { skip = true; continue }
+		if a.hasPrefix("--") { continue }
+		if let v = Double(a) { numbers.append(v) }
+	}
+	guard numbers.count == 4 else { fail("drag needs X1 Y1 X2 Y2 (window relative points)", 2) }
+	let steps = max(1, option(args, "--steps").flatMap { Int($0) } ?? 12)
+	let holdMs = max(0, option(args, "--hold-ms").flatMap { Int($0) } ?? 0)
+	if lockState() != "unlocked" { fail("screen locked or no GUI session", 4) }
+
+	guard let front = NSWorkspace.shared.frontmostApplication, Int(front.processIdentifier) == pid else {
+		fail("the application (pid \(pid)) is not frontmost: drag refused", 5)
+	}
+	let windows = listWindows(all: false)
+	guard let target = windows.first(where: { $0.id == windowId && $0.pid == pid }) else {
+		fail("window \(windowId) of pid \(pid) is not on screen: drag refused", 5)
+	}
+	let start = CGPoint(x: target.rect.origin.x + CGFloat(numbers[0]), y: target.rect.origin.y + CGFloat(numbers[1]))
+	let end = CGPoint(x: target.rect.origin.x + CGFloat(numbers[2]), y: target.rect.origin.y + CGFloat(numbers[3]))
+	for point in [start, end] {
+		if !target.rect.contains(point) {
+			fail("a point is outside the window (\(Int(target.rect.size.width)) x \(Int(target.rect.size.height))): drag refused", 5)
+		}
+		if let top = windows.first(where: { $0.layer == 0 && $0.rect.contains(point) }), top.pid != pid {
+			fail("a window of \(top.owner) covers a point: drag refused", 5)
+		}
+	}
+	var flags: CGEventFlags = []
+	if args.contains("--cmd") { flags.insert(.maskCommand) }
+	if args.contains("--shift") { flags.insert(.maskShift) }
+	let original = CGEvent(source: nil)?.location
+	post(.mouseMoved, start, .left)
+	usleep(80_000)
+	post(.leftMouseDown, start, .left, clicks: 1, flags: flags)
+	usleep(60_000)
+	for i in 1...steps {
+		let t = CGFloat(i) / CGFloat(steps)
+		let point = CGPoint(x: start.x + (end.x - start.x) * t, y: start.y + (end.y - start.y) * t)
+		post(.leftMouseDragged, point, .left, clicks: 1, flags: flags)
+		usleep(30_000)
+	}
+	if holdMs > 0 { usleep(UInt32(holdMs) * 1000) }
+	post(.leftMouseUp, end, .left, clicks: 1, flags: flags)
+	usleep(80_000)
+	if let original = original {
+		CGWarpMouseCursorPosition(original)
+	}
+	print("dragged \(Int(numbers[0])),\(Int(numbers[1])) to \(Int(numbers[2])),\(Int(numbers[3])) in window \(windowId)")
+}
+
 let arguments = Array(CommandLine.arguments.dropFirst())
-guard let command = arguments.first else { fail("usage: windowtool lockstate|frontpid|windows|click", 2) }
+guard let command = arguments.first else { fail("usage: windowtool lockstate|frontpid|windows|click|drag", 2) }
 switch command {
 case "lockstate":
 	let state = lockState()
@@ -155,6 +216,8 @@ case "windows":
 	commandWindows(arguments)
 case "click":
 	commandClick(arguments)
+case "drag":
+	commandDrag(arguments)
 default:
 	fail("unknown command: \(command)", 2)
 }

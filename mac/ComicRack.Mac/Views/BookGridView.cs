@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -8,8 +9,10 @@ using ComicRack.Mac.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ComicRack.Mac.Browser;
+using ComicRack.Mac.Services;
 using ComicRack.Mac.Thumbnails;
 using ComicRack.Mac.ViewModels;
 
@@ -40,6 +43,18 @@ namespace ComicRack.Mac.Views
 		private int pendingClick = -1;
 		private bool pendingToggle, pendingExtend;
 		private double cellWidth, cellHeight;
+		private readonly CrSelectionRectangle band = new CrSelectionRectangle();
+		private bool marqueeActive;
+		private Point marqueeStart;      // where the band started, in the coordinates of the repeater (they scroll with the content)
+		private Rect marqueeRect;        // the band now, in the same coordinates
+		private Point lastView;          // the pointer in the coordinates of the scroll viewer
+		private KeyModifiers lastModifiers;
+		private (double Offset, int Realized, double Viewport) evaluated;
+		private DispatcherTimer autoScrollTimer;
+		private bool releaseEnsuresVisible;
+		private int dragIndex = -1;
+		private PointerPressedEventArgs dragPress;
+		private Point dragOrigin;
 
 		public BookGridView()
 		{
@@ -72,11 +87,34 @@ namespace ComicRack.Mac.Views
 				Content = repeater,
 			};
 			scroll.SizeChanged += (sender, e) => OnViewportChanged();
-			Content = scroll;
+			scroll.ScrollChanged += OnScrollChanged;
+			repeater.LayoutUpdated += OnRepeaterLayoutUpdated;
+			Content = new Grid { Children = { scroll, band } };
 			ApplyMetrics(BrowserViewModel.DefaultThumbnailSize);
 		}
 
 		public ScrollViewer Scroller => scroll;
+
+		/// <summary>The rubber band, drawn over the grid (its <see cref="CrSelectionRectangle.Rectangle"/> is empty while there is none).</summary>
+		public CrSelectionRectangle Band => band;
+
+		/// <summary>True while a rubber band is being dragged.</summary>
+		public bool IsMarqueeActive => marqueeActive;
+
+		/// <summary>The rubber band in the coordinates of the grid content (scrolls with it); empty when there is none.</summary>
+		public Rect MarqueeRectangle => marqueeRect;
+
+		/// <summary>The scroll timer of a rubber band runs in the application (<c>ScrollControl.scrollTimer</c>, 20 ms); tests leave it off and call <see cref="AdvanceAutoScroll"/>.</summary>
+		public static bool AutoScrollEnabled { get; set; }
+
+		/// <summary>How far the pointer moves with a pressed book before the books are dragged out (<c>SystemInformation.DragSize</c>).</summary>
+		public const double DragThreshold = 4;
+
+		/// <summary>Starts the drag session of the selected books; a test replaces it.</summary>
+		public IBookDragStarter DragStarter { get; set; } = new AvaloniaBookDragStarter();
+
+		/// <summary>What a target may do with dragged books: copy them. Move is added with the editable lists (P5.16c), as <c>itemView_ItemDrag</c> adds it for a list that is not the library.</summary>
+		public DragDropEffects DragEffects { get; set; } = DragDropEffects.Copy;
 
 		public ItemsRepeater Repeater => repeater;
 
@@ -277,7 +315,7 @@ namespace ComicRack.Mac.Views
 		}
 
 		// The selection or the focus changed: the cells draw their state, and the focused book is scrolled into view when the focus moved.
-		private void OnSelectionChanged(object sender, EventArgs e) => ApplySelection(ensureVisible: !model.KeepsView);
+		private void OnSelectionChanged(object sender, EventArgs e) => ApplySelection(ensureVisible: !model.KeepsView && !marqueeActive);
 
 		private void ApplyItems()
 		{
@@ -421,10 +459,21 @@ namespace ComicRack.Mac.Views
 
 		// ---- pointer ---------------------------------------------------------------------------------------------------------------
 
+		// The item under a pointer event: the cell, if the point is on what the item draws (CrThumbnailItem.HitRegion), else null: the border around a
+		// cover and the free part of the caption area are the empty area of the view, as in the original (CoverViewItem.Contains).
+		private static BookCell ItemUnder(PointerEventArgs e, Visual source)
+		{
+			BookCell cell = source?.FindAncestorOfType<BookCell>(includeSelf: true);
+			return cell?.Item != null && cell.HitTest(e.GetPosition(cell)) ? cell : null;
+		}
+
 		protected override void OnPointerPressed(PointerPressedEventArgs e)
 		{
 			base.OnPointerPressed(e);
 			pendingClick = -1;
+			dragIndex = -1;
+			dragPress = null;
+			releaseEnsuresVisible = false;
 			if (model == null)
 			{
 				return;
@@ -441,15 +490,18 @@ namespace ComicRack.Mac.Views
 				return; // the scroll bar is not an empty spot of the list
 			}
 			Focus();
+			releaseEnsuresVisible = left;
 			bool toggle = e.KeyModifiers.HasFlag(KeyModifiers.Meta); // Ctrl of the original
 			bool extend = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
 			SelectionModel selection = model.Selection;
-			BookCell cell = source?.FindAncestorOfType<BookCell>(includeSelf: true);
-			if (cell?.Item == null)
+			BookCell cell = ItemUnder(e, source);
+			if (cell == null)
 			{
+				// ItemView.UpdateSelectionFromMouse(null): any button clears (unless Cmd or Shift is held); the left button also starts the rubber band
+				selection.ClickEmpty(toggle, extend);
 				if (left)
 				{
-					selection.ClickEmpty(toggle, extend);
+					BeginMarquee(e);
 				}
 				return;
 			}
@@ -489,7 +541,40 @@ namespace ComicRack.Mac.Views
 			{
 				selection.Click(index, toggle, extend);
 			}
+			dragIndex = index;
+			dragPress = e;
+			dragOrigin = e.GetPosition(this);
 			e.Handled = true;
+		}
+
+		protected override void OnPointerMoved(PointerEventArgs e)
+		{
+			base.OnPointerMoved(e);
+			if (model == null)
+			{
+				return;
+			}
+			if (marqueeActive)
+			{
+				lastView = e.GetPosition(scroll);
+				lastModifiers = e.KeyModifiers;
+				EvaluateMarquee(force: false);
+				return;
+			}
+			if (dragIndex >= 0)
+			{
+				if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+				{
+					dragIndex = -1;
+					dragPress = null;
+					return;
+				}
+				Point now = e.GetPosition(this);
+				if (Math.Abs(now.X - dragOrigin.X) > DragThreshold || Math.Abs(now.Y - dragOrigin.Y) > DragThreshold)
+				{
+					StartDragOut();
+				}
+			}
 		}
 
 		protected override void OnPointerReleased(PointerReleasedEventArgs e)
@@ -497,14 +582,203 @@ namespace ComicRack.Mac.Views
 			base.OnPointerReleased(e);
 			int index = pendingClick;
 			pendingClick = -1;
-			if (model == null || index < 0)
+			dragIndex = -1;
+			dragPress = null;
+			if (model == null)
 			{
 				return;
 			}
-			BookCell cell = (e.Source as Visual)?.FindAncestorOfType<BookCell>(includeSelf: true);
-			if (cell?.Item != null && cell.Index == index)
+			if (marqueeActive)
 			{
+				EndMarquee();
+			}
+			else if (index >= 0)
+			{
+				// ItemView.OnMouseUpView: the click that was waiting is applied wherever the pointer is
 				model.Selection.Click(index, pendingToggle, pendingExtend);
+			}
+			if (releaseEnsuresVisible)
+			{
+				releaseEnsuresVisible = false;
+				EnsureVisible(model.Selection.FocusedIndex);
+			}
+		}
+
+		protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+		{
+			base.OnPointerCaptureLost(e);
+			if (marqueeActive)
+			{
+				EndMarquee();
+			}
+		}
+
+		// ---- rubber band -----------------------------------------------------------------------------------------------------------
+
+		// The coordinates of the grid content, which scroll with it: the repeater's own, i.e. the viewport point plus the offset, less the margin around the repeater.
+		private Point ToGrid(Point viewPoint) => new Point(Math.Floor(viewPoint.X + scroll.Offset.X - repeater.Margin.Left), Math.Floor(viewPoint.Y + scroll.Offset.Y - repeater.Margin.Top));
+
+		private Vector GridOrigin => new Vector(scroll.Offset.X - repeater.Margin.Left, scroll.Offset.Y - repeater.Margin.Top);
+
+		private static bool Touches(Rect a, Rect b) => a.X < b.Right && b.X < a.Right && a.Y < b.Bottom && b.Y < a.Bottom; // Rectangle.IntersectsWith
+
+		private static bool Holds(Rect a, Point p) => p.X >= a.X && p.X < a.Right && p.Y >= a.Y && p.Y < a.Bottom; // Rectangle.Contains
+
+		// ItemView.UpdateSelectionFromMouse(null) and OnMouseDownView: the band starts where the button went down.
+		private void BeginMarquee(PointerPressedEventArgs e)
+		{
+			lastView = e.GetPosition(scroll);
+			lastModifiers = e.KeyModifiers;
+			marqueeStart = ToGrid(lastView);
+			marqueeRect = default;
+			marqueeActive = true;
+			evaluated = default;
+			model.Selection.BeginMarquee();
+			e.Pointer.Capture(this);
+			e.Handled = true;
+			if (AutoScrollEnabled)
+			{
+				autoScrollTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(20), DispatcherPriority.Input, (sender, args) => AdvanceAutoScroll());
+				autoScrollTimer.Start();
+			}
+		}
+
+		// ItemView.UpdateSelection: the band from the start to the pointer; the books on screen that it touches are selected (see SelectionModel.UpdateMarquee).
+		private void EvaluateMarquee(bool force)
+		{
+			if (!marqueeActive)
+			{
+				return;
+			}
+			Point p = ToGrid(lastView);
+			double left = Math.Min(marqueeStart.X, p.X), top = Math.Min(marqueeStart.Y, p.Y);
+			var rect = new Rect(left, top, Math.Max(marqueeStart.X, p.X) - left, Math.Max(marqueeStart.Y, p.Y) - top);
+			ShowBand(rect);
+			evaluated = (scroll.Offset.Y, realized, scroll.Viewport.Height);
+			if (!force && rect == marqueeRect)
+			{
+				return;
+			}
+			marqueeRect = rect;
+			Vector origin = GridOrigin;
+			var viewport = new Rect(origin.X, origin.Y, scroll.Viewport.Width, scroll.Viewport.Height);
+			var visible = new List<int>();
+			var hit = new List<int>();
+			int pointed = -1;
+			foreach (BookCell cell in BoundCells())
+			{
+				Rect region = cell.HitRegion;
+				region = new Rect(cell.Bounds.X + region.X, cell.Bounds.Y + region.Y, region.Width, region.Height);
+				if (!Touches(region, viewport))
+				{
+					continue;
+				}
+				visible.Add(cell.Index);
+				if (Touches(region, rect))
+				{
+					hit.Add(cell.Index);
+					if (pointed < 0 && Holds(region, p))
+					{
+						pointed = cell.Index;
+					}
+				}
+			}
+			visible.Sort();
+			bool keepBase = lastModifiers.HasFlag(KeyModifiers.Meta) || lastModifiers.HasFlag(KeyModifiers.Shift);
+			model.Selection.UpdateMarquee(visible, hit, pointed, keepBase, flip: lastModifiers.HasFlag(KeyModifiers.Meta));
+		}
+
+		private void ShowBand(Rect gridRect)
+		{
+			Vector origin = GridOrigin;
+			band.Rectangle = gridRect.Width <= 0 && gridRect.Height <= 0 ? default : new Rect(gridRect.X - origin.X, gridRect.Y - origin.Y, gridRect.Width, gridRect.Height);
+		}
+
+		private void EndMarquee()
+		{
+			marqueeActive = false;
+			marqueeRect = default;
+			autoScrollTimer?.Stop();
+			autoScrollTimer = null;
+			band.Rectangle = default;
+			model?.Selection.EndMarquee();
+		}
+
+		// The view scrolled (the wheel, the scroll bar, the auto scroll): the band stays where it started in the content, so it grows or shrinks; ItemView.OnScroll.
+		private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+		{
+			if (marqueeActive)
+			{
+				EvaluateMarquee(force: true);
+			}
+		}
+
+		// The repeater realized other cells after a scroll: the band is evaluated against what is on screen now.
+		private void OnRepeaterLayoutUpdated(object sender, EventArgs e)
+		{
+			if (marqueeActive && evaluated != (scroll.Offset.Y, realized, scroll.Viewport.Height))
+			{
+				EvaluateMarquee(force: true);
+			}
+		}
+
+		/// <summary>
+		/// One tick of the auto scroll of <c>ScrollControl</c>: while the pointer is above or below the view, the content moves by the distance to its edge
+		/// (as it is up to 10, beyond that 10 plus a tenth of the rest). Returns true if the view scrolled.
+		/// </summary>
+		public bool AdvanceAutoScroll()
+		{
+			if (!marqueeActive)
+			{
+				return false;
+			}
+			double height = scroll.Viewport.Height;
+			double beyond = lastView.Y < 0 ? lastView.Y : lastView.Y > height ? lastView.Y - height : 0;
+			if (beyond == 0)
+			{
+				return false;
+			}
+			int delta = (int)Math.Abs(beyond);
+			if (delta > 10)
+			{
+				delta = 10 + (delta - 10) / 10;
+			}
+			double max = Math.Max(0, scroll.Extent.Height - scroll.Viewport.Height);
+			double target = Math.Clamp(scroll.Offset.Y + Math.Sign(beyond) * delta, 0, max);
+			if (Math.Abs(target - scroll.Offset.Y) < 0.001)
+			{
+				return false;
+			}
+			scroll.Offset = new Vector(scroll.Offset.X, target);
+			return true;
+		}
+
+		// ---- drag out --------------------------------------------------------------------------------------------------------------
+
+		// ItemView.OnItemDrag then ComicBrowserControl.itemView_ItemDrag: the selected books are dragged out; the click that was waiting is dropped.
+		private void StartDragOut()
+		{
+			PointerPressedEventArgs trigger = dragPress;
+			dragIndex = -1;
+			dragPress = null;
+			pendingClick = -1;
+			IReadOnlyList<cYo.Projects.ComicRack.Engine.ComicBook> books = model.SelectedBooks;
+			if (trigger == null || books.Count == 0)
+			{
+				return;
+			}
+			_ = RunDragAsync(new BookDragRequest(this, trigger, books, DragEffects));
+		}
+
+		private async Task RunDragAsync(BookDragRequest request)
+		{
+			try
+			{
+				await DragStarter.StartAsync(request);
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("Dragging books out of the grid failed", ex);
 			}
 		}
 
@@ -523,7 +797,7 @@ namespace ComicRack.Mac.Views
 			int count = items.Length;
 			int columns = Columns;
 			int current = selection.FocusedIndex;
-			int from = current < 0 ? 0 : current; // the first movement key selects the first book
+			int from = current < 0 ? 0 : current; // ItemView.OnKeyDown: without a focused book the keys move from the first one (Right goes to the second)
 			int target;
 			switch (e.Key)
 			{
@@ -546,19 +820,20 @@ namespace ComicRack.Mac.Views
 				case Key.Space:
 					// Ctrl+Space of the original is Option+Space here: Cmd+Space, Option+Cmd+Space and Ctrl+Cmd+Space belong to the system
 					selection.Space(e.KeyModifiers.HasFlag(KeyModifiers.Alt) || toggle);
+					EnsureVisible(from);
 					e.Handled = true;
 					return;
 				case Key.Right:
-					target = current < 0 ? 0 : current + 1;
+					target = from + 1;
 					break;
 				case Key.Left:
-					target = current < 0 ? 0 : current - 1;
+					target = from - 1;
 					break;
 				case Key.Down:
-					target = current < 0 ? 0 : RelativeRows(from, 1, columns);
+					target = RelativeRows(from, 1, columns);
 					break;
 				case Key.Up:
-					target = current < 0 ? 0 : RelativeRows(from, -1, columns);
+					target = RelativeRows(from, -1, columns);
 					break;
 				case Key.Home:
 					target = 0;

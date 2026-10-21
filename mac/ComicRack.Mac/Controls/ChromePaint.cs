@@ -56,6 +56,17 @@ namespace ComicRack.Mac.Controls
 			return brushes.GetOrAdd((variant, token), key => new ImmutableSolidColorBrush(ThemeTokens.Get(key.Item2, key.Item1)));
 		}
 
+		/// <summary>A solid brush in the colour of a token with its own alpha (0 to 255, over the token's), cached per appearance.</summary>
+		public static IBrush Brush(Control control, string token, byte alpha)
+		{
+			ThemeVariant variant = VariantOf(control);
+			return brushes.GetOrAdd((variant, token + "@" + alpha), key =>
+			{
+				Avalonia.Media.Color c = ThemeTokens.Get(token, key.Item1);
+				return new ImmutableSolidColorBrush(Avalonia.Media.Color.FromArgb(alpha, c.R, c.G, c.B));
+			});
+		}
+
 		/// <summary>A top to bottom gradient through the given token colours (evenly spaced), cached per appearance.</summary>
 		public static IBrush VerticalGradient(Control control, params string[] tokens)
 		{

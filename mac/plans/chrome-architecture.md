@@ -58,7 +58,7 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 | SidePanel | `CrSizableContainer` | not yet |
 | Icons | `CrIcon`, `Icons` | not yet |
 | Dialogs | `CrDialogWindow`, `AlertWindow` (the system alert is native already: `MacAlert`) | not yet |
-| ItemView | `CrThumbnailItem` (shadow, frame, badges, caption, selection; its backdrop and overlay are inner parts), `CoverView` (the picture, fade-in), `CrBookToolTip`; the colours of the original's renderers are `Cr.Thumb.*` in `Themes/Controls/CrThumbnailLook.axaml`, the numbers are `ThumbnailMetrics` and `ThumbnailLayout` | not yet |
+| ItemView | `CrThumbnailItem` (shadow, frame, badges, caption, selection; its backdrop and overlay are inner parts), `CoverView` (the picture, fade-in), `CrBookToolTip`, `CrSelectionRectangle` (the rubber band, RV6); the colours of the original's renderers are `Cr.Thumb.*` in `Themes/Controls/CrThumbnailLook.axaml`, the numbers are `ThumbnailMetrics` and `ThumbnailLayout` | not yet |
 | ReaderOverlay | `CrTextOverlay` (page info, loading, message), `CrPartOverlay` (visible part), `CrNavigationOverlay` (glass buttons, slider, page strip), `GlassPainter` (nine-part glass pictures), `PageFrame` (outline and shadow of the pages), `ReaderOverlayClock` (fades and slide); the colours are `Cr.Reader.*` in `Themes/Controls/CrReaderLook.axaml` | not yet |
 | Buttons, ComboBox, Menus | **stock controls**: `CrControls.axaml`, `CrControlThemes.axaml` (check box, radio button), `CrControlResources.*` (the base theme's brush keys), `CrMetrics.axaml` | **not switchable yet**: the original look is made of global overrides of the base theme, which a per-control theme cannot undo. See `full-port.md` section 9. |
 

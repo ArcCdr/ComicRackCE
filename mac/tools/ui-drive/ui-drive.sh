@@ -29,6 +29,7 @@ usage: ui-drive.sh <command> [args]
   keycode <n>                                            raw key code
   type <text>                                            type text
   click <x> <y> [--right] [--double] [--cmd] [--shift] [--window ID]   click, window relative points (--cmd/--shift hold the modifier)
+  drag <x1> <y1> <x2> <y2> [--cmd] [--shift] [--steps N] [--hold-ms N] [--window ID]   press at the first point, drag to the second, release (hold keeps the button down for a screenshot)
   shot <name> [--window ID]                              screenshot of the window to artifacts/ui-drive/shots/<name>.png
   probe <png> <x> <y> [--box N]                          pixel colour (crcli image probe)
   stats <png>                                            channel statistics, non-blank check (crcli image stats)
@@ -653,6 +654,42 @@ cmd_click() {
 	esac
 }
 
+cmd_drag() {
+	local window="" args=() a
+	strip_common "$@"; set -- ${REST[@]+"${REST[@]}"}
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			--window) shift; window=${1:-}; [ -n "$window" ] || die 2 "--window needs an id" ;;
+			*) args+=("$1") ;;
+		esac
+		shift
+	done
+	local coords=() flags=() i=0
+	while [ $i -lt ${#args[@]} ]; do
+		a=${args[$i]}
+		case "$a" in
+			--cmd|--shift) flags+=("$a") ;;
+			--steps|--hold-ms) i=$((i+1)); case "${args[$i]}" in ''|*[!0-9]*) die 2 "drag: $a needs a whole number" ;; esac; flags+=("$a" "${args[$i]}") ;;
+			-*|'') die 2 "drag: unknown option $a" ;;
+			*) coords+=("$a") ;;
+		esac
+		i=$((i+1))
+	done
+	[ ${#coords[@]} -eq 4 ] || die 2 "drag needs <x1> <y1> <x2> <y2> (window relative points)"
+	for a in "${coords[@]}"; do case "$a" in *[!0-9.]*|'') die 2 "drag: not a non-negative number: $a" ;; esac; done
+	prepare_input
+	[ -n "$window" ] || window=$(main_window_id)
+	[ -n "$window" ] || die 1 "the app has no window to drag in"
+	"$WT" drag --pid "$UD_PID" --window "$window" "${coords[@]}" ${flags[@]+"${flags[@]}"}
+	local rc=$?
+	case $rc in
+		0) ;;
+		4) exit 4 ;;
+		5) exit 5 ;;
+		*) exit 1 ;;
+	esac
+}
+
 cmd_shot() {
 	local name="" window=""
 	while [ $# -gt 0 ]; do
@@ -815,6 +852,7 @@ case "$command_name" in
 	keycode) cmd_keycode "$@" ;;
 	type) cmd_type "$@" ;;
 	click) cmd_click "$@" ;;
+	drag) cmd_drag "$@" ;;
 	shot) cmd_shot "$@" ;;
 	probe) cmd_probe "$@" ;;
 	stats) cmd_stats "$@" ;;

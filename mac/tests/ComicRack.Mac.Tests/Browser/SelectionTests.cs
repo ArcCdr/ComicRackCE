@@ -170,12 +170,15 @@ namespace ComicRack.Mac.Tests.Browser
 		}
 
 		[Fact]
-		public void Space_without_a_focus_acts_on_the_first_book()
+		public void Space_without_a_focus_selects_the_first_book_and_leaves_the_focus_alone()
 		{
+			// ItemView.OnKeyDown takes displayedItems[0] when nothing has the focus, and the Space case sets the selection only
 			SelectionModel m = Model(4);
 			m.Space(toggle: false);
 			Assert.Equal(new[] { 0 }, Selected(m));
-			Assert.Equal(0, m.FocusedIndex);
+			Assert.Equal(-1, m.FocusedIndex);
+			m.Space(toggle: true);
+			Assert.Empty(Selected(m));
 		}
 
 		// ---- the model: the whole list ---------------------------------------------------------------------------------------------------
@@ -551,26 +554,27 @@ namespace ComicRack.Mac.Tests.Browser
 					h.Grid.Focus();
 					SelectionModel s = h.Model.Selection;
 
-					Press(h, Key.Right); // the first key selects the first book
-					Assert.Equal(new[] { 0 }, Selected(s));
+					// ItemView.OnKeyDown: with nothing focused the key moves from the first book, so Right selects the second one
+					Press(h, Key.Right);
+					Assert.Equal(new[] { 1 }, Selected(s));
 					Press(h, Key.Right, KeyModifiers.Shift);
 					Press(h, Key.Right, KeyModifiers.Shift);
-					Assert.Equal(new[] { 0, 1, 2 }, Selected(s));
+					Assert.Equal(new[] { 1, 2, 3 }, Selected(s));
 					Press(h, Key.Left, KeyModifiers.Shift);
-					Assert.Equal(new[] { 0, 1 }, Selected(s));
+					Assert.Equal(new[] { 1, 2 }, Selected(s));
 					Press(h, Key.Down, KeyModifiers.Shift);
-					Assert.Equal(Enumerable.Range(0, 2 + columns), Selected(s));
+					Assert.Equal(Enumerable.Range(1, 2 + columns), Selected(s));
 					Press(h, Key.Right); // a plain movement key collapses the selection
-					Assert.Equal(new[] { 2 + columns }, Selected(s));
+					Assert.Equal(new[] { 3 + columns }, Selected(s));
 
 					// Cmd+arrow moves the focus only, Option+Space flips the focused book, Space selects it
 					Press(h, Key.Left, KeyModifiers.Meta);
-					Assert.Equal(new[] { 2 + columns }, Selected(s));
-					Assert.Equal(1 + columns, s.FocusedIndex);
+					Assert.Equal(new[] { 3 + columns }, Selected(s));
+					Assert.Equal(2 + columns, s.FocusedIndex);
 					Press(h, Key.Space);
-					Assert.Equal(new[] { 1 + columns, 2 + columns }, Selected(s));
+					Assert.Equal(new[] { 2 + columns, 3 + columns }, Selected(s));
 					Press(h, Key.Space, KeyModifiers.Alt);
-					Assert.Equal(new[] { 2 + columns }, Selected(s));
+					Assert.Equal(new[] { 3 + columns }, Selected(s));
 
 					// Home and End, with Shift from the anchor
 					Press(h, Key.Home);

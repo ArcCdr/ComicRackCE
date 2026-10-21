@@ -268,20 +268,18 @@ namespace ComicRack.Mac.Browser
 			End();
 		}
 
-		/// <summary>Space: the focused book is selected; with <paramref name="toggle"/> it is flipped. Without a focus the first book is the one.</summary>
+		/// <summary>
+		/// Space: the focused book is selected; with <paramref name="toggle"/> it is flipped. Without a focus the first book is the one, and, as in
+		/// <c>ItemView.OnKeyDown</c>, it is selected without getting the focus.
+		/// </summary>
 		public void Space(bool toggle)
 		{
 			if (items.Length == 0)
 			{
 				return;
 			}
-			int index = FocusedIndex;
+			int index = Math.Max(0, FocusedIndex);
 			Begin();
-			if (index < 0)
-			{
-				index = 0;
-				focused = Key(items[0]);
-			}
 			if (toggle)
 			{
 				Flip(index);
@@ -368,6 +366,85 @@ namespace ComicRack.Mac.Browser
 				}
 			}
 			End();
+		}
+
+		// ---- rubber band ---------------------------------------------------------------------------------------------------------------
+
+		private HashSet<object> marqueeBase;
+
+		/// <summary>True between <see cref="BeginMarquee"/> and <see cref="EndMarquee"/>.</summary>
+		public bool IsMarqueeActive => marqueeBase != null;
+
+		/// <summary>
+		/// A press on the empty area started a rubber band (<c>UpdateSelectionFromMouse</c> with no item: the state at this moment is kept, after the
+		/// press has cleared the selection when no modifier was held).
+		/// </summary>
+		public void BeginMarquee()
+		{
+			marqueeBase = new HashSet<object>(selected, ReferenceEqualityComparer.Instance);
+		}
+
+		/// <summary>
+		/// The rubber band moved or the view scrolled (<c>ItemView.UpdateSelection</c>). The focus is let go. Every book in <paramref name="visible"/> (the
+		/// ones on screen: the others keep the state they have) goes back to the state it had when the band started (<paramref name="keepBase"/>, held
+		/// while Shift or Cmd is down) or to not selected, and the ones in <paramref name="hit"/> (the band touches them) are selected, or flipped when
+		/// <paramref name="flip"/> (Cmd). The book under the pointer, <paramref name="pointed"/>, gets the focus.
+		/// </summary>
+		public void UpdateMarquee(IReadOnlyList<int> visible, IReadOnlyCollection<int> hit, int pointed, bool keepBase, bool flip)
+		{
+			if (marqueeBase == null)
+			{
+				return;
+			}
+			var touched = new HashSet<int>(hit);
+			object oldFocus = focused;
+			bool[] before = new bool[visible.Count];
+			for (int i = 0; i < before.Length; i++)
+			{
+				before[i] = visible[i] >= 0 && visible[i] < items.Length && selected.Contains(Key(items[visible[i]]));
+			}
+			Begin();
+			focused = null;
+			foreach (int index in visible)
+			{
+				if (index < 0 || index >= items.Length)
+				{
+					continue;
+				}
+				Set(index, keepBase && marqueeBase.Contains(Key(items[index])));
+				if (touched.Contains(index))
+				{
+					if (flip)
+					{
+						Flip(index);
+					}
+					else
+					{
+						Set(index, true);
+					}
+					if (index == pointed && focused == null)
+					{
+						focused = Key(items[index]);
+					}
+				}
+			}
+			bool changed = !ReferenceEquals(oldFocus, focused);
+			for (int i = 0; i < before.Length && !changed; i++)
+			{
+				changed = visible[i] >= 0 && visible[i] < items.Length && before[i] != selected.Contains(Key(items[visible[i]]));
+			}
+			if (!changed)
+			{
+				muted--; // the band moved but nothing changed: no event
+				return;
+			}
+			End();
+		}
+
+		/// <summary>The button went up (<c>OnMouseUpView</c>): the state kept at the start is let go.</summary>
+		public void EndMarquee()
+		{
+			marqueeBase = null;
 		}
 
 		// ---- parts ---------------------------------------------------------------------------------------------------------------------

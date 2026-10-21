@@ -58,6 +58,8 @@ namespace ComicRack.Mac
 			Controls.CoverView.FadeEnabled = ApplicationLifetime is IClassicDesktopStyleApplicationLifetime && !options.Headless;
 			// The fades and the slide of the reader overlays run on the same condition; a test moves them by hand (ReaderOverlayClock.Advance).
 			Controls.ReaderOverlayClock.Enabled = Controls.CoverView.FadeEnabled;
+			// The rubber band of the browser scrolls the view with a 20 ms timer while the pointer is beyond its edge (ScrollControl); a test calls AdvanceAutoScroll.
+			Views.BookGridView.AutoScrollEnabled = Controls.CoverView.FadeEnabled;
 			if (options.Headless)
 			{
 				// The system alert runs a modal loop of its own: not on the headless platform (the alert window answers instead).

@@ -99,17 +99,17 @@ namespace ComicRack.Mac.Tests.Browser
 					// Keyboard: arrows move by one and by a row; Enter opens; the selected cell is scrolled into view.
 					h.Grid.Focus();
 					h.Window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
-					Assert.Equal(0, h.Model.SelectedIndex); // the first key selects the first book
+					Assert.Equal(1, h.Model.SelectedIndex); // nothing was focused: the key moves from the first book, as in the original
 					h.Window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, null);
-					Assert.Equal(1, h.Model.SelectedIndex);
+					Assert.Equal(2, h.Model.SelectedIndex);
 					h.Window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
-					Assert.Equal(1 + columns, h.Model.SelectedIndex);
+					Assert.Equal(2 + columns, h.Model.SelectedIndex);
 					h.Window.KeyPress(Key.Left, RawInputModifiers.None, PhysicalKey.ArrowLeft, null);
-					Assert.Equal(columns, h.Model.SelectedIndex);
+					Assert.Equal(1 + columns, h.Model.SelectedIndex);
 					h.Window.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
-					Assert.Equal(0, h.Model.SelectedIndex);
+					Assert.Equal(1, h.Model.SelectedIndex);
 					h.Window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
-					Assert.Equal(new[] { "Album 1" }, opened);
+					Assert.Equal(new[] { "Album 2" }, opened);
 
 					h.Window.KeyPress(Key.End, RawInputModifiers.None, PhysicalKey.End, null);
 					Assert.Equal(59, h.Model.SelectedIndex);
