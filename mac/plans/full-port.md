@@ -11,14 +11,14 @@ Run state: RUNNING (2026-10-20, orchestrator; next task: RV5b)
 |---|---|---|---|---|
 | P0 Safety net and tooling | 12 | 12 | - | fast gate, replacement manifest, upstream harness, UI automation, goldens, unattended loop |
 | P1 Core runtime gaps | 3 | 3 | - | zero-edit fixes through pass B replacements |
-| P2 Platform pieces | 9 | 1 | P2.1 | shell, codecs, ComicInfo write, payload, TR |
+| P2 Platform pieces | 9 | 2 | P2.4a | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 66 | 11 | P5.4 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 66 | 12 | P5.32a | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 8 | 6 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **165** | **36** | | estimate in §10 |
+| RV Review fixes and upstream sync | 10 | 7 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **167** | **39** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -567,6 +567,7 @@ The orchestrator takes the first task in this list whose status is `todo` and wh
 - **RV5** (chrome isolation) runs right after P5.R1 and before P5.R2/P5.R3 and all further screens.
 - **RV5b** runs at the end of wave B, before C2.
 - **RV6** runs right after P5.3, before P5.4.
+- **RV7, RV8** (wave B review fixes) run right now, before P5.32a.
 - Tasks created by an upstream sync (`U<date>.<n>`, §7 "Upstream sync tasks") and review fixes (`RV<n>`, formerly `R<n>`; renamed because R1 to R9 are the owner requirements of §1.1) go to the **front** of the list.
 
 ---
@@ -632,6 +633,16 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Depends: P5.3 · Effort: high · Unattended: yes · Status: done 2026-10-21
 - Goal: R9 says behaviour must be identical to the Windows app. P5.3 left three deviations: (1) with nothing focused the original's first arrow key moves relative to item 0 (Right selects the second book); the Mac grid selects the first book; (2) rubber band (marquee) selection is missing; (3) dragging the selection out of the grid (drag-and-drop source) is missing. Derive the exact behaviour from `cYo.Common.Windows/Forms/ItemView*.cs` (read-only) and implement it in the Mac grid with tests; keep any remaining true deviation in the parity ledger with a reason.
 - Accept: new tests for each (model + real keys/pointer events, 1x and 2x for the marquee drawing); `mac/tools/verify.sh`; ledger rows BV.* updated.
+
+#### RV7 Review fixes: settings safety, ui-drive drag safety, window placement, UI-thread writes (wave B review, High 1 and 4, Medium 5-6)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Do: (1) `SettingsStore`: only parse errors (`XmlException`, `InvalidOperationException`, `InvalidDataException`, `FormatException`) count as a damaged file; on IO/access errors run on defaults WITHOUT queuing a save over the file; never save when the `.bad` copy failed; log at warning level; tests for an unreadable file (permissions) and a failed copy. (2) `ui-drive` `drag` (WindowTool.swift + shell + grid-marquee/drag-out cases): re-check frontmost/not-covered before every dragged event and before mouse-up; on failure post mouse-up at the start point and exit 5; cap `--hold-ms` and `--steps` (Swift and shell, no UInt32 overflow); signal handler (SIGINT/SIGTERM) posts mouse-up; kill/wait the background drag subshell in `e2e_cleanup`; add refusal tests for `drag` and `frame`. (3) `SettingsStore.SaveNow`: serialize to memory under the lock, write/fsync/rename outside it with a sequence number so an older save never replaces a newer one; setters never wait for I/O (test with a blocked writer). (4) `WindowPlacement`: after clamping the size also clamp X/Y so the whole window is on a screen; assert X/Y in tests (a 2400x1300 frame at (100,300) on a 1440x900 screen). (5) `SidebarWidth` restore: clamp and NaN-check.
+- Accept: new tests fail without the fixes and pass with them (show once); `mac/tools/verify.sh`; e2e `grid-marquee` and `grid-multiselect` still pass (SKIPPED(focus) allowed after one retry).
+
+#### RV8 Review fixes: parity and UI correctness (wave B review, High 2-3, Medium 7-13, Low)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Do: (1) Arrange button: a click flips the sort direction and swaps the SortUp/SortDown icon (original `ComicBrowserControl.cs` `FlipSortOrder`); only the arrow opens the menu; test. (2) Toolbar: quick search right-aligned as in `ComicBrowserControl.Designer.cs`; add the overflow behaviour (`HorizontalStackWithOverflow` equivalent: overflow chevron with a drop-down of hidden items) to `CrToolBar` with 1x/2x test; correct ledger BT.01. (3) Reader: Option+Shift+0..5 and Cmd+I rating/info keys either work (map in `ReaderViewModel.HandleKey`) or are not shown; hide 'Info...' until P5.7a; correct ledger PC.02. (4) `BrowserViewModel` last-opened: call `SetLastOpened`, remove the manual `NotifyMarkersChanged` from the test; use a HashSet in the change-batch loop. (5) `SelectionModel`: reset the anchor when the list changes (original falls back to item 0). (6) Reader navigation overlay: strip centres on `sliderValue` while dragging; request thumbnails in device pixels; write the overlay-closed setting back (MainForm.cs:4389 behaviour); add tests for `CorePageThumbnails` (ref counting, eviction past 64, dispose during a load). (7) Lints: extend `NoLiteralColorsTests`/`ChromeLint` to scan `Thumbnails/`, `Reader/`, `Browser/` etc. (all of `mac/ComicRack.Mac` except the chrome layer), forbid `new SKColor`, `SKColors.*`, `Color.FromUInt32`, short `#rgb` strings, `Avalonia.Media` in Views/ViewModels; move `ThumbnailPixels.cs` placeholder colours and `ReaderView.cs` painting into the chrome layer (tokens, dark-mode aware). (8) `MacAlert`: marshal to the UI thread, map Stop/Abort correctly, add an autorelease pool. (9) Weak tests: fix `PreferencesTests` (100 then 100), `SettingsStoreTests` old-file deletion, `LiveRefreshTests` `if (cell != null)`, restore 1.5x in `GridHiDpiTests`, make `ChromeSnapshotTests` fail loudly when baselines are missing in `--full`, list all e2e cases in `E2eScriptTests`. (10) Parity details: Cmd+F9 alias for Settings; right-click honours Cmd/Shift; Shift+Home/End/arrows in the reader; `zh-Hans*` maps to `zh-CN`.
+- Accept: each fix has a test that fails without it (show once for the groups 1, 4, 5); `mac/tools/verify.sh`; ledger rows corrected; `ledger-check` passes.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
