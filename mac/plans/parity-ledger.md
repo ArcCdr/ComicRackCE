@@ -455,5 +455,5 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | FF.04 | Plugins `.crplugin` / script `.zip` | `PackageManager` | P4.4 | todo | |
 | FF.05 | Keyboard layout export `*.xml` | `PreferencesDialog.cs:741` | P5.22c | todo | |
 | FF.06 | Backups `*.zip` | `BackupManager` | P5.25 | todo | |
-| FF.07 | ComicInfo.xml inside archives | Core | P2.4b | todo | |
+| FF.07 | ComicInfo.xml inside archives | Core | P2.4b | done 2026-10-21 | read by the Core's providers; written into CBZ, CB7 and CBT through the bundled `7zz` (`crcli info write`); CBR, RAR and PDF are never written (the Core's own rule: no `EnableUpdate`) |
 | FF.08 | Export formats (CBZ, CB7, CBT, PDF, image folders) | `ExportComicsDialog`, `ComicExporter` | P5.24a, P5.24b | todo | |

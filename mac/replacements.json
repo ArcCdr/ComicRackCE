@@ -378,6 +378,16 @@
       "sha256": "d950e6b268df6960d0b3667a8972e3e6e218aec220cc2121adfaf41816955e7b",
       "maxChangedLines": 10,
       "reason": "PathGetCharType (shlwapi) replaced by a managed table, so MakeValidFilename no longer throws per character (P1.3)"
+    },
+    {
+      "original": "ComicRack.Engine/IO/Provider/Readers/Archive/SevenZipEngine.cs",
+      "replacement": "mac/ComicRack.Engine.Core/Replacements/PassB/SevenZipEngine.cs",
+      "kind": "patched-copy",
+      "pass": "B",
+      "base": "512c9a3c917489cb77bf66c6ee04aadf28aaf035",
+      "sha256": "60f4a01cc742a987e4ce1abe275c7a33898ce91bdbead8fe940f949b639da22c",
+      "maxChangedLines": 12,
+      "reason": "ComicInfo writes run the bundled 7zz (PackExe is settable and defaults to 7zz next to the assembly; Path.Combine instead of backslashes; the error text is decoded as UTF-8, not through the Windows OEM code page) (P2.4b)"
     }
   ]
 }

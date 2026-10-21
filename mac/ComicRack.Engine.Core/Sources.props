@@ -27,6 +27,8 @@
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Provider\Readers\Pdf\PdfiumReaderEngine.cs" />
     <!-- Thread.Abort is not supported on .NET 10: the replacement of Stop reports and abandons a scanning thread that ignores its timeout (P1.1). -->
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\ComicScanner.cs" />
+    <!-- 7z.exe and the backslash paths under Resources do not exist on macOS: the copy looks for the bundled 7zz (P2.4b). -->
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\ComicRack.Engine\IO\Provider\Readers\Archive\SevenZipEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Replacements\PassB\**\*.cs" />
     <!-- Resources.Designer.cs reads ResXFileRef bitmaps of the framework's System.Drawing.Bitmap: replaced by Replacements\PassB\Resources.cs,
          which decodes the raw files below through the Drawing shim. -->

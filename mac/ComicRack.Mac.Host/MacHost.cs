@@ -11,6 +11,7 @@ using cYo.Common.Text;
 using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.Database;
 using cYo.Projects.ComicRack.Engine.IO.Cache;
+using cYo.Projects.ComicRack.Engine.IO.Provider.Readers.Archive;
 using cYo.Projects.ComicRack.Engine.Sync;
 using ComicRack.Mac.Host.Library;
 using ComicRack.Mac.Host.Platform;
@@ -174,6 +175,13 @@ namespace ComicRack.Mac.Host
 			// The archive engines default to SevenZip (a Windows DLL); SharpCompress is managed.
 			EngineConfiguration config = EngineConfiguration.Default;
 			config.CbzUses = config.CbrUses = config.Cb7Uses = config.CbtUses = EngineConfiguration.CbEngines.SharpCompress;
+
+			// ComicInfo writes and CB7 creation run the bundled 7zz (P2.4b); without one the Core's calls fail like a missing 7z.exe (the write returns false).
+			string sevenZip = ToolLocator.SevenZip;
+			if (sevenZip != null)
+			{
+				SevenZipEngine.PackExe = sevenZip;
+			}
 
 			// ShellFile.DeleteFile (queue, exporter, backups) sends files to the Trash; the pass B ShellFile has no shell of its own (P2.1).
 			cYo.Common.Win32.ShellFile.TrashHandler = path => MacShell.MoveToTrash(path);

@@ -39,6 +39,8 @@ namespace ComicRack.Cli
 					return CoreCommands.Thumb(rest.ToArray(), output, error);
 				case "image":
 					return ImageCommands.Run(rest.ToArray(), output, error);
+				case "info":
+					return InfoCommands.Run(rest.ToArray(), output, error);
 				case "smartlist":
 					return SmartListCommand.Run(rest.ToArray(), output, error);
 				default:
@@ -81,6 +83,11 @@ namespace ComicRack.Cli
       Evaluate a list of the database with the Core (the same code the app's sidebar uses) and print its book count.
       --all prints every list as a tab separated table. By default each list is computed from its matchers; --cached trusts the query cache stored in the file. Lists with a script
       matcher are reported as ""requires scripts"" with count 0. The database is opened read only.
+  info show <book>
+      The ComicInfo of a book file as the Core reads it (fields that are not empty or default).
+  info write <book> --set Field=Value [--set Field=Value ...]
+      Set fields and write them into the book file through the Core (ComicBook.WriteInfoToFile: CBZ, CB7 and CBT use the bundled 7zz;
+      CBR and PDF cannot be written). Field names are those of ComicInfo (Series, Number, Summary, Year, ...). Exit 1 if the Core could not write.
   image probe <png> <x> <y> [--box N]
       Colour at a pixel (top left origin), or the mean of the N x N pixels around it. Prints rgba and hex.
   image stats <png> [--require-nonblank]
@@ -89,7 +96,7 @@ namespace ComicRack.Cli
   image sheet --out <png> --cols N [--cell-width W] [--gap G] [--background #RRGGBB] <image-or-card.json>[::caption]...
       Contact sheet: the inputs in rows of N cells (scaled to the cell width, default 480), each with a caption under it
       (the text after `::`, else the file name). A .json input is a reference card (title, lines, swatches, icons) that is drawn first.
-Options of db/scan/page/thumb/smartlist: --data-dir <dir> (or CRCLI_DATA_DIR) keeps data, cache and logs there; --app-folders uses
+Options of db/scan/page/thumb/smartlist/info: --data-dir <dir> (or CRCLI_DATA_DIR) keeps data, cache and logs there; --app-folders uses
 ~/Library/.../ComicRack CE (MVP). Default: a temporary folder that is deleted at the end.
 Everything under mac/fixtures is limited to 1.5 GB; the commands estimate first and refuse to exceed it.";
 	}
