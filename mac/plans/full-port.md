@@ -505,6 +505,9 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Test strength: `PreferencesTests` checks that nothing is kept without preferences (a second view model has the defaults), `SettingsStoreTests` checks that a save replaces the old content, `LiveRefreshTests` scrolls to the selected cell instead of `if (cell != null)`, `GridHiDpiTests` has 1.5x again for the exact cover (the P5.R2 snapping already makes it pass), `E2eScriptTests` lists all 19 cases and fails when a case is added without being listed. `ChromeSnapshotTests` in `mac/tools/verify.sh --full` (which exports `CRMAC_FULL_GATE=1`) needs the baseline frames in `mac/artifacts/chrome/baseline` (or `CRMAC_CHROME_BASELINE_DIR`) and fails with the command that takes them; RUNBOOK section 4 says so. The baseline of this Mac was taken after RV8 (the toolbar of the library window changed).
 - Mutation checks (once): the Arrange click opening the menu again, `lastOpened = newest` without `SetLastOpened`, and the old anchor rule each failed their new test (`The_arrange_button_flips...`, `The_open_and_the_last_opened_book...` (the `Changed` count), `A_new_list_has_no_anchor...`); restored.
 
+**Facts from RV10 (2026-10-21)**
+- Full gate on the healthy disk (25 GB free) passed with no code change: `verify.sh --full` 1576 tests, e2e 21 cases (first run lost focus in 4 cases: chrome, grid-multiselect, import, menu-structure; all passed on the single retry), census pass B 0 errors, `upstream-sync-check.sh --no-merge` clean. The `--full` chrome baseline frames existed and matched.
+
 **Facts from RV9 (2026-10-21)**
 - The product never announced a host twice: `HostService.Complete` posts `Opened` once per open (start, and again after an import with the new host) and `App` has the only subscription. The double call was test-only: `Launch.Start` subscribed `Opened` and also called `OnHostOpened` itself. `Launch.Announce` now calls it once per host (or failure), whichever comes first (the explicit call serves tests that start off the UI thread, the event serves the reopen after an import); `MainViewModel.HostOpenedRuns` counts the runs. `OnHostOpened` itself stays re-runnable on purpose (tests refresh the library with it).
 - `DatabaseManager.Database` (original Core) closes its init wait handle on the first access, so two threads making the first access can hit `ObjectDisposedException`; `MacHost` now makes that first access itself right after `DatabaseManager.Open`, on the opening thread, before the host is handed out.
@@ -695,7 +698,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: new test fails without the fix; `LibraryFlowTests` passes 5 times in a row; `mac/tools/verify.sh`.
 
 #### RV10 Verify P5.5 on a healthy disk (full gate)
-- Depends: P5.5 · Effort: medium · Unattended: yes · Status: todo
+- Depends: P5.5 · Effort: medium · Unattended: yes · Status: done 2026-10-21
 - Goal: P5.5 finished while the disk was full, so its fast gate was skipped and several test projects failed on disk guards. Run the full gate on the current tree and fix anything real.
 - Do: `mac/tools/verify.sh --full`; `mac/tools/e2e.sh` (retry focus losses once); `dotnet run --project mac/tools/census -- --pass B` then `git restore mac/reports`; `mac/tools/upstream-sync-check.sh --no-merge`; fix failures that come from P5.5 code or tests (not disk-guard noise); if the baseline frames for `--full` are missing, regenerate them as RV8 documents.
 - Accept: all of the above exit 0 (or SKIPPED(focus) for e2e after one retry).
