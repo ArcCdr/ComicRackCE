@@ -54,6 +54,29 @@ namespace ComicRack.Mac.Tests.HiDpi
 
 		[Theory]
 		[MemberData(nameof(Scales.MainData), MemberType = typeof(Scales))]
+		public async Task A_drop_down_button_is_29_by_22_units_with_a_one_unit_frame_and_a_whole_pixel_arrow(double scale)
+		{
+			await InAppearance("Light", () =>
+			{
+				var bar = new CrToolBar { Width = 100 };
+				var button = new CrDropDownButton { IconName = "ListLayout", DisplayState = ToolButtonState.Hot };
+				bar.Children.Add(button);
+				Window window = ShowIn(bar, 120, 40, scale);
+				Assert.Equal(new Size(29, 22), button.Bounds.Size);
+				Raster frame = Dpi.Capture(window, "chrome-hidpi-dropdown@" + Scales.Tag(scale));
+				SKColor border = Token(ThemeTokens.Names.ToolButtonSelectedBorder, "Light");
+				Point o = Dpi.Origin(button, window);
+				int w = Scales.Device(1, scale);
+				Assert.Equal(w, Run(frame, scale, o.X, o.Y + 11, w, border));
+				Assert.Equal(Scales.Device(29, scale), Run(frame, scale, o.X, o.Y, Scales.Device(29, scale), border));
+				// the right frame: the last `w` device columns of the button
+				Assert.Equal(w, Run(frame, scale, o.X + 28, o.Y + 11, w, border));
+				window.Close();
+			});
+		}
+
+		[Theory]
+		[MemberData(nameof(Scales.MainData), MemberType = typeof(Scales))]
 		public async Task The_selected_tab_has_a_page_border_frame_of_one_unit_and_the_bar_keeps_its_logical_size(double scale)
 		{
 			await InAppearance("Light", () =>

@@ -12,7 +12,7 @@ toolStrip 25 high, left to right:
 openStackPanel 39 (hidden), searchBrowserContainer 160 (P5.15b), displayOptionPanel 39 (hidden)
 browserContainer: itemView (the book list) with lvGroupHeaders
 ```
-Mac in P5.R1: Sidebar button, Arrange split button (the MVP sort: Series, Title, Date added), quick search box; the book grid below.
+Mac since P5.4: the whole strip in this order (Sidebar and Arrange work, quick search filters; the other buttons are present and disabled until their task); the book grid below.
 
 ## 3. Controls
 | Control | TR key | English | Mac in P5.R1 | Task |
@@ -26,7 +26,7 @@ Mac in P5.R1: Sidebar button, Arrange split button (the MVP sort: Series, Title,
 | `tsListLayouts`, `tbbDuplicateList`, `tbUndo`, `tbRedo` | | | not yet | P5.11b, P5.20, P5.7a |
 
 ## 4. Menus and shortcuts
-Toolbar BT.* rows; Cmd+F (focus quick search, GK.01) is P5.15a.
+Toolbar BT.* rows; Cmd+F (focus quick search, GK.01) works since P5.4; the scope menu is P5.15a.
 
 ## 5. Icons
 `<Sidebar>`, `<SortUp>`, `<Search>`, `<SmallCloseGray>`, `<SmallArrowDown>` (split arrow).

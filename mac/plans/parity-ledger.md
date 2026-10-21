@@ -176,7 +176,7 @@
 
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
-| BT.01 | Toolbar: Sidebar toggle | `toolStrip.tbSidebar` | — | P5.4 | todo | |
+| BT.01 | Toolbar: Sidebar toggle | `toolStrip.tbSidebar` | — | P5.4 | done 2026-10-21 | toolbar complete in the original order; the buttons of the other BT rows are present and disabled until their task |
 | BT.02 | Toolbar: Previous / Next (list history) | `btBrowsePrev`, `btBrowseNext` | Mouse 4/5 | P5.32b | todo | |
 | BT.03 | Toolbar: Views (Thumbnails, Tiles, Details) | `tbbView`, `miViewThumbnails`, `miViewTiles`, `miViewDetails` | — | P5.12 | todo | |
 | BT.04 | Views: Collapse/Expand all Groups, Show Group Headers | `miExpandAllGroups`, `miShowGroupHeaders` | Ctrl+Shift+G → Cmd+Shift+G | P5.13a | todo | |
@@ -295,7 +295,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | RK.29 | Rotate Page Right / Left (permanent, page info) | Y, Shift+Y | same | P5.23b | todo | |
 | RK.30 | Exit | Q | Q | P5.R3 | done 2026-10-21 | Q quits the application like Cmd+Q |
 | RK.31 | Windows touch gestures without a trackpad equivalent (gestures 4, 6, flick up/down) | `CommandKey.Gesture*` | — | P5.23d | deviation | impossible: no such trackpad gesture on macOS; the commands keep their keys |
-| GK.01 | Focus Quick Search (`FocusQuickSearch`) | Ctrl+F | Cmd+F | P5.15a | todo | |
+| GK.01 | Focus Quick Search (`FocusQuickSearch`) | Ctrl+F | Cmd+F | P5.4 | done 2026-10-21 | window key binding, focuses the quick search |
 | GK.02 | Previous / Next List (`BrowsePrevious`, `BrowseNext`) | mouse buttons 4/5 | same | P5.32b | todo | |
 | GK.03 | Library tree quick search (`ToggleQuickSearch`) | Ctrl+Alt+F | Option+Cmd+F | P5.16a | todo | |
 

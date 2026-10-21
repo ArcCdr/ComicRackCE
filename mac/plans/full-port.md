@@ -475,6 +475,12 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - ui-drive: `drag <x1> <y1> <x2> <y2> [--cmd] [--shift] [--steps N] [--hold-ms N]` (WindowTool `drag`: left button down, `leftMouseDragged` events, hold, up; the click safety checks for both points). e2e case `grid-marquee` passed on an unlocked screen: bands with no modifier, Shift and Cmd (status text), the pure Highlight probe pixel of the band's left line in a screenshot taken while the button is held (scale 2), a real drag session of one book and of all fifty. Shots: `mac/artifacts/e2e/grid-marquee/`.
 - Tests: `Browser/RubberBandTests` (17: model rules; grid with real pointer events: press in the cover border starts a band, the band selects what it touches and focuses the book under the pointer, up-left, Shift, Cmd and shrinking, right button press, no scroll to the focus during the band and a scroll at the release, auto scroll below and above with the step values 19 and 12 and the ends, scroll while the band is down with books out of view keeping their state, pointer outside the window, hit region), `Browser/BookDragOutTests` (6: threshold 4, whole selection in grid order without collapsing, empty area / right button / hover, double click, transfer layout), `HiDpi/RubberBandHiDpiTests` (6: fill and one unit frame at 1x and 2x in light and dark, frame pixels pure, nothing outside; the band over the grid at 1x and 2x with the same logical rectangle). Existing keyboard tests changed for the first key. Mutation check: drag threshold -1, first key from index -1 and a whole-cell hit test together failed 14 tests (restored).
 
+**Facts from P5.4 (2026-10-21)**
+- Toolbar (`Views/MainWindow.axaml`, names): `SidebarButton`, `BrowsePreviousButton`, `BrowseNextButton`, separator, `ViewsButton`, `GroupButton`, `StackButton` (`CrSplitButton` with the original text), `ArrangeButton`, `SearchBox`, `ListLayoutsButton` (`CrDropDownButton`), separator, `DuplicateButton` (`CrDropDownButton`), separator, `UndoButton`, `RedoButton`. Images by the original names (BrowsePrevious, BrowseNext, View, Group, Stacking, SortUp, ListLayout, AddList, Undo, Redo); tool tips and texts from `ComicBrowserControl.xml` through `MainWindow.Label`. Everything except Sidebar and Arrange is disabled until its task (BT.02, BT.03, BT.06, BT.07, BT.10, BT.11, BT.12) enables it: set `IsEnabled` and add the menu or command there.
+- `Controls/CrToolBar.cs` `CrDropDownButton` (chrome layer, element Toolbar, theme `CrDropDownButton.Original`): image plus 7 unit arrow, 29 x 22 with a 16 pixel image, `DropDown` flyout and `DropDownOpening` like `CrSplitButton`; no split line. `ChromeMetrics.DropDownArrowWidth`.
+- Cmd+F (GK.01): a window key binding (`MainMenu.FocusQuickSearchGesture`, set in `MainWindow.Attach`) calls `MainWindow.FocusQuickSearch()` (`CrSearchBox.FocusBox`, which doubles the box). The original has no menu item for it. The side panel grip drag is saved by P5.1 (`Sidebar.Width`); the case below proves it on screen. Below 640 units wide the toolbar clips its right end (the original has an overflow chevron: section 9).
+- Tests: `MainWindowShellTests` (order, images, enabled set, texts, sizes, Cmd+F), `ChromeHiDpiTests` drop down button at 1x and 2x. e2e case `chrome` (Cmd+F then typing filters the list; a 100 point drag of the grip writes `SidebarWidth` 352; after a relaunch the grip is where it was left). Contact sheet: `mac/artifacts/chrome/P5.4/sheet.png`.
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -1151,7 +1157,7 @@ Every P5 task: view-model tests on the headless platform (frames saved when `CRM
 - Parity: BV.09, BV.10, BC.19.
 
 #### P5.4 Browser toolbar and main window layout
-- Depends: P5.1, P5.R1 · Effort: medium · Unattended: yes · Status: todo
+- Depends: P5.1, P5.R1 · Effort: medium · Unattended: yes · Status: done-with-caveat 2026-10-21 (the info panel and small preview splitters have no panel to carry until P5.6; their persistence is listed in section 9)
 - Goal: the browser toolbar complete in the original order (Sidebar, Previous, Next | Views, Group, Stack, Arrange, quick search, List Layouts | Duplicate | Undo, Redo; items whose feature is not built yet are present and disabled, then enabled by their task), Cmd+F focuses the quick search, the side panel and info panel splitters (`SizableContainer`) persisted, the status bar complete; no unified macOS toolbar (C-TB-1).
 - Edit: `mac/ComicRack.Mac/Views/MainWindow.axaml(.cs)`, `MainMenu.cs`.
 - Accept: tests; e2e case `chrome` (Cmd+F focuses search; splitter drag persisted); `mac/tools/chrome-sheet.sh P5.4 MainWindow`; `verify.sh`.
@@ -1830,6 +1836,8 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 - [RV6] P5.16c: Move effect and removal from an editable list after a drop (`itemView_ItemDrag` with `IEditableComicBookListProvider`), the grid as a drop target with the position marker, the drag cursor picture (`DragDropCursorAlpha`; Avalonia has no custom drag image) and `PB.30` (DisableDragDrop). `BookGridView.DragEffects` is Copy until then; read the books from `BookDrag.BooksFormat`.
 - [RV6] A very large drag (the whole 14,706 book library) was not tried: the system makes one drag image per file. If it is slow, cap the file items (the books stay in the in-process container).
 - [RV6] A secondary button drag neither starts a band nor drags books (the original does both for any button); on the Mac the secondary button is the context click. Listed in BV.11 and BV.12.
+- [P5.4] The info panel (162 high) and small preview (207 high) splitters and their persisted sizes (`AppPreferences` Mac-only properties) come with the panels in P5.6.
+- [P5.4] Toolbar overflow: below about 640 units of browser width the original shows an overflow chevron; the Mac toolbar clips. Needs a chrome part (`CrToolBar` overflow menu).
 
 ## 10. Estimates (low confidence)
 

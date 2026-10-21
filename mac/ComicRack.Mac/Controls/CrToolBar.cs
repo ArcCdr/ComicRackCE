@@ -304,6 +304,61 @@ namespace ComicRack.Mac.Controls
 	}
 
 	/// <summary>
+	/// A toolbar drop down button (<c>ToolStripDropDownButton</c>): the image and a small arrow on the right (29 wide with a 16 pixel image), with no
+	/// split line; a click opens <see cref="DropDown"/>. Without a menu (the feature is not built yet) the button is disabled by its owner.
+	/// </summary>
+	public class CrDropDownButton : CrToolButton
+	{
+		public static readonly StyledProperty<FlyoutBase> DropDownProperty = AvaloniaProperty.Register<CrDropDownButton, FlyoutBase>(nameof(DropDown));
+
+		private bool open;
+
+		public FlyoutBase DropDown
+		{
+			get => GetValue(DropDownProperty);
+			set => SetValue(DropDownProperty, value);
+		}
+
+		/// <summary>Raised before the menu opens (the original's <c>DropDownOpening</c>): the handler fills the menu.</summary>
+		public event EventHandler DropDownOpening;
+
+		protected override double ExtraWidth => ChromeMetrics.DropDownArrowWidth;
+
+		protected override void OnClick()
+		{
+			base.OnClick();
+			FlyoutBase flyout = DropDown;
+			if (flyout == null || open)
+			{
+				return;
+			}
+			DropDownOpening?.Invoke(this, EventArgs.Empty);
+			open = true;
+			flyout.Closed += OnClosed;
+			flyout.ShowAt(this);
+			InvalidateVisual();
+		}
+
+		private void OnClosed(object sender, EventArgs e)
+		{
+			((FlyoutBase)sender).Closed -= OnClosed;
+			open = false;
+			InvalidateVisual();
+		}
+
+		protected override void RenderBackground(DrawingContext context, Rect area)
+		{
+			ToolPaint.Background(context, this, area, open ? ToolButtonState.Pressed : State);
+			Bitmap glyph = Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(this));
+			if (glyph != null)
+			{
+				var slot = new Rect(Math.Max(0, area.Width - ChromeMetrics.DropDownArrowWidth - 2), 0, ChromeMetrics.DropDownArrowWidth + 2, area.Height);
+				ChromePaint.Image(context, glyph, ChromePaint.Centered(glyph.Size, slot), IsEnabled ? 1 : 0.45);
+			}
+		}
+	}
+
+	/// <summary>
 	/// A toolbar split button (<c>ToolStripSplitButton</c>): the button part and a 14 wide arrow part (<c>SplitButton.PushButtonWidth</c>) that
 	/// opens <see cref="DropDown"/>. While the pointer is over it or the menu is open a split line (<c>SplitButtonSeparatorLeft</c> and
 	/// <c>SplitButtonSeparatorRight</c>, as <c>SplitButton.DrawSplitLine</c>) separates the parts. A press on the arrow part never raises Click.

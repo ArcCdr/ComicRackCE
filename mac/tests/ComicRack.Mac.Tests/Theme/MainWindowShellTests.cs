@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.Threading;
 using ComicRack.Mac.Browser;
@@ -59,10 +60,8 @@ namespace ComicRack.Mac.Tests.Theme
 				Assert.Equal(CrSearchBox.RestWidth, Part<CrSearchBox>(window, "SearchBox").Bounds.Width);
 				Assert.Equal(CrSearchBox.BoxHeight, Part<CrSearchBox>(window, "SearchBox").Bounds.Height);
 				// the toolbar runs Sidebar, Arrange, quick search (the original's order), the status bar Ready text, Book, Page, page count, the slider
-				var buttons = toolbar.Children;
-				Assert.IsType<CrToolButton>(buttons[0]);
-				Assert.IsType<CrSplitButton>(buttons[1]);
-				Assert.IsType<CrSearchBox>(buttons[2]);
+				Assert.IsType<CrToolButton>(toolbar.Children[0]);
+				Assert.Same(Part<CrSplitButton>(window, "ArrangeButton"), toolbar.Children.OfType<CrSplitButton>().Last());
 				Assert.True(Part<CrToolButton>(window, "SidebarButton").IsChecked);
 				Assert.True(Part<TextBlock>(window, "BookSegment").Bounds.X < Part<TextBlock>(window, "PageSegment").Bounds.X);
 				Assert.True(Part<TextBlock>(window, "PageSegment").Bounds.X < Part<TextBlock>(window, "PageCountSegment").Bounds.X);
@@ -71,6 +70,73 @@ namespace ComicRack.Mac.Tests.Theme
 				Assert.Equal("NA", Part<TextBlock>(window, "PageSegment").Text);
 				Assert.Equal("Starting the library engine...", Part<TextBlock>(window, "StatusLabel").Text);
 				Assert.Equal("Search All", Part<CrSearchBox>(window, "SearchBox").CueText);
+				window.Close();
+				return Task.CompletedTask;
+			});
+		}
+
+		/// <summary>The toolbar of ComicBrowserControl.Designer.cs: Sidebar, Previous, Next | Views, Group, Stack, Arrange, quick search, List Layouts | Duplicate | Undo, Redo.</summary>
+		[Fact]
+		public async Task The_browser_toolbar_has_every_button_of_the_original_in_its_order_and_the_unbuilt_ones_are_disabled()
+		{
+			await Ui.Run(() =>
+			{
+				var (window, vm) = NewWindow();
+				window.Show();
+				Layout(window);
+				var toolbar = Part<CrToolBar>(window, "BrowserToolBar");
+				string[] order =
+				{
+					"SidebarButton", "BrowsePreviousButton", "BrowseNextButton", "-", "ViewsButton", "GroupButton", "StackButton", "ArrangeButton", "SearchBox",
+					"ListLayoutsButton", "-", "DuplicateButton", "-", "UndoButton", "RedoButton",
+				};
+				string[] actual = toolbar.Children.Select(c => c is CrToolSeparator ? "-" : c.Name).ToArray();
+				Assert.Equal(order, actual);
+				// the images are the original's by resource name
+				string[] images = { "Sidebar", "BrowsePrevious", "BrowseNext", "View", "Group", "Stacking", "SortUp", "ListLayout", "AddList", "Undo", "Redo" };
+				string[] shown = toolbar.Children.OfType<CrToolButton>().Select(b => b.IconName).ToArray();
+				Assert.Equal(images, shown);
+				// enabled: the Sidebar button and Arrange; everything whose task is not done is present and disabled
+				string[] enabled = toolbar.Children.OfType<CrToolButton>().Where(b => b.IsEnabled).Select(b => b.Name).ToArray();
+				Assert.Equal(new[] { "SidebarButton", "ArrangeButton" }, enabled);
+				// the texts are the original's (ComicBrowserControl.xml): a tool tip on every button, text on the split buttons that have one
+				Assert.Equal("Previous", ToolTip.GetTip(Part<CrToolButton>(window, "BrowsePreviousButton")));
+				Assert.Equal("Next", ToolTip.GetTip(Part<CrToolButton>(window, "BrowseNextButton")));
+				Assert.Equal("Views", Part<CrSplitButton>(window, "ViewsButton").Text);
+				Assert.Equal("Group", Part<CrSplitButton>(window, "GroupButton").Text);
+				Assert.Equal("Stack", Part<CrSplitButton>(window, "StackButton").Text);
+				Assert.Equal("List Layouts", ToolTip.GetTip(Part<CrDropDownButton>(window, "ListLayoutsButton")));
+				Assert.Equal("Duplicate", ToolTip.GetTip(Part<CrDropDownButton>(window, "DuplicateButton")));
+				Assert.Equal("Undo", ToolTip.GetTip(Part<CrToolButton>(window, "UndoButton")));
+				Assert.Equal("Redo", ToolTip.GetTip(Part<CrToolButton>(window, "RedoButton")));
+				// the sizes of the designer: buttons 23 x 22, drop down buttons 29 x 22, separators 6
+				Assert.Equal(new Size(23, 22), Part<CrToolButton>(window, "BrowseNextButton").Bounds.Size);
+				Assert.Equal(new Size(29, 22), Part<CrDropDownButton>(window, "ListLayoutsButton").Bounds.Size);
+				Assert.Equal(new Size(29, 22), Part<CrDropDownButton>(window, "DuplicateButton").Bounds.Size);
+				Assert.Equal(6, toolbar.Children.OfType<CrToolSeparator>().First().Bounds.Width);
+				Assert.True(Part<CrToolButton>(window, "UndoButton").Bounds.X < Part<CrToolButton>(window, "RedoButton").Bounds.X);
+				window.Close();
+				return Task.CompletedTask;
+			});
+		}
+
+		/// <summary>GK.01: Cmd+F is FocusQuickSearch; from the grid or the tree the keyboard focus goes to the quick search box.</summary>
+		[Fact]
+		public async Task Cmd_F_gives_the_keyboard_focus_to_the_quick_search()
+		{
+			await Ui.Run(() =>
+			{
+				var (window, vm) = NewWindow();
+				window.Show();
+				Layout(window);
+				var box = Part<CrSearchBox>(window, "SearchBox");
+				Part<Slider>(window, "SizeSlider").Focus();
+				Layout(window);
+				Assert.False(box.Box.IsFocused);
+				window.KeyPress(Key.F, RawInputModifiers.Meta, PhysicalKey.F, "f");
+				Layout(window);
+				Assert.True(box.Box.IsFocused);
+				Assert.Equal(260, box.Bounds.Width);
 				window.Close();
 				return Task.CompletedTask;
 			});

@@ -34,9 +34,34 @@ namespace ComicRack.Mac.Views
 		{
 			ToolTip.SetTip(this.FindControl<CrToolButton>("SidebarButton"), UiText.Get("ComicBrowserControl", "tbSidebar", "Sidebar"));
 			ToolTip.SetTip(Arrange, UiText.Get("ComicBrowserControl", "tbbSort", "Arrange"));
+			// The buttons of the other tasks: icon, text and tool tip are the original's already, the feature enables them (full-port.md P5.4).
+			Label("BrowsePreviousButton", "btBrowsePrev", "Previous", false);
+			Label("BrowseNextButton", "btBrowseNext", "Next", false);
+			Label("ViewsButton", "tbbView", "Views", true);
+			Label("GroupButton", "tbbGroup", "Group", true);
+			Label("StackButton", "tbbStack", "Stack", true);
+			Label("ListLayoutsButton", "tsListLayouts", "List Layouts", false);
+			Label("DuplicateButton", "tbbDuplicateList", "Duplicate", false);
+			Label("UndoButton", "tbUndo", "Undo", false);
+			Label("RedoButton", "tbRedo", "Redo", false);
 			this.FindControl<CrSearchBox>("SearchBox").CueText = UiText.Default("Search", "Search") + " " + UiText.Get("ComicBrowserControl", "miSearchAll", "All");
 			this.FindControl<Button>("CancelButton").Content = UiText.Get("PreferencesDialog", "btCancel", "&Cancel");
 		}
+
+		// Sets the tool tip, and the visible text of a button that shows one (ToolStripSplitButton: image and text; the others: image only).
+		private void Label(string name, string key, string english, bool showText)
+		{
+			var button = this.FindControl<CrToolButton>(name);
+			string text = UiText.Get("ComicBrowserControl", key, english);
+			ToolTip.SetTip(button, text);
+			if (showText)
+			{
+				button.Text = text;
+			}
+		}
+
+		/// <summary>Cmd+F (GK.01, <c>ComicBrowserControl.FocusQuickSearch</c>): the keyboard focus goes to the quick search.</summary>
+		public void FocusQuickSearch() => this.FindControl<CrSearchBox>("SearchBox").FocusBox();
 
 		// The sort menu of the Arrange button: the choices of the MVP sort, one of them checked.
 		private Avalonia.Controls.Primitives.FlyoutBase BuildSortMenu()
@@ -77,6 +102,7 @@ namespace ComicRack.Mac.Views
 				model.IsFullScreen = WindowState == WindowState.FullScreen;
 				KeyBindings.Clear();
 				KeyBindings.AddRange(MainMenu.Aliases(model));
+				KeyBindings.Add(new KeyBinding { Gesture = MainMenu.FocusQuickSearchGesture, Command = new CommunityToolkit.Mvvm.Input.RelayCommand(FocusQuickSearch) });
 			}
 		}
 

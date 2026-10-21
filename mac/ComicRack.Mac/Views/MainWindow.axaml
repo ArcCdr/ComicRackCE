@@ -37,11 +37,24 @@
     </c:CrSizableContainer>
 
     <Grid RowDefinitions="Auto,*">
-      <!-- Browser toolbar (BT.*): Sidebar, Arrange (the MVP sort), quick search; the other buttons come with the tasks that own them. -->
+      <!-- Browser toolbar (BT.*), in the original's order (ComicBrowserControl.Designer.cs, toolStrip): Sidebar, Previous, Next | Views, Group, Stack, Arrange,
+           quick search, List Layouts | Duplicate | Undo, Redo. A button whose feature is not built yet is there and disabled; its task enables it. -->
       <c:CrToolBar Name="BrowserToolBar" Grid.Row="0">
         <c:CrToolButton Name="SidebarButton" IconName="Sidebar" CheckOnClick="True" IsChecked="{Binding Sidebar.IsVisible, Mode=TwoWay}" />
+        <c:CrToolButton Name="BrowsePreviousButton" IconName="BrowsePrevious" IsEnabled="False" />
+        <c:CrToolButton Name="BrowseNextButton" IconName="BrowseNext" IsEnabled="False" />
+        <c:CrToolSeparator />
+        <c:CrSplitButton Name="ViewsButton" IconName="View" IsEnabled="False" />
+        <c:CrSplitButton Name="GroupButton" IconName="Group" IsEnabled="False" />
+        <c:CrSplitButton Name="StackButton" IconName="Stacking" IsEnabled="False" />
         <c:CrSplitButton Name="ArrangeButton" IconName="SortUp" Text="{Binding Browser.SortName}" />
         <c:CrSearchBox Name="SearchBox" Text="{Binding Browser.SearchText, Mode=TwoWay}" />
+        <c:CrDropDownButton Name="ListLayoutsButton" IconName="ListLayout" IsEnabled="False" />
+        <c:CrToolSeparator />
+        <c:CrDropDownButton Name="DuplicateButton" IconName="AddList" IsEnabled="False" />
+        <c:CrToolSeparator />
+        <c:CrToolButton Name="UndoButton" IconName="Undo" IsEnabled="False" />
+        <c:CrToolButton Name="RedoButton" IconName="Redo" IsEnabled="False" />
       </c:CrToolBar>
 
       <Grid Name="ContentArea" Grid.Row="1">

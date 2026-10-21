@@ -22,6 +22,9 @@ namespace ComicRack.Mac
 
 		public const KeyModifiers PerfModifiers = KeyModifiers.Meta | KeyModifiers.Control | KeyModifiers.Alt;
 
+		/// <summary>Cmd+F: focus the quick search (GK.01, the original's Ctrl+F). The original has no menu item for it; the window binds it.</summary>
+		public static readonly KeyGesture FocusQuickSearchGesture = new KeyGesture(Key.F, KeyModifiers.Meta);
+
 		/// <summary>The key bindings of shortcuts that a native menu item cannot carry because the item has another one (aliases of the ledger).</summary>
 		public static IReadOnlyList<KeyBinding> Aliases(MainViewModel vm)
 		{

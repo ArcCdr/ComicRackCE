@@ -24,6 +24,9 @@ namespace ComicRack.Mac.Controls
 		/// <summary><c>SplitButton.PushButtonWidth</c>.</summary>
 		public const double SplitArrowWidth = 14;
 
+		/// <summary>The arrow of a drop down button (<c>ToolStripDropDownButton</c>: 16 + 6 padding + 7 = 29 wide with an image).</summary>
+		public const double DropDownArrowWidth = 7;
+
 		public const double ToolSeparatorWidth = 6;
 
 		/// <summary><c>MainForm.Designer.cs:2577-2589</c> and <c>TabBar.cs</c>: bar 31, tab 24, left indent 8, tab width 60 to 250, padding 2 above and 4 below.</summary>

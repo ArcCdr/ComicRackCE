@@ -24,6 +24,7 @@
         </Setter>
       </ControlTheme>
       <ControlTheme x:Key="CrSplitButton.Original" TargetType="c:CrSplitButton" BasedOn="{StaticResource CrToolButton.Original}" />
+      <ControlTheme x:Key="CrDropDownButton.Original" TargetType="c:CrDropDownButton" BasedOn="{StaticResource CrToolButton.Original}" />
 
       <!-- Tab bar -->
       <ControlTheme x:Key="CrTabBar.Original" TargetType="c:CrTabBar" />
