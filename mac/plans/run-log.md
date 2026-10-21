@@ -52,3 +52,6 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-21 13:03 | RV10 | done | 5ef3403 |  | Verify P5.5 on a healthy disk (full gate passes, no code change needed) |
 | 2026-10-21 13:40 | P5.6a | done | 810e5e8 |  | Small preview pane (Browse > Small Preview Shift+F7: toolbar, page viewer on the reader, 500 ms timer, copy of the first selected book opened as DisableAll,... |
 | 2026-10-21 14:27 | P5.6b | done | 2b3006e |  | Info panel container (Browse > Info Panel Shift+F9: tab strip of script pages, 162 high bottom dock, settings kept, selected books given to the showing page,... |
+| 2026-10-21 15:15 | RV11 | done | 00021ed |  | Flaky fast gate, round 2 (per-test pixel and image counts, static switch guard, flaky-scan.sh; 6 consecutive gate runs pass in about 95 s, was 209 to 340 s) |
+| 2026-10-21 15:23 | P2.4a | done | 0d99a06 |  | Bundle 7zz (fetch-7zz.sh with pinned SHA-256 from the official 7-Zip 26.05 release, ToolLocator.SevenZip, make-app copies and signs it, fixtures make --forma... |
+| 2026-10-21 15:32 | P2.4b | done-with-caveat | 0f348db |  | ComicInfo write-back engine (pass B patched SevenZipEngine runs the bundled 7zz, crcli info show and write, CBZ CB7 and CBT written with pages byte-identical... |
