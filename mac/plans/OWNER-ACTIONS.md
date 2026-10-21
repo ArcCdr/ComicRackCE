@@ -15,7 +15,24 @@
 
 ## Inbox
 
-**Required now: none.** The five optional blocks below belong to checkpoint C1. Answer any of them whenever convenient; nothing waits for them.
+**Required now: OA-6 (free disk space).** The five optional blocks below belong to checkpoint C1. Answer any of them whenever convenient; nothing waits for them.
+
+### OA-6: Free disk space (REQUIRED, stops the port)
+- **Status:** OPEN
+- **Checkpoint / tasks:** STOP (disk) / all tasks after P5.5 · **Asked:** 2026-10-21 · **Blocks:** every remaining task (a task must not run below 3 GB free)
+- **Why now:** the Mac has only 2.0 GB free. The port itself uses little (about 1.5 GB for `mac/fixtures` + `mac/artifacts`, deleted on demand), but the temporary folder holds 16 GB of old test data from another project: `pytest-of-vince` (dated 2026-10-19 and later) inside `$TMPDIR`.
+- **What to do:**
+  1. Check what it is: `du -sh "$TMPDIR/pytest-of-vince"; ls "$TMPDIR/pytest-of-vince" | head`
+  2. If you do not need it (it is pytest scratch output, not source code), delete it: `rm -rf "$TMPDIR/pytest-of-vince"`
+  3. Optionally also remove `/private/tmp/claude-501/-Users-vince-dev-lit-ebookerr` (6.3 GB) if that project is finished.
+  4. Check: `df -h ~` should show at least 10 GB free.
+- **What you should see:** free space rises by about 16 GB.
+- **Time needed:** about 2 minutes
+- **If you skip it:** the port stays stopped at P5.5; the sessions do not delete files they did not create.
+- **What happens next:** the orchestrator re-checks the disk and continues with RV10 (P5.5 follow-up and the full gate), then P5.6.
+- **Your answer** (write below this line, then change Status to ANSWERED):
+  >
+- **Resume:** in the VS Code terminal, in /Users/vince/dev/ComicRackCE, paste the "Normal run" prompt of mac/plans/RUNBOOK.md section 1 (or simply tell this session "resume").
 
 ### OA-1: Real CBR and 7-Zip samples (optional, C1)
 - **Status:** OPEN
