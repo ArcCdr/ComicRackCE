@@ -93,6 +93,15 @@ namespace ComicRack.Mac.ViewModels
 			}
 			finally
 			{
+				// pages that were moved or turned, another custom thumbnail: the cover of the book is another picture now
+				if (request.Model.ThumbnailsChanged)
+				{
+					foreach (ComicBook changed in request.Model.ThumbnailBooks)
+					{
+						hostService.Thumbnails?.Invalidate(changed);
+					}
+					Browser.RefreshCovers();
+				}
 				dialogDepth--;
 				NotifyDialogState();
 				RefreshUndoState();
@@ -107,6 +116,7 @@ namespace ComicRack.Mac.ViewModels
 			var lists = new EditorValueLists(() => database.Books, EditorValueLists.DefaultLocations(host.Paths.DataFolder));
 			var model = new BookEditorModel(current, all, preferences, lists, selectComic: book => Browser.SelectBook(book),
 				createBook: file => host.DatabaseManager.BookFactory.Create(file, CreateBookOption.DoNotAdd, RefreshInfoOptions.ForceRefresh));
+			model.PageServices = new PageListServices { Thumbnails = hostService.Thumbnails, Pool = host.ImagePool };
 			return new BookInfoRequest
 			{
 				Model = model,

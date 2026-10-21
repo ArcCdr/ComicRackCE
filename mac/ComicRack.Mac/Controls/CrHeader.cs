@@ -111,14 +111,13 @@ namespace ComicRack.Mac.Controls
 		public event EventHandler DropDownClicked;
 
 		/// <summary>The drop-down part at the right (<c>GetDropDownBounds</c>): the arrow image plus 4, inside the 2 unit text inset.</summary>
-		public Rect DropDownBounds
+		public Rect DropDownBounds => DropDownBoundsOf(this, Bounds.Size);
+
+		private static Rect DropDownBoundsOf(Control owner, Size size)
 		{
-			get
-			{
-				Rect inner = new Rect(2, 0, Math.Max(0, Bounds.Width - 4), Bounds.Height);
-				double w = Math.Min(Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(this))?.Size.Width + 4 ?? 10, inner.Width);
-				return new Rect(inner.Right - w, inner.Top, w, inner.Height);
-			}
+			Rect inner = new Rect(2, 0, Math.Max(0, size.Width - 4), size.Height);
+			double w = Math.Min(Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(owner))?.Size.Width + 4 ?? 10, inner.Width);
+			return new Rect(inner.Right - w, inner.Top, w, inner.Height);
 		}
 
 		/// <summary>The selection style that the frame of a state uses (<c>HeaderControl.Draw</c>).</summary>
@@ -137,44 +136,55 @@ namespace ComicRack.Mac.Controls
 
 		public override void Render(DrawingContext context)
 		{
-			var area = new Rect(Bounds.Size);
-			context.DrawRectangle(ChromePaint.Brush(this, ThemeTokens.Names.HeaderBack), null, area);
-			var style = new StyledSelection(FrameStyle(State), ThemeTokens.Get(ThemeTokens.Names.HeaderSeparator, ChromePaint.VariantOf(this)));
-			ChromePaint.Selection(context, area, style);
-			Rect inner = new Rect(2, 0, Math.Max(0, area.Width - 4), area.Height);
-			Rect textArea = inner;
-			if ((Adornments & HeaderAdornments.DropDown) != 0)
+			Draw(context, this, new Rect(Bounds.Size), Text, TextAlignment, Adornments, State, TextElement.GetFontFamily(this), TextElement.GetFontSize(this));
+		}
+
+		/// <summary>
+		/// Draws a column header into <paramref name="area"/> (<c>HeaderControl.Draw</c>); the page list draws the headers of its columns with it. The area's origin is the origin of the drawing.
+		/// </summary>
+		public static void Draw(DrawingContext context, Control owner, Rect area, string text, TextAlignment alignment, HeaderAdornments adornments, HeaderState state, FontFamily family, double fontSize)
+		{
+			using (context.PushTransform(Matrix.CreateTranslation(area.X, area.Y)))
 			{
-				Rect drop = DropDownBounds;
-				ChromePaint.VLine(context, ChromePaint.Brush(this, ThemeTokens.Names.ControlDark), drop.X, 4, area.Height - 8);
-				ChromePaint.VLine(context, ChromePaint.Brush(this, ThemeTokens.Names.ControlLight), drop.X + 1, 4, area.Height - 8);
-				Bitmap arrow = Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(this));
-				if (arrow != null)
+				var local = new Rect(area.Size);
+				context.DrawRectangle(ChromePaint.Brush(owner, ThemeTokens.Names.HeaderBack), null, local);
+				var style = new StyledSelection(FrameStyle(state), ThemeTokens.Get(ThemeTokens.Names.HeaderSeparator, ChromePaint.VariantOf(owner)));
+				ChromePaint.Selection(context, local, style);
+				Rect inner = new Rect(2, 0, Math.Max(0, local.Width - 4), local.Height);
+				Rect textArea = inner;
+				if ((adornments & HeaderAdornments.DropDown) != 0)
 				{
-					ChromePaint.Image(context, arrow, ChromePaint.Centered(arrow.Size, drop));
+					Rect drop = DropDownBoundsOf(owner, local.Size);
+					ChromePaint.VLine(context, ChromePaint.Brush(owner, ThemeTokens.Names.ControlDark), drop.X, 4, local.Height - 8);
+					ChromePaint.VLine(context, ChromePaint.Brush(owner, ThemeTokens.Names.ControlLight), drop.X + 1, 4, local.Height - 8);
+					Bitmap arrow = Icons.TryGet("cYo.Common.Windows:SmallArrowDown", ChromePaint.VariantOf(owner));
+					if (arrow != null)
+					{
+						ChromePaint.Image(context, arrow, ChromePaint.Centered(arrow.Size, drop));
+					}
+					textArea = new Rect(inner.X, inner.Y, Math.Max(0, drop.X - inner.X), inner.Height);
 				}
-				textArea = new Rect(inner.X, inner.Y, Math.Max(0, drop.X - inner.X), inner.Height);
-			}
-			string sort = (Adornments & HeaderAdornments.SortDown) != 0 ? "cYo.Common.Windows:SortDown" : (Adornments & HeaderAdornments.SortUp) != 0 ? "cYo.Common.Windows:SortUp" : null;
-			if (sort != null)
-			{
-				Bitmap image = Icons.TryGet(sort, ChromePaint.VariantOf(this));
-				if (image != null)
+				string sort = (adornments & HeaderAdornments.SortDown) != 0 ? "cYo.Common.Windows:SortDown" : (adornments & HeaderAdornments.SortUp) != 0 ? "cYo.Common.Windows:SortUp" : null;
+				if (sort != null)
 				{
-					var target = new Rect(Math.Floor(textArea.X + (textArea.Width - image.Size.Width) / 2), textArea.Y + 1, image.Size.Width, image.Size.Height);
-					ChromePaint.Image(context, image, target, 0.7);
+					Bitmap image = Icons.TryGet(sort, ChromePaint.VariantOf(owner));
+					if (image != null)
+					{
+						var target = new Rect(Math.Floor(textArea.X + (textArea.Width - image.Size.Width) / 2), textArea.Y + 1, image.Size.Width, image.Size.Height);
+						ChromePaint.Image(context, image, target, 0.7);
+					}
 				}
-			}
-			if (!string.IsNullOrEmpty(Text))
-			{
-				var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(TextElement.GetFontFamily(this)), TextElement.GetFontSize(this), ChromePaint.Brush(this, ThemeTokens.Names.ControlText))
+				if (!string.IsNullOrEmpty(text))
 				{
-					MaxTextWidth = Math.Max(0, textArea.Width),
-					Trimming = TextTrimming.CharacterEllipsis,
-					TextAlignment = TextAlignment,
-				};
-				text.MaxTextHeight = text.Height;
-				context.DrawText(text, new Point(textArea.X, Math.Floor(textArea.Y + 3 + Math.Max(0, (textArea.Height - 6 - text.Height) / 2))));
+					var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(family), fontSize, ChromePaint.Brush(owner, ThemeTokens.Names.ControlText))
+					{
+						MaxTextWidth = Math.Max(0, textArea.Width),
+						Trimming = TextTrimming.CharacterEllipsis,
+						TextAlignment = alignment,
+					};
+					formatted.MaxTextHeight = formatted.Height;
+					context.DrawText(formatted, new Point(textArea.X, Math.Floor(textArea.Y + 3 + Math.Max(0, (textArea.Height - 6 - formatted.Height) / 2))));
+				}
 			}
 		}
 

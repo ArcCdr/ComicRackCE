@@ -43,6 +43,9 @@ namespace ComicRack.Mac.Tests
 			coverFade = CoverView.FadeEnabled;
 			overlayClock = ReaderOverlayClock.Enabled;
 			autoScroll = BookGridView.AutoScrollEnabled;
+			// what the Pages and Colors tabs remember for the next dialog (the application keeps it while it runs)
+			InfoPagesPage.ResetViewState();
+			InfoColorsPage.ResetViewState();
 		}
 
 		public override void After(MethodInfo methodUnderTest)

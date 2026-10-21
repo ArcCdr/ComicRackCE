@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoPagesPage"
+             x:DataType="e:BookEditorModel">
+  <!-- tabPages, page 566 x 442: labelPagesInfo (8,14); btPageView (479,9) 73 x 23 anchored top right; pagesView (11,38) 541 x 363 anchored on all sides; btResetPages (441,407)
+       111 x 23 anchored bottom right (a split button: Reset, and the menu Order by Name / Order by Name (numeric)). A margin is the position, the alignment is the anchor. -->
+  <Panel>
+    <Label Name="labelPagesInfo" Content="Change the page order with drag &amp; drop or use the context menu to change page types:" Margin="8,14,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" />
+    <Button Name="btPageView" Margin="0,9,14,0" HorizontalAlignment="Right" Width="73" VerticalAlignment="Top" Height="23" Padding="4,0,4,0" MinHeight="23" HorizontalContentAlignment="Stretch">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Name="btPageViewText" Text="Pages" VerticalAlignment="Center" />
+        <c:CrIcon Grid.Column="1" IconName="SmallArrowDown" VerticalAlignment="Center" />
+      </Grid>
+    </Button>
+    <c:CrPageList Name="pagesView" Margin="11,38,14,41" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    <SplitButton Name="btResetPages" Content="Reset" Margin="0,0,14,12" HorizontalAlignment="Right" Width="111" VerticalAlignment="Bottom" Height="23" MinHeight="23" />
+  </Panel>
+</UserControl>

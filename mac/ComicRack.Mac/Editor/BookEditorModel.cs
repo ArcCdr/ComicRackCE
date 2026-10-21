@@ -10,6 +10,7 @@ using cYo.Common;
 using cYo.Common.Localize;
 using cYo.Common.Text;
 using cYo.Projects.ComicRack.Engine;
+using cYo.Projects.ComicRack.Engine.IO.Cache;
 
 namespace ComicRack.Mac.Editor
 {
@@ -137,6 +138,91 @@ namespace ComicRack.Mac.Editor
 
 		/// <summary>Raised when the cover has to be drawn again: another book, or another custom thumbnail. The argument is the book that holds the thumbnail key to show.</summary>
 		public event EventHandler<ComicBook> CoverChanged;
+
+		// ---- Pages and Colors (P5.7c)
+
+		/// <summary>The Colors tab: the sliders, the white point and the page the viewer shows. Filled with every book (<c>SetDataToEditor</c>), written by <see cref="ApplyTo"/>.</summary>
+		public ColorTabModel ColorTab { get; } = new ColorTabModel();
+
+		/// <summary>What the Pages tab needs besides the book: the picture service, the Core's image pool, the UI thread. Set by the owner of the dialog; without it the pages have no pictures.</summary>
+		public PageListServices PageServices { get; set; }
+
+		/// <summary>The pages of the shown book while the Pages tab has been used for it (<see cref="EnsurePages"/>), else null.</summary>
+		public PageListModel Pages => pages;
+
+		/// <summary>Raised when <see cref="Pages"/> was dropped because another book is shown (the tab clears its list), and when it was made.</summary>
+		public event EventHandler PagesChanged;
+
+		/// <summary>True after a save changed what the grid shows of a book's pictures: the pages of the book (the cover can be another page or turned) or its custom thumbnail. The owner refreshes the covers.</summary>
+		public bool ThumbnailsChanged => thumbnailBooks.Count > 0;
+
+		/// <summary>The books whose pictures a save changed.</summary>
+		public IReadOnlyCollection<ComicBook> ThumbnailBooks => thumbnailBooks;
+
+		private readonly HashSet<ComicBook> thumbnailBooks = new HashSet<ComicBook>();
+
+		private PageListModel pages;
+
+		/// <summary>
+		/// The list of pages of the shown book, made on first use (<c>SetComicToEditor</c> makes it for every book; here it waits for the tab, so moving through books does not open each file).
+		/// The list works on a copy of the book with a navigator of its own; Save writes its pages into the library's book. Null for a book without a file or one that cannot be opened.
+		/// </summary>
+		public PageListModel EnsurePages()
+		{
+			if (pages != null)
+			{
+				return pages;
+			}
+			if (!displayComic.IsLinked)
+			{
+				return null;
+			}
+			var copy = new ComicBook(displayComic);
+			ComicBookNavigator navigator = null;
+			try
+			{
+				navigator = copy.CreateNavigator();
+			}
+			catch (Exception)
+			{
+			}
+			if (navigator == null)
+			{
+				return null;
+			}
+			if (copy.IsDynamicSource)
+			{
+				PageServices?.Pool?.RefreshLastImage(copy.FilePath);
+			}
+			pages = new PageListModel(copy, navigator, PageServices, ownsNavigator: true);
+			// PagesViewSelectedIndexChanged: the viewer of the Colors tab shows the first selected page, else the front cover of the book
+			PageListModel created = pages;
+			created.SelectionChanged += (sender, e) =>
+			{
+				if (ReferenceEquals(pages, created))
+				{
+					ColorTab.ShowPage(created.FirstSelectedPage(current.FrontCoverPageIndex));
+				}
+			};
+			pages.Start();
+			PagesChanged?.Invoke(this, EventArgs.Empty);
+			return pages;
+		}
+
+		private void DropPages()
+		{
+			if (pages == null)
+			{
+				return;
+			}
+			PageListModel old = pages;
+			pages = null;
+			old.Dispose();
+			PagesChanged?.Invoke(this, EventArgs.Empty);
+		}
+
+		/// <summary>Lets go of the pages and their navigator (the dialog closes).</summary>
+		public void Close() => DropPages();
 
 		// ---- state that follows the book (SetComicToEditor)
 
@@ -574,6 +660,7 @@ namespace ComicRack.Mac.Editor
 			try
 			{
 				displayComic = comic;
+				DropPages();
 				bool isLocal = comic.EditMode.IsLocalComic();
 				IsLinked = comic.IsLinked;
 				ShowFileInfo = comic.IsLinked;
@@ -684,6 +771,7 @@ namespace ComicRack.Mac.Editor
 			ReleasedTime = PickerValue(comic.ReleasedTime);
 			OpenedTime = PickerValue(comic.OpenedTime);
 			LoadCustomRows(comic);
+			ColorTab.Load(comic);
 			SetPromptTexts(comic, comic.EnableProposed);
 		}
 
@@ -820,6 +908,10 @@ namespace ComicRack.Mac.Editor
 			comic.Year = EditControls.GetNumber(Year);
 			comic.AlternateCount = EditControls.GetNumber(AlternateCount);
 			comic.FilePath = displayComic.FilePath;
+			if (comic.CustomThumbnailKey != CustomThumbnailKey)
+			{
+				thumbnailBooks.Add(comic);
+			}
 			comic.CustomThumbnailKey = CustomThumbnailKey;
 			string publisher = Publisher.Trim();
 			if (comic.Publisher != publisher)
@@ -888,6 +980,15 @@ namespace ComicRack.Mac.Editor
 			comic.BlackAndWhite = EditControls.GetYesNo(BlackAndWhite);
 			comic.EnableProposed = EditControls.GetYesNo(EnableProposed) == YesNo.Yes;
 			comic.EnableDynamicUpdate = EditControls.GetYesNo(EnableDynamicUpdate) == YesNo.Yes;
+			ColorTab.ApplyTo(comic);
+			if (pages != null)
+			{
+				pages.SavePagesTo(comic, out bool coverChanged);
+				if (coverChanged)
+				{
+					thumbnailBooks.Add(comic);
+				}
+			}
 			comic.CustomValuesStore = CustomValuesStore();
 		}
 

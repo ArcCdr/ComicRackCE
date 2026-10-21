@@ -150,6 +150,48 @@ namespace ComicRack.Mac.Tests.Editor
 		}
 
 		[Fact]
+		public async Task The_dialog_gets_the_services_of_the_pages_and_a_changed_cover_makes_the_grid_ask_for_its_pictures_again()
+		{
+			await Ui.Run(async () =>
+			{
+				using (var temp = new TempDir())
+				using (Launch launch = await Launch.Start(temp.Combine("app")))
+				{
+					MainViewModel vm = launch.ViewModel;
+					await Fill(launch, 2);
+					vm.Browser.Selection.SelectBooks(new[] { vm.Browser.Items[0].Book });
+					ComicBook first = vm.Browser.Items[0].Book;
+					var refreshed = new System.Collections.Generic.List<string>();
+					vm.Browser.PropertyChanged += (s, e) => refreshed.Add(e.PropertyName);
+					launch.Dialogs.BookInfoHandler = request =>
+					{
+						Assert.NotNull(request.Model.PageServices);
+						Assert.Same(launch.Service.Thumbnails, request.Model.PageServices.Thumbnails);
+						Assert.Same(launch.Service.Host.ImagePool, request.Model.PageServices.Pool);
+						request.Model.Series = "Only the text";
+						request.Model.Ok();
+						return Task.FromResult(true);
+					};
+					await vm.ShowInfoCommand.ExecuteAsync(null);
+					Assert.DoesNotContain(nameof(BrowserViewModel.Thumbnails), refreshed); // a text does not change the cover
+
+					// a book without a file takes a custom thumbnail: its cover is another picture, so the grid asks again
+					first.FilePath = string.Empty;
+					Assert.False(first.IsLinked);
+					launch.Dialogs.BookInfoHandler = request =>
+					{
+						request.Model.CustomThumbnailKey = "custom-key-1";
+						request.Model.Ok();
+						return Task.FromResult(true);
+					};
+					await vm.ShowInfoCommand.ExecuteAsync(null);
+					Assert.Equal("custom-key-1", first.CustomThumbnailKey);
+					Assert.Contains(nameof(BrowserViewModel.Thumbnails), refreshed);
+				}
+			});
+		}
+
+		[Fact]
 		public async Task While_the_dialog_is_open_Undo_Redo_and_Info_are_off_so_that_Cmd_Z_stays_the_text_fields()
 		{
 			await Ui.Run(async () =>

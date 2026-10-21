@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ComicRack.Mac.Thumbnails;
+using cYo.Projects.ComicRack.Engine;
 using SkiaSharp;
 using Xunit;
 
@@ -753,6 +754,84 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				Assert.Equal(2, rig.Decoder.Started);
 				Assert.Equal(FakeDecoder.ColorFor(Loc("book")), PixelOf(retried.Image));
 			}
+		}
+
+		// ---- Invalidate (P5.7c) --------------------------------------------------------------------------------------
+
+		[Fact]
+		public void Invalidate_forgets_every_picture_of_the_book_and_only_that_book()
+		{
+			using (var rig = new Rig())
+			{
+				ComicBook a = Books.Make("a"), b = Books.Make("b");
+				rig.Done(rig.Service.RequestResult(a, 200, CancellationToken.None));
+				rig.Done(rig.Service.RequestResult(a, 2, 200, CancellationToken.None)); // another page of the same book
+				rig.Done(rig.Service.RequestResult(a, 400, CancellationToken.None)); // another step
+				rig.Done(rig.Service.RequestResult(b, 200, CancellationToken.None));
+				Assert.Equal(4, rig.Decoder.Started);
+				Assert.Equal(4, rig.Service.GetStats().CachedCount);
+
+				Assert.Equal(3, rig.Service.Invalidate(a));
+				ThumbnailServiceStats stats = rig.Service.GetStats();
+				Assert.Equal(1, stats.CachedCount);
+				Assert.Equal(Entry, stats.CachedBytes);
+				Assert.False(rig.Service.TryGetCached(a, 200, out _));
+				Assert.True(rig.Service.TryGetCached(b, 200, out ThumbnailResult kept));
+				rig.Own(kept);
+
+				// the next request decodes again, the other book still comes from the cache
+				rig.Done(rig.Service.RequestResult(a, 200, CancellationToken.None));
+				Assert.Equal(5, rig.Decoder.Started);
+				Assert.Equal(0, rig.Service.Invalidate(Books.Make("never asked for")));
+			}
+		}
+
+		[Fact]
+		public void Invalidate_forgets_a_remembered_failure_so_the_next_request_tries_again()
+		{
+			using (var rig = new Rig(retry: TimeSpan.FromSeconds(30)))
+			{
+				bool broken = true;
+				rig.Decoder.FailWith = r => broken ? new IOException("volume not mounted") : null;
+				ComicBook book = Books.Make("book");
+				Assert.True(rig.Done(rig.Service.RequestResult(book, 200, CancellationToken.None)).IsPlaceholder);
+				broken = false;
+				Assert.Equal(1, rig.Service.Invalidate(book));
+				ThumbnailResult again = rig.Done(rig.Service.RequestResult(book, 200, CancellationToken.None));
+				Assert.False(again.IsPlaceholder);
+				Assert.Equal(2, rig.Decoder.Started);
+			}
+		}
+
+		[Fact]
+		public void A_decode_that_runs_while_the_book_is_invalidated_is_delivered_but_not_kept_and_a_new_request_does_not_join_it()
+		{
+			using (var rig = new Rig())
+			{
+				ComicBook book = Books.Make("book");
+				rig.Decoder.Hold();
+				Task<ThumbnailResult> old = rig.Service.RequestResult(book, 200, CancellationToken.None);
+				rig.Decoder.WaitForStarted(1);
+				rig.Service.Invalidate(book);
+
+				Task<ThumbnailResult> fresh = rig.Service.RequestResult(book, 200, CancellationToken.None);
+				rig.Decoder.WaitForStarted(2); // its own decode, not the stale one
+				rig.Decoder.Open();
+				Assert.False(rig.Done(old).IsPlaceholder); // the caller that waited still gets a picture
+				Assert.False(rig.Done(fresh).IsPlaceholder);
+				rig.Decoder.WaitForFinished(2);
+				Assert.Equal(1, rig.Service.GetStats().CachedCount); // only the fresh decode was kept
+				Assert.Equal(2, rig.Decoder.Started);
+			}
+		}
+
+		[Fact]
+		public void Invalidate_checks_its_argument_and_does_nothing_after_dispose()
+		{
+			var rig = new Rig();
+			Assert.Throws<ArgumentNullException>(() => rig.Service.Invalidate(null));
+			rig.Dispose();
+			Assert.Equal(0, rig.Service.Invalidate(Books.Make("a")));
 		}
 
 		[Fact]

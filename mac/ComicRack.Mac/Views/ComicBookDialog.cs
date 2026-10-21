@@ -24,7 +24,7 @@ namespace ComicRack.Mac.Views
 	/// <summary>
 	/// The Info dialog (DL.01, <c>ComicRack/Dialogs/ComicBookDialog.cs</c>): the tabs Summary, Details, Plot &amp; Notes, Catalog, Custom, Pages and Colors in the original's order, Previous and
 	/// Next at the left of the buttons, OK, Cancel and Apply at the right. The dialog edits the library's own book through <see cref="BookEditorModel"/>: OK, Apply, Previous and Next
-	/// write it, Cancel does not. P5.7a builds the frame, Summary and Details, P5.7b Plot &amp; Notes, Catalog and Custom; Pages and Colors are filled by P5.7c. The window is 593 x 517 at least (the Designer's client
+	/// write it, Cancel does not. P5.7a builds the frame, Summary and Details, P5.7b Plot &amp; Notes, Catalog and Custom, P5.7c Pages and Colors. The window is 593 x 517 at least (the Designer's client
 	/// size) and can be resized; the size and the tab the user chose are kept (<c>SafeSize</c>, <c>lastActivePage</c>). The cover is the book's front cover thumbnail, drawn as the
 	/// 3D book of the Core's <c>ComicBox3D</c> unless the user clicked it to get the flat cover (<c>InformationCover3D</c>). Spec: <c>mac/specs/views/ComicBookDialog.md</c>.
 	/// </summary>
@@ -46,7 +46,8 @@ namespace ComicRack.Mac.Views
 		private readonly InfoPlotPage plot = new InfoPlotPage();
 		private readonly InfoCatalogPage catalog = new InfoCatalogPage();
 		private readonly InfoCustomPage custom = new InfoCustomPage();
-		private readonly Panel pagesPanel = new Panel(), colors = new Panel();
+		private readonly InfoPagesPage pagesPage = new InfoPagesPage();
+		private readonly InfoColorsPage colorsPage = new InfoColorsPage();
 		private readonly InfoSummaryPage summary = new InfoSummaryPage();
 		private readonly InfoDetailsPage details = new InfoDetailsPage();
 		private readonly Button previousButton = new Button();
@@ -75,8 +76,8 @@ namespace ComicRack.Mac.Views
 			tabPlot = Tab("tabPlot", "Plot & Notes", plot);
 			tabCatalog = Tab("tabCatalog", "Catalog", catalog);
 			tabCustom = Tab("tabCustom", "Custom", custom);
-			tabPages = Tab("tabPages", "Pages", pagesPanel);
-			tabColors = Tab("tabColors", "Colors", colors);
+			tabPages = Tab("tabPages", "Pages", pagesPage);
+			tabColors = Tab("tabColors", "Colors", colorsPage);
 			foreach (TabItem tab in new[] { tabSummary, tabDetails, tabPlot, tabCatalog, tabCustom, tabPages, tabColors })
 			{
 				tabs.Items.Add(tab);
@@ -107,6 +108,9 @@ namespace ComicRack.Mac.Views
 			plot.Initialize(model);
 			catalog.Initialize(model);
 			custom.Initialize(model);
+			pagesPage.Initialize(model, AskNameAsync);
+			pagesPage.PageActivated += (sender, row) => ShowTab("tabColors"); // PagesViewItemActivate
+			colorsPage.Initialize(model);
 			summary.DataContext = model;
 			WireModel();
 			WireSummary();
@@ -140,10 +144,10 @@ namespace ComicRack.Mac.Views
 
 		public InfoCustomPage CustomPage => custom;
 
-		/// <summary>The panels of the tabs that P5.7c fills: Pages and Colors.</summary>
-		public Panel PagesPage => pagesPanel;
+		/// <summary>The Pages and Colors pages (P5.7c).</summary>
+		public InfoPagesPage PagesPage => pagesPage;
 
-		public Panel ColorsPage => colors;
+		public InfoColorsPage ColorsPage => colorsPage;
 
 		/// <summary>Shows the tab with this key ("tabPlot", "tabCatalog", ...) if it is there (the contact sheet and the tests choose the tab this way).</summary>
 		public bool ShowTab(string key)
@@ -223,8 +227,8 @@ namespace ComicRack.Mac.Views
 			tabCustom.IsVisible = model.ShowCustomTab;
 			details.IsEnabled = model.DetailsEnabled;
 			plot.IsEnabled = model.PlotEnabled;
-			colors.IsEnabled = model.ColorsEnabled;
-			pagesPanel.IsEnabled = model.PagesEnabled;
+			colorsPage.IsEnabled = model.ColorsEnabled;
+			pagesPage.IsEnabled = model.PagesEnabled;
 			catalog.IsEnabled = model.CatalogEnabled;
 			custom.IsEnabled = model.CustomEnabled;
 			previousButton.IsVisible = nextButton.IsVisible = model.HasNavigation;
@@ -480,6 +484,9 @@ namespace ComicRack.Mac.Views
 
 		private Task ShowProblemAsync(string text) => request.ShowProblem?.Invoke(text) ?? Task.CompletedTask;
 
+		/// <summary>The name dialog of the Pages tab (<c>SelectItemDialog.GetName</c>), over this window.</summary>
+		private Task<string> AskNameAsync(string caption, string value) => SelectItemWindow.GetNameAsync(this, caption, value);
+
 		// The pictures a custom thumbnail can be made of (Program.LoadCustomThumbnail: jpeg, bitmap, png, gif, tiff and icon files). A translation of the original's
 		// filter text ("JPEG Image|*.jpg|...") is used as it is; without one the picker's own list of picture types is used.
 		private static FilePickerFileType[] ThumbnailFilter()
@@ -624,6 +631,8 @@ namespace ComicRack.Mac.Views
 		private void OnClosed()
 		{
 			RememberTab();
+			colorsPage.Close();
+			model.Close();
 			coverRequest?.Cancel();
 			Watch(null);
 			model.PropertyChanged -= OnModelChanged;

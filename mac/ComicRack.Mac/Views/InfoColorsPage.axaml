@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoColorsPage"
+             x:DataType="e:BookEditorModel">
+  <!-- tabColors, page 566 x 442. panelImage fills the page above panelImageControls (125 high, docked at the bottom, hidden until "Image Control" is pressed); the positions inside
+       panelImage are those of the Designer for its 566 x 317 (a margin is the position, the alignment is the anchor). Every control of panelImageControls is anchored to nothing
+       in the Designer, so the 566 x 125 block of them stays in the middle when the page is wider. -->
+  <Grid RowDefinitions="*,Auto">
+    <Panel Name="panelImage">
+      <c:CrPageViewer Name="pageViewer" Text="Double Click on Color to set White Point" Margin="11,12,10,30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+      <Button Name="btFirstPage" Margin="11,0,0,4" HorizontalAlignment="Left" Width="32" VerticalAlignment="Bottom" Height="23" MinHeight="0" MinWidth="0" Padding="0" HorizontalContentAlignment="Center"><c:CrIcon IconName="GoFirst" /></Button>
+      <Button Name="btPrevPage" Margin="43,0,0,4" HorizontalAlignment="Left" Width="32" VerticalAlignment="Bottom" Height="23" MinHeight="0" MinWidth="0" Padding="0" HorizontalContentAlignment="Center"><c:CrIcon IconName="GoPrevious" /></Button>
+      <Button Name="btNextPage" Margin="75,0,0,4" HorizontalAlignment="Left" Width="32" VerticalAlignment="Bottom" Height="23" MinHeight="0" MinWidth="0" Padding="0" HorizontalContentAlignment="Center"><c:CrIcon IconName="GoNext" /></Button>
+      <Button Name="btLastPage" Margin="107,0,0,4" HorizontalAlignment="Left" Width="32" VerticalAlignment="Bottom" Height="23" MinHeight="0" MinWidth="0" Padding="0" HorizontalContentAlignment="Center"><c:CrIcon IconName="GoLast" /></Button>
+      <Label Name="labelCurrentPage" Content="Page Text" Margin="4,0,0,5" HorizontalAlignment="Center" Width="202" VerticalAlignment="Bottom" Height="21" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+      <ToggleButton Name="chkShowImageControls" Margin="0,0,10,3" HorizontalAlignment="Right" Width="140" VerticalAlignment="Bottom" Height="23" MinHeight="23" Padding="4,0,4,0" HorizontalContentAlignment="Stretch">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Name="chkShowImageControlsText" Text="Image Control" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <c:CrIcon Grid.Column="1" IconName="DoubleArrow" VerticalAlignment="Center" />
+        </Grid>
+      </ToggleButton>
+    </Panel>
+    <Panel Name="panelImageControls" Grid.Row="1" Height="125" IsVisible="False">
+      <Panel Width="566" Height="125" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Label Name="labelSaturation" Content="Saturation" Margin="11,34,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Classes="cr-caption" />
+        <Slider Name="tbSaturation" Minimum="-100" Maximum="100" TickFrequency="16" TickPlacement="BottomRight" Margin="78,28,0,0" HorizontalAlignment="Left" Width="192" VerticalAlignment="Top" Height="18" MinHeight="0" />
+        <Label Name="labelBrightness" Content="Brightness" Margin="11,58,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Classes="cr-caption" />
+        <Slider Name="tbBrightness" Minimum="-100" Maximum="100" TickFrequency="16" TickPlacement="BottomRight" Margin="78,52,0,0" HorizontalAlignment="Left" Width="192" VerticalAlignment="Top" Height="18" MinHeight="0" />
+        <Label Name="labelContrast" Content="Contrast" Margin="296,34,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Classes="cr-caption" />
+        <Slider Name="tbContrast" Minimum="-100" Maximum="100" TickFrequency="16" TickPlacement="BottomRight" Margin="363,28,0,0" HorizontalAlignment="Left" Width="192" VerticalAlignment="Top" Height="18" MinHeight="0" />
+        <Label Name="labelGamma" Content="Gamma" Margin="296,58,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Classes="cr-caption" />
+        <Slider Name="tbGamma" Minimum="-100" Maximum="100" TickFrequency="16" TickPlacement="BottomRight" Margin="363,52,0,0" HorizontalAlignment="Left" Width="192" VerticalAlignment="Top" Height="18" MinHeight="0" />
+        <Label Name="labelSharpening" Content="Sharpening" Margin="11,92,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Classes="cr-caption" />
+        <Slider Name="tbSharpening" Minimum="0" Maximum="3" LargeChange="1" TickFrequency="1" TickPlacement="BottomRight" Margin="81,86,0,0" HorizontalAlignment="Left" Width="189" VerticalAlignment="Top" Height="18" MinHeight="0" />
+        <Button Name="btResetColors" Content="Reset" Margin="478,86,0,0" HorizontalAlignment="Left" Width="77" VerticalAlignment="Top" Height="24" MinHeight="0" Padding="0" HorizontalContentAlignment="Center" />
+      </Panel>
+    </Panel>
+  </Grid>
+</UserControl>

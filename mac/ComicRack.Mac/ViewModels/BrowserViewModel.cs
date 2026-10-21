@@ -374,6 +374,9 @@ namespace ComicRack.Mac.ViewModels
 		[ObservableProperty]
 		public partial ThumbnailService Thumbnails { get; set; }
 
+		/// <summary>Every shown cover asks for its picture again (after the Info dialog changed pages or a custom thumbnail: the key of the cover is another one).</summary>
+		public void RefreshCovers() => OnPropertyChanged(nameof(Thumbnails));
+
 		public BookSort Sort => (BookSort)Math.Clamp(SortIndex, 0, SortNames.Length - 1);
 
 		/// <summary>Books in the catalog (before the search).</summary>

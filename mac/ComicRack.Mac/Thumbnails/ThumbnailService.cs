@@ -246,6 +246,49 @@ namespace ComicRack.Mac.Thumbnails
 			return hit;
 		}
 
+		/// <summary>
+		/// Forgets every picture of <paramref name="book"/> (all its pages and sizes, and remembered failures): the next request decodes again. A decode that is running for the
+		/// book still delivers to the callers that wait for it, but its result is not kept, and a request made now starts a decode of its own. For a book whose pixels changed
+		/// under the same key (the file was rewritten, a page picture was refreshed); a change of the page order, a rotation or a custom thumbnail makes a new key and needs no call.
+		/// Returns the number of cache entries dropped.
+		/// </summary>
+		public int Invalidate(ComicBook book)
+		{
+			if (book == null)
+			{
+				throw new ArgumentNullException(nameof(book));
+			}
+			string location = book.GetThumbnailKey(0).Location;
+			var removed = new List<Entry>();
+			lock (gate)
+			{
+				if (disposed)
+				{
+					return 0;
+				}
+				foreach (LinkedListNode<Entry> node in new List<LinkedListNode<Entry>>(map.Values))
+				{
+					if (node.Value.Key.Image.Location == location)
+					{
+						RemoveLocked(node, removed);
+					}
+				}
+				foreach (Job job in runningJobs)
+				{
+					if (job.Key.Image.Location == location)
+					{
+						job.Stale = true;
+						if (jobs.TryGetValue(job.Key, out Job current) && ReferenceEquals(current, job))
+						{
+							jobs.Remove(job.Key);
+						}
+					}
+				}
+			}
+			Free(removed);
+			return removed.Count;
+		}
+
 		// ---- Scheduling ------------------------------------------------------------------------------------------------
 
 		/// <summary>Takes the newest queued jobs while a slot is free. Call with the lock held; start the result outside it.</summary>
@@ -382,9 +425,9 @@ namespace ComicRack.Mac.Thumbnails
 				{
 					decodesCompleted++;
 					show = block;
-					if (!InsertLocked(job.Key, block, isFailure: false, null, removed))
+					if (job.Stale || !InsertLocked(job.Key, block, isFailure: false, null, removed))
 					{
-						uncached = block; // bigger than the whole cache: delivered, not kept
+						uncached = block; // bigger than the whole cache, or the book was invalidated meanwhile: delivered, not kept
 					}
 				}
 				else if (!cancelled)
@@ -831,6 +874,9 @@ namespace ComicRack.Mac.Thumbnails
 			public bool Abandoned { get; set; }
 
 			public bool Finished { get; set; }
+
+			/// <summary>The book was invalidated while this decode ran: its result goes to the callers but is not cached.</summary>
+			public bool Stale { get; set; }
 
 			/// <summary>0 until <c>Finish</c> ran for this job (a field, for <c>Interlocked</c>).</summary>
 			public int Ended;

@@ -90,6 +90,12 @@
     <Setter Property="Padding" Value="3,0" />
   </Style>
 
+  <!-- The captions of the sliders of the Colors tab (labelSaturation ... labelSharpening: Microsoft Sans Serif 6.75 pt bold) -->
+  <Style Selector="Label.cr-caption">
+    <Setter Property="FontSize" Value="{DynamicResource Cr.FontSize.Caption}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+
   <!-- The performance overlay (MA.05): a translucent block in the corner with monospaced text -->
   <Style Selector=":is(Border).cr-overlay">
     <Setter Property="Padding" Value="10,6" />

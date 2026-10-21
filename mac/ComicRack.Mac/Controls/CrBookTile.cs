@@ -210,33 +210,6 @@ namespace ComicRack.Mac.Controls
 
 		// ---- text (SimpleTextRenderer.DrawText) ----------------------------------------------------------------------
 
-		private FormattedText Format(string text, TileTextLine line, IBrush brush, double width, double height, bool far)
-		{
-			var weight = line.IsBold ? FontWeight.Bold : FontWeight.Normal;
-			var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(FontFamily.Default, FontStyle.Normal, weight), ChromeFonts.TileSize * line.Scale, brush)
-			{
-				TextAlignment = far ? TextAlignment.Right : TextAlignment.Left,
-			};
-			if (width > 0)
-			{
-				formatted.MaxTextWidth = width;
-			}
-			if (height > 0)
-			{
-				formatted.MaxTextHeight = height;
-			}
-			if (line.NoWrap)
-			{
-				formatted.MaxLineCount = 1;
-				formatted.Trimming = TextTrimming.None;
-			}
-			else
-			{
-				formatted.Trimming = line.EllipsisWord ? TextTrimming.WordEllipsis : TextTrimming.None;
-			}
-			return formatted;
-		}
-
 		private void DrawText(DrawingContext context, Rect area, bool far)
 		{
 			if (area.Width <= 0 || area.Height <= 0 || lines.Count == 0)
@@ -246,81 +219,12 @@ namespace ComicRack.Mac.Controls
 			if (far)
 			{
 				// DrawEmbossedText: once in the emboss colour one unit lower and to the right, then in the title colour for bold lines and the body colour for the others
-				DrawLines(context, new Rect(area.X + 1, area.Y + 1, area.Width, area.Height), true, line => ChromePaint.Brush(this, ThemeTokens.Names.ThumbTileEmboss));
-				DrawLines(context, area, true, line => ChromePaint.Brush(this, line.IsBold ? ThemeTokens.Names.ThumbTileTitle : ThemeTokens.Names.ThumbTileBody));
+				TileTextPainter.Draw(context, lines, new Rect(area.X + 1, area.Y + 1, area.Width, area.Height), true, ChromeFonts.TileSize, line => ChromePaint.Brush(this, ThemeTokens.Names.ThumbTileEmboss));
+				TileTextPainter.Draw(context, lines, area, true, ChromeFonts.TileSize, line => ChromePaint.Brush(this, line.IsBold ? ThemeTokens.Names.ThumbTileTitle : ThemeTokens.Names.ThumbTileBody));
 			}
 			else
 			{
-				DrawLines(context, area, false, line => ChromePaint.Brush(this, ThemeTokens.Names.ControlText));
-			}
-		}
-
-		private void DrawLines(DrawingContext context, Rect area, bool far, Func<TileTextLine, IBrush> brushOf)
-		{
-			using (context.PushClip(area))
-			{
-				// the first tab stop: the widest text before a tab, plus 8 (not for the right aligned text)
-				double tab = 0;
-				if (!far)
-				{
-					foreach (TileTextLine line in lines.Where(l => !l.Separator && l.Text.Contains('\t')))
-					{
-						tab = Math.Max(tab, Format(line.Text.Substring(0, line.Text.IndexOf('\t')), line, Brushes.Transparent, 0, 0, false).WidthIncludingTrailingWhitespace);
-					}
-					tab += 8;
-				}
-				double y = area.Y;
-				double remaining = area.Height;
-				double gap = 0;
-				foreach (TileTextLine line in lines)
-				{
-					if (line.Separator)
-					{
-						gap = line.Spacing;
-						continue;
-					}
-					if (gap != 0)
-					{
-						Space(ref y, ref remaining, gap);
-						gap = 0;
-					}
-					if (string.IsNullOrEmpty(line.Text))
-					{
-						continue;
-					}
-					if (remaining <= 0)
-					{
-						break;
-					}
-					IBrush brush = brushOf(line);
-					string text = far ? line.Text.Replace("\t", "    ") : line.Text;
-					double height;
-					int at = far ? -1 : text.IndexOf('\t');
-					if (at >= 0)
-					{
-						FormattedText label = Format(text.Substring(0, at), line, brush, 0, 0, false);
-						FormattedText value = Format(text.Substring(at + 1), line, brush, Math.Max(1, area.Width - tab), remaining, false);
-						context.DrawText(label, new Point(area.X, y));
-						context.DrawText(value, new Point(area.X + tab, y));
-						height = Math.Min(remaining, Math.Max(label.Height, value.Height));
-					}
-					else
-					{
-						FormattedText formatted = Format(text, line, brush, area.Width, remaining, far);
-						context.DrawText(formatted, new Point(area.X, y));
-						height = Math.Min(remaining, formatted.Height);
-					}
-					Space(ref y, ref remaining, height);
-				}
-			}
-		}
-
-		private static void Space(ref double y, ref double remaining, double dy)
-		{
-			if (remaining > 0)
-			{
-				y += dy;
-				remaining = Math.Max(0, remaining - dy);
+				TileTextPainter.Draw(context, lines, area, false, ChromeFonts.TileSize, line => ChromePaint.Brush(this, ThemeTokens.Names.ControlText));
 			}
 		}
 

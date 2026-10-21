@@ -104,6 +104,12 @@
       <ControlTheme x:Key="CoverView.Original" TargetType="c:CoverView" />
       <ControlTheme x:Key="CrBookToolTip.Original" TargetType="c:CrBookToolTip" />
       <ControlTheme x:Key="CrBookTile.Original" TargetType="c:CrBookTile" />
+
+      <!-- The list of pages of a book (the pages view of the Info dialog): draws itself (CrPageList.Render) from the item view tokens; the scroll bars are the stock ones. -->
+      <ControlTheme x:Key="CrPageList.Original" TargetType="c:CrPageList" />
+
+      <!-- The page viewer of the Colors tab: draws itself (CrPageViewer.Render). -->
+      <ControlTheme x:Key="CrPageViewer.Original" TargetType="c:CrPageViewer" />
       <ControlTheme x:Key="CrSelectionRectangle.Original" TargetType="c:CrSelectionRectangle" />
 
       <!-- Reader overlays: they draw the glass pictures and the text themselves (CrTextOverlay, CrPartOverlay, CrNavigationOverlay). -->

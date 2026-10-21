@@ -13,6 +13,9 @@ namespace ComicRack.Mac.Views
 		/// <summary>The text for a control of the dialog: the translation of <paramref name="key"/> (the control's name) or the Designer's English text, without the Windows mnemonic.</summary>
 		public static string Get(string key, string english) => UiText.Get(Section, key, english);
 
+		/// <summary>The text with the Windows mnemonic ampersands kept (a control with <c>UseMnemonic</c> off shows them: "drag &amp; drop").</summary>
+		public static string Raw(string key, string english) => UiText.Raw(Section, key, english);
+
 		/// <summary>Translates the labels, buttons and check boxes below <paramref name="root"/> whose <c>Tag</c> names their key.</summary>
 		public static void Translate(Control root)
 		{
