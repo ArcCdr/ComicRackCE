@@ -10,8 +10,7 @@ namespace ComicRack.Mac.Views
 {
 	/// <summary>
 	/// The popup menus of the reader (C-MENU-3: original items, order, shortcuts and 16 unit pictures; the rendering is the popup style of the chrome
-	/// layer): the drop-downs of the reader toolbar (<c>mainToolStrip</c>: TB.01 to TB.06, TB.09), and the page menu (<c>pageContextMenu</c>: PC.01,
-	/// PC.02, PC.06). Only the items the reader can do are there (C-MENU-4); the others arrive with the tasks of the ledger. The texts are the
+	/// layer): the drop-downs of the reader toolbar (<c>mainToolStrip</c>: TB.01 to TB.06, TB.09), and the page menu (<c>pageContextMenu</c>: PC.02, PC.06). Only the items the reader can do are there (C-MENU-4); the others arrive with the tasks of the ledger. The texts are the
 	/// original's through TR (section MainForm, key = the item's name), the shortcuts the ledger's.
 	/// </summary>
 	public static class ReaderPopupMenus
@@ -149,7 +148,7 @@ namespace ComicRack.Mac.Views
 
 		// ---- the page menu --------------------------------------------------------------------------------------------
 
-		/// <summary>The menu of a right click on the page (<c>pageContextMenu</c>): Info..., My Rating, Page Layout.</summary>
+		/// <summary>The menu of a right click on the page (<c>pageContextMenu</c>): My Rating, Page Layout. Info... comes with P5.7a (PC.01).</summary>
 		public static MenuFlyout Page(ReaderViewModel vm)
 		{
 			var rating = new MenuItem { Header = Text("cmRating", "My R&ating") };
@@ -182,9 +181,9 @@ namespace ComicRack.Mac.Views
 			layout.Items.Add(Choice(vm, Text("cmTwoPages", "Two Pages"), "TwoPageForced", vm.TwoPageLayoutCommand, Key.D8, () => vm.LayoutMode == PageLayoutMode.Double, nameof(ReaderViewModel.LayoutMode)));
 			layout.Items.Add(Choice(vm, Text("cmTwoPagesAdaptive", "Two Pages (adaptive)"), "TwoPage", vm.AdaptiveTwoPageLayoutCommand, Key.D9, () => vm.LayoutMode == PageLayoutMode.DoubleAdaptive, nameof(ReaderViewModel.LayoutMode)));
 			layout.Items.Add(Check(vm, Text("cmRightToLeft", "Right to Left"), "RightToLeft", vm.ToggleRightToLeftCommand, Key.D0, () => vm.RightToLeft, nameof(ReaderViewModel.RightToLeft)));
+			// Info... (cmShowInfo, Cmd+I) is not here: the Info dialog arrives with P5.7a, which adds the item and the key together
 			return Flyout(new Control[]
 			{
-				Item(Text("cmShowInfo", "Info..."), "GetInfo", vm.ShowInfoCommand, Key.I),
 				rating,
 				layout,
 			});

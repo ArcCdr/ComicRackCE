@@ -240,13 +240,24 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
-		public void A_save_writes_a_temporary_file_and_renames_it_so_nothing_else_is_left()
+		public void A_save_writes_a_temporary_file_and_renames_it_so_nothing_else_is_left_and_the_old_content_is_gone()
 		{
-			SettingsStore.Save(SettingsFile, new AppPreferences { ShowSplash = false });
+			SettingsStore.Save(SettingsFile, new AppPreferences { ShowSplash = false, LastFolder = "/old/folder" });
+			string old = File.ReadAllText(SettingsFile);
+			Assert.Contains("ShowSplash", old); // a value that differs from its default is written
+			Assert.Contains("/old/folder", old);
 			SettingsStore.Save(SettingsFile, new AppPreferences { ShowSplash = true, OpenInNewTab = true });
 			string[] files = Directory.GetFiles(Path.GetDirectoryName(SettingsFile));
 			Assert.Equal(new[] { SettingsStore.FileName }, files.Select(Path.GetFileName).ToArray());
-			Assert.True(SettingsStore.Load(SettingsFile, out _).OpenInNewTab);
+			// the file is the new state, not the old one with the new values added: the old values are not in it any more
+			string text = File.ReadAllText(SettingsFile);
+			Assert.DoesNotContain("ShowSplash", text); // back to its default, so no longer written
+			Assert.DoesNotContain("/old/folder", text);
+			Assert.Contains("OpenInNewTab", text);
+			AppPreferences loaded = SettingsStore.Load(SettingsFile, out _);
+			Assert.True(loaded.OpenInNewTab);
+			Assert.True(loaded.ShowSplash);
+			Assert.Null(loaded.LastFolder);
 		}
 
 		[Fact]

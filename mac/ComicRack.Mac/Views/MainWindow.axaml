@@ -37,8 +37,9 @@
     </c:CrSizableContainer>
 
     <Grid RowDefinitions="Auto,*">
-      <!-- Browser toolbar (BT.*), in the original's order (ComicBrowserControl.Designer.cs, toolStrip): Sidebar, Previous, Next | Views, Group, Stack, Arrange,
-           quick search, List Layouts | Duplicate | Undo, Redo. A button whose feature is not built yet is there and disabled; its task enables it. -->
+      <!-- Browser toolbar (BT.*), in the original's order (ComicBrowserControl.Designer.cs, toolStrip, HorizontalStackWithOverflow): Sidebar, Previous, Next |
+           Views, Group, Stack, Arrange, List Layouts | Duplicate | Undo, Redo, and the quick search at the right end (Alignment Right, Overflow Never). When the
+           window is too narrow the last buttons go to the overflow drop-down. A button whose feature is not built yet is there and disabled; its task enables it. -->
       <c:CrToolBar Name="BrowserToolBar" Grid.Row="0">
         <c:CrToolButton Name="SidebarButton" IconName="Sidebar" CheckOnClick="True" IsChecked="{Binding Sidebar.IsVisible, Mode=TwoWay}" />
         <c:CrToolButton Name="BrowsePreviousButton" IconName="BrowsePrevious" IsEnabled="False" />
@@ -47,14 +48,14 @@
         <c:CrSplitButton Name="ViewsButton" IconName="View" IsEnabled="False" />
         <c:CrSplitButton Name="GroupButton" IconName="Group" IsEnabled="False" />
         <c:CrSplitButton Name="StackButton" IconName="Stacking" IsEnabled="False" />
-        <c:CrSplitButton Name="ArrangeButton" IconName="SortUp" Text="{Binding Browser.SortName}" />
-        <c:CrSearchBox Name="SearchBox" Text="{Binding Browser.SearchText, Mode=TwoWay}" />
+        <c:CrSplitButton Name="ArrangeButton" IconName="{Binding Browser.SortIconName}" Text="{Binding Browser.SortName}" />
         <c:CrDropDownButton Name="ListLayoutsButton" IconName="ListLayout" IsEnabled="False" />
         <c:CrToolSeparator />
         <c:CrDropDownButton Name="DuplicateButton" IconName="AddList" IsEnabled="False" />
         <c:CrToolSeparator />
         <c:CrToolButton Name="UndoButton" IconName="Undo" IsEnabled="False" />
         <c:CrToolButton Name="RedoButton" IconName="Redo" IsEnabled="False" />
+        <c:CrSearchBox Name="SearchBox" Text="{Binding Browser.SearchText, Mode=TwoWay}" c:CrToolBar.Alignment="Right" c:CrToolBar.Overflow="Never" />
       </c:CrToolBar>
 
       <Grid Name="ContentArea" Grid.Row="1">

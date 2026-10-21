@@ -27,6 +27,20 @@
       <!-- RatingRenderer.RatingTextColor = Color.DimGray (the number on the rating tags) -->
       <SolidColorBrush x:Key="Cr.Thumb.RatingTextBrush" Color="#FF696969" />
       <!-- The paper of the grid behind the cells: ThemeColors.ItemView.MainBack (itemView.BackColor in ComicBrowserControl.Designer.cs) -->
+      <!-- The tile that stands for a thumbnail that cannot be made (a Mac addition: the original draws a missing cover as a white tile with LightGray text).
+           The decoder draws it on a worker thread from ThumbnailPlaceholderLook, which reads these entries for the current appearance. -->
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="Cr.Thumb.PlaceholderTileBrush" Color="#FFDCDCDC" />
+          <SolidColorBrush x:Key="Cr.Thumb.PlaceholderFrameBrush" Color="#FFA8A8A8" />
+          <SolidColorBrush x:Key="Cr.Thumb.PlaceholderCrossBrush" Color="#FF9C9C9C" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="Cr.Thumb.PlaceholderTileBrush" Color="#FF3A3A3A" />
+          <SolidColorBrush x:Key="Cr.Thumb.PlaceholderFrameBrush" Color="#FF5A5A5A" />
+          <SolidColorBrush x:Key="Cr.Thumb.PlaceholderCrossBrush" Color="#FF6A6A6A" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
     </ResourceDictionary>
   </Styles.Resources>
 </Styles>

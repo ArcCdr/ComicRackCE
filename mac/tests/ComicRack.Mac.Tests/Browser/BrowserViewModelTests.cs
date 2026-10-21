@@ -54,6 +54,62 @@ namespace ComicRack.Mac.Tests.Browser
 		}
 
 		[Fact]
+		public async Task Flipping_the_sort_order_reverses_the_list_and_the_picture_and_the_same_sort_chosen_again_flips_while_another_starts_ascending()
+		{
+			await Ui.Run(async () =>
+			{
+				var vm = new BrowserViewModel { SearchDelay = TimeSpan.Zero };
+				vm.SetCatalog(new BookCatalog(new[] { Item("b", "S", "2", day: 5), Item("a", "S", "1", day: 2), Item("c", "T", "1", day: 40) }));
+				await vm.WhenIdle();
+				Assert.False(vm.SortDescending);
+				Assert.Equal("SortUp", vm.SortIconName);
+				Assert.Equal(new[] { "a", "b", "c" }, vm.Items.Select(i => i.Title));
+
+				vm.FlipSortOrder(); // the Arrange button
+				await vm.WhenIdle();
+				Assert.True(vm.SortDescending);
+				Assert.Equal("SortDown", vm.SortIconName);
+				Assert.Equal(new[] { "c", "b", "a" }, vm.Items.Select(i => i.Title));
+
+				vm.ArrangeBy(0); // the sort the list already has, from the menu: flips back
+				await vm.WhenIdle();
+				Assert.False(vm.SortDescending);
+				Assert.Equal(new[] { "a", "b", "c" }, vm.Items.Select(i => i.Title));
+
+				vm.ArrangeBy(1); // another sort starts ascending
+				await vm.WhenIdle();
+				Assert.Equal(1, vm.SortIndex);
+				Assert.False(vm.SortDescending);
+				vm.FlipSortOrder();
+				await vm.WhenIdle();
+				Assert.Equal(new[] { "c", "b", "a" }, vm.Items.Select(i => i.Title));
+
+				// another sort while descending: ascending again, and one query only (the list is not built for the half way state)
+				var applied = new List<string[]>();
+				vm.PropertyChanged += (s, e) =>
+				{
+					if (e.PropertyName == nameof(BrowserViewModel.Items))
+					{
+						applied.Add(vm.Items.Select(i => i.Title).ToArray());
+					}
+				};
+				vm.ArrangeBy(2);
+				await vm.WhenIdle();
+				Assert.False(vm.SortDescending);
+				Assert.Equal(2, vm.SortIndex);
+				Assert.Equal("SortUp", vm.SortIconName);
+				Assert.Single(applied);
+				Assert.Equal(new[] { "c", "b", "a" }, applied[0]); // date added: newest first, the order of the MVP sort key
+
+				// a search keeps the order that was chosen
+				vm.FlipSortOrder();
+				vm.SearchText = "s";
+				await vm.WhenIdle();
+				Assert.Equal(new[] { "a", "b" }, vm.Items.Select(i => i.Title));
+			});
+		}
+
+		[Fact]
 		public async Task A_burst_of_keystrokes_runs_one_query_and_only_the_last_text_is_applied()
 		{
 			await Ui.Run(async () =>

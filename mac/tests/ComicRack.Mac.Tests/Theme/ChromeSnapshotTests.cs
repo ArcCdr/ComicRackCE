@@ -27,13 +27,36 @@ namespace ComicRack.Mac.Tests.Theme
 	/// RV5: the default look must not change while the chrome moves into its own layer. This test renders a fixed set of views (library window,
 	/// grid with a selected cell, chrome gallery, About, Import, a reader page and the reader notice) in light and dark on the headless platform.
 	/// <c>CRMAC_CHROME_SNAPSHOT_DIR</c> saves the frames as PNG; <c>CRMAC_CHROME_BASELINE_DIR</c> compares every frame with the PNG of the same
-	/// name in that folder (frames taken before a change) and fails above the tolerance. Without either variable the test only checks that every
-	/// frame has content.
+	/// name in that folder (frames taken before a change) and fails above the tolerance. In the fast gate, without either variable, the test only
+	/// checks that every frame has content. In the full gate (<c>mac/tools/verify.sh --full</c> sets <c>CRMAC_FULL_GATE=1</c>) the comparison is
+	/// required: the baseline is <c>CRMAC_CHROME_BASELINE_DIR</c> or <see cref="DefaultBaselineFolder"/>, and a missing folder or frame fails the test
+	/// with the command that takes it, so the "default look unchanged" guarantee cannot silently go away.
 	/// </summary>
 	public class ChromeSnapshotTests
 	{
 		public const string SnapshotVariable = "CRMAC_CHROME_SNAPSHOT_DIR";
 		public const string BaselineVariable = "CRMAC_CHROME_BASELINE_DIR";
+		public const string FullGateVariable = "CRMAC_FULL_GATE";
+
+		/// <summary>Where the full gate looks for the baseline frames when <see cref="BaselineVariable"/> is not set (git ignored: a baseline belongs to the machine that took it).</summary>
+		public static string DefaultBaselineFolder => Path.Combine(OriginalColors.RepoRoot, "mac", "artifacts", "chrome", "baseline");
+
+		/// <summary>The folder the comparison reads, or null when there is none to read (fast gate without the variable).</summary>
+		public static string BaselineFolder(string variableValue, bool fullGate)
+		{
+			if (!string.IsNullOrEmpty(variableValue))
+			{
+				return variableValue;
+			}
+			return fullGate ? DefaultBaselineFolder : null;
+		}
+
+		/// <summary>The sentence a missing baseline frame gets in the full gate.</summary>
+		public static string HowToTakeTheBaseline(string folder)
+		{
+			return "no baseline frame in '" + folder + "' (take them from a tree whose look is right: CRMAC_CHROME_SNAPSHOT_DIR='" + folder
+				+ "' dotnet test mac/tests/ComicRack.Mac.Tests --filter ChromeSnapshotTests)";
+		}
 
 		/// <summary>The fraction of pixels that may differ by more than the threshold, and the largest mean difference.</summary>
 		private const double MaxBad = 0.0005;
@@ -169,8 +192,14 @@ namespace ComicRack.Mac.Tests.Theme
 			Dictionary<string, Raster> frames = await Render(variantName);
 			Assert.Equal(7, frames.Count);
 			string save = Environment.GetEnvironmentVariable(SnapshotVariable);
-			string baseline = Environment.GetEnvironmentVariable(BaselineVariable);
+			bool fullGate = Environment.GetEnvironmentVariable(FullGateVariable) == "1";
+			string baseline = BaselineFolder(Environment.GetEnvironmentVariable(BaselineVariable), fullGate);
 			var problems = new List<string>();
+			if (fullGate)
+			{
+				// one sentence for a missing baseline, not one per frame
+				Assert.True(Directory.Exists(baseline) && Directory.EnumerateFiles(baseline, "*.png").Any(), "the full gate compares the default look with its baseline: " + HowToTakeTheBaseline(baseline));
+			}
 			foreach (KeyValuePair<string, Raster> frame in frames)
 			{
 				Assert.True(frame.Value.Width > 100 && frame.Value.Height > 100, frame.Key + " is empty");
@@ -184,7 +213,7 @@ namespace ComicRack.Mac.Tests.Theme
 					string path = Path.Combine(baseline, frame.Key + ".png");
 					if (!File.Exists(path))
 					{
-						problems.Add(frame.Key + ": no baseline frame");
+						problems.Add(frame.Key + ": " + (fullGate ? HowToTakeTheBaseline(baseline) : "no baseline frame"));
 						continue;
 					}
 					Raster expected;
@@ -205,6 +234,23 @@ namespace ComicRack.Mac.Tests.Theme
 				}
 			}
 			Assert.True(problems.Count == 0, "the default look changed: " + string.Join("; ", problems));
+		}
+
+		[Fact]
+		public void The_full_gate_requires_a_baseline_and_the_fast_gate_does_not()
+		{
+			Assert.Null(BaselineFolder(null, fullGate: false));
+			Assert.Null(BaselineFolder("", fullGate: false));
+			Assert.Equal(DefaultBaselineFolder, BaselineFolder(null, fullGate: true));
+			Assert.Equal(DefaultBaselineFolder, BaselineFolder("", fullGate: true));
+			Assert.Equal("/somewhere/else", BaselineFolder("/somewhere/else", fullGate: true));
+			Assert.Equal("/somewhere/else", BaselineFolder("/somewhere/else", fullGate: false));
+			string text = HowToTakeTheBaseline("/x/baseline");
+			Assert.Contains("CRMAC_CHROME_SNAPSHOT_DIR='/x/baseline'", text);
+			Assert.EndsWith(Path.Combine("artifacts", "chrome", "baseline"), DefaultBaselineFolder);
+			// verify.sh --full is what sets the variable
+			string script = File.ReadAllText(Path.Combine(OriginalColors.RepoRoot, "mac", "tools", "verify.sh"));
+			Assert.Contains("export " + FullGateVariable + "=1", script);
 		}
 	}
 }

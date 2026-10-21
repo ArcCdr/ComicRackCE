@@ -154,6 +154,27 @@ namespace ComicRack.Mac.Tests.Browser
 		}
 
 		[Fact]
+		public void A_new_list_has_no_anchor_so_the_next_range_starts_at_the_focused_book_as_ItemView_does_without_one()
+		{
+			BookItem[] all = Books(12);
+			var m = new SelectionModel();
+			m.SetItems(all, keepHidden: false);
+			m.Move(2, false, false); // the anchor is book 2
+			m.Move(4, toggle: false, extend: true);
+			Assert.Equal(new[] { 2, 3, 4 }, Selected(m));
+			// the list is sorted the other way round: book 4 (the focus) is at 7, book 2 (the old anchor) at 9
+			m.SetItems(all.Reverse().ToArray(), keepHidden: true);
+			Assert.Equal(7, m.FocusedIndex);
+			m.Move(5, toggle: false, extend: true);
+			Assert.Equal(new[] { 5, 6, 7 }, Selected(m)); // from the focused book, not from the book that was the anchor in the old list
+			// without a focus either, the range starts at the first book (SelectFromAnchorItem: a == -1 gives item 0)
+			var fresh = new SelectionModel();
+			fresh.SetItems(all, keepHidden: false);
+			fresh.Move(3, toggle: false, extend: true);
+			Assert.Equal(new[] { 0, 1, 2, 3 }, Selected(fresh));
+		}
+
+		[Fact]
 		public void Cmd_with_a_movement_key_moves_the_focus_without_changing_the_selection_and_Space_toggles()
 		{
 			SelectionModel m = Model(10);
@@ -537,6 +558,34 @@ namespace ComicRack.Mac.Tests.Browser
 					h.Window.MouseDown(on6, MouseButton.Right);
 					h.Window.MouseUp(on6, MouseButton.Right);
 					Assert.Equal(new[] { 6 }, Selected(h.Model.Selection));
+				}
+			});
+		}
+
+		[Fact]
+		public async Task A_context_click_honours_Cmd_and_Shift_as_a_click_of_any_button_does_in_ItemView()
+		{
+			await Ui.Run(async () =>
+			{
+				using (var h = new GridHarness(900, 600))
+				{
+					await h.Show(new BookCatalog(Books(12)));
+					Click(h, 1);
+					void Right(int index, RawInputModifiers modifiers)
+					{
+						Point p = CenterOf(h, index);
+						h.Window.MouseDown(p, MouseButton.Right, modifiers);
+						h.Window.MouseUp(p, MouseButton.Right, modifiers);
+					}
+					Right(4, RawInputModifiers.Meta); // Cmd adds the book it presses
+					Assert.Equal(new[] { 1, 4 }, Selected(h.Model.Selection));
+					Right(6, RawInputModifiers.Shift); // Shift selects from the focused book (4) to the pressed one and lets the others go
+					Assert.Equal(new[] { 4, 5, 6 }, Selected(h.Model.Selection));
+					Right(5, RawInputModifiers.Meta); // Cmd on a selected book flips it off
+					Assert.Equal(new[] { 4, 6 }, Selected(h.Model.Selection));
+					Right(6, RawInputModifiers.None); // no modifier on a selected book: the selection stays for the menu
+					Assert.Equal(new[] { 4, 6 }, Selected(h.Model.Selection));
+					Assert.Equal(6, h.Model.SelectedIndex);
 				}
 			});
 		}

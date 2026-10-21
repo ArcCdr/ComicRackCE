@@ -3,7 +3,6 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Avalonia.Media;
 using ComicRack.Mac.Diagnostics;
 
 namespace ComicRack.Mac.Views

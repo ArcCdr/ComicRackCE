@@ -120,7 +120,7 @@ namespace ComicRack.Mac.Browser
 		// ---- the list ------------------------------------------------------------------------------------------------------------------
 
 		/// <summary>
-		/// A new list is shown (sorted, searched, refreshed). The selection, the focus and the anchor stay with their books. <paramref name="keepHidden"/>
+		/// A new list is shown (sorted, searched, refreshed). The selection and the focus stay with their books; the anchor of a range does not (the next range starts at the focused book, else at the first one). <paramref name="keepHidden"/>
 		/// keeps the selected books that are not in the new list (a search hides them); false forgets them (another list, a refresh).
 		/// </summary>
 		public void SetItems(BookItem[] value, bool keepHidden)
@@ -156,10 +156,9 @@ namespace ComicRack.Mac.Browser
 			{
 				focused = null;
 			}
-			if (anchor != null && IndexOf(anchor) < 0)
-			{
-				anchor = null;
-			}
+			// A new list has no anchor: the next range starts at the focused book, else at the first one, as ItemView.SelectFromAnchorItem does when it
+			// does not find its anchor among the displayed items.
+			anchor = null;
 			Raise();
 		}
 

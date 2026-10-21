@@ -293,9 +293,14 @@ namespace ComicRack.Mac.Tests.Reader
 		{
 			await Ui.Run(async () =>
 			{
-				using (ReaderHarness h = await Open(size: p => (1200, 1800)))
+				var saved = new ComicRack.Mac.Host.AppPreferences();
+				ReaderOptions fromSaved = ReaderOptions.From(saved);
+				fromSaved.Log = m => { };
+				fromSaved.LoadingDelay = TimeSpan.FromMilliseconds(50);
+				using (ReaderHarness h = await Open(size: p => (1200, 1800), options: fromSaved))
 				{
 					CrPartOverlay part = h.Window.Part;
+					Assert.True(saved.ShowVisiblePagePartOverlay);
 					Assert.Equal(0, part.Opacity);
 					Assert.False(part.IsFading); // the page fits: no part to show
 					h.Press(Key.D3, KeyModifiers.Meta); // Fit Width: taller than the window
@@ -332,6 +337,8 @@ namespace ComicRack.Mac.Tests.Reader
 					h.Window.MouseDown(onIt, MouseButton.Left);
 					h.Window.MouseUp(onIt, MouseButton.Left);
 					Assert.False(h.Vm.Options.ShowVisiblePagePartOverlay);
+					// and it is written back to the preferences, as MainForm does when the overlay is closed (VisibleInfoOverlaysChanged)
+					Assert.False(saved.ShowVisiblePagePartOverlay);
 					Assert.False(part.IsFading);
 					h.Vm.ScrollBy(-10000);
 					Assert.False(part.IsFading);
@@ -429,6 +436,92 @@ namespace ComicRack.Mac.Tests.Reader
 			});
 		}
 
+		private static async Task<(ReaderHarness h, FakeThumbnails thumbs)> OpenWithStrip(int pages = 40, int resume = 5)
+		{
+			var thumbs = new FakeThumbnails();
+			var session = new FakeSession(new FakePageDecoder { PageCount = pages, Size = p => (1200, 1800) }) { ResumePage = resume };
+			var vm = new ComicRack.Mac.ViewModels.ReaderViewModel(session, ReaderHarness.DefaultOptions());
+			var h = new ReaderHarness(vm, 900, 700);
+			h.Window.Navigation.Thumbnails = thumbs;
+			await vm.OpenAsync();
+			await vm.WhenSettled;
+			h.Tick();
+			vm.ToggleNavigationOverlayCommand.Execute(null);
+			h.Tick();
+			ReaderOverlayClock.Advance(1000);
+			h.Tick();
+			return (h, thumbs);
+		}
+
+		/// <summary>NavigationOverlay.DisplayedPageIndex is the slider's value: while the slider is dragged the strip of pictures runs with it, centred on the page it is on.</summary>
+		[Fact]
+		public async Task The_page_strip_is_centred_on_the_slider_while_it_is_dragged()
+		{
+			await Ui.Run(async () =>
+			{
+				(ReaderHarness h, FakeThumbnails thumbs) = await OpenWithStrip();
+				using (h)
+				{
+					CrNavigationOverlay nav = h.Window.Navigation;
+					Assert.True(nav.IsShown);
+					NavigationLayout l = nav.Layout;
+					Rect box = Dpi.Area(nav, h.Window);
+					double centre = Math.Floor(l.Strip.X + l.Strip.Width / 2);
+					Rect displayed = nav.PageAreas.First(a => a.Page == 5).Bounds;
+					Assert.Equal(centre, displayed.Center.X, 1.5); // at rest the displayed page is in the middle
+
+					// press on the slider near its right end and drag a little further: the slider is on a later page, the reader still shows page 5
+					Point At(double fraction) => new Point(box.X + l.Slider.X + 6 + fraction * (l.Slider.Width - 12), box.Y + l.Slider.Y + 12);
+					Point start = At(0.5);
+					h.Window.MouseMove(start);
+					h.Window.MouseDown(start, MouseButton.Left);
+					h.Window.MouseMove(At(0.75));
+					h.Tick();
+					int value = nav.SliderValue;
+					Assert.InRange(value, 25, 33);
+					Assert.Equal(5, nav.DisplayedPage);
+					Assert.Contains(thumbs.Asked, a => a.Page == value); // the pictures of the pages it runs over are asked for
+					Rect dragged = nav.PageAreas.First(a => a.Page == value).Bounds;
+					Assert.Equal(centre, dragged.Center.X, 1.5);
+					Assert.True(nav.PageAreas.First(a => a.Page == value).Bounds.Width > 0);
+					Assert.DoesNotContain(nav.PageAreas, a => a.Page == 5); // the page the reader shows is far out of the strip now
+
+					// the release goes to the page the slider is on
+					var browsed = new List<NavigationBrowseEventArgs>();
+					nav.Browse += (s, e) => browsed.Add(e);
+					h.Window.MouseUp(At(0.75), MouseButton.Left);
+					h.Tick();
+					Assert.Equal(NavigationOrigin.Absolute, browsed.Single().Origin);
+					Assert.Equal(value, browsed.Single().Offset);
+				}
+			});
+		}
+
+		/// <summary>The pictures of the strip are asked for at the height of the strip in device pixels: a Retina window gets twice the pixels, not a blown up small picture.</summary>
+		[Theory]
+		[InlineData(1.0)]
+		[InlineData(2.0)]
+		public async Task The_pictures_of_the_page_strip_are_asked_for_in_device_pixels(double scale)
+		{
+			await Ui.Run(async () =>
+			{
+				(ReaderHarness h, FakeThumbnails thumbs) = await OpenWithStrip();
+				using (h)
+				{
+					Dpi.Apply(h.Window, scale);
+					h.Tick();
+					thumbs.Asked.Clear();
+					h.Window.Navigation.InvalidateVisual();
+					h.Tick();
+					Assert.NotEmpty(thumbs.Asked);
+					double strip = h.Window.Navigation.Layout.Strip.Height;
+					int expected = (int)Math.Round(strip * scale);
+					Assert.All(thumbs.Asked, a => Assert.Equal(expected, a.Height));
+					Assert.Equal(Math.Round(strip), Math.Round((double)expected / scale));
+				}
+			});
+		}
+
 		[Fact]
 		public async Task The_navigation_overlay_follows_its_options_and_the_toggle_and_the_browse_requests_move_the_reader()
 		{
@@ -513,7 +606,7 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task The_page_menu_has_info_my_rating_and_page_layout_and_the_rating_is_written_to_the_book()
+		public async Task The_page_menu_has_my_rating_and_page_layout_without_Info_until_the_dialog_exists_and_the_rating_is_written_to_the_book()
 		{
 			await Ui.Run(async () =>
 			{
@@ -521,12 +614,13 @@ namespace ComicRack.Mac.Tests.Reader
 				using (ReaderHarness h = await ReaderHarness.Open(session, 800, 600))
 				{
 					var flyout = (MenuFlyout)h.Window.ReadingArea.ContextFlyout;
-					Assert.Equal(3, flyout.Items.Count);
+					// Info... (Cmd+I) comes with the Info dialog, P5.7a: an item that does nothing is not shown
+					Assert.Equal(2, flyout.Items.Count);
 					var items = flyout.Items.OfType<MenuItem>().ToArray();
-					Assert.Equal("Info...", items[0].Header);
-					Assert.Equal(new KeyGesture(Key.I, KeyModifiers.Meta), items[0].InputGesture);
-					Assert.Equal("My Rating", items[1].Header);
-					var stars = items[1].Items.OfType<MenuItem>().ToArray();
+					Assert.DoesNotContain(items, m => (string)m.Header == "Info...");
+					Assert.DoesNotContain(items, m => m.InputGesture != null && m.InputGesture.Equals(new KeyGesture(Key.I, KeyModifiers.Meta)));
+					Assert.Equal("My Rating", items[0].Header);
+					var stars = items[0].Items.OfType<MenuItem>().ToArray();
 					Assert.Equal(6, stars.Length);
 					Assert.Equal("None", stars[0].Header);
 					Assert.Equal("*** (3 Stars)", stars[3].Header);
@@ -535,16 +629,73 @@ namespace ComicRack.Mac.Tests.Reader
 					stars[5].Command.Execute(null);
 					Assert.Equal(5, session.RatingValue);
 					Assert.True(stars[5].IsChecked);
-					Assert.Equal("Page Layout", items[2].Header);
-					var layout = items[2].Items.OfType<MenuItem>().ToArray();
+					Assert.Equal("Page Layout", items[1].Header);
+					var layout = items[1].Items.OfType<MenuItem>().ToArray();
 					Assert.Equal(new[] { "Fit All", "Fit Width", "Fit Height", "Single Page", "Two Pages", "Two Pages (adaptive)", "Right to Left" }, layout.Select(m => m.Header).ToArray());
 					layout[1].Command.Execute(null);
 					Assert.True(layout[1].IsChecked);
 					Assert.False(layout[0].IsChecked);
+					// the key does not reach a command either: nothing is asked for
 					bool info = false;
 					h.Vm.InfoRequested += (s, e) => info = true;
-					items[0].Command.Execute(null);
-					Assert.True(info);
+					Assert.False(h.Vm.HandleKey(Key.I, KeyModifiers.Meta));
+					Assert.False(info);
+				}
+			});
+		}
+
+		/// <summary>PC.02: the shortcuts the menu shows (Alt+Shift+0 to 5 of cmRate0 to cmRate5) work in the reader, with the page menu closed.</summary>
+		[Fact]
+		public async Task Option_Shift_0_to_5_rate_the_book_from_the_keyboard()
+		{
+			await Ui.Run(async () =>
+			{
+				var session = new FakeSession(new FakePageDecoder { PageCount = 4 }) { RatingValue = 3 };
+				using (ReaderHarness h = await ReaderHarness.Open(session, 800, 600))
+				{
+					for (int stars = 0; stars <= 5; stars++)
+					{
+						Assert.True(h.Vm.HandleKey((Key)((int)Key.D0 + stars), KeyModifiers.Alt | KeyModifiers.Shift), "Option+Shift+" + stars);
+						Assert.Equal(stars, session.RatingValue);
+						Assert.Equal(stars, h.Vm.Rating);
+					}
+					// through the window, as a key press
+					h.Press(Key.D2, KeyModifiers.Alt | KeyModifiers.Shift);
+					Assert.Equal(2, session.RatingValue);
+					// Option alone and Shift alone are other keys: 2 is Fit All, nothing rates
+					Assert.False(h.Vm.HandleKey(Key.D4, KeyModifiers.Alt));
+					Assert.Equal(2, session.RatingValue);
+					h.Vm.HandleKey(Key.D3, KeyModifiers.None); // Fit Width
+					Assert.Equal(2, session.RatingValue);
+					// 6 to 9 are no stars
+					Assert.False(h.Vm.HandleKey(Key.D6, KeyModifiers.Alt | KeyModifiers.Shift));
+					Assert.Equal(2, session.RatingValue);
+				}
+			});
+		}
+
+		/// <summary>The original's keyboard map matches a key with its modifiers exactly: Home, End and the arrows scroll, Shift+Home, Shift+End and Shift+arrow are no command.</summary>
+		[Fact]
+		public async Task Shift_with_Home_End_or_an_arrow_is_not_a_scroll_command_as_in_the_original()
+		{
+			await Ui.Run(async () =>
+			{
+				using (ReaderHarness h = await Open(resume: 5))
+				{
+					h.Vm.SetFit(cYo.Projects.ComicRack.Engine.Display.ImageFitMode.FitHeight);
+					h.Vm.SetZoom(4);
+					h.Tick();
+					double x = h.Vm.ScrollX, y = h.Vm.ScrollY;
+					foreach (Key key in new[] { Key.Home, Key.End, Key.Up, Key.Down, Key.Left, Key.Right })
+					{
+						Assert.False(h.Vm.HandleKey(key, KeyModifiers.Shift), "Shift+" + key);
+						Assert.Equal(x, h.Vm.ScrollX, 3);
+						Assert.Equal(y, h.Vm.ScrollY, 3);
+						Assert.True(h.Vm.HandleKey(key, KeyModifiers.None), key.ToString());
+						x = h.Vm.ScrollX;
+						y = h.Vm.ScrollY;
+					}
+					Assert.Equal(5, h.Vm.CurrentPage);
 				}
 			});
 		}

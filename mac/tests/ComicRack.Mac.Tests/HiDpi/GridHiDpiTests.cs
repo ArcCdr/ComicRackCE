@@ -137,12 +137,12 @@ namespace ComicRack.Mac.Tests.HiDpi
 		}
 
 		/// <summary>
-		/// Not at 1.5x: <see cref="CoverDrawOperation"/> does not snap the picture to whole device pixels (the reader's
-		/// <see cref="ComicRack.Mac.Reader.ReaderPainter"/> does), and the centred picture lands on a half pixel there. Real displays of
-		/// the Mac have 1x or 2x; the cover draw path is reworked by P3.7 (full-port.md section 9, [P3.H]).
+		/// At every scale including 1.5x (RV8 put it back): the cover is placed on whole device pixels (<c>CoverView.SnapToUnits</c> since P5.R2), so
+		/// the picture of exactly the box's pixels is a copy of it even where a unit is one and a half pixels.
 		/// </summary>
 		[Theory]
 		[InlineData(1.0)]
+		[InlineData(1.5)]
 		[InlineData(2.0)]
 		[InlineData(3.0)]
 		public async Task A_cover_with_the_pixels_of_its_box_is_drawn_sharp_and_not_resampled(double scale)

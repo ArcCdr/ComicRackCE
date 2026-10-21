@@ -113,6 +113,9 @@ if [ "$TEST" = 1 ]; then
 	if [ "$FULL" = 1 ]; then FILTER='Category!=E2E'; KIND='fast+slow'; else FILTER='Category!=Slow&Category!=E2E'; KIND='fast'; fi
 	# -m:1 runs the test projects one after the other: they are timing-sensitive (UI gaps, queue throughput) and a second project
 	# burning CPU in parallel made them fail now and then. Inside a project tests are serialized by its AssemblyInfo.cs.
+	# --full also tells the tests it is the full gate: the chrome snapshot test then needs its baseline frames (mac/artifacts/chrome/baseline, or
+	# CRMAC_CHROME_BASELINE_DIR) and fails, saying how to take them, instead of passing without a comparison.
+	if [ "$FULL" = 1 ]; then export CRMAC_FULL_GATE=1; else unset CRMAC_FULL_GATE; fi
 	dotnet test mac/ComicRack.Mac.slnx -c "$CONFIG" --no-build -m:1 --filter "$FILTER" --logger trx --results-directory "$LOGS" \
 		--blame-hang-timeout 15m >"$LOGS/test.log" 2>&1
 	rc=$?

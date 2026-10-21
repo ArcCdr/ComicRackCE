@@ -120,6 +120,7 @@ mac/tools/upstream-sync-check.sh --no-merge                # previews upstream/m
 git status --porcelain                                     # the check's own census runs rewrite mac/reports/*.md again:
 git restore mac/reports                                    #   restore them once more unless the totals changed
 ```
+`verify.sh --full` (the upstream check runs it too) compares the default look with the chrome baseline frames in `mac/artifacts/chrome/baseline` (git ignored: a baseline belongs to the machine). `ChromeSnapshotTests` fails, with the command that takes the frames, when they are missing. Take them from a tree whose look is right, and again after a change of the look that was meant (RV8 took them after the toolbar change): `CRMAC_CHROME_SNAPSHOT_DIR=$PWD/mac/artifacts/chrome/baseline dotnet test mac/tests/ComicRack.Mac.Tests --filter ChromeSnapshotTests`.
 A failure here that no single task explains becomes task `RV<n>` at the front of the order.
 
 **Review**: one subagent with `subagent_type: general-purpose`, `model: opus`, `effort: high`, prompt:

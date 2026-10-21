@@ -105,20 +105,39 @@ namespace ComicRack.Mac.ViewModels
 			{
 				DateTime t = lastOpened?.OpenedTime ?? DateTime.MinValue;
 				ComicBook newest = null;
+				HashSet<ComicBook> shown = null;
 				foreach (ComicBook book in books)
 				{
-					if (book.OpenedTime > t && Array.Exists(Items, i => ReferenceEquals(i.Book, book)))
+					if (book.OpenedTime > t)
 					{
-						t = book.OpenedTime;
-						newest = book;
+						shown ??= ShownBooks();
+						if (shown.Contains(book))
+						{
+							t = book.OpenedTime;
+							newest = book;
+						}
 					}
 				}
 				if (newest != null)
 				{
-					lastOpened = newest;
+					SetLastOpened(newest);
 				}
 			}
 			BooksChanged?.Invoke(this, books);
+		}
+
+		// The Core books of the items that are shown, for a membership test (the change batch is checked once, not once per book).
+		private HashSet<ComicBook> ShownBooks()
+		{
+			var set = new HashSet<ComicBook>(ReferenceEqualityComparer.Instance);
+			foreach (BookItem item in Items)
+			{
+				if (item.Book != null)
+				{
+					set.Add(item.Book);
+				}
+			}
+			return set;
 		}
 
 		partial void OnListNameChanged(string value) => UpdateSummary();
@@ -156,6 +175,67 @@ namespace ComicRack.Mac.ViewModels
 		[ObservableProperty]
 		[NotifyPropertyChangedFor(nameof(SortName))]
 		public partial int SortIndex { get; set; }
+
+		/// <summary>
+		/// The list runs from the end of the sort (<c>ItemView.ItemSortOrder</c> is <c>Descending</c>). The Arrange button flips it
+		/// (<c>ComicBrowserControl.tbbSort_ButtonClick</c>, <c>ItemView.FlipSortOrder</c>) and so does choosing the sort the list already has from the
+		/// menu (<c>ItemView.ArrangeMenuItemClicked</c>).
+		/// </summary>
+		[ObservableProperty]
+		[NotifyPropertyChangedFor(nameof(SortIconName))]
+		public partial bool SortDescending { get; set; }
+
+		/// <summary>The picture of the Arrange button: <c>SortUp</c> while ascending, <c>SortDown</c> while descending (<c>ComicBrowserControl</c>: <c>tbbSort.Image</c>).</summary>
+		public string SortIconName => SortDescending ? "SortDown" : "SortUp";
+
+		/// <summary>The click on the Arrange button: the sort order flips.</summary>
+		public void FlipSortOrder() => SortDescending = !SortDescending;
+
+		/// <summary>
+		/// A sort chosen in the Arrange menu (<c>ItemView.ArrangeMenuItemClicked</c>): the sort that the list has flips its order, another sort starts ascending.
+		/// </summary>
+		public void ArrangeBy(int index)
+		{
+			index = Math.Clamp(index, 0, SortNames.Length - 1);
+			if (index == SortIndex)
+			{
+				FlipSortOrder();
+				return;
+			}
+			if (SortDescending)
+			{
+				using (SuspendQueries())
+				{
+					SortDescending = false;
+					SortIndex = index;
+				}
+				StartQuery(debounce: false, resetScroll: true);
+				return;
+			}
+			SortIndex = index;
+		}
+
+		private int queriesSuspended;
+
+		private IDisposable SuspendQueries()
+		{
+			queriesSuspended++;
+			return new Releaser(() => queriesSuspended--);
+		}
+
+		private sealed class Releaser : IDisposable
+		{
+			private Action action;
+
+			public Releaser(Action action) => this.action = action;
+
+			public void Dispose()
+			{
+				Action a = action;
+				action = null;
+				a?.Invoke();
+			}
+		}
 
 		/// <summary>The text of the Arrange button: the name of the column the list is arranged by (<c>tbbSort.Text</c>).</summary>
 		public string SortName => SortNames[Math.Clamp(SortIndex, 0, SortNames.Length - 1)];
@@ -262,7 +342,21 @@ namespace ComicRack.Mac.ViewModels
 
 		partial void OnSearchTextChanged(string value) => StartQuery(debounce: true, resetScroll: true);
 
-		partial void OnSortIndexChanged(int value) => StartQuery(debounce: false, resetScroll: true);
+		partial void OnSortIndexChanged(int value)
+		{
+			if (queriesSuspended == 0)
+			{
+				StartQuery(debounce: false, resetScroll: true);
+			}
+		}
+
+		partial void OnSortDescendingChanged(bool value)
+		{
+			if (queriesSuspended == 0)
+			{
+				StartQuery(debounce: false, resetScroll: true);
+			}
+		}
 
 		/// <summary>Builds the catalog from the Core's books on a worker thread and shows it. A newer load supersedes an older one.</summary>
 		public Task LoadAsync(Func<CancellationToken, BookCatalog> build, bool resetScroll = false)
@@ -374,10 +468,10 @@ namespace ComicRack.Mac.ViewModels
 			queryCts.Cancel();
 			queryCts = new CancellationTokenSource();
 			CancellationToken token = queryCts.Token;
-			lastQuery = RunQuery(mine, token, debounce, resetScroll, keepView, newCatalog, forgetSelection, catalog, Sort, SearchText);
+			lastQuery = RunQuery(mine, token, debounce, resetScroll, keepView, newCatalog, forgetSelection, catalog, Sort, SortDescending, SearchText);
 		}
 
-		private async Task RunQuery(int mine, CancellationToken token, bool debounce, bool resetScroll, bool keepView, bool newCatalog, bool forgetSelection, BookCatalog cat, BookSort sort, string text)
+		private async Task RunQuery(int mine, CancellationToken token, bool debounce, bool resetScroll, bool keepView, bool newCatalog, bool forgetSelection, BookCatalog cat, BookSort sort, bool descending, string text)
 		{
 			try
 			{
@@ -389,6 +483,10 @@ namespace ComicRack.Mac.ViewModels
 				(BookItem[] items, long size, ComicBook last) = await Task.Run(() =>
 				{
 					BookItem[] result = cat.Query(sort, text, token);
+					if (descending)
+					{
+						Array.Reverse(result);
+					}
 					long total = 0;
 					foreach (BookItem item in result)
 					{

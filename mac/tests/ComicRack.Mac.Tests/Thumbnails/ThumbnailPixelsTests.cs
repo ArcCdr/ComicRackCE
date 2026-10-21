@@ -1,6 +1,10 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Styling;
 using SkiaSharp;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Thumbnails;
 using Xunit;
 
@@ -213,6 +217,88 @@ namespace ComicRack.Mac.Tests.Thumbnails
 			{
 				block.Release();
 			}
+		}
+
+		private static SKColor Inside(PixelBlock block, int x, int y)
+		{
+			using (SKImage image = block.CreateImage())
+			using (SKPixmap pixmap = image.PeekPixels())
+			{
+				return pixmap.GetPixelColor(x, y);
+			}
+		}
+
+		/// <summary>RV8: the colours of the placeholder are the chrome layer's, one look per appearance, not literals of the decoder.</summary>
+		[Fact]
+		public void The_placeholder_is_drawn_in_the_colours_of_the_look_it_is_given()
+		{
+			PixelBlock light = ThumbnailPixels.CreatePlaceholder(216, ThumbnailPlaceholderLook.Light);
+			PixelBlock dark = ThumbnailPixels.CreatePlaceholder(216, ThumbnailPlaceholderLook.Dark);
+			try
+			{
+				// the tile, one unit inside the frame and away from the cross
+				Assert.Equal(new SKColor(0xDC, 0xDC, 0xDC), Inside(light, 20, 20));
+				Assert.Equal(new SKColor(0x3A, 0x3A, 0x3A), Inside(dark, 20, 20));
+				var custom = new ThumbnailPlaceholderLook(0xFF102030, 0xFF405060, 0xFF708090);
+				PixelBlock mine = ThumbnailPixels.CreatePlaceholder(216, custom);
+				try
+				{
+					Assert.Equal(new SKColor(0x10, 0x20, 0x30), Inside(mine, 20, 20));
+					Assert.Equal(new SKColor(0x40, 0x50, 0x60), Inside(mine, 0, 100)); // the frame is on the first column
+				}
+				finally
+				{
+					mine.Release();
+				}
+			}
+			finally
+			{
+				light.Release();
+				dark.Release();
+			}
+		}
+
+		[Fact]
+		public async Task The_theme_defines_the_placeholder_look_for_both_appearances_and_it_follows_the_appearance_of_the_application()
+		{
+			await Ui.Run(() =>
+			{
+				Application app = Application.Current;
+				ThemeVariant before = app.RequestedThemeVariant;
+				try
+				{
+					// what the theme file says is what the fallback values say (so a process without the theme draws the same)
+					AssertSame(ThumbnailPlaceholderLook.Light, ThumbnailPlaceholderLook.For(ThemeVariant.Light));
+					AssertSame(ThumbnailPlaceholderLook.Dark, ThumbnailPlaceholderLook.For(ThemeVariant.Dark));
+					Assert.NotEqual(ThumbnailPlaceholderLook.Light.Tile, ThumbnailPlaceholderLook.Dark.Tile);
+					app.RequestedThemeVariant = ThemeVariant.Dark;
+					AssertSame(ThumbnailPlaceholderLook.Dark, ThumbnailPlaceholderLook.Current);
+					app.RequestedThemeVariant = ThemeVariant.Light;
+					AssertSame(ThumbnailPlaceholderLook.Light, ThumbnailPlaceholderLook.Current);
+					app.RequestedThemeVariant = ThemeVariant.Dark;
+					PixelBlock block = ThumbnailPixels.CreatePlaceholder(216);
+					try
+					{
+						Assert.Equal(new SKColor(0x3A, 0x3A, 0x3A), Inside(block, 20, 20));
+					}
+					finally
+					{
+						block.Release();
+					}
+				}
+				finally
+				{
+					app.RequestedThemeVariant = before;
+				}
+				return Task.CompletedTask;
+			});
+		}
+
+		private static void AssertSame(ThumbnailPlaceholderLook expected, ThumbnailPlaceholderLook actual)
+		{
+			Assert.Equal(expected.Tile, actual.Tile);
+			Assert.Equal(expected.Frame, actual.Frame);
+			Assert.Equal(expected.Cross, actual.Cross);
 		}
 
 		[Fact]

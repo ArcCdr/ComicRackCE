@@ -46,6 +46,8 @@ namespace ComicRack.Mac
 			Themes.ChromeVariants.Reset();
 			Themes.ChromeVariants.Configure(options.Chrome);
 			RequestedThemeVariant = options.Theme == "light" ? ThemeVariant.Light : options.Theme == "dark" ? ThemeVariant.Dark : ThemeVariant.Default;
+			// The tile of a thumbnail that cannot be made follows the appearance (the decoder draws it on a worker thread from this snapshot).
+			Controls.ThumbnailPlaceholderLook.Follow(this);
 			// The saved settings are read before anything else that depends on them (P5.1): the host service owns the file, and only a desktop run has one.
 			if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime)
 			{

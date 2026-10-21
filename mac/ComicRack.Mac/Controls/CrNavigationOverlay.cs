@@ -42,8 +42,8 @@ namespace ComicRack.Mac.Controls
 	}
 
 	/// <summary>
-	/// Where the overlay gets the pictures of the page strip. <see cref="Get"/> gives a retained picture of a page at about the height (the caller
-	/// releases it) or null while it is not there yet, and starts making it; <see cref="Ready"/> says a page has its picture (the overlay redraws).
+	/// Where the overlay gets the pictures of the page strip. <see cref="Get"/> gives a retained picture of a page at about the height in device
+	/// pixels (the caller releases it) or null while it is not there yet, and starts making it; <see cref="Ready"/> says a page has its picture (the overlay redraws).
 	/// </summary>
 	public interface INavigationThumbnailSource
 	{
@@ -610,10 +610,15 @@ namespace ComicRack.Mac.Controls
 				return;
 			}
 			int height = (int)Math.Round(strip.Height);
+			// the pictures are asked for in device pixels (a Retina screen shows twice as many), the layout stays in units
+			double scaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
+			int pixels = Math.Max(1, (int)Math.Round(strip.Height * scaling));
+			// the strip is centred on the slider (NavigationOverlay.DisplayedPageIndex is the slider's value): while the slider is dragged the pages run with it
+			int centrePage = sliderValue;
 			double direction = mirror ? -1 : 1;
 			double centre = Math.Floor(strip.X + strip.Width / 2);
 			double left = centre, right = centre;
-			int leftPage = displayed, rightPage = displayed + 1;
+			int leftPage = centrePage, rightPage = centrePage + 1;
 			bool selected = true, more = false;
 			using (context.PushClip(strip))
 			{
@@ -623,14 +628,14 @@ namespace ComicRack.Mac.Controls
 				}
 				else
 				{
-					using (CoverImageLease picture = Hold(displayed, height))
+					using (CoverImageLease picture = Hold(centrePage, pixels))
 					{
-						Size size = PageSize(displayed, height, picture.Value);
+						Size size = PageSize(centrePage, height, picture.Value);
 						var rect = new Rect(Math.Floor(centre - size.Width / 2), strip.Y, size.Width, size.Height);
 						if (strip.Intersects(rect))
 						{
-							DrawPage(context, rect, displayed, true, picture.Value);
-							pageAreas.Add((rect, displayed));
+							DrawPage(context, rect, centrePage, true, picture.Value);
+							pageAreas.Add((rect, centrePage));
 							more = true;
 						}
 						left -= (Math.Floor(size.Width / 2) + NavigationLayout.PagePadding) * direction;
@@ -642,7 +647,7 @@ namespace ComicRack.Mac.Controls
 				for (int guard = 0; more && guard < 400; guard++)
 				{
 					more = false;
-					using (CoverImageLease picture = Hold(leftPage, height))
+					using (CoverImageLease picture = Hold(leftPage, pixels))
 					{
 						Size size = PageSize(leftPage, height, picture.Value);
 						if (size.Width > 0)
@@ -659,7 +664,7 @@ namespace ComicRack.Mac.Controls
 							}
 						}
 					}
-					using (CoverImageLease picture = Hold(rightPage, height))
+					using (CoverImageLease picture = Hold(rightPage, pixels))
 					{
 						Size size = PageSize(rightPage, height, picture.Value);
 						if (size.Width > 0)
@@ -681,10 +686,10 @@ namespace ComicRack.Mac.Controls
 			}
 		}
 
-		/// <summary>A held picture of a page for a drawing pass (disposing the lease releases it).</summary>
-		private CoverImageLease Hold(int page, int height)
+		/// <summary>A held picture of a page for a drawing pass (disposing the lease releases it); <paramref name="pixels"/> is the height in device pixels.</summary>
+		private CoverImageLease Hold(int page, int pixels)
 		{
-			CoverImage picture = thumbnails == null || page < 0 || page >= pageCount ? null : thumbnails.Get(page, height);
+			CoverImage picture = thumbnails == null || page < 0 || page >= pageCount ? null : thumbnails.Get(page, pixels);
 			return new CoverImageLease(picture);
 		}
 

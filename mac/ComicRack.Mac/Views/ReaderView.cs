@@ -3,7 +3,6 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Threading;
 using ComicRack.Mac.Browser;
 using ComicRack.Mac.Controls;
@@ -14,16 +13,14 @@ using ComicRack.Mac.ViewModels;
 namespace ComicRack.Mac.Views
 {
 	/// <summary>
-	/// The reading area (<c>ComicDisplayControl</c>): draws the scene of its <see cref="ReaderViewModel"/> (the DataContext) with Skia on the paper
-	/// colour of the original (<c>Cr.ReaderBackground</c>, WhiteSmoke). <see cref="Render"/> runs when the scene, the scroll position, the fit mode or the
-	/// size changes (Avalonia keeps the recorded frame otherwise); the pixels are drawn by the render thread through <see cref="ReaderDrawOperation"/>,
-	/// one <c>DrawImageRect</c> per page, with the shadow around the pages and the outline of each page that the original draws for "realistic pages"
-	/// (<see cref="PageFrame"/>). The view takes no reference of its own: the draw operation holds the pictures for as long as a frame needs them.
+	/// The reading area (<c>ComicDisplayControl</c>): the behaviour on top of <see cref="CrReaderPage"/>, which draws the scene of its
+	/// <see cref="ReaderViewModel"/> (the DataContext, set as <see cref="CrReaderPage.Source"/>). The page is drawn again (<c>InvalidateVisual</c>) when the
+	/// scene, the scroll position, the zoom, the fit mode or the size changes (Avalonia keeps the recorded frame otherwise); how it looks is the chrome layer's.
 	/// Wheel and trackpad events go to <see cref="ReaderViewModel.HandleWheel"/>; Command+wheel zooms; a drag pans a page that is larger than the area
 	/// (the content follows the pointer); a pinch on the trackpad (the macOS magnify gesture) or on a touch screen zooms about the pointer; a double
 	/// click toggles full screen. In full screen the cursor is hidden after <see cref="AutoHideCursorDelay"/> without movement (<c>AutoHideCursor</c>).
 	/// </summary>
-	public sealed class ReaderView : Control
+	public sealed class ReaderView : CrReaderPage
 	{
 		private ReaderViewModel model;
 		private bool dragging;
@@ -37,12 +34,10 @@ namespace ComicRack.Mac.Views
 		public ReaderView()
 		{
 			Focusable = true;
-			ClipToBounds = true;
 			AddHandler(PointerTouchPadGestureMagnifyEvent, OnMagnify);
 			GestureRecognizers.Add(new PinchGestureRecognizer());
 			AddHandler(PinchEvent, OnPinch);
 			AddHandler(PinchEndedEvent, (sender, e) => lastPinchScale = 1.0);
-			ActualThemeVariantChanged += (sender, e) => InvalidateVisual();
 		}
 
 		protected override void OnDataContextChanged(EventArgs e)
@@ -62,6 +57,7 @@ namespace ComicRack.Mac.Views
 				model.PropertyChanged -= OnModelChanged;
 			}
 			model = next;
+			Source = model;
 			if (model != null)
 			{
 				model.PropertyChanged += OnModelChanged;
@@ -89,11 +85,6 @@ namespace ComicRack.Mac.Views
 			}
 		}
 
-		protected override Size MeasureOverride(Size availableSize)
-		{
-			return new Size(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width, double.IsInfinity(availableSize.Height) ? 0 : availableSize.Height);
-		}
-
 		protected override Size ArrangeOverride(Size finalSize)
 		{
 			if (model != null)
@@ -101,46 +92,6 @@ namespace ComicRack.Mac.Views
 				model.ViewportSize = finalSize;
 			}
 			return base.ArrangeOverride(finalSize);
-		}
-
-		public override void Render(DrawingContext context)
-		{
-			var area = new Rect(Bounds.Size);
-			context.DrawRectangle(ChromePaint.Brush(this, ThemeTokens.Names.ReaderBackground), null, area);
-			ReaderViewModel m = model;
-			ReaderScene scene = m?.Scene;
-			if (m == null || scene == null || scene.Pages.Count == 0 || area.Width <= 0 || area.Height <= 0)
-			{
-				return;
-			}
-			PageArrangement arrangement = m.ArrangeFor(area.Size);
-			var images = new CoverImage[scene.Pages.Count];
-			for (int i = 0; i < images.Length; i++)
-			{
-				images[i] = scene.Pages[i].Image;
-			}
-			bool ornaments = m.Options.RealisticPages;
-			Rect[] snapped = null;
-			if (ornaments)
-			{
-				double scaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
-				snapped = new Rect[arrangement.Pages.Length];
-				Rect union = default(Rect);
-				for (int i = 0; i < snapped.Length; i++)
-				{
-					snapped[i] = ReaderPainter.SnapToDevice(arrangement.Pages[i], scaling);
-					union = i == 0 ? snapped[i] : union.Union(snapped[i]);
-				}
-				PageFrame.DrawShadow(context, this, union);
-			}
-			context.Custom(new ReaderDrawOperation(images, arrangement.Pages, area, scene.Turn, m.Meter));
-			if (snapped != null)
-			{
-				foreach (Rect page in snapped)
-				{
-					PageFrame.DrawOutline(context, this, page);
-				}
-			}
 		}
 
 		// ---- the pointer ----------------------------------------------------------------------------------------------

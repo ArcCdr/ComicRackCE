@@ -75,7 +75,7 @@ namespace ComicRack.Mac.Tests.Theme
 			});
 		}
 
-		/// <summary>The toolbar of ComicBrowserControl.Designer.cs: Sidebar, Previous, Next | Views, Group, Stack, Arrange, quick search, List Layouts | Duplicate | Undo, Redo.</summary>
+		/// <summary>The toolbar of ComicBrowserControl.Designer.cs: Sidebar, Previous, Next | Views, Group, Stack, Arrange, List Layouts | Duplicate | Undo, Redo, and the quick search aligned to the right.</summary>
 		[Fact]
 		public async Task The_browser_toolbar_has_every_button_of_the_original_in_its_order_and_the_unbuilt_ones_are_disabled()
 		{
@@ -87,11 +87,17 @@ namespace ComicRack.Mac.Tests.Theme
 				var toolbar = Part<CrToolBar>(window, "BrowserToolBar");
 				string[] order =
 				{
-					"SidebarButton", "BrowsePreviousButton", "BrowseNextButton", "-", "ViewsButton", "GroupButton", "StackButton", "ArrangeButton", "SearchBox",
-					"ListLayoutsButton", "-", "DuplicateButton", "-", "UndoButton", "RedoButton",
+					"SidebarButton", "BrowsePreviousButton", "BrowseNextButton", "-", "ViewsButton", "GroupButton", "StackButton", "ArrangeButton",
+					"ListLayoutsButton", "-", "DuplicateButton", "-", "UndoButton", "RedoButton", "SearchBox",
 				};
 				string[] actual = toolbar.Children.Select(c => c is CrToolSeparator ? "-" : c.Name).ToArray();
 				Assert.Equal(order, actual);
+				// the quick search is Alignment.Right and Overflow.Never in the designer: it is the one item at the right end that never leaves the bar
+				var search = Part<CrSearchBox>(window, "SearchBox");
+				Assert.Equal(ToolBarAlignment.Right, CrToolBar.GetAlignment(search));
+				Assert.Equal(ToolBarOverflow.Never, CrToolBar.GetOverflow(search));
+				Assert.All(toolbar.Children.Where(c => c != search), c => Assert.Equal(ToolBarAlignment.Left, CrToolBar.GetAlignment(c)));
+				Assert.True(search.Bounds.X > Part<CrToolButton>(window, "RedoButton").Bounds.Right);
 				// the images are the original's by resource name
 				string[] images = { "Sidebar", "BrowsePrevious", "BrowseNext", "View", "Group", "Stacking", "SortUp", "ListLayout", "AddList", "Undo", "Redo" };
 				string[] shown = toolbar.Children.OfType<CrToolButton>().Select(b => b.IconName).ToArray();
@@ -117,6 +123,66 @@ namespace ComicRack.Mac.Tests.Theme
 				Assert.True(Part<CrToolButton>(window, "UndoButton").Bounds.X < Part<CrToolButton>(window, "RedoButton").Bounds.X);
 				window.Close();
 				return Task.CompletedTask;
+			});
+		}
+
+		/// <summary>BT.08: the click on the Arrange button flips the sort order and its picture (tbbSort_ButtonClick); only the arrow opens the menu (tbbSort_DropDownOpening).</summary>
+		[Fact]
+		public async Task The_arrange_button_flips_the_sort_order_and_its_picture_and_only_the_arrow_opens_the_menu()
+		{
+			await Ui.Run(async () =>
+			{
+				var (window, vm) = NewWindow();
+				window.Show();
+				Layout(window);
+				vm.Browser.SearchDelay = TimeSpan.Zero;
+				vm.Browser.SetCatalog(new BookCatalog(new[]
+				{
+					new BookItem(null, "b", "S", "2", new DateTime(2020, 1, 5)),
+					new BookItem(null, "a", "S", "1", new DateTime(2020, 1, 2)),
+					new BookItem(null, "c", "T", "1", new DateTime(2020, 1, 9)),
+				}));
+				await vm.Browser.WhenIdle();
+				var arrange = Part<CrSplitButton>(window, "ArrangeButton");
+				Assert.Equal("SortUp", arrange.IconName);
+				Assert.Equal("Series", arrange.Text);
+				Point o = Dpi.Origin(arrange, window);
+				var body = new Point(o.X + 8, o.Y + 11);
+				var arrow = new Point(o.X + arrange.ArrowBounds.X + 7, o.Y + 11);
+
+				window.MouseDown(body, MouseButton.Left);
+				window.MouseUp(body, MouseButton.Left);
+				await vm.Browser.WhenIdle();
+				Layout(window);
+				Assert.True(vm.Browser.SortDescending);
+				Assert.Equal(new[] { "c", "b", "a" }, vm.Browser.Items.Select(i => i.Title).ToArray());
+				Assert.Equal("SortDown", arrange.IconName);
+				Assert.False(arrange.IsDropDownOpen, "the body of the button does not open the menu");
+
+				window.MouseDown(arrow, MouseButton.Left);
+				window.MouseUp(arrow, MouseButton.Left);
+				Layout(window);
+				Assert.True(arrange.IsDropDownOpen, "the arrow opens the menu");
+				Assert.True(vm.Browser.SortDescending, "and does not flip the order");
+				var menu = (MenuFlyout)arrange.DropDown;
+				MenuItem[] choices = menu.Items.OfType<MenuItem>().ToArray();
+				Assert.Equal(new[] { "Series", "Title", "Date added" }, choices.Select(c => (string)c.Header).ToArray());
+				Assert.True(choices[0].IsChecked);
+
+				// the sort the list has, chosen again, flips the order (ArrangeMenuItemClicked); another sort starts ascending
+				choices[0].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+				await vm.Browser.WhenIdle();
+				Assert.False(vm.Browser.SortDescending);
+				Assert.Equal(new[] { "a", "b", "c" }, vm.Browser.Items.Select(i => i.Title).ToArray());
+				vm.Browser.FlipSortOrder();
+				choices[1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+				await vm.Browser.WhenIdle();
+				Layout(window);
+				Assert.False(vm.Browser.SortDescending);
+				Assert.Equal(1, vm.Browser.SortIndex);
+				Assert.Equal("SortUp", arrange.IconName);
+				Assert.Equal("Title", arrange.Text);
+				window.Close();
 			});
 		}
 
@@ -279,6 +345,9 @@ namespace ComicRack.Mac.Tests.Theme
 				var aliases = MainMenu.Aliases(vm);
 				Assert.Contains(aliases, a => a.Gesture.Equals(new KeyGesture(Key.F, KeyModifiers.Meta | KeyModifiers.Control)));
 				Assert.Contains(aliases, a => a.Gesture.Equals(new KeyGesture(Key.OemQuestion, KeyModifiers.Meta | KeyModifiers.Shift)));
+				// Settings: Cmd+, on the app menu item, Cmd+F9 (the original's Ctrl+F9) as an alias that reaches the same command (ME.16)
+				KeyBinding settings = aliases.Single(a => a.Gesture.Equals(new KeyGesture(Key.F9, KeyModifiers.Meta)));
+				Assert.Same(vm.ShowSettingsCommand, settings.Command);
 				// Display > Full Screen is a check item that follows the window
 				NativeMenuItem full = Item("Display", "Full Screen");
 				Assert.False(full.IsChecked);

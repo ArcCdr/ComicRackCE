@@ -34,6 +34,8 @@ namespace ComicRack.Mac
 				new KeyBinding { Gesture = new KeyGesture(Key.F, KeyModifiers.Meta | KeyModifiers.Control), Command = vm.ToggleFullScreenCommand },
 				// ComicRack Documentation: F1, alias Cmd+? (MH.02).
 				new KeyBinding { Gesture = new KeyGesture(Key.OemQuestion, KeyModifiers.Meta | KeyModifiers.Shift), Command = vm.ShowHelpCommand },
+				// Settings: Cmd+, on the app menu item, alias Cmd+F9 (the original's Ctrl+F9, ME.16); Preferences arrive with P5.22a.
+				new KeyBinding { Gesture = new KeyGesture(Key.F9, KeyModifiers.Meta), Command = vm.ShowSettingsCommand },
 			};
 		}
 

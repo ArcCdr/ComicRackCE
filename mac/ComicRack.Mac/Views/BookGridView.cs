@@ -518,14 +518,15 @@ namespace ComicRack.Mac.Views
 			}
 			if (!left)
 			{
-				// a context click: an unselected book becomes the selection, a selected one keeps it (the menu works on the selection)
-				if (selection.IsSelected(index))
+				// a context click acts as ItemView.UpdateSelectionFromMouse does for any button: Cmd flips the book and Shift selects the range from the
+				// focused book; without a modifier an unselected book becomes the selection and a selected one keeps it (the menu works on the selection)
+				if (selection.IsSelected(index) && !toggle && !extend)
 				{
 					selection.Focus(index);
 				}
 				else
 				{
-					selection.Click(index, toggle: false, extend: false);
+					selection.Click(index, toggle, extend);
 				}
 				e.Handled = true;
 				return;

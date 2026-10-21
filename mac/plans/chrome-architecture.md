@@ -49,7 +49,7 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 
 | Element | Controls and styles | Native variant |
 |---|---|---|
-| Toolbar | `CrToolBar`, `CrToolButton`, `CrSplitButton`, `CrToolSeparator`, `CrSearchBox` (self-drawn from `Cr.Tool*`) | not yet |
+| Toolbar | `CrToolBar` (items planned by `ToolBarLayout`: `CrToolBar.Alignment`, `CrToolBar.Overflow`, the overflow button and its drop-down, RV8), `CrToolButton`, `CrSplitButton`, `CrDropDownButton`, `CrToolSeparator`, `CrSearchBox` (self-drawn from `Cr.Tool*`) | not yet |
 | TabBar | `CrTabBar` (self-drawn) | not yet |
 | StatusBar | `CrStatusBar`, `CrStatusSlot` | **yes** (proof) |
 | Tree | `CrTreeView`, `CrTreeRow`, `CrGaugeStrip`, `StyledSelectionVisual`, tree item theme (`CrControlThemes.axaml`) | not yet |
@@ -59,7 +59,7 @@ The chrome layer is `Themes/`, `Controls/` and `Platform/`. Nothing else in the 
 | Icons | `CrIcon`, `Icons` | not yet |
 | Dialogs | `CrDialogWindow`, `AlertWindow` (the system alert is native already: `MacAlert`) | not yet |
 | ItemView | `CrThumbnailItem` (shadow, frame, badges, caption, selection; its backdrop and overlay are inner parts), `CoverView` (the picture, fade-in), `CrBookToolTip`, `CrSelectionRectangle` (the rubber band, RV6); the colours of the original's renderers are `Cr.Thumb.*` in `Themes/Controls/CrThumbnailLook.axaml`, the numbers are `ThumbnailMetrics` and `ThumbnailLayout` | not yet |
-| ReaderOverlay | `CrTextOverlay` (page info, loading, message), `CrPartOverlay` (visible part), `CrNavigationOverlay` (glass buttons, slider, page strip), `GlassPainter` (nine-part glass pictures), `PageFrame` (outline and shadow of the pages), `ReaderOverlayClock` (fades and slide); the colours are `Cr.Reader.*` in `Themes/Controls/CrReaderLook.axaml` | not yet |
+| ReaderOverlay | `CrTextOverlay` (page info, loading, message), `CrPartOverlay` (visible part), `CrNavigationOverlay` (glass buttons, slider, page strip), `CrReaderPage` (the reading surface: paper, shadow, outlines and the pages through `ReaderDrawOperation`, fed by `IReaderPageSource`; `Views/ReaderView` is this control plus the pointer, wheel, gesture and cursor behaviour, RV8), `GlassPainter` (nine-part glass pictures), `PageFrame` (outline and shadow of the pages), `ReaderOverlayClock` (fades and slide); the colours are `Cr.Reader.*` in `Themes/Controls/CrReaderLook.axaml` | not yet |
 | Buttons, ComboBox, Menus | **stock controls**: `CrControls.axaml`, `CrControlThemes.axaml` (check box, radio button), `CrControlResources.*` (the base theme's brush keys), `CrMetrics.axaml` | **not switchable yet**: the original look is made of global overrides of the base theme, which a per-control theme cannot undo. See `full-port.md` section 9. |
 
 Native for a stock-control element means splitting its global overrides into a per-variant style set that `ChromeVariants` adds to or removes from the application styles (and re-resolves the type-keyed themes). That is the next step for these three; it is a chrome-layer change only.
@@ -67,7 +67,7 @@ Native for a stock-control element means splitting its global overrides into a p
 ## 6. Enforcement (tests in `mac/tests/ComicRack.Mac.Tests/Theme/`)
 
 - `ChromeArchitectureTests` (scanner: `ChromeLint.cs`): the view layer (every `.cs` and `.axaml` outside `Themes/`, `Controls/`, `Platform/`, `Assets/`, `App.axaml*`, `Program.cs`) contains no font attribute or `FontFamily`/`FontWeight`, no `CornerRadius`/`BoxShadow`/`Opacity`/`BorderThickness` assignment, no inline `<Style>`, `<ControlTemplate>`, `<DataTemplate>`, `<TreeDataTemplate>`, `<ControlTheme>`, `<X.Styles>` or `new Style/ControlTemplate/Setter/FuncTreeDataTemplate`, no `AssetLoader`, `avares://`, `new Bitmap` or image file name; files of `Views/` do not use `Avalonia.Styling`, `Avalonia.Markup.*`, `Avalonia.Skia`, `Avalonia.Media.Imaging`, `Avalonia.Rendering.*`, `Avalonia.Platform`, `SkiaSharp` or `ComicRack.Mac.Platform`; files of `ViewModels/` use no `Avalonia.Controls`, `Avalonia.Media`, styling, rendering or chrome namespace. `ChromeLint.Allowed` (one entry: the grid's `ItemsRepeater` element factory) and `ChromeLint.Showcases` (the gallery) are the only exceptions, each with a reason, and a test fails when an exception is no longer needed.
-- `NoLiteralColorsTests`: no colour literal in `Views/`, `Controls/` or any `.axaml` outside `Themes/` (no exceptions left since RV5).
+- `NoLiteralColorsTests`: no colour literal in any source or `.axaml` of the app outside `Themes/` and `Platform/` (every folder since RV8: `Thumbnails/`, `Reader/`, `Browser/`, `Services/` ...; no exceptions left since RV5). Outside `Controls/` the Skia and short forms count too (`new SKColor`, `SKColors.X`, `Color.FromUInt32`, `"#rgb"`): code that needs a colour takes it from a token or from a look object of the chrome layer (`ThumbnailPlaceholderLook`). Views may not name `Avalonia.Media` at all (`ChromeLint.ForbiddenInViews`).
 - `ChromeArchitectureTests`: every public control of `ComicRack.Mac.Controls` implements `IChromeElement`, resolves a `ControlTheme` keyed `<Type>.Original` that it wears, and a `<Type>.Native` for every element in `NativeAvailable`; `CrChromeThemes.axaml` defines only keys of that form for existing controls; only `Themes/Icons.cs` touches the asset store.
 - `ChromeVariantTests`: parsing and defaults, the flip (same tree, same controls, other elements untouched, pixels of the Native bar equal the stock brush, flip back restores the frame pixel for pixel, light and dark), controls made after a flip, no leak through the registry.
 - `ChromeSnapshotTests`: 14 frames (library window, grid with a selected cell, gallery, About, Import, reader page, reader notice; light and dark) compared with a baseline taken before a change (`CRMAC_CHROME_BASELINE_DIR`, save with `CRMAC_CHROME_SNAPSHOT_DIR`), and the values of the surfaces that moved into `CrMvpLook.axaml (deleted by P5.R3: the values are tokens and `Cr.Reader.*`/`Cr.Perf.*` now)`.
@@ -82,6 +82,10 @@ Native for a stock-control element means splitting its global overrides into a p
 | `BookCell.cs`, `CoverView.cs`, `ReaderView.cs`, `PerfOverlay.cs` | colour literals, fonts, opacity, padding, frame, radius, a monospace family | `BookCell` derives from `CrThumbnailItem` and `CoverView` moved to `Controls/` (P5.R2, the `cr-book-*` classes and `Cr.Mvp.Grid*`/`Cover*` entries are gone); `cr-overlay*` and `ChromePaint.ResourceBrush` for the reader views (values in `CrMvpLook.axaml (deleted by P5.R3: the values are tokens and `Cr.Reader.*`/`Cr.Perf.*` now)`, replaced in P5.R3) |
 | `Views/AlertWindow.cs` | a chrome dialog living in the view layer | moved to `Controls/` (namespace `ComicRack.Mac.Controls`) |
 | the Cr controls | no common contract, no element, no variant | `IChromeElement`, `ChromeVariants`, a theme per control and variant |
+
+| RV8 | `Views/ReaderView.cs` painted the page (paper, shadow, outlines, pages) | `Controls/CrReaderPage`; the view derives from it and keeps the behaviour |
+| RV8 | `Thumbnails/ThumbnailPixels.cs` had the grey of the placeholder tile as literals | `Controls/ThumbnailPlaceholderLook` and the `Cr.Thumb.Placeholder*Brush` entries, per appearance |
+| RV8 | `Views/PerfOverlay.cs` named `Avalonia.Media` for nothing | unused using removed |
 
 ## 8. Adding to the layer
 

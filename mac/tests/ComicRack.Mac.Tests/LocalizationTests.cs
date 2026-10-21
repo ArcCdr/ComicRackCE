@@ -156,7 +156,9 @@ namespace ComicRack.Mac.Tests
 		[InlineData("pt-PT", "pt-BR")]
 		[InlineData("pt", "pt-BR")]
 		[InlineData("cs", "cs-CZ")]
-		[InlineData("zh-Hans-CN", "zh-Hans")]
+		[InlineData("zh-Hans-CN", "zh-CN")]
+		[InlineData("zh-Hans", "zh-CN")]
+		[InlineData("zh_hans_SG", "zh-CN")]
 		[InlineData("zh-CN", "zh-CN")]
 		[InlineData("zh-Hant-TW", "zh")]
 		[InlineData("ja-JP", "ja")]
@@ -169,6 +171,17 @@ namespace ComicRack.Mac.Tests
 		public void A_language_tag_selects_a_folder(string tag, string expected)
 		{
 			Assert.Equal(expected, Localization.Match(tag, Folders));
+		}
+
+		[Fact]
+		public void Simplified_Chinese_is_the_complete_zh_CN_translation_whatever_the_tag_and_stays_zh_Hans_where_there_is_no_zh_CN()
+		{
+			Assert.Equal("zh-CN", Localization.Choose("zh-Hans", new[] { "fr" }, Folders));
+			Assert.Equal("zh-CN", Localization.Choose(null, new[] { "zh-Hans-CN", "fr" }, Folders));
+			// the traditional script is not it
+			Assert.Equal("zh", Localization.Match("zh-Hant-HK", Folders));
+			// a language folder list without zh-CN keeps the old way
+			Assert.Equal("zh-Hans", Localization.Match("zh-Hans-CN", new[] { "de", "zh", "zh-Hans" }));
 		}
 
 		[Fact]

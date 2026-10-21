@@ -20,20 +20,21 @@ namespace ComicRack.Mac.Views
 		{
 			InitializeComponent();
 			ApplyTexts();
-			Arrange.Click += (sender, e) => Arrange.ShowDropDown();
-			Arrange.DropDown = BuildSortMenu();
-			Arrange.DropDownOpening += (sender, e) => CheckSortItem();
+			// The button flips the sort order (tbbSort_ButtonClick); only the arrow opens the menu (tbbSort_DropDownOpening)
+			ArrangeSplit.Click += (sender, e) => model?.Browser.FlipSortOrder();
+			ArrangeSplit.DropDown = BuildSortMenu();
+			ArrangeSplit.DropDownOpening += (sender, e) => CheckSortItem();
 			PropertyChanged += OnWindowPropertyChanged;
 			DataContextChanged += (sender, e) => Attach(DataContext as MainViewModel);
 		}
 
-		private CrSplitButton Arrange => this.FindControl<CrSplitButton>("ArrangeButton");
+		private CrSplitButton ArrangeSplit => this.FindControl<CrSplitButton>("ArrangeButton");
 
 		/// <summary>The labels and tool tips of the toolbar, as the original names them (ComicBrowserControl.xml, MainForm.xml, PreferencesDialog.xml).</summary>
 		private void ApplyTexts()
 		{
 			ToolTip.SetTip(this.FindControl<CrToolButton>("SidebarButton"), UiText.Get("ComicBrowserControl", "tbSidebar", "Sidebar"));
-			ToolTip.SetTip(Arrange, UiText.Get("ComicBrowserControl", "tbbSort", "Arrange"));
+			ToolTip.SetTip(ArrangeSplit, UiText.Get("ComicBrowserControl", "tbbSort", "Arrange"));
 			// The buttons of the other tasks: icon, text and tool tip are the original's already, the feature enables them (full-port.md P5.4).
 			Label("BrowsePreviousButton", "btBrowsePrev", "Previous", false);
 			Label("BrowseNextButton", "btBrowseNext", "Next", false);
@@ -63,7 +64,7 @@ namespace ComicRack.Mac.Views
 		/// <summary>Cmd+F (GK.01, <c>ComicBrowserControl.FocusQuickSearch</c>): the keyboard focus goes to the quick search.</summary>
 		public void FocusQuickSearch() => this.FindControl<CrSearchBox>("SearchBox").FocusBox();
 
-		// The sort menu of the Arrange button: the choices of the MVP sort, one of them checked.
+		// The sort menu of the Arrange button: the choices of the MVP sort, one of them checked. Choosing the sort the list has flips its order (ArrangeMenuItemClicked).
 		private Avalonia.Controls.Primitives.FlyoutBase BuildSortMenu()
 		{
 			var flyout = new MenuFlyout();
@@ -74,10 +75,7 @@ namespace ComicRack.Mac.Views
 				var item = new MenuItem { Header = names[i], ToggleType = MenuItemToggleType.Radio, GroupName = "arrange" };
 				item.Click += (sender, e) =>
 				{
-					if (model != null)
-					{
-						model.Browser.SortIndex = index;
-					}
+					model?.Browser.ArrangeBy(index);
 				};
 				sortItems.Add(item);
 				flyout.Items.Add(item);

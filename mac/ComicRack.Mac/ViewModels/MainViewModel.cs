@@ -207,6 +207,7 @@ namespace ComicRack.Mac.ViewModels
 			Sidebar.Width = SidebarViewModel.ClampWidth(saved.SidebarWidth);
 			Browser.ThumbnailSize = Math.Clamp(saved.ThumbnailSize, BrowserViewModel.MinThumbnailSize, BrowserViewModel.MaxThumbnailSize);
 			Browser.SortIndex = Enum.TryParse(saved.SortBy, out BookSort sort) && Enum.IsDefined(typeof(BookSort), sort) ? (int)sort : 0;
+			Browser.SortDescending = saved.SortDescending;
 			Browser.ThumbnailOptions.Bind(saved);
 			Sidebar.PropertyChanged += (sender, e) =>
 			{
@@ -228,6 +229,10 @@ namespace ComicRack.Mac.ViewModels
 				else if (e.PropertyName == nameof(BrowserViewModel.SortIndex))
 				{
 					saved.SortBy = Browser.Sort.ToString();
+				}
+				else if (e.PropertyName == nameof(BrowserViewModel.SortDescending))
+				{
+					saved.SortDescending = Browser.SortDescending;
 				}
 			};
 		}
@@ -729,6 +734,10 @@ namespace ComicRack.Mac.ViewModels
 
 		[RelayCommand]
 		private void About() => shell.ShowAbout();
+
+		/// <summary>Settings (the original's Preferences, Ctrl+F9; ME.16): the keys Cmd+, and Cmd+F9 reach it. The dialog arrives with P5.22a.</summary>
+		[RelayCommand]
+		private void ShowSettings() => NotYet(UiText.Get("MacOnly", "Settings", "Settings…"), "P5.22a");
 
 		private void NotYet(string what, string task)
 		{

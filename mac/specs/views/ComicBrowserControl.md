@@ -8,11 +8,11 @@ Mac view: the browser toolbar and book area of `ComicRack.Mac.Views.MainWindow` 
 ## 2. Layout
 ```
 toolStrip 25 high, left to right:
-  tbSidebar | btBrowsePrev btBrowseNext | --- | tbbView(split) tbbGroup(split) tbbStack(split) tbbSort "Arrange"(split) | tsQuickSearch 130 x 24 | tsListLayouts | --- | tbbDuplicateList | --- | tbUndo tbRedo
+  tbSidebar | btBrowsePrev btBrowseNext | --- | tbbView(split) tbbGroup(split) tbbStack(split) tbbSort "Arrange"(split) | tsListLayouts | --- | tbbDuplicateList | --- | tbUndo tbRedo | ... | tsQuickSearch 130 x 24 (Alignment Right, Overflow Never, margin 0,1,1,0) | overflow button (16 wide, only when the strip is too narrow; LayoutStyle HorizontalStackWithOverflow)
 openStackPanel 39 (hidden), searchBrowserContainer 160 (P5.15b), displayOptionPanel 39 (hidden)
 browserContainer: itemView (the book list) with lvGroupHeaders
 ```
-Mac since P5.4: the whole strip in this order (Sidebar and Arrange work, quick search filters; the other buttons are present and disabled until their task); the book grid below.
+Mac since P5.4: the whole strip (Sidebar and Arrange work, quick search filters; the other buttons are present and disabled until their task); the book grid below. Corrected by RV8: the quick search is at the right end and the strip overflows (`CrToolBar` with `CrToolBar.Alignment` and `CrToolBar.Overflow`, `ToolBarLayout`); the Arrange button flips the order on a click (`tbbSort_ButtonClick`) and its arrow opens the menu.
 
 ## 3. Controls
 | Control | TR key | English | Mac in P5.R1 | Task |

@@ -705,6 +705,7 @@ namespace ComicRack.Mac.Host
 		private bool sidebarVisible = true;
 		private double thumbnailSize = DefaultThumbnailSize;
 		private string sortBy = DefaultSortBy;
+		private bool sortDescending;
 		private string readerFit = DefaultReaderFit;
 		private string readerLayout = DefaultReaderLayout;
 		private bool rightToLeftDefault;
@@ -771,6 +772,15 @@ namespace ComicRack.Mac.Host
 		{
 			get { return sortBy; }
 			set { Set(ref sortBy, value); }
+		}
+
+		/// <summary>The sort of the grid runs from the end (the Arrange button flips it, <c>ItemSortOrder</c> Descending).</summary>
+		[MacOnly]
+		[DefaultValue(false)]
+		public bool SortDescending
+		{
+			get { return sortDescending; }
+			set { Set(ref sortDescending, value); }
 		}
 
 		[MacOnly]

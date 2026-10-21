@@ -48,7 +48,7 @@ namespace ComicRack.Mac.Platform
 		}
 	}
 
-	/// <summary>The outcome of an alert: the 0-based index of the pressed button and the state of the suppression check box.</summary>
+	/// <summary>The outcome of an alert: the 0-based index of the pressed button (-1: the alert ended without one and has no cancel button) and the state of the suppression check box.</summary>
 	public sealed class MacAlertResult
 	{
 		public MacAlertResult(int buttonIndex, bool suppressed)
@@ -94,7 +94,12 @@ namespace ComicRack.Mac.Platform
 			{
 				throw new ArgumentNullException(nameof(options));
 			}
-			if (UseNative && NativeSupported && Dispatcher.UIThread.CheckAccess())
+			if (!Dispatcher.UIThread.CheckAccess())
+			{
+				// the system alert and the window both belong to the UI thread: a caller on a worker is moved there (the result comes back to the caller)
+				return await Dispatcher.UIThread.InvokeAsync(() => ShowAsync(owner, options));
+			}
+			if (UseNative && NativeSupported)
 			{
 				return ShowNative(options);
 			}
@@ -114,37 +119,61 @@ namespace ComicRack.Mac.Platform
 		/// <summary>The system alert. UI thread only; blocks until a button is pressed.</summary>
 		public static MacAlertResult ShowNative(MacAlertOptions o)
 		{
-			IntPtr alert = ObjC.Call(ObjC.Call(ObjC.Class("NSAlert"), "alloc"), "init");
-			try
+			// the strings, the button list and the suppression button are autoreleased: the pool goes when the alert is gone
+			using (ObjC.AutoreleasePool())
 			{
-				ObjC.Call(alert, "setMessageText:", ObjC.NSString(o.Message));
-				ObjC.Call(alert, "setInformativeText:", ObjC.NSString(o.Informative));
-				ObjC.Call(alert, "setAlertStyle:", (long)o.Style);
-				foreach (string title in o.Buttons)
+				IntPtr alert = ObjC.Call(ObjC.Call(ObjC.Class("NSAlert"), "alloc"), "init");
+				try
 				{
-					ObjC.Call(alert, "addButtonWithTitle:", ObjC.NSString(title));
+					ObjC.Call(alert, "setMessageText:", ObjC.NSString(o.Message));
+					ObjC.Call(alert, "setInformativeText:", ObjC.NSString(o.Informative));
+					ObjC.Call(alert, "setAlertStyle:", (long)o.Style);
+					foreach (string title in o.Buttons)
+					{
+						ObjC.Call(alert, "addButtonWithTitle:", ObjC.NSString(title));
+					}
+					if (o.CancelIndex >= 0 && o.CancelIndex < o.Buttons.Count)
+					{
+						// Esc presses the cancel button even when its (translated) title is not "Cancel"
+						IntPtr button = ObjC.Call(ObjC.Call(alert, "buttons"), "objectAtIndex:", (long)o.CancelIndex);
+						ObjC.Call(button, "setKeyEquivalent:", ObjC.NSString("\u001b"));
+					}
+					IntPtr suppression = IntPtr.Zero;
+					if (!string.IsNullOrEmpty(o.SuppressionText))
+					{
+						ObjC.CallBool(alert, "setShowsSuppressionButton:", true);
+						suppression = ObjC.Call(alert, "suppressionButton");
+						ObjC.Call(suppression, "setTitle:", ObjC.NSString(o.SuppressionText));
+					}
+					long response = ObjC.CallReturnsLong(alert, "runModal");
+					bool suppressed = suppression != IntPtr.Zero && ObjC.CallReturnsLong(suppression, "state") == 1;
+					return new MacAlertResult(ButtonOf(response, o), suppressed);
 				}
-				if (o.CancelIndex >= 0 && o.CancelIndex < o.Buttons.Count)
+				finally
 				{
-					// Esc presses the cancel button even when its (translated) title is not "Cancel"
-					IntPtr button = ObjC.Call(ObjC.Call(alert, "buttons"), "objectAtIndex:", (long)o.CancelIndex);
-					ObjC.Call(button, "setKeyEquivalent:", ObjC.NSString("\u001b"));
+					ObjC.Call(alert, "release");
 				}
-				IntPtr suppression = IntPtr.Zero;
-				if (!string.IsNullOrEmpty(o.SuppressionText))
-				{
-					ObjC.CallBool(alert, "setShowsSuppressionButton:", true);
-					suppression = ObjC.Call(alert, "suppressionButton");
-					ObjC.Call(suppression, "setTitle:", ObjC.NSString(o.SuppressionText));
-				}
-				long response = ObjC.CallReturnsLong(alert, "runModal");
-				bool suppressed = suppression != IntPtr.Zero && ObjC.CallReturnsLong(suppression, "state") == 1;
-				return new MacAlertResult((int)Math.Max(0, response - FirstButtonReturn), suppressed);
 			}
-			finally
+		}
+
+		/// <summary><c>NSModalResponseStop</c>: the modal session was ended by the application (<c>stopModal</c>), no button was pressed.</summary>
+		public const long ModalResponseStop = -1000;
+
+		/// <summary><c>NSModalResponseAbort</c>: the modal session was aborted (<c>abortModal</c>, the application is quitting), no button was pressed.</summary>
+		public const long ModalResponseAbort = -1001;
+
+		/// <summary>
+		/// The 0-based button for a response of <c>runModal</c>. A button gives <c>NSAlertFirstButtonReturn</c> (1000) plus its position. Stop, Abort and
+		/// any other value are no button: they answer as the cancel button (<see cref="MacAlertOptions.CancelIndex"/>), or -1 when the alert has none, so
+		/// that an ended session never counts as a press of the default (first) button.
+		/// </summary>
+		public static int ButtonOf(long response, MacAlertOptions options)
+		{
+			if (response >= FirstButtonReturn && response - FirstButtonReturn < options.Buttons.Count)
 			{
-				ObjC.Call(alert, "release");
+				return (int)(response - FirstButtonReturn);
 			}
+			return options.CancelIndex >= 0 && options.CancelIndex < options.Buttons.Count ? options.CancelIndex : -1;
 		}
 	}
 }

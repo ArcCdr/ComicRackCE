@@ -83,6 +83,7 @@
       <ControlTheme x:Key="CrSelectionRectangle.Original" TargetType="c:CrSelectionRectangle" />
 
       <!-- Reader overlays: they draw the glass pictures and the text themselves (CrTextOverlay, CrPartOverlay, CrNavigationOverlay). -->
+      <ControlTheme x:Key="CrReaderPage.Original" TargetType="c:CrReaderPage" />
       <ControlTheme x:Key="CrTextOverlay.Original" TargetType="c:CrTextOverlay" />
       <ControlTheme x:Key="CrPartOverlay.Original" TargetType="c:CrPartOverlay" />
       <ControlTheme x:Key="CrNavigationOverlay.Original" TargetType="c:CrNavigationOverlay" />

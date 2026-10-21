@@ -83,6 +83,8 @@ namespace ComicRack.Mac.Tests.Theme
 			Assert.Equal(new[] { "Avalonia.Skia" }, ChromeLint.ForbiddenUsings("using System;\nusing Avalonia.Skia;\nusing Avalonia.Controls;", ChromeLint.ForbiddenInViews));
 			Assert.Equal(new[] { "ComicRack.Mac.Platform" }, ChromeLint.ForbiddenUsings("using ComicRack.Mac.Platform;\nusing ComicRack.Mac.Controls;", ChromeLint.ForbiddenInViews));
 			Assert.Empty(ChromeLint.ForbiddenUsings("using Avalonia.Platform.Storage;", ChromeLint.ForbiddenInViews));
+			// RV8: a view draws nothing and holds no brush, colour or geometry type of its own, so Avalonia.Media is not for it (the page drawing is CrReaderPage)
+			Assert.Equal(new[] { "Avalonia.Media", "Avalonia.Media.Imaging" }, ChromeLint.ForbiddenUsings("using Avalonia.Media;\nusing Avalonia.Media.Imaging;\nusing Avalonia.Input;", ChromeLint.ForbiddenInViews));
 			Assert.Equal(new[] { "Avalonia.Platform" }, ChromeLint.ForbiddenUsings("using Avalonia.Platform;", ChromeLint.ForbiddenInViews));
 			Assert.Equal(new[] { "Avalonia.Media", "Avalonia.Controls", "Avalonia.Controls.Primitives" }, ChromeLint.ForbiddenUsings("using Avalonia;\nusing Avalonia.Media;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Primitives;\nusing Avalonia.Input;", ChromeLint.ForbiddenInViewModels));
 			Assert.Empty(ChromeLint.ForbiddenUsings("// using Avalonia.Media;", ChromeLint.ForbiddenInViewModels));

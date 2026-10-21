@@ -143,12 +143,18 @@ namespace ComicRack.Mac.Tests.Browser
 					Assert.Same(selected, h.Model.SelectedItem.Book);
 					Assert.True(h.Model.SelectedIndex > 1500, "the selected book moved down with the new books before it");
 					Assert.Equal(offset, h.Grid.Scroller.Offset.Y, 1);
-					BookCell cell = h.Grid.CellAt(h.Model.SelectedIndex);
-					if (cell != null)
-					{
-						Assert.True(cell.IsSelectedForTest);
-					}
 					Assert.True(h.Grid.BoundCells().Count(c => c.IsSelectedForTest) <= 1);
+					// the selected book moved down with the new books before it, so it may be out of the realized rows: scroll to it, look at its cell, and put the view back
+					int row = h.Model.SelectedIndex / h.Grid.Columns;
+					h.ScrollToRow(Math.Max(0, row - 2));
+					h.Layout();
+					BookCell cell = h.Grid.CellAt(h.Model.SelectedIndex);
+					Assert.NotNull(cell);
+					Assert.True(cell.IsSelectedForTest);
+					Assert.Same(selected, cell.Item.Book);
+					h.ScrollToRow(1500 / h.Grid.Columns - 2);
+					h.Layout();
+					Assert.Equal(offset, h.Grid.Scroller.Offset.Y, 1);
 
 					// the selected book is removed: no selection, same place
 					books.Remove(selected);
@@ -239,9 +245,17 @@ namespace ComicRack.Mac.Tests.Browser
 					// a book opened later takes the last-opened marker once its change is reported
 					open.Clear();
 					books[1].OpenedTime = new DateTime(2026, 9, 1);
+					int raised = 0;
+					h.Model.ThumbnailOptions.Changed += (s, e) => raised++;
 					h.Model.NotifyBooksChanged(new[] { books[1] });
 					Assert.Same(books[1], h.Model.LastOpenedBook);
-					h.Model.NotifyMarkersChanged();
+					Assert.Equal(1, raised); // the marker moved through SetLastOpened, which tells every cell: the old holder loses its icon without a call of the test
+					// a book that is not in the shown list never takes the marker
+					ComicBook elsewhere = Book("elsewhere", 1);
+					elsewhere.OpenedTime = new DateTime(2026, 12, 1);
+					h.Model.NotifyBooksChanged(new[] { elsewhere });
+					Assert.Same(books[1], h.Model.LastOpenedBook);
+					Assert.Equal(1, raised);
 					Assert.Contains("LastMarker", h.Grid.BoundCells().Single(c => c.Item.Book == books[1]).Badges.StateIcons);
 					Assert.DoesNotContain("LastMarker", cell4.Badges.StateIcons);
 				}

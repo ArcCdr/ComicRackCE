@@ -40,7 +40,7 @@ namespace ComicRack.Mac.ViewModels
 	/// <para><b>Ownership.</b> The scene holds one reference of each picture; replacing it releases them. The pictures are shared with
 	/// the page cache, so nothing is copied and nothing is freed while a frame still draws it.</para>
 	/// </summary>
-	public sealed partial class ReaderViewModel : ObservableObject, IDisposable
+	public sealed partial class ReaderViewModel : ObservableObject, IReaderPageSource, IDisposable
 	{
 		private readonly IReadingSession session;
 		private readonly ReaderOptions options;
@@ -245,6 +245,8 @@ namespace ComicRack.Mac.ViewModels
 				return new ReaderPartInfo(content, pages, window.Intersect(new Rect(content)), a.MaxScroll > 0.5 || a.MaxScrollX > 0.5);
 			}
 		}
+
+		bool IReaderPageSource.RealisticPages => options.RealisticPages;
 
 		/// <summary>Where the pages of the scene are placed right now.</summary>
 		public PageArrangement Arrangement => ArrangeFor(viewport);
@@ -1125,7 +1127,7 @@ namespace ComicRack.Mac.ViewModels
 		/// arrows scroll; F, F11 and Ctrl+Cmd+F toggle full screen; T cycles the page layout; 7, 8, 9 and 0 choose one page, two pages, two pages
 		/// (adaptive) and right to left, 2, 3 and 5 Fit All, Fit Width and Fit Height; Q quits the application. With Cmd: B, P, N and E first,
 		/// previous, next and last page (the Read menu), 2, 3, 5, 7, 8, 9 and 0 as the Display menu says, Cmd+= and Cmd+- zoom, Cmd+W closes.
-		/// Esc leaves full screen first and then closes the reader. Returns true if the key was used.
+		/// Option+Shift+0 to 5 rate the book (My Rating). Esc leaves full screen first and then closes the reader. Returns true if the key was used.
 		/// </summary>
 		public bool HandleKey(Key key, KeyModifiers modifiers)
 		{
@@ -1144,6 +1146,12 @@ namespace ComicRack.Mac.ViewModels
 			}
 			if (alt)
 			{
+				// Option+Shift+0 to 5: My Rating None to 5 stars (the shortcuts of cmRate0 to cmRate5; Alt+Shift+0..5 of the original)
+				if (shift && key >= Key.D0 && key <= Key.D5)
+				{
+					SetRating(key - Key.D0);
+					return true;
+				}
 				// Option+Left and Option+Right: Previous Page and Next Page (Alt+Left and Alt+Right of the original)
 				switch (key)
 				{
@@ -1244,22 +1252,48 @@ namespace ComicRack.Mac.ViewModels
 						SpaceForward();
 					}
 					return true;
+				// Home, End and the arrows are mapped without Shift only: the original's keyboard map matches the key and its modifiers exactly
+				// (KeyboardCommand.Handles), and has no Shift+Home, Shift+End or Shift+arrow command.
 				case Key.Home:
+					if (shift)
+					{
+						return false;
+					}
 					ScrollToPageEdge(end: false);
 					return true;
 				case Key.End:
+					if (shift)
+					{
+						return false;
+					}
 					ScrollToPageEdge(end: true);
 					return true;
 				case Key.Down:
+					if (shift)
+					{
+						return false;
+					}
 					ScrollBy(options.ArrowScrollStep);
 					return true;
 				case Key.Up:
+					if (shift)
+					{
+						return false;
+					}
 					ScrollBy(-options.ArrowScrollStep);
 					return true;
 				case Key.Right:
+					if (shift)
+					{
+						return false;
+					}
 					ScrollSideways(options.ArrowScrollStep);
 					return true;
 				case Key.Left:
+					if (shift)
+					{
+						return false;
+					}
 					ScrollSideways(-options.ArrowScrollStep);
 					return true;
 				case Key.Escape:

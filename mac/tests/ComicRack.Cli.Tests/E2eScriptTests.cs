@@ -56,14 +56,15 @@ namespace ComicRack.Cli.Tests
 		}
 
 		[Fact]
-		public void The_suite_has_the_cases_of_the_task()
+		public void The_suite_has_exactly_the_listed_cases_so_a_new_case_must_be_listed_here()
 		{
-			string[] expected = { "launch-quit", "menu-structure", "open-folder", "import", "grid-keys", "reader-keys", "fullscreen", "overlay", "quit-during-scan", "pdf-cb7", "chrome-gallery", "grid-look", "reader-look", "state-restore", "refresh-after-read" };
-			var names = CaseFiles().Select(f => Path.GetFileNameWithoutExtension(f)).ToArray();
-			foreach (string n in expected)
+			string[] expected =
 			{
-				Assert.Contains(n, names);
-			}
+				"chrome", "chrome-gallery", "fullscreen", "grid-keys", "grid-look", "grid-marquee", "grid-multiselect", "hidpi", "import", "launch-quit",
+				"menu-structure", "open-folder", "overlay", "pdf-cb7", "quit-during-scan", "reader-keys", "reader-look", "refresh-after-read", "state-restore",
+			};
+			string[] names = CaseFiles().Select(f => Path.GetFileNameWithoutExtension(f)).OrderBy(n => n, StringComparer.Ordinal).ToArray();
+			Assert.Equal(expected.OrderBy(n => n, StringComparer.Ordinal).ToArray(), names);
 		}
 
 		[Fact]

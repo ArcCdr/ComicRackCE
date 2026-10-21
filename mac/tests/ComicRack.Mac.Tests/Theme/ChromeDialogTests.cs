@@ -255,6 +255,74 @@ namespace ComicRack.Mac.Tests.Theme
 			}
 		}
 
+		/// <summary>RV8: <c>runModal</c> answers 1000 + the button, or Stop (-1000) / Abort (-1001) when the session was ended from outside: that is no button, and never the first one.</summary>
+		[Fact]
+		public void A_response_of_the_system_alert_is_a_button_and_Stop_or_Abort_answers_as_the_cancel_button()
+		{
+			var three = new MacAlertOptions { Buttons = new[] { "Replace", "Cancel", "Skip" }, CancelIndex = 1 };
+			Assert.Equal(0, MacAlert.ButtonOf(1000, three));
+			Assert.Equal(1, MacAlert.ButtonOf(1001, three));
+			Assert.Equal(2, MacAlert.ButtonOf(1002, three));
+			Assert.Equal(1, MacAlert.ButtonOf(MacAlert.ModalResponseStop, three));
+			Assert.Equal(1, MacAlert.ButtonOf(MacAlert.ModalResponseAbort, three));
+			Assert.Equal(1, MacAlert.ButtonOf(0, three)); // NSModalResponseCancel
+			Assert.Equal(1, MacAlert.ButtonOf(1003, three)); // a response past the last button
+			var withoutCancel = new MacAlertOptions { Buttons = new[] { "Delete", "Keep" } };
+			Assert.Equal(-1, MacAlert.ButtonOf(MacAlert.ModalResponseStop, withoutCancel));
+			Assert.Equal(-1, MacAlert.ButtonOf(MacAlert.ModalResponseAbort, withoutCancel));
+			Assert.Equal(1, MacAlert.ButtonOf(1001, withoutCancel));
+		}
+
+		[Fact]
+		public void An_autorelease_pool_can_be_nested_and_disposed_twice_and_the_strings_made_inside_it_are_read_before_it_goes()
+		{
+			if (!OperatingSystem.IsMacOS())
+			{
+				return;
+			}
+			IntPtr text;
+			using (IDisposable outer = ObjC.AutoreleasePool())
+			{
+				using (IDisposable inner = ObjC.AutoreleasePool())
+				{
+					text = ObjC.NSString("Abbruch");
+					Assert.Equal("Abbruch", ObjC.ToManaged(text));
+					inner.Dispose();
+				}
+				Assert.Equal("Abbruch", ObjC.ToManaged(ObjC.NSString("Abbruch")));
+			}
+		}
+
+		/// <summary>An alert asked for from a worker thread is shown on the UI thread (the window and the system alert both belong to it).</summary>
+		[Fact]
+		public async Task An_alert_asked_for_from_a_worker_thread_is_shown_on_the_UI_thread_and_the_answer_comes_back()
+		{
+			bool before = MacAlert.UseNative;
+			MacAlert.UseNative = false;
+			try
+			{
+				MacAlertResult result = await InDialog(async owner =>
+				{
+					Task<MacAlertResult> task = Task.Run(() => MacAlert.ShowAsync(owner, new MacAlertOptions { Message = "From a worker", Buttons = new[] { "OK", "Cancel" }, CancelIndex = 1 }));
+					for (int i = 0; i < 2000 && !owner.OwnedWindows.OfType<AlertWindow>().Any(); i++)
+					{
+						Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+						await Task.Delay(5);
+					}
+					Settle(owner);
+					AlertWindow window = owner.OwnedWindows.OfType<AlertWindow>().Single();
+					Assert.True(Avalonia.Threading.Dispatcher.UIThread.CheckAccess());
+					window.AlertButtons[1].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+					return await task;
+				});
+				Assert.Equal(1, result.ButtonIndex);
+			}
+			finally
+			{
+				MacAlert.UseNative = before;
+			}
+		}
+
 		// ---- window layer ----
 
 		[Fact]

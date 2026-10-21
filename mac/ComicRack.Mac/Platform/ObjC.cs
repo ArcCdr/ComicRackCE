@@ -27,6 +27,12 @@ namespace ComicRack.Mac.Platform
 		[DllImport(Runtime)]
 		private static extern IntPtr class_getClassMethod(IntPtr cls, IntPtr selector);
 
+		[DllImport(Runtime)]
+		private static extern IntPtr objc_autoreleasePoolPush();
+
+		[DllImport(Runtime)]
+		private static extern void objc_autoreleasePoolPop(IntPtr pool);
+
 		[DllImport("libSystem.dylib")]
 		private static extern IntPtr dlopen(string path, int mode);
 
@@ -72,6 +78,29 @@ namespace ComicRack.Mac.Platform
 		}
 
 		public static IntPtr Selector(string name) => sel_registerName(name);
+
+		/// <summary>
+		/// An autorelease pool for the objects that the calls in a <c>using</c> block make and autorelease (strings from <see cref="NSString"/>, the buttons
+		/// of an alert). Dispose it on the thread that made it. Where there is no Objective-C runtime it does nothing.
+		/// </summary>
+		public static IDisposable AutoreleasePool() => new Pool(IsAvailable ? objc_autoreleasePoolPush() : IntPtr.Zero);
+
+		private sealed class Pool : IDisposable
+		{
+			private IntPtr handle;
+
+			public Pool(IntPtr handle) => this.handle = handle;
+
+			public void Dispose()
+			{
+				IntPtr h = handle;
+				handle = IntPtr.Zero;
+				if (h != IntPtr.Zero)
+				{
+					objc_autoreleasePoolPop(h);
+				}
+			}
+		}
 
 		/// <summary>True if the class has an instance method with the selector (the check that needs no object, hence no window).</summary>
 		public static bool HasInstanceMethod(string className, string selector)

@@ -187,13 +187,14 @@ namespace ComicRack.Mac.Tests.Settings
 		[Fact]
 		public void The_library_view_starts_from_the_saved_state_and_writes_every_change_back()
 		{
-			var saved = new AppPreferences { SidebarVisible = false, SidebarWidth = 310, ThumbnailSize = 144, SortBy = "Title", ShowToolTips = true, UpdateComicFiles = true };
+			var saved = new AppPreferences { SidebarVisible = false, SidebarWidth = 310, ThumbnailSize = 144, SortBy = "Title", SortDescending = true, ShowToolTips = true, UpdateComicFiles = true };
 			var service = new HostService(AppOptions.Parse(new[] { "--data-dir", Path.Combine(Path.GetTempPath(), "crmac-never-started") }));
 			var vm = new MainViewModel(new NullShell(), service, new FakeDialogs(), null, saved);
 			Assert.False(vm.Sidebar.IsVisible);
 			Assert.Equal(310, vm.Sidebar.Width);
 			Assert.Equal(144, vm.Browser.ThumbnailSize);
 			Assert.Equal(BookSort.Title, vm.Browser.Sort);
+			Assert.True(vm.Browser.SortDescending);
 			Assert.True(vm.Browser.ThumbnailOptions.ShowToolTips);
 			Assert.True(vm.Browser.ThumbnailOptions.UpdateComicFiles);
 
@@ -201,11 +202,13 @@ namespace ComicRack.Mac.Tests.Settings
 			vm.Sidebar.Width = 280;
 			vm.Browser.ThumbnailSize = 220;
 			vm.Browser.SortIndex = (int)BookSort.Added;
+			vm.Browser.SortDescending = true;
 			vm.Browser.ThumbnailOptions.DogEarThumbnails = false;
 			Assert.True(saved.SidebarVisible);
 			Assert.Equal(280, saved.SidebarWidth);
 			Assert.Equal(220, saved.ThumbnailSize);
 			Assert.Equal("Added", saved.SortBy);
+			Assert.True(saved.SortDescending);
 			Assert.False(saved.DogEarThumbnails);
 
 			// the other way: the preferences change the browser's options (Preferences > Behavior, P5.22a)
@@ -235,8 +238,15 @@ namespace ComicRack.Mac.Tests.Settings
 			var vm = new MainViewModel(new NullShell(), service, new FakeDialogs());
 			vm.Sidebar.Width = 400;
 			vm.Browser.ThumbnailSize = 100;
-			Assert.Equal(100, vm.Browser.ThumbnailSize);
+			vm.Browser.SortDescending = true;
+			Assert.Equal(100, vm.Browser.ThumbnailSize); // the view model works with what it is given
 			Assert.Null(vm.LastFolder);
+			// but nothing is kept: a second view model starts from the defaults, not from what the first one was given
+			var other = new MainViewModel(new NullShell(), service, new FakeDialogs());
+			Assert.Equal(BrowserViewModel.DefaultThumbnailSize, other.Browser.ThumbnailSize);
+			Assert.Equal(AppPreferences.DefaultSidebarWidth, other.Sidebar.Width);
+			Assert.False(other.Browser.SortDescending);
+			Assert.Equal(BookSort.Series, other.Browser.Sort);
 		}
 
 		[Fact]

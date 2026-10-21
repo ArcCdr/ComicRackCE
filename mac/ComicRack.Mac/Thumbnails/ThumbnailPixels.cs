@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using ComicRack.Mac.Controls;
 using SkiaSharp;
 
 namespace ComicRack.Mac.Thumbnails
@@ -63,12 +64,18 @@ namespace ComicRack.Mac.Thumbnails
 			}
 		}
 
+		private static SKColor Skia(uint argb) => argb; // SKColor converts from 0xAARRGGBB
+
 		/// <summary>
-		/// The picture shown when a thumbnail cannot be made (a missing or damaged file): a light grey 2:3 tile with a cross. No text,
+		/// The picture shown when a thumbnail cannot be made (a missing or damaged file): a 2:3 tile with a cross in the colours of the current appearance (light grey in the light one). No text,
 		/// so it does not depend on a font.
 		/// </summary>
-		public static PixelBlock CreatePlaceholder(int height)
+		public static PixelBlock CreatePlaceholder(int height) => CreatePlaceholder(height, ThumbnailPlaceholderLook.Current);
+
+		/// <summary>The placeholder in the given colours (the chrome layer's <see cref="ThumbnailPlaceholderLook"/> for the light or the dark appearance).</summary>
+		public static PixelBlock CreatePlaceholder(int height, ThumbnailPlaceholderLook look)
 		{
+			look = look ?? ThumbnailPlaceholderLook.Current;
 			height = Math.Max(8, height);
 			int width = Math.Max(6, height * 2 / 3);
 			var bitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Opaque));
@@ -77,16 +84,16 @@ namespace ComicRack.Mac.Thumbnails
 				using (var canvas = new SKCanvas(bitmap))
 				using (var paint = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke })
 				{
-					canvas.Clear(new SKColor(0xDC, 0xDC, 0xDC));
+					canvas.Clear(Skia(look.Tile));
 					float line = Math.Max(1f, height / 80f);
 					paint.StrokeWidth = line;
-					paint.Color = new SKColor(0xA8, 0xA8, 0xA8);
+					paint.Color = Skia(look.Frame);
 					canvas.DrawRect(line / 2, line / 2, width - line, height - line, paint);
 					float inset = width * 0.22f;
 					float top = (height - (width - 2 * inset)) / 2;
 					paint.StrokeWidth = Math.Max(1.5f, height / 45f);
 					paint.StrokeCap = SKStrokeCap.Round;
-					paint.Color = new SKColor(0x9C, 0x9C, 0x9C);
+					paint.Color = Skia(look.Cross);
 					canvas.DrawLine(inset, top, width - inset, top + (width - 2 * inset), paint);
 					canvas.DrawLine(width - inset, top, inset, top + (width - 2 * inset), paint);
 				}

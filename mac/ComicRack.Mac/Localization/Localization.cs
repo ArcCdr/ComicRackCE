@@ -64,7 +64,7 @@ namespace ComicRack.Mac
 
 		/// <summary>
 		/// The culture to use for one language tag (<c>fr-BE</c>, <c>zh_Hans_CN</c>, <c>pt</c>): a folder name, <see cref="English"/>, or null if the app has
-		/// nothing for it. Tried in this order: the tag as it is, the tag with subtags removed from the right (<c>zh-Hans-CN</c>, <c>zh-Hans</c>, <c>zh</c>),
+		/// nothing for it. Tried in this order: the tag as it is (any <c>zh-Hans*</c> tag is <c>zh-CN</c>), the tag with subtags removed from the right (<c>zh-Hant-TW</c>, <c>zh-Hant</c>, <c>zh</c>),
 		/// English for any <c>en</c> tag, then the first folder of the same language (<c>pt-PT</c> gives <c>pt-BR</c>, <c>nl-NL</c> gives <c>nl-BE</c>).
 		/// </summary>
 		public static string Match(string tag, IReadOnlyCollection<string> available)
@@ -78,6 +78,15 @@ namespace ComicRack.Mac
 			if (parts.Length == 0)
 			{
 				return null;
+			}
+			// Simplified Chinese (zh-Hans, zh-Hans-CN, zh-Hans-SG ...) is the zh-CN translation: it is the complete one (zh-Hans has fewer files)
+			if (parts.Length >= 2 && string.Equals(parts[0], "zh", StringComparison.OrdinalIgnoreCase) && string.Equals(parts[1], "Hans", StringComparison.OrdinalIgnoreCase))
+			{
+				string simplified = available.FirstOrDefault(a => string.Equals(a, "zh-CN", StringComparison.OrdinalIgnoreCase));
+				if (simplified != null)
+				{
+					return simplified;
+				}
 			}
 			for (int length = parts.Length; length >= 1; length--)
 			{

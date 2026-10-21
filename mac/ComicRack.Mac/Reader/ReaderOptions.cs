@@ -21,7 +21,8 @@ namespace ComicRack.Mac.Reader
 			}
 			options.ShowCurrentPageOverlay = preferences.ShowCurrentPageOverlay;
 			options.CurrentPageShowsName = preferences.CurrentPageShowsName;
-			options.ShowVisiblePagePartOverlay = preferences.ShowVisiblePagePartOverlay;
+			options.showVisiblePagePartOverlay = preferences.ShowVisiblePagePartOverlay;
+			options.preferences = preferences;
 			options.ShowStatusOverlay = preferences.ShowStatusOverlay;
 			options.ShowNavigationOverlay = preferences.ShowNavigationOverlay;
 			options.NavigationOverlayOnTop = preferences.NavigationOverlayOnTop;
@@ -97,8 +98,26 @@ namespace ComicRack.Mac.Reader
 		/// <summary><c>CurrentPageShowsName</c> (false): the page overlay also shows the names of the page files. Not shown yet (P5.22a).</summary>
 		public bool CurrentPageShowsName { get; set; }
 
-		/// <summary><c>ShowVisiblePagePartOverlay</c> (true): the miniature of the page with the visible part, when the page is larger than the window.</summary>
-		public bool ShowVisiblePagePartOverlay { get; set; } = true;
+		private bool showVisiblePagePartOverlay = true;
+		private AppPreferences preferences;
+
+		/// <summary>
+		/// <c>ShowVisiblePagePartOverlay</c> (true): the miniature of the page with the visible part, when the page is larger than the window. Closing the
+		/// miniature turns it off for good: the value is written back to the preferences (<c>MainForm</c>: <c>VisibleInfoOverlaysChanged</c> sets
+		/// <c>Program.Settings.ShowVisiblePagePartOverlay</c>).
+		/// </summary>
+		public bool ShowVisiblePagePartOverlay
+		{
+			get => showVisiblePagePartOverlay;
+			set
+			{
+				showVisiblePagePartOverlay = value;
+				if (preferences != null)
+				{
+					preferences.ShowVisiblePagePartOverlay = value;
+				}
+			}
+		}
 
 		/// <summary><c>HideVisiblePartOverlayClose</c> (false): the miniature has a close button.</summary>
 		public bool HideVisiblePartOverlayClose { get; set; }

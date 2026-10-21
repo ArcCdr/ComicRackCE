@@ -72,7 +72,7 @@ namespace ComicRack.Mac.Tests.Theme
 		/// <summary>Namespaces that a view (a file of <c>Views/</c>) may not name: the means to draw, style or load things of its own.</summary>
 		public static readonly string[] ForbiddenInViews =
 		{
-			"Avalonia.Styling", "Avalonia.Markup.*", "Avalonia.Skia", "Avalonia.Media.Imaging", "Avalonia.Rendering.*", "Avalonia.Platform", "SkiaSharp",
+			"Avalonia.Styling", "Avalonia.Markup.*", "Avalonia.Skia", "Avalonia.Media.*", "Avalonia.Rendering.*", "Avalonia.Platform", "SkiaSharp",
 			"ComicRack.Mac.Platform",
 		};
 
