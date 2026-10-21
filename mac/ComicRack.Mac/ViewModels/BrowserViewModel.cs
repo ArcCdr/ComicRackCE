@@ -49,6 +49,13 @@ namespace ComicRack.Mac.ViewModels
 		{
 			SummaryText = string.Empty;
 			ThumbnailOptions.MarkerOf = MarkerOf;
+			Selection.Changed += (sender, e) =>
+			{
+				if (!selectionMuted)
+				{
+					OnSelectionChanged();
+				}
+			};
 		}
 
 		/// <summary>Whether a book is open in a reader (the state icon "open"); set by the window that owns the readers, null: none is.</summary>
@@ -116,14 +123,23 @@ namespace ComicRack.Mac.ViewModels
 
 		partial void OnListNameChanged(string value) => UpdateSummary();
 
-		partial void OnSelectedIndexChanged(int value) => UpdateSummary();
-
 		// Writes the status text from the books shown and the selected book (UI thread).
 		private void UpdateSummary()
 		{
-			BookItem selected = SelectedItem;
-			string path = selected?.Book != null && selected.Book.IsLinked ? selected.Book.FilePath : null;
-			SummaryText = SelectionInfo.Build(ListName, shownCount, TotalCount, shownSize, selected == null ? 0 : 1, path, selected?.Book?.FileSize ?? 0);
+			int count = Selection.Count;
+			string path = null;
+			long size = 0;
+			if (count > 0)
+			{
+				size = Selection.SelectedSize();
+				if (count == 1)
+				{
+					// the path of the one selected book (GetBookList(IsLocal | IsNotFileless | Selected).FirstOrDefault())
+					BookItem only = Selection.SelectedItems()[0];
+					path = only.Book != null && only.Book.IsLinked ? only.Book.FilePath : null;
+				}
+			}
+			SummaryText = SelectionInfo.Build(ListName, shownCount, TotalCount, shownSize, count, path, size);
 		}
 
 		/// <summary>How long a typed search waits for the next keystroke before a query starts.</summary>
@@ -151,9 +167,51 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>True while a refresh replaces <see cref="Items"/> and the selection: the view keeps its scroll position and does not scroll to the selected book.</summary>
 		public bool KeepsView { get; private set; }
 
-		/// <summary>Index into <see cref="Items"/>, or -1.</summary>
-		[ObservableProperty]
-		public partial int SelectedIndex { get; set; } = -1;
+		/// <summary>Which books are selected, which one has the focus (P5.3; the rules of the original's <c>ItemView</c>).</summary>
+		public SelectionModel Selection { get; } = new SelectionModel();
+
+		private bool selectionMuted;
+
+		/// <summary>Raised on the UI thread when the selection or the focused book changed (also when a new list was shown).</summary>
+		public event EventHandler SelectionChanged;
+
+		/// <summary>
+		/// Index into <see cref="Items"/> of the focused book (the one Enter opens), or -1. Setting it selects that book alone, as a click does;
+		/// -1 selects nothing.
+		/// </summary>
+		public int SelectedIndex
+		{
+			get => Selection.FocusedIndex;
+			set
+			{
+				if (value < 0)
+				{
+					Selection.Clear();
+				}
+				else
+				{
+					Selection.SelectOnly(value);
+				}
+			}
+		}
+
+		/// <summary>The focused book, or null.</summary>
+		public BookItem SelectedItem => Selection.FocusedItem;
+
+		/// <summary>The Core books that are selected and shown, in the order of the grid (what the commands of the browser work on).</summary>
+		public IReadOnlyList<ComicBook> SelectedBooks => Selection.SelectedBooks();
+
+		/// <summary>Number of selected books that are shown.</summary>
+		public int SelectedCount => Selection.Count;
+
+		private void OnSelectionChanged()
+		{
+			OnPropertyChanged(nameof(SelectedIndex));
+			OnPropertyChanged(nameof(SelectedItem));
+			OnPropertyChanged(nameof(SelectedCount));
+			UpdateSummary();
+			SelectionChanged?.Invoke(this, EventArgs.Empty);
+		}
 
 		/// <summary>
 		/// The status bar text of the browser, as the original writes it (<see cref="SelectionInfo"/>): "Library: 312 Books (14394 filtered) / 1.20 GB -
@@ -188,16 +246,6 @@ namespace ComicRack.Mac.ViewModels
 		/// <summary>Raised on the UI thread when the user opens a book (double click or Enter).</summary>
 		public event EventHandler<BookItem> OpenBookRequested;
 
-		public BookItem SelectedItem
-		{
-			get
-			{
-				BookItem[] items = Items;
-				int i = SelectedIndex;
-				return i >= 0 && i < items.Length ? items[i] : null;
-			}
-		}
-
 		/// <summary>The task of the newest query (completes when its result is applied or it was superseded).</summary>
 		public Task WhenIdle()
 		{
@@ -215,22 +263,6 @@ namespace ComicRack.Mac.ViewModels
 		partial void OnSearchTextChanged(string value) => StartQuery(debounce: true, resetScroll: true);
 
 		partial void OnSortIndexChanged(int value) => StartQuery(debounce: false, resetScroll: true);
-
-		private static int IndexOfBook(BookItem[] items, BookItem wanted)
-		{
-			if (wanted == null)
-			{
-				return -1;
-			}
-			for (int i = 0; i < items.Length; i++)
-			{
-				if (ReferenceEquals(items[i], wanted) || (wanted.Book != null && ReferenceEquals(items[i].Book, wanted.Book)))
-				{
-					return i;
-				}
-			}
-			return -1;
-		}
 
 		/// <summary>Builds the catalog from the Core's books on a worker thread and shows it. A newer load supersedes an older one.</summary>
 		public Task LoadAsync(Func<CancellationToken, BookCatalog> build, bool resetScroll = false)
@@ -280,7 +312,8 @@ namespace ComicRack.Mac.ViewModels
 		{
 			catalog = value ?? BookCatalog.Empty;
 			OnPropertyChanged(nameof(TotalCount));
-			StartQuery(debounce: false, resetScroll: resetScroll, keepView: keepView);
+			// another list forgets the selection (the original makes new items); a refresh of the same list keeps the books that are still there
+			StartQuery(debounce: false, resetScroll: resetScroll, keepView: keepView, newCatalog: true, forgetSelection: !keepView);
 		}
 
 		/// <summary>
@@ -335,16 +368,16 @@ namespace ComicRack.Mac.ViewModels
 			SetCatalog(BookCatalog.Empty);
 		}
 
-		private void StartQuery(bool debounce, bool resetScroll, bool keepView = false)
+		private void StartQuery(bool debounce, bool resetScroll, bool keepView = false, bool newCatalog = false, bool forgetSelection = false)
 		{
 			int mine = Interlocked.Increment(ref version);
 			queryCts.Cancel();
 			queryCts = new CancellationTokenSource();
 			CancellationToken token = queryCts.Token;
-			lastQuery = RunQuery(mine, token, debounce, resetScroll, keepView, catalog, Sort, SearchText, SelectedItem);
+			lastQuery = RunQuery(mine, token, debounce, resetScroll, keepView, newCatalog, forgetSelection, catalog, Sort, SearchText);
 		}
 
-		private async Task RunQuery(int mine, CancellationToken token, bool debounce, bool resetScroll, bool keepView, BookCatalog cat, BookSort sort, string text, BookItem selected)
+		private async Task RunQuery(int mine, CancellationToken token, bool debounce, bool resetScroll, bool keepView, bool newCatalog, bool forgetSelection, BookCatalog cat, BookSort sort, string text)
 		{
 			try
 			{
@@ -353,7 +386,7 @@ namespace ComicRack.Mac.ViewModels
 					await Task.Delay(SearchDelay, token).ConfigureAwait(true);
 				}
 				var sw = Stopwatch.StartNew();
-				(BookItem[] items, int selectedIndex, long size, ComicBook last) = await Task.Run(() =>
+				(BookItem[] items, long size, ComicBook last) = await Task.Run(() =>
 				{
 					BookItem[] result = cat.Query(sort, text, token);
 					long total = 0;
@@ -361,7 +394,7 @@ namespace ComicRack.Mac.ViewModels
 					{
 						total += item.Book?.FileSize ?? 0;
 					}
-					return (result, IndexOfBook(result, selected), total, BookCatalog.LastOpened(result));
+					return (result, total, BookCatalog.LastOpened(result));
 				}, token).ConfigureAwait(true);
 				if (mine != Volatile.Read(ref version))
 				{
@@ -371,19 +404,26 @@ namespace ComicRack.Mac.ViewModels
 				scrollReset |= resetScroll;
 				lastOpened = last;
 				KeepsView = keepView;
+				selectionMuted = true;
 				try
 				{
-					SelectedIndex = -1; // the old index means another book in the new list
+					// the selection follows its books into the new list (a search keeps the ones it hides, a refresh or another list does not)
+					if (forgetSelection)
+					{
+						Selection.Clear();
+					}
+					Selection.SetItems(items, keepHidden: !newCatalog);
 					Items = items;
 					shownCount = items.Length;
 					shownSize = size;
-					SelectedIndex = selectedIndex;
+					selectionMuted = false;
+					OnSelectionChanged(); // while KeepsView still says whether the view may scroll
 				}
 				finally
 				{
 					KeepsView = false;
+					selectionMuted = false;
 				}
-				UpdateSummary();
 			}
 			catch (OperationCanceledException)
 			{
@@ -403,6 +443,28 @@ namespace ComicRack.Mac.ViewModels
 			if (item != null)
 			{
 				OpenBookRequested?.Invoke(this, item);
+			}
+		}
+
+		/// <summary>Select All (<c>miSelectAll</c>, Cmd+A): every book of the shown list.</summary>
+		[RelayCommand]
+		public void SelectAll() => Selection.SelectAll();
+
+		/// <summary>Invert Selection (<c>miInvertSelection</c>): the selected books are let go, the others are selected.</summary>
+		[RelayCommand]
+		public void InvertSelection() => Selection.Invert();
+
+		/// <summary>Raised on the UI thread with the selected books when the user presses Delete (or Cmd+Backspace); P5.5 answers it with the Remove dialog.</summary>
+		public event EventHandler<IReadOnlyList<ComicBook>> RemoveBooksRequested;
+
+		/// <summary>Remove (<c>miRemove</c>, Delete): asks to remove the selected books. Does nothing without a selection (<c>CanRemoveBooks</c>).</summary>
+		[RelayCommand]
+		public void RemoveSelected()
+		{
+			IReadOnlyList<ComicBook> books = SelectedBooks;
+			if (books.Count > 0)
+			{
+				RemoveBooksRequested?.Invoke(this, books);
 			}
 		}
 	}

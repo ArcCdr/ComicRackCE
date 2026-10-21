@@ -19,8 +19,10 @@ namespace ComicRack.Mac.Views
 	/// The browser grid. A <see cref="ScrollViewer"/> around an <see cref="ItemsRepeater"/> with a <see cref="UniformGridLayout"/>:
 	/// the repeater realizes the cells in (and a little around) the viewport and recycles them while scrolling, so the number of
 	/// <see cref="BookCell"/>s depends on the window size, not on the library (14,706 books or 100,000 cost the same). The view model is
-	/// the DataContext. Keyboard: arrows, Home, End, Page Up/Down move the selection; Enter or a double click raises
-	/// <see cref="BrowserViewModel.OpenBookRequested"/>.
+	/// the DataContext. The selection is the view model's <see cref="SelectionModel"/> (the rules of the original's <c>ItemView</c>); this
+	/// view turns pointer and keys into its operations: a click selects, Cmd toggles, Shift extends; arrows, Home, End, Page Up/Down move the focus (and
+	/// select, with Shift extend, with Cmd only move); Space selects the focused book (Option+Space toggles it); Cmd+A selects all; Delete or Cmd+Backspace asks
+	/// to remove the selected books; Enter or a double click raises <see cref="BrowserViewModel.OpenBookRequested"/> for the focused book.
 	/// </summary>
 	public sealed class BookGridView : UserControl
 	{
@@ -34,7 +36,9 @@ namespace ComicRack.Mac.Views
 		private BrowserViewModel model;
 		private BookItem[] items = Array.Empty<BookItem>();
 		private int realized;
-		private int selected = -1;
+		private int focusedIndex = -1;
+		private int pendingClick = -1;
+		private bool pendingToggle, pendingExtend;
 		private double cellWidth, cellHeight;
 
 		public BookGridView()
@@ -170,6 +174,7 @@ namespace ComicRack.Mac.Views
 				model.PropertyChanged -= OnModelChanged;
 				model.ThumbnailOptions.Changed -= OnOptionsChanged;
 				model.BooksChanged -= OnBooksChanged;
+				model.SelectionChanged -= OnSelectionChanged;
 			}
 			model = DataContext as BrowserViewModel;
 			if (model != null)
@@ -177,6 +182,7 @@ namespace ComicRack.Mac.Views
 				model.PropertyChanged += OnModelChanged;
 				model.ThumbnailOptions.Changed += OnOptionsChanged;
 				model.BooksChanged += OnBooksChanged;
+				model.SelectionChanged += OnSelectionChanged;
 				ApplyMetrics(model.ThumbnailSize);
 			}
 			ApplyItems();
@@ -267,16 +273,16 @@ namespace ComicRack.Mac.Views
 						cell.RefreshThumbnail(force: true);
 					}
 					break;
-				case nameof(BrowserViewModel.SelectedIndex):
-					ApplySelection(model.SelectedIndex, ensureVisible: !model.KeepsView);
-					break;
 			}
 		}
+
+		// The selection or the focus changed: the cells draw their state, and the focused book is scrolled into view when the focus moved.
+		private void OnSelectionChanged(object sender, EventArgs e) => ApplySelection(ensureVisible: !model.KeepsView);
 
 		private void ApplyItems()
 		{
 			items = model?.Items ?? Array.Empty<BookItem>();
-			selected = -1;
+			focusedIndex = -1;
 			Vector before = scroll.Offset;
 			repeater.ItemsSource = items;
 			if (model != null && model.ConsumeScrollReset())
@@ -287,7 +293,7 @@ namespace ComicRack.Mac.Views
 			{
 				KeepOffset(before);
 			}
-			ApplySelection(model?.SelectedIndex ?? -1, ensureVisible: !(model?.KeepsView ?? false));
+			ApplySelection(ensureVisible: !(model?.KeepsView ?? false));
 		}
 
 		// A refresh replaces the list under the user's hands: the scroll position stays where it was (as far as the new list is long enough).
@@ -347,7 +353,7 @@ namespace ComicRack.Mac.Views
 			if (e.Element is BookCell cell && e.Index >= 0 && e.Index < items.Length)
 			{
 				realized++;
-				cell.Bind(this, items[e.Index], e.Index, e.Index == selected);
+				cell.Bind(this, items[e.Index], e.Index, model?.Selection.IsSelected(e.Index) ?? false, e.Index == focusedIndex);
 			}
 		}
 
@@ -360,21 +366,20 @@ namespace ComicRack.Mac.Views
 			}
 		}
 
-		private void ApplySelection(int index, bool ensureVisible = true)
+		// Draws the selection of the model on the realized cells; the focused book is scrolled into view if the focus moved.
+		private void ApplySelection(bool ensureVisible = true)
 		{
-			int old = selected;
-			selected = index;
-			if (old >= 0)
+			SelectionModel selection = model?.Selection;
+			int focus = selection?.FocusedIndex ?? -1;
+			bool moved = focus != focusedIndex;
+			focusedIndex = focus;
+			foreach (BookCell cell in BoundCells())
 			{
-				CellAt(old)?.SetSelected(false);
+				cell.SetState(selection != null && selection.IsSelected(cell.Index), cell.Index == focus);
 			}
-			if (index >= 0)
+			if (focus >= 0 && moved && ensureVisible)
 			{
-				CellAt(index)?.SetSelected(true);
-				if (ensureVisible)
-				{
-					EnsureVisible(index);
-				}
+				EnsureVisible(focus);
 			}
 		}
 
@@ -414,26 +419,96 @@ namespace ComicRack.Mac.Views
 		/// <summary>Number of rows the list has at the current width.</summary>
 		public int RowCount => items.Length == 0 ? 0 : (items.Length + Columns - 1) / Columns;
 
+		// ---- pointer ---------------------------------------------------------------------------------------------------------------
+
 		protected override void OnPointerPressed(PointerPressedEventArgs e)
 		{
 			base.OnPointerPressed(e);
-			if (model == null || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+			pendingClick = -1;
+			if (model == null)
 			{
 				return;
+			}
+			PointerPointProperties properties = e.GetCurrentPoint(this).Properties;
+			bool left = properties.IsLeftButtonPressed;
+			if (!left && !properties.IsRightButtonPressed)
+			{
+				return;
+			}
+			var source = e.Source as Visual;
+			if (source?.FindAncestorOfType<Avalonia.Controls.Primitives.ScrollBar>(includeSelf: true) != null)
+			{
+				return; // the scroll bar is not an empty spot of the list
 			}
 			Focus();
-			BookCell cell = (e.Source as Visual)?.FindAncestorOfType<BookCell>(includeSelf: true);
+			bool toggle = e.KeyModifiers.HasFlag(KeyModifiers.Meta); // Ctrl of the original
+			bool extend = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+			SelectionModel selection = model.Selection;
+			BookCell cell = source?.FindAncestorOfType<BookCell>(includeSelf: true);
 			if (cell?.Item == null)
 			{
+				if (left)
+				{
+					selection.ClickEmpty(toggle, extend);
+				}
 				return;
 			}
-			model.SelectedIndex = cell.Index;
-			if (e.ClickCount >= 2)
+			int index = cell.Index;
+			if (left && e.ClickCount >= 2)
 			{
+				if (selection.FocusedIndex != index)
+				{
+					selection.Click(index, toggle: false, extend: false);
+				}
 				model.OpenSelected();
+				e.Handled = true;
+				return;
+			}
+			if (!left)
+			{
+				// a context click: an unselected book becomes the selection, a selected one keeps it (the menu works on the selection)
+				if (selection.IsSelected(index))
+				{
+					selection.Focus(index);
+				}
+				else
+				{
+					selection.Click(index, toggle: false, extend: false);
+				}
+				e.Handled = true;
+				return;
+			}
+			if (selection.IsSelected(index))
+			{
+				// ItemView.OnMouseDownView: a press on a selected book waits for the release, because it could start dragging the selection
+				pendingClick = index;
+				pendingToggle = toggle;
+				pendingExtend = extend;
+			}
+			else
+			{
+				selection.Click(index, toggle, extend);
 			}
 			e.Handled = true;
 		}
+
+		protected override void OnPointerReleased(PointerReleasedEventArgs e)
+		{
+			base.OnPointerReleased(e);
+			int index = pendingClick;
+			pendingClick = -1;
+			if (model == null || index < 0)
+			{
+				return;
+			}
+			BookCell cell = (e.Source as Visual)?.FindAncestorOfType<BookCell>(includeSelf: true);
+			if (cell?.Item != null && cell.Index == index)
+			{
+				model.Selection.Click(index, pendingToggle, pendingExtend);
+			}
+		}
+
+		// ---- keyboard --------------------------------------------------------------------------------------------------------------
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
@@ -442,18 +517,36 @@ namespace ComicRack.Mac.Views
 			{
 				return;
 			}
+			SelectionModel selection = model.Selection;
+			bool toggle = e.KeyModifiers.HasFlag(KeyModifiers.Meta); // Ctrl of the original (DD20)
+			bool extend = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
 			int count = items.Length;
 			int columns = Columns;
-			int current = model.SelectedIndex;
+			int current = selection.FocusedIndex;
+			int from = current < 0 ? 0 : current; // the first movement key selects the first book
 			int target;
 			switch (e.Key)
 			{
+				case Key.A when toggle && !extend && !e.KeyModifiers.HasFlag(KeyModifiers.Alt):
+					model.SelectAll();
+					e.Handled = true;
+					return;
+				case Key.Delete:
+				case Key.Back when toggle: // Cmd+Backspace: the Mac alias of Delete (DD20)
+					model.RemoveSelected();
+					e.Handled = true;
+					return;
 				case Key.Enter:
 					if (current >= 0)
 					{
 						model.OpenSelected();
 						e.Handled = true;
 					}
+					return;
+				case Key.Space:
+					// Ctrl+Space of the original is Option+Space here: Cmd+Space, Option+Cmd+Space and Ctrl+Cmd+Space belong to the system
+					selection.Space(e.KeyModifiers.HasFlag(KeyModifiers.Alt) || toggle);
+					e.Handled = true;
 					return;
 				case Key.Right:
 					target = current < 0 ? 0 : current + 1;
@@ -462,14 +555,10 @@ namespace ComicRack.Mac.Views
 					target = current < 0 ? 0 : current - 1;
 					break;
 				case Key.Down:
-					target = current < 0 ? 0 : current + columns;
-					if (target >= count && current / columns < (count - 1) / columns)
-					{
-						target = count - 1; // from the row above a short last row to its last book
-					}
+					target = current < 0 ? 0 : RelativeRows(from, 1, columns);
 					break;
 				case Key.Up:
-					target = current < 0 ? 0 : current - columns;
+					target = current < 0 ? 0 : RelativeRows(from, -1, columns);
 					break;
 				case Key.Home:
 					target = 0;
@@ -478,20 +567,27 @@ namespace ComicRack.Mac.Views
 					target = count - 1;
 					break;
 				case Key.PageDown:
-					target = (current < 0 ? 0 : current) + columns * VisibleRows();
+					target = RelativeRows(from, VisibleRows(), columns);
 					break;
 				case Key.PageUp:
-					target = (current < 0 ? 0 : current) - columns * VisibleRows();
+					target = RelativeRows(from, -VisibleRows(), columns);
 					break;
 				default:
 					return;
 			}
 			e.Handled = true;
-			target = Math.Clamp(target, 0, count - 1);
-			if (target != current)
-			{
-				model.SelectedIndex = target;
-			}
+			selection.Move(Math.Clamp(target, 0, count - 1), toggle, extend);
+		}
+
+		// ItemView.GetRelativeItem with a row delta: the same column of the row (the last book of a short row), and the focus stays in the first or last row
+		// when the delta goes past it.
+		private int RelativeRows(int index, int deltaRows, int columns)
+		{
+			int count = items.Length;
+			int lastRow = (count - 1) / columns;
+			int row = Math.Clamp(index / columns + deltaRows, 0, lastRow);
+			int rowLength = row == lastRow ? count - lastRow * columns : columns;
+			return row * columns + Math.Min(index % columns, rowLength - 1);
 		}
 
 		private int VisibleRows()

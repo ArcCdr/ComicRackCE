@@ -28,7 +28,7 @@ usage: ui-drive.sh <command> [args]
   key <combo>                                            e.g. cmd+shift+g, return, escape, right, f5, cmd+code19 (see README)
   keycode <n>                                            raw key code
   type <text>                                            type text
-  click <x> <y> [--right] [--double] [--window ID]       click, window relative points
+  click <x> <y> [--right] [--double] [--cmd] [--shift] [--window ID]   click, window relative points (--cmd/--shift hold the modifier)
   shot <name> [--window ID]                              screenshot of the window to artifacts/ui-drive/shots/<name>.png
   probe <png> <x> <y> [--box N]                          pixel colour (crcli image probe)
   stats <png>                                            channel statistics, non-blank check (crcli image stats)
@@ -633,7 +633,7 @@ cmd_click() {
 	local coords=() flags=()
 	for a in ${args[@]+"${args[@]}"}; do
 		case "$a" in
-			--right|--double) flags+=("$a") ;;
+			--right|--double|--cmd|--shift) flags+=("$a") ;;
 			-*|'') die 2 "click: unknown option $a" ;;
 			*) coords+=("$a") ;;
 		esac

@@ -317,10 +317,10 @@ namespace ComicRack.Mac.Tests.HiDpi
 					var inside = new Point(otherArea.X + 10, otherArea.Y + 10);
 					Click(h, inside);
 					Assert.Equal(7, h.Model.SelectedIndex);
-					// the gap between two cells (BookGridView.Spacing) belongs to no cell, at any scale
+					// the gap between two cells (BookGridView.Spacing) belongs to no cell, at any scale: it is the empty area, which clears the selection
 					var gap = new Point(otherArea.Right + BookGridView.Spacing / 2, otherArea.Y + 30);
 					Click(h, gap);
-					Assert.Equal(7, h.Model.SelectedIndex);
+					Assert.Equal(-1, h.Model.SelectedIndex);
 				}
 			});
 		}

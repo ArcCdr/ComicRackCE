@@ -4,11 +4,12 @@
 //   windowtool frontpid                  prints the pid of the frontmost application
 //   windowtool windows [--pid N] [--all] one line per window, front to back, tab separated:
 //                                        id pid owner layer onscreen x y w h title   (--all adds off-screen windows)
-//   windowtool click --pid N --window ID X Y [--right] [--double]
+//   windowtool click --pid N --window ID X Y [--right] [--double] [--cmd] [--shift]
 //                                        X, Y are relative to the window's top left corner (points). The click is only posted
 //                                        if the application of PID is frontmost, the window is on screen and the topmost window
 //                                        under the point belongs to PID. Exit 5 when one of those checks fails, 4 on a locked
-//                                        screen, 2 on bad arguments.
+//                                        screen, 2 on bad arguments. --cmd and --shift hold the Command or Shift key during the click (flags of the
+//                                        mouse events only; no key event is sent).
 //
 // Exit codes: 0 ok, 2 bad arguments, 4 locked screen or no GUI session, 5 safety check failed.
 import AppKit
@@ -75,9 +76,10 @@ func commandWindows(_ args: [String]) {
 	}
 }
 
-func post(_ type: CGEventType, _ point: CGPoint, _ button: CGMouseButton, clicks: Int64 = 1) {
+func post(_ type: CGEventType, _ point: CGPoint, _ button: CGMouseButton, clicks: Int64 = 1, flags: CGEventFlags = []) {
 	guard let event = CGEvent(mouseEventSource: nil, mouseType: type, mouseCursorPosition: point, mouseButton: button) else { return }
 	event.setIntegerValueField(.mouseEventClickState, value: clicks)
+	event.flags = flags
 	event.post(tap: .cghidEventTap)
 }
 
@@ -116,17 +118,20 @@ func commandClick(_ args: [String]) {
 	let button: CGMouseButton = right ? .right : .left
 	let down: CGEventType = right ? .rightMouseDown : .leftMouseDown
 	let up: CGEventType = right ? .rightMouseUp : .leftMouseUp
+	var flags: CGEventFlags = []
+	if args.contains("--cmd") { flags.insert(.maskCommand) }
+	if args.contains("--shift") { flags.insert(.maskShift) }
 	let original = CGEvent(source: nil)?.location
 	post(.mouseMoved, point, button)
 	usleep(60_000)
-	post(down, point, button, clicks: 1)
+	post(down, point, button, clicks: 1, flags: flags)
 	usleep(40_000)
-	post(up, point, button, clicks: 1)
+	post(up, point, button, clicks: 1, flags: flags)
 	if args.contains("--double") {
 		usleep(60_000)
-		post(down, point, button, clicks: 2)
+		post(down, point, button, clicks: 2, flags: flags)
 		usleep(40_000)
-		post(up, point, button, clicks: 2)
+		post(up, point, button, clicks: 2, flags: flags)
 	}
 	usleep(80_000)
 	if let original = original {

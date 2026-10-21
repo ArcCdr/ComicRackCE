@@ -51,7 +51,7 @@ namespace ComicRack.Mac.Views
 		/// <summary>True while the request for the page behind the dog-ear is waiting.</summary>
 		public bool IsBackRequestPending => backRequest != null;
 
-		public void Bind(BookGridView grid, BookItem item, int index, bool selected)
+		public void Bind(BookGridView grid, BookItem item, int index, bool selected, bool focused = false)
 		{
 			if (Item != null)
 			{
@@ -67,6 +67,7 @@ namespace ComicRack.Mac.Views
 			Badges = ThumbnailBadgeBuilder.From(item, options);
 			LoadingText = UiText.Message("loadingThumbnail", "Loading Thumbnail...");
 			ViewFocused = grid.IsKeyboardFocusWithin;
+			IsFocusedItem = focused;
 			SetSelected(selected);
 			LoadThumbnail(keepCurrent: false);
 		}
@@ -83,6 +84,7 @@ namespace ComicRack.Mac.Views
 			Index = -1;
 			owner = null;
 			SetHot(false);
+			IsFocusedItem = false;
 			SetSelected(false);
 			UpdateToolTip();
 		}
@@ -90,12 +92,21 @@ namespace ComicRack.Mac.Views
 		/// <summary>True if the cell is drawn as selected.</summary>
 		public bool IsSelectedForTest => IsSelected;
 
-		/// <summary>Sets the selection; the selected book is the focused one in this single selection grid, and the dog-ear page is asked for or let go.</summary>
+		/// <summary>Sets the selection (the focus is <see cref="CrThumbnailItem.IsFocusedItem"/>), and the dog-ear page is asked for or let go.</summary>
 		public override void SetSelected(bool value)
 		{
 			base.SetSelected(value);
-			IsFocusedItem = value;
 			UpdateBackImage();
+		}
+
+		/// <summary>Sets the selection and the focus together (the grid draws the model's state on the cells it realizes).</summary>
+		public void SetState(bool selected, bool focused)
+		{
+			if (selected != IsSelected || focused != IsFocusedItem)
+			{
+				IsFocusedItem = focused;
+				SetSelected(selected);
+			}
 		}
 
 		protected override void OnHotChanged()

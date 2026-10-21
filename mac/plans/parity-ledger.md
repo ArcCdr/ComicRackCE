@@ -196,8 +196,8 @@
 | BV.06 | "Not all Books are displayed" bar with Display All | `displayOptionPanel` | — | P5.15a | todo | |
 | BV.07 | List background image | `miSetListBackground`, `miResetListBackground` | — | P5.20 | todo | |
 | BV.08 | Book tooltips (`ShowToolTips`), fade-in, dog-ear, numeric ratings, same-size covers | Settings (PB rows) | — | P5.R2 | done 2026-10-20 | tool tip card (`CrBookToolTip`, 360 x 120), fade-in of new covers, dog-ear, numeric rating tags, same size covers; the options are `ThumbnailOptions` with the defaults of `Settings.cs` |
-| BV.09 | Multi-selection, Select All, Invert Selection | `miSelectAll`, `miInvertSelection` | Ctrl+A → Cmd+A | P5.3 | todo | |
-| BV.10 | Keyboard in the browser: arrows, Return opens, Delete removes | `ItemView` | Delete, alias Cmd+Backspace | P5.3 | todo | |
+| BV.09 | Multi-selection, Select All, Invert Selection | `miSelectAll`, `miInvertSelection` | Ctrl+A → Cmd+A | P5.3 | done 2026-10-21 | Cmd-click toggles, Shift-click selects from the focused book, a click on the empty area clears, Cmd+A selects all (`SelectionModel`, rules of `ItemView.UpdateSelectionFromMouse`); Invert Selection has no shortcut in the original and is `BrowserViewModel.InvertSelectionCommand` until the context menu (BC.19); rubber band selection is not done (section 9) |
+| BV.10 | Keyboard in the browser: arrows, Return opens, Delete removes | `ItemView` | Delete, alias Cmd+Backspace | P5.3 | done 2026-10-21 | arrows, Home, End, Page keys with Shift (extend) and Cmd (Ctrl of the original: move the focus only), Space selects the focused book and Option+Space flips it (Ctrl+Space of the original: Cmd+Space, Option+Cmd+Space and Ctrl+Cmd+Space are system shortcuts), Return opens the focused book; Delete and Cmd+Backspace raise `BrowserViewModel.RemoveBooksRequested`, which the Remove dialog answers in P5.5 (BC.23) |
 | BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | todo | |
 | BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.32a | todo | |
 | BC.03 | Context: Open With (programs, Manage Programs...) | `miOpenWith`, `contextOpenWith`, `miOpenWithManager` | — | P5.21 | todo | |
@@ -216,7 +216,7 @@
 | BC.16 | Context: Update Book Files | `miUpdateComicFiles` | — | P5.9 | todo | |
 | BC.17 | Context: Reveal Book in Explorer | `miRevealBrowser` | Ctrl+G → Cmd+G | P5.5 | deviation | native: label "Reveal in Finder" |
 | BC.18 | Context: Copy Data / Paste Data... / Clear Data | `miCopyData`, `miPasteData`, `miClearData` | Ctrl+C/V → Cmd+C/V | P5.20 | todo | |
-| BC.19 | Context: Select All / Invert Selection | `miSelectAll`, `miInvertSelection` | as BV.09 | P5.3 | todo | |
+| BC.19 | Context: Select All / Invert Selection | `miSelectAll`, `miInvertSelection` | as BV.09 | P5.3 | todo | the commands exist since P5.3 (`SelectAllCommand`, `InvertSelectionCommand`); the menu items come with the context menu (P5.5) |
 | BC.20 | Context: Refresh (re-read info and thumbnail) | `miRefreshInformation` | — | P5.20 | todo | |
 | BC.21 | Context: Reset Top of Stack / Set as Top of Stack / Set custom Stack Thumbnail... / Remove custom Stack Thumbnail | `miResetTopOfStack`, `miSetTopOfStack`, `miSetStackThumbnail`, `miRemoveStackThumbnail` | — | P5.13b | todo | |
 | BC.22 | Context: Set as List Background | `miSetListBackground` | — | P5.20 | todo | |
