@@ -55,3 +55,6 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-21 15:15 | RV11 | done | 00021ed |  | Flaky fast gate, round 2 (per-test pixel and image counts, static switch guard, flaky-scan.sh; 6 consecutive gate runs pass in about 95 s, was 209 to 340 s) |
 | 2026-10-21 15:23 | P2.4a | done | 0d99a06 |  | Bundle 7zz (fetch-7zz.sh with pinned SHA-256 from the official 7-Zip 26.05 release, ToolLocator.SevenZip, make-app copies and signs it, fixtures make --forma... |
 | 2026-10-21 15:32 | P2.4b | done-with-caveat | 0f348db |  | ComicInfo write-back engine (pass B patched SevenZipEngine runs the bundled 7zz, crcli info show and write, CBZ CB7 and CBT written with pages byte-identical... |
+| 2026-10-21 16:34 | P5.7a | done | 964c60f |  | Info editor: shell, Summary and Details (ComicBookDialog with the original's tabs, Previous/Next, OK/Cancel/Apply, 3D cover, value lists, spin buttons, list... |
+| 2026-10-21 16:53 | P5.7b | done | e59bfe2 |  | Info editor: Plot and Notes, Catalog and Custom tabs (sub-tabs Summary, Notes, Review, list selectors, catalog fields and date boxes, custom value grid; Cata... |
+| 2026-10-21 17:57 | P5.7c | done | 77c045f |  | Info editor: Pages, Colors and cover (page list with thumbnails, tiles and details, page menu, Order by Name, sorting, merge; Colors tab with the Core's colo... |
