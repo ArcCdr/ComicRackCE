@@ -132,6 +132,39 @@ namespace ComicRack.Cli.Tests
 		}
 
 		[Fact]
+		public void Make_writes_cb7_books_with_the_located_7zz_that_the_Core_provider_reads()
+		{
+			string sevenZip = ComicRack.Mac.Host.Platform.ToolLocator.SevenZip;
+			if (sevenZip == null)
+			{
+				return; // mac/native/fetch-7zz.sh has not been run on this machine
+			}
+			FixtureEnvironment env = Env();
+			env.SevenZip = sevenZip;
+			string dir = Path.Combine(env.FixturesRoot, "seven");
+			var output = new StringWriter();
+			Assert.Equal(0, Run(env, output, "make", dir, "--books", "2", "--pages", "3", "--formats", "cb7"));
+			Assert.DoesNotContain("Skipping CB7", output.ToString());
+
+			string[] files = Directory.GetFiles(dir, "*.cb7");
+			Assert.Equal(2, files.Length);
+			using (var host = MacHost.Open(new MacHostOptions { Paths = MacPaths.Under(Path.Combine(temp, "host")) }))
+			{
+				foreach (string file in files)
+				{
+					using (ImageProvider provider = OpenWithCore(file))
+					{
+						Assert.Equal(3, provider.Count);
+						using (Bitmap page = provider.GetImage(0))
+						{
+							Assert.True(page.Height > page.Width);
+						}
+					}
+				}
+			}
+		}
+
+		[Fact]
 		public void Cb7_and_cbr_are_skipped_with_a_message_when_there_is_no_7zz()
 		{
 			FixtureEnvironment env = Env();

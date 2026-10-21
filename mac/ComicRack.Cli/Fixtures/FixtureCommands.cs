@@ -127,7 +127,7 @@ namespace ComicRack.Cli.Fixtures
 				case "cb7":
 					if (env.SevenZip == null)
 					{
-						output.WriteLine("Skipping CB7: `7zz` is not installed (brew install sevenzip).");
+						output.WriteLine("Skipping CB7: `7zz` was not found (run mac/native/fetch-7zz.sh).");
 					}
 					else
 					{

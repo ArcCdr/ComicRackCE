@@ -45,6 +45,13 @@ if [ -e "$APP/Contents/MacOS/Resources/x64" ] || [ -e "$APP/Contents/MacOS/Resou
 	exit 1
 fi
 
+# P2.4a: the official 7-Zip console binary (ComicInfo writes, CB7 creation; DD10) sits next to the executable, where ToolLocator.SevenZip looks.
+# fetch-7zz.sh does nothing when the pinned, verified copy is already in mac/artifacts/native. Its licence text goes to Contents/Resources.
+"$ROOT/mac/native/fetch-7zz.sh"
+cp "$ARTIFACTS/native/7zz" "$APP/Contents/MacOS/7zz"
+cp "$ARTIFACTS/native/7zz-License.txt" "$APP/Contents/Resources/7zz-License.txt"
+codesign --force -s - --options runtime "$APP/Contents/MacOS/7zz"
+
 # Icon: sips resizes the 256 px source (the 512 and 1024 px entries are upscaled; use a larger source for a sharper icon).
 mkdir -p "$ICONSET"
 for s in 16 32 64 128 256 512 1024; do
@@ -82,7 +89,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 </plist>
 PLIST
 
-# Ad-hoc signature, hardened runtime. --deep also signs the dylibs next to the executable.
+# Ad-hoc signature, hardened runtime. --deep also signs the dylibs and 7zz next to the executable.
 codesign --force --deep -s - --options runtime --entitlements "$ROOT/mac/tools/mvp.entitlements" "$APP"
 codesign --verify --deep --strict "$APP"
 echo "Built: $APP ($(du -sh "$APP" | cut -f1))"

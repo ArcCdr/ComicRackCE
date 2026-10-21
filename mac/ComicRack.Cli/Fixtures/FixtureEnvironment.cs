@@ -21,12 +21,12 @@ namespace ComicRack.Cli.Fixtures
 		/// <summary>Prints "df -h ~" like the plan asks; tests turn it off.</summary>
 		public bool PrintDiskFree { get; set; } = true;
 
-		/// <summary>Command that creates 7z archives, or null. Looked up on PATH by default.</summary>
+		/// <summary>Command that creates 7z archives, or null. The bundled 7zz by default (ToolLocator).</summary>
 		public string SevenZip { get; set; }
 
 		public static FixtureEnvironment Default()
 		{
-			return new FixtureEnvironment { FixturesRoot = FindFixturesRoot(), SevenZip = FindOnPath("7zz") };
+			return new FixtureEnvironment { FixturesRoot = FindFixturesRoot(), SevenZip = ComicRack.Mac.Host.Platform.ToolLocator.SevenZip };
 		}
 
 		private static string FindFixturesRoot()
