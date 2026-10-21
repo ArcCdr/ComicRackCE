@@ -494,10 +494,10 @@ namespace ComicRack.Mac.Tests.Reader
 			await Ui.Run(async () =>
 			{
 				Gc.Flush();
-				long live = PixelBlock.LiveCount;
+				long live = Gc.Live;
 				(ReaderViewModel vm, FakeSession session) = await Open(pages: 10, resume: 5);
 				PageService pages = vm.Pages;
-				Assert.True(PixelBlock.LiveCount > live);
+				Assert.True(Gc.Live > live);
 				vm.NextPage();
 				vm.Dispose();
 				Assert.Equal(6, session.LastReported);
@@ -506,7 +506,7 @@ namespace ComicRack.Mac.Tests.Reader
 				Assert.Null(vm.Pages);
 				Assert.Null(vm.Scene);
 				Gc.Flush();
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 				vm.Dispose();
 				vm.NextPage(); // nothing happens, nothing throws
 				Assert.True(vm.IsDisposed);
@@ -519,7 +519,7 @@ namespace ComicRack.Mac.Tests.Reader
 			await Ui.Run(async () =>
 			{
 				Gc.Flush();
-				long live = PixelBlock.LiveCount;
+				long live = Gc.Live;
 				(ReaderViewModel vm, FakeSession session) = await Open(pages: 30, waitForPrefetch: true);
 				session.FakeDecoder.Hold();
 				vm.LastPage();
@@ -530,7 +530,7 @@ namespace ComicRack.Mac.Tests.Reader
 				Assert.Equal(0, session.FakeDecoder.InFlight);
 				await Task.Delay(30); // the pending load ends on its own
 				Gc.Flush();
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 			});
 		}
 

@@ -30,15 +30,14 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public ReaderChromeTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 		}
 
 		public void Dispose()
 		{
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private static Task<ReaderHarness> Open(int pages = 12, int resume = 3, Func<int, (int, int)> size = null, ReaderOptions options = null, double width = 900, double height = 645)

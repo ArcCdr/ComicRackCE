@@ -21,6 +21,8 @@ namespace System.Drawing
 		private long memoryPressure;
 
 		private static int liveStorage;
+		private static volatile ImageStorageTracker storageTracker;
+		private ImageStorageTracker storageOwner;
 
 		internal Image()
 		{
@@ -28,6 +30,13 @@ namespace System.Drawing
 
 		/// <summary>Number of SKBitmaps currently owned by images (tests use it to check that Dispose releases them).</summary>
 		internal static int LiveStorageCount => Volatile.Read(ref liveStorage);
+
+		/// <summary>The tracker that counts the storages made from now on (tests set one per test); null in the app.</summary>
+		internal static ImageStorageTracker StorageTracker
+		{
+			get => storageTracker;
+			set => storageTracker = value;
+		}
 
 		/// <summary>The backing bitmap; throws once the image is disposed. Owned by this image: callers must not dispose it.</summary>
 		internal SKBitmap Storage => sk ?? throw new ObjectDisposedException(GetType().Name);
@@ -74,6 +83,8 @@ namespace System.Drawing
 			memoryPressure = Math.Max(1, bitmap.ByteCount);
 			GC.AddMemoryPressure(memoryPressure);
 			Interlocked.Increment(ref liveStorage);
+			storageOwner = storageTracker;
+			storageOwner?.Add(1);
 		}
 
 		/// <summary>Replaces the backing bitmap (RotateFlip) and disposes the old one. The byte count must not change.</summary>
@@ -252,6 +263,7 @@ namespace System.Drawing
 				old.Dispose();
 				GC.RemoveMemoryPressure(memoryPressure);
 				Interlocked.Decrement(ref liveStorage);
+				storageOwner?.Add(-1);
 			}
 		}
 

@@ -126,15 +126,14 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public MainWindowReaderTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 		}
 
 		public void Dispose()
 		{
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private static string[] Captions(MainReaderHarness h) => h.Tabs.Slots.Select(s => s.Caption).ToArray();

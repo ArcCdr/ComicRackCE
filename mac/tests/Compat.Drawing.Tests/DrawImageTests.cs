@@ -559,9 +559,9 @@ namespace Compat.Drawing.Tests
 				Bitmap disposed = new Bitmap(2, 2);
 				disposed.Dispose();
 				Assert.Throws<ObjectDisposedException>(() => new Bitmap(disposed, 4, 4));
-				Assert.Equal(before + 1, Image.LiveStorageCount);
+				Assert.Equal(before + 1, Live);
 			}
-			Assert.Equal(before, Image.LiveStorageCount);
+			Assert.Equal(before, Live);
 		}
 
 		[Fact]
@@ -570,10 +570,10 @@ namespace Compat.Drawing.Tests
 			int before = LiveSettled();
 			Bitmap source = new Bitmap(4, 4);
 			Bitmap scaled = new Bitmap(source, 8, 8);
-			Assert.Equal(before + 2, Image.LiveStorageCount);
+			Assert.Equal(before + 2, Live);
 			scaled.Dispose();
 			source.Dispose();
-			Assert.Equal(before, Image.LiveStorageCount);
+			Assert.Equal(before, Live);
 		}
 
 		[Fact]
@@ -588,9 +588,9 @@ namespace Compat.Drawing.Tests
 					g.DrawImage(bitmap, new Rectangle(1, 1, 4, 4), 0, 0, 2, 2, GraphicsUnit.Pixel);
 					Assert.Throws<NotSupportedException>(() => g.DrawImage(bitmap, 0, 0, -1, 1));
 				}
-				Assert.Equal(before + 1, Image.LiveStorageCount);
+				Assert.Equal(before + 1, Live);
 			}
-			Assert.Equal(before, Image.LiveStorageCount);
+			Assert.Equal(before, Live);
 		}
 	}
 }

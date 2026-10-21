@@ -47,9 +47,7 @@ namespace ComicRack.Mac.Tests.Browser
 	/// </summary>
 	public class InfoPanelTests : IDisposable
 	{
-		public InfoPanelTests() => Ui.BeginTest();
-
-		public void Dispose()
+				public void Dispose()
 		{
 		}
 

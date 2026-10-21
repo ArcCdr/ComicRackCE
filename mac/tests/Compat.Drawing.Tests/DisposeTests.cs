@@ -14,8 +14,6 @@ namespace Compat.Drawing.Tests
 	/// <summary>Dispose: no SKBitmap outlives its image, on any path.</summary>
 	public class DisposeTests
 	{
-		private static int Live => Image.LiveStorageCount;
-
 		[Fact]
 		public void Dispose_releases_the_storage_once_and_can_be_repeated()
 		{

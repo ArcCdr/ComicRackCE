@@ -29,15 +29,14 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public ReaderSpreadWindowTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 		}
 
 		public void Dispose()
 		{
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private static (int, int) Sizes(int page) => page == 4 ? (2400, 1200) : (1200, 1800);

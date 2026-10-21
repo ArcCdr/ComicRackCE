@@ -3,10 +3,24 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using cYo.Compat.Drawing;
+using System.Reflection;
 using SkiaSharp;
+using Xunit.Sdk;
+
+// Every test of this assembly counts its own image storages (see TestImages.Live).
+[assembly: Compat.Drawing.Tests.TrackImages]
 
 namespace Compat.Drawing.Tests
 {
+	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
+	public sealed class TrackImagesAttribute : BeforeAfterTestAttribute
+	{
+		public override void Before(MethodInfo methodUnderTest)
+		{
+			TestImages.StartCounting();
+		}
+	}
+
 	internal static class TestImages
 	{
 		public static readonly PixelFormat[] AllFormats =
@@ -17,26 +31,22 @@ namespace Compat.Drawing.Tests
 			PixelFormat.Format24bppRgb,
 		};
 
+		private static ImageStorageTracker current = new ImageStorageTracker();
+
 		/// <summary>
-		/// The number of live image storages once the finalizer thread has caught up with the garbage of earlier tests. Tests that assert
-		/// exact counts take their baseline here: an image that an earlier test left undisposed is finalized (and the counter drops) on
-		/// the finalizer thread at any moment, which would shift a baseline taken without this.
+		/// The image storages made by the running test that are not released yet. The count belongs to the test (<see cref="TrackImagesAttribute"/>
+		/// starts a new one before each test): an image that an earlier test left undisposed is finalized at any moment, and the counter that
+		/// moves then is the earlier test's, not this one's.
 		/// </summary>
-		public static int LiveSettled()
+		public static int Live => current.Live;
+
+		/// <summary>The live count at the start of the test: 0, with no garbage collection.</summary>
+		public static int LiveSettled() => Live;
+
+		internal static void StartCounting()
 		{
-			int last = -1;
-			for (int round = 0; round < 20; round++)
-			{
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
-				int now = Image.LiveStorageCount;
-				if (now == last)
-				{
-					return now;
-				}
-				last = now;
-			}
-			return last;
+			current = new ImageStorageTracker();
+			Image.StorageTracker = current;
 		}
 
 		/// <summary>A smooth gradient (red grows to the right, green downwards, blue fixed), so that lossy codecs stay close.</summary>

@@ -28,15 +28,14 @@ namespace ComicRack.Mac.Tests.Browser
 
 		public SmallPreviewTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 		}
 
 		public void Dispose()
 		{
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private static ComicBook Book(string name, string file = null)
@@ -403,7 +402,7 @@ namespace ComicRack.Mac.Tests.Browser
 				rig.Model.IsVisible = true;
 				rig.SelectAndWait(Book("A"));
 				await rig.Opened1();
-				Assert.True(PixelBlock.LiveCount > Ui.LiveBaseline(liveBefore));
+				Assert.True(Gc.Live > liveBefore);
 				rig.Model.SelectionChanged();
 				Assert.Equal(1, rig.Scheduler.Pending);
 				rig.Model.Close();
@@ -484,15 +483,14 @@ namespace ComicRack.Mac.Tests.Browser
 
 		public SmallPreviewWiringTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 		}
 
 		public void Dispose()
 		{
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private static async Task WaitFor(Func<bool> condition, string what, int timeoutMs = 30000)

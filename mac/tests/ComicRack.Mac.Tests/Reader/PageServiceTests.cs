@@ -24,7 +24,7 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public PageServiceTests()
 		{
-			liveBefore = Gc.SettleLive();
+			liveBefore = Gc.BeginCount();
 			bytesBefore = PixelBlock.LiveBytes;
 		}
 
@@ -36,7 +36,7 @@ namespace ComicRack.Mac.Tests.Reader
 			}
 			Gc.WaitForLive(liveBefore);
 			// Whatever a test did, no page memory may be left behind.
-			Assert.Equal(liveBefore, PixelBlock.LiveCount);
+			Assert.Equal(liveBefore, Gc.Live);
 			Assert.Equal(bytesBefore, PixelBlock.LiveBytes);
 		}
 
@@ -392,9 +392,9 @@ namespace ComicRack.Mac.Tests.Reader
 			}
 			service.SetWindow(new[] { 0 }); // page 5 leaves the window: evicted at once (the bound is 0)
 			WaitUntil(() => service.TryGetCachedOrNull(5) == false, "page 5 evicted");
-			Assert.True(PixelBlock.LiveCount > liveBefore, "the held picture keeps its pixels");
+			Assert.True(Gc.Live > liveBefore, "the held picture keeps its pixels");
 			service.Dispose();
-			Assert.True(PixelBlock.LiveCount > liveBefore);
+			Assert.True(Gc.Live > liveBefore);
 
 			// Still drawable: draw it into a bitmap and look at a pixel.
 			using (var target = new SKBitmap(new SKImageInfo(10, 10, SKColorType.Bgra8888, SKAlphaType.Opaque)))
@@ -407,7 +407,7 @@ namespace ComicRack.Mac.Tests.Reader
 			}
 			held.Release();
 			Gc.Flush();
-			WaitUntil(() => PixelBlock.LiveCount == liveBefore, "pixels freed with the last reference");
+			WaitUntil(() => Gc.Live == liveBefore, "pixels freed with the last reference");
 		}
 
 		[Fact]

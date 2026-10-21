@@ -18,7 +18,9 @@ namespace ComicRack.Mac.Thumbnails
 	{
 		private static long liveCount;
 		private static long liveBytes;
+		private static volatile PixelBlockTracker tracker;
 
+		private readonly PixelBlockTracker owner;
 		private readonly SKBitmap bitmap;
 		private readonly Action onFree;
 		private readonly IntPtr pixels;
@@ -32,6 +34,16 @@ namespace ComicRack.Mac.Thumbnails
 
 		/// <summary>Pixel bytes of the blocks that are not freed yet, in the whole process.</summary>
 		public static long LiveBytes => Interlocked.Read(ref liveBytes);
+
+		/// <summary>
+		/// The tracker that counts the blocks made from now on (tests set one per test, so that a block of an earlier test that is
+		/// still being released cannot disturb their counts); null in the app. Set it only from test code.
+		/// </summary>
+		public static PixelBlockTracker Tracker
+		{
+			get => tracker;
+			set => tracker = value;
+		}
 
 		public int Width => viewInfo.Width;
 
@@ -61,6 +73,8 @@ namespace ComicRack.Mac.Thumbnails
 			ByteCount = (long)rowBytes * bitmap.Height;
 			Interlocked.Increment(ref liveCount);
 			Interlocked.Add(ref liveBytes, ByteCount);
+			owner = tracker;
+			owner?.Add(1);
 		}
 
 		/// <summary>
@@ -170,6 +184,7 @@ namespace ComicRack.Mac.Thumbnails
 			{
 				Interlocked.Decrement(ref liveCount);
 				Interlocked.Add(ref liveBytes, -ByteCount);
+				owner?.Add(-1);
 				try
 				{
 					onFree?.Invoke();

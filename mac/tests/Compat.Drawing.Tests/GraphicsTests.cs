@@ -18,8 +18,6 @@ namespace Compat.Drawing.Tests
 
 		private static readonly Color Clear0 = Color.FromArgb(0, 0, 0, 0);
 
-		private static int Live => Image.LiveStorageCount;
-
 		// ---- FromImage and Dispose -----------------------------------------------------------------------------------------------
 
 		[Fact]

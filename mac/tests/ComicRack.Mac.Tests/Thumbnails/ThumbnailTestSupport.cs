@@ -247,49 +247,71 @@ namespace ComicRack.Mac.Tests.Thumbnails
 			}
 		}
 
+		private static PixelBlockTracker current;
+		private static bool begun;
+
 		/// <summary>
-		/// <see cref="Flush"/>, then waits until the process-wide count of live pixel blocks has stopped changing (at most 2 s) and returns it.
-		/// A test class that compares the count at its end with the count at its start takes the start value here: a decode of the test
-		/// before, still finishing on a pool thread, would otherwise be in the baseline and vanish during the test.
+		/// The pixel blocks made by the running test that are not freed yet. The count belongs to the test: a block of an earlier test
+		/// that is still being released (a decode finishing on the pool, a finalizer) is not in it, so no baseline can go stale. Tests
+		/// compare it with a value of the same test, never with a number.
 		/// </summary>
-		public static long SettleLive()
+		public static long Live => (current ?? StartCounting()).Live;
+
+		/// <summary>
+		/// Starts the count of the running test (a test class calls it in its constructor; <see cref="TestGuardAttribute"/> does it
+		/// before a test whose class did not). Returns the count at the start: 0. No garbage collection, no waiting.
+		/// </summary>
+		public static long BeginCount()
 		{
-			var watch = Stopwatch.StartNew();
-			long last = -1;
-			int stable = 0;
-			while (watch.ElapsedMilliseconds < 2000)
+			StartCounting();
+			return 0;
+		}
+
+		private static PixelBlockTracker StartCounting()
+		{
+			var tracker = new PixelBlockTracker();
+			current = tracker;
+			PixelBlock.Tracker = tracker;
+			begun = true;
+			return tracker;
+		}
+
+		/// <summary>Called before each test body: a test whose class started no count gets a new one.</summary>
+		internal static void BeginTestBody()
+		{
+			if (!begun)
 			{
-				Flush();
-				long now = PixelBlock.LiveCount;
-				if (now == last)
-				{
-					if (++stable >= 5)
-					{
-						break;
-					}
-				}
-				else
-				{
-					last = now;
-					stable = 0;
-				}
-				Thread.Sleep(20);
+				StartCounting();
 			}
-			return PixelBlock.LiveCount;
+		}
+
+		/// <summary>Called after each test body (before the class is disposed): the next test starts a new count.</summary>
+		internal static void EndTestBody()
+		{
+			begun = false;
 		}
 
 		/// <summary>
-		/// Flushes and waits (at most 2 s) until the live pixel block count is <paramref name="expected"/>: pool work that was cancelled by the
-		/// test releases its pixels a moment after the test's last line. The caller asserts the value afterwards, so a real leak still fails.
+		/// Waits (at most 2 s) until <see cref="Live"/> is <paramref name="expected"/>: pool work that was cancelled by the test releases
+		/// its pixels a moment after the test's last line, and an image that nobody disposed is released by a finalizer. The caller
+		/// asserts the value afterwards, so a real leak still fails. Costs nothing when the count is right already.
 		/// </summary>
 		public static void WaitForLive(long expected)
 		{
-			var watch = Stopwatch.StartNew();
-			Flush();
-			while (PixelBlock.LiveCount != expected && watch.ElapsedMilliseconds < 2000)
+			if (Live == expected)
 			{
-				Thread.Sleep(10);
-				Flush();
+				return;
+			}
+			var watch = Stopwatch.StartNew();
+			long nextFlush = 0;
+			while (Live != expected && watch.ElapsedMilliseconds < 2000)
+			{
+				if (watch.ElapsedMilliseconds >= nextFlush)
+				{
+					Flush();
+					nextFlush = watch.ElapsedMilliseconds + 50;
+				}
+				Thread.Sleep(5);
 			}
 		}
 	}

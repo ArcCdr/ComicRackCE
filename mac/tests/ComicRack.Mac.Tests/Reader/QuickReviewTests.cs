@@ -16,15 +16,14 @@ namespace ComicRack.Mac.Tests.Reader
 
 		public QuickReviewTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 		}
 
 		public void Dispose()
 		{
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private static async Task<ReaderSlot> ReadBook(MainReaderHarness h, string name, int lastPageRead, float rating = 0)

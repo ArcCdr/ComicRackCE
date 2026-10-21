@@ -110,6 +110,7 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
+		[Trait("Category", "Slow")] // waits for the real 5 s and 10 s limits of the original code; ThreadUtility_Abort_reports_and_abandons... covers the same path with 200 ms
 		public void BackgroundRunner_Dispose_abandons_a_tick_that_does_not_return_and_the_thread_ends_quietly_later()
 		{
 			var capture = new Capture();
@@ -144,6 +145,7 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
+		[Trait("Category", "Slow")] // waits for the real 5 s and 10 s limits of the original code; ThreadUtility_Abort_reports_and_abandons... covers the same path with 200 ms
 		public void MacHost_Dispose_completes_when_the_scanner_ignores_its_stop_flag_for_15_seconds()
 		{
 			using (var temp = new TempFolder())
@@ -193,6 +195,7 @@ namespace ComicRack.Mac.Host.Tests
 		}
 
 		[Fact]
+		[Trait("Category", "Slow")] // waits for the real 5 s and 10 s limits of the original code; ThreadUtility_Abort_reports_and_abandons... covers the same path with 200 ms
 		public void A_scanner_that_outlives_the_close_marks_the_final_save_unchecked_and_its_last_notification_is_not_raised()
 		{
 			using (var temp = new TempFolder())

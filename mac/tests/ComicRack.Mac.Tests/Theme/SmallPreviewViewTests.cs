@@ -39,8 +39,7 @@ namespace ComicRack.Mac.Tests.Theme
 
 		public SmallPreviewViewTests()
 		{
-			liveBefore = Gc.SettleLive();
-			Ui.BeginTest();
+			liveBefore = Gc.BeginCount();
 			animation = CrSizableContainer.EnableAnimation;
 			CrSizableContainer.EnableAnimation = false;
 		}
@@ -48,9 +47,9 @@ namespace ComicRack.Mac.Tests.Theme
 		public void Dispose()
 		{
 			CrSizableContainer.EnableAnimation = animation;
-			long expected = Ui.LiveBaseline(liveBefore);
+			long expected = liveBefore;
 			Gc.WaitForLive(expected);
-			Assert.Equal(expected, PixelBlock.LiveCount);
+			Assert.Equal(expected, Gc.Live);
 		}
 
 		private sealed class Setup : IDisposable

@@ -35,7 +35,6 @@ namespace ComicRack.Mac.Tests
 					Func<Task<T>> job = () =>
 					{
 						started = true;
-						NoteJobStart();
 						return work();
 					};
 					return await session.Value.Dispatch(job, CancellationToken.None);
@@ -45,39 +44,6 @@ namespace ComicRack.Mac.Tests
 					await Task.Delay(25);
 				}
 			}
-		}
-
-		private static long liveAtJobStart = -1;
-
-		/// <summary>
-		/// The session resets the previous test's application when a job starts, which releases what that application still held (a closed
-		/// window's last frame, the pictures behind it). A test class that counts live pixel blocks therefore compares the end with this
-		/// value, taken inside the first job of the test, and not with the one its constructor saw before the reset.
-		/// </summary>
-		private static void NoteJobStart()
-		{
-			if (Volatile.Read(ref liveAtJobStart) >= 0)
-			{
-				return;
-			}
-			if (PixelBlock.LiveCount > 0)
-			{
-				Gc.Flush();
-			}
-			Volatile.Write(ref liveAtJobStart, PixelBlock.LiveCount);
-		}
-
-		/// <summary>Called by a test class constructor: the next job is the first of a new test.</summary>
-		public static void BeginTest()
-		{
-			Volatile.Write(ref liveAtJobStart, -1);
-		}
-
-		/// <summary>The live pixel block count at the start of the test's first job, or <paramref name="fallback"/> when the test ran no job.</summary>
-		public static long LiveBaseline(long fallback)
-		{
-			long value = Volatile.Read(ref liveAtJobStart);
-			return value >= 0 ? value : fallback;
 		}
 
 		public static Task Run(Func<Task> work)

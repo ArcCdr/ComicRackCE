@@ -2,9 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using ComicRack.Mac.Controls;
 using ComicRack.Mac.Host;
+using ComicRack.Mac.Platform;
 using ComicRack.Mac.Tests.Thumbnails;
 using ComicRack.Mac.Thumbnails;
+using ComicRack.Mac.Views;
 using Xunit;
 using Xunit.Sdk;
 
@@ -18,23 +21,37 @@ namespace ComicRack.Mac.Tests
 	/// <list type="bullet">
 	/// <item>A <see cref="MacHost"/> that the test left open is closed and the test fails, instead of the next test failing with
 	/// "A MacHost is already open" (the Core allows one host per process).</item>
-	/// <item>The live <see cref="PixelBlock"/> counter is allowed to return to what it was when the test began: a decode that is
-	/// still finishing when the test ends (the reader cancels it, the pool thread releases its pixels a moment later) would
-	/// otherwise show up in the baseline that the next test takes, and vanish during that test.</item>
+	/// <item>The static switches that tests turn off to stay deterministic (native alerts, animations, cover fade, the overlay clock, the
+	/// grid's auto scroll) go back to the value they had when the test began, whether or not the test restored them itself.</item>
+	/// <item>Each test counts its own pixel blocks (<see cref="Gc.Live"/>), so what an earlier test is still releasing never changes
+	/// its count. The count is allowed to return to what it was when the test began before the next test starts: a decode that is
+	/// still finishing when the test ends (the reader cancels it, the pool thread releases its pixels a moment later) is waited for.</item>
 	/// </list>
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
 	public sealed class TestGuardAttribute : BeforeAfterTestAttribute
 	{
 		private static long liveAtStart;
+		private static bool nativeAlerts, animation, coverFade, overlayClock, autoScroll;
 
 		public override void Before(MethodInfo methodUnderTest)
 		{
-			liveAtStart = PixelBlock.LiveCount;
+			Gc.BeginTestBody();
+			liveAtStart = Gc.Live;
+			nativeAlerts = MacAlert.UseNative;
+			animation = CrSizableContainer.EnableAnimation;
+			coverFade = CoverView.FadeEnabled;
+			overlayClock = ReaderOverlayClock.Enabled;
+			autoScroll = BookGridView.AutoScrollEnabled;
 		}
 
 		public override void After(MethodInfo methodUnderTest)
 		{
+			MacAlert.UseNative = nativeAlerts;
+			CrSizableContainer.EnableAnimation = animation;
+			CoverView.FadeEnabled = coverFade;
+			ReaderOverlayClock.Enabled = overlayClock;
+			BookGridView.AutoScrollEnabled = autoScroll;
 			// MacHost keeps its single instance in a private static field; the test assembly has no other way to see it.
 			FieldInfo field = typeof(MacHost).GetField("current", BindingFlags.NonPublic | BindingFlags.Static);
 			MacHost leaked = field?.GetValue(null) as MacHost;
@@ -51,6 +68,7 @@ namespace ComicRack.Mac.Tests
 				throw new InvalidOperationException(methodUnderTest.DeclaringType?.Name + "." + methodUnderTest.Name + " left a MacHost open.");
 			}
 			WaitForPixelBlocksToBeReleased();
+			Gc.EndTestBody();
 		}
 
 		/// <summary>
@@ -63,7 +81,7 @@ namespace ComicRack.Mac.Tests
 		{
 			var watch = Stopwatch.StartNew();
 			long nextFlush = 50;
-			while (PixelBlock.LiveCount > liveAtStart && watch.ElapsedMilliseconds < 300)
+			while (Gc.Live > liveAtStart && watch.ElapsedMilliseconds < 300)
 			{
 				if (watch.ElapsedMilliseconds >= nextFlush)
 				{

@@ -213,7 +213,7 @@ namespace ComicRack.Mac.Tests.Browser
 			await Ui.Run(async () =>
 			{
 				Gc.Flush();
-				long liveBefore = PixelBlock.LiveCount;
+				long liveBefore = Gc.Live;
 				var decoder = new FakeDecoder { Size = r => (100, 150) };
 				decoder.Hold();
 				using (var service = new ThumbnailService(new ThumbnailServiceOptions { Decoder = decoder }))
@@ -294,7 +294,7 @@ namespace ComicRack.Mac.Tests.Browser
 				}
 				Gc.Flush();
 				Assert.True(decoder.Blocks.All(b => b.IsFreed), "every picture the decoder made must be freed once the cells and the cache let go");
-				Assert.True(PixelBlock.LiveCount <= liveBefore, $"live pixel blocks: {PixelBlock.LiveCount} (before the test: {liveBefore})");
+				Assert.True(Gc.Live <= liveBefore, $"live pixel blocks: {Gc.Live} (before the test: {liveBefore})");
 			});
 		}
 

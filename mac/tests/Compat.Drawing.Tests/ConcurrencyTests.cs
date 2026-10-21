@@ -35,7 +35,7 @@ namespace Compat.Drawing.Tests
 					}
 				}
 			});
-			Assert.Equal(before, Image.LiveStorageCount);
+			Assert.Equal(before, Live);
 		}
 
 		[Fact]

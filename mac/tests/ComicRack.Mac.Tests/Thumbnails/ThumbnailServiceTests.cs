@@ -523,7 +523,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void A_result_that_arrives_after_the_caller_cancelled_is_not_delivered_and_is_not_leaked()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (var rig = new Rig(maxBytes: Entry))
 			{
 				var cts = new CancellationTokenSource();
@@ -534,7 +534,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				rig.Ui.PumpUntilCompleted(task);
 				Assert.True(task.IsCanceled);
 				rig.Service.Clear();
-				Assert.Equal(live, PixelBlock.LiveCount); // no image stayed behind holding the pixels
+				Assert.Equal(live, Gc.Live); // no image stayed behind holding the pixels
 			}
 		}
 
@@ -562,7 +562,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void The_cache_never_holds_more_bytes_than_its_bound_and_evicts_the_least_recently_used()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (var rig = new Rig(maxBytes: 10 * Entry))
 			{
 				for (int i = 0; i < 25; i++)
@@ -574,7 +574,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				ThumbnailServiceStats stats = rig.Service.GetStats();
 				Assert.Equal(10, stats.CachedCount);
 				Assert.Equal(10 * Entry, stats.CachedBytes);
-				Assert.Equal(10, PixelBlock.LiveCount - live); // the evicted pixels are really freed
+				Assert.Equal(10, Gc.Live - live); // the evicted pixels are really freed
 				for (int i = 0; i < 25; i++)
 				{
 					bool cached = rig.Service.TryGetCached(Books.Make("b" + i), 200, out ThumbnailResult hit);
@@ -612,16 +612,16 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void An_image_bigger_than_the_whole_cache_is_delivered_but_not_kept()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (var rig = new Rig(maxBytes: Entry))
 			{
 				rig.Decoder.Size = r => (1000, 1000);
 				ThumbnailResult result = rig.Done(rig.Ask("huge"));
 				Assert.Equal(1000, result.Image.Width);
 				Assert.Equal(0, rig.Service.GetStats().CachedCount);
-				Assert.Equal(live + 1, PixelBlock.LiveCount); // only the caller's image holds it
+				Assert.Equal(live + 1, Gc.Live); // only the caller's image holds it
 				result.Image.Dispose();
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 			}
 		}
 
@@ -629,7 +629,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void Evicting_an_image_that_is_still_drawn_does_not_free_its_pixels()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (var rig = new Rig(maxBytes: 2 * Entry))
 			{
 				SKImage held = rig.Done(rig.Ask("held")).Image;
@@ -638,7 +638,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 					rig.Done(rig.Ask("other" + i)).Image.Dispose();
 				}
 				Assert.False(rig.Service.TryGetCached(Books.Make("held"), 200, out _)); // evicted ...
-				Assert.Equal(live + 3, PixelBlock.LiveCount); // ... but its pixels live on, next to the two cached ones
+				Assert.Equal(live + 3, Gc.Live); // ... but its pixels live on, next to the two cached ones
 
 				using (var target = new SKBitmap(100, 100))
 				using (var canvas = new SKCanvas(target))
@@ -648,9 +648,9 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				}
 
 				rig.Service.Clear();
-				Assert.Equal(live + 1, PixelBlock.LiveCount);
+				Assert.Equal(live + 1, Gc.Live);
 				held.Dispose(); // the last holder lets go
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 			}
 		}
 
@@ -658,7 +658,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public async Task An_image_that_is_never_disposed_is_freed_by_the_garbage_collector()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (var rig = new Rig(maxBytes: 1 * Entry))
 			{
 				for (int i = 0; i < 6; i++)
@@ -670,13 +670,13 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				for (int attempt = 0; attempt < 50 && !freed; attempt++)
 				{
 					Gc.Flush();
-					freed = PixelBlock.LiveCount == live;
+					freed = Gc.Live == live;
 					if (!freed)
 					{
 						await Task.Delay(50);
 					}
 				}
-				Assert.True(freed, "blocks still alive: " + (PixelBlock.LiveCount - live));
+				Assert.True(freed, "blocks still alive: " + (Gc.Live - live));
 			}
 		}
 
@@ -783,7 +783,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void Dispose_cancels_what_waits_and_what_runs_and_frees_the_pixels()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			var rig = new Rig(concurrency: 1);
 			try
 			{
@@ -800,7 +800,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				Assert.Equal(2, rig.Decoder.Started); // "queued" never decoded
 				Assert.True(rig.Service.IsDisposed);
 				Assert.IsType<ObjectDisposedException>(Record.Exception(() => { rig.Ask("late"); }));
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 			}
 			finally
 			{
@@ -812,7 +812,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void Dispose_does_not_wait_longer_than_asked_for_a_decode_that_cannot_be_interrupted()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			var rig = new Rig(disposeWait: TimeSpan.FromMilliseconds(200));
 			try
 			{
@@ -828,11 +828,11 @@ namespace ComicRack.Mac.Tests.Thumbnails
 
 				rig.Decoder.Open(); // the decode finally ends; the service is closed, so the pixels go straight back
 				rig.Decoder.WaitForFinished(1);
-				for (int i = 0; i < 100 && PixelBlock.LiveCount != live; i++)
+				for (int i = 0; i < 100 && Gc.Live != live; i++)
 				{
 					Thread.Sleep(10);
 				}
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 			}
 			finally
 			{
@@ -857,7 +857,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void Many_threads_asking_for_overlapping_covers_keep_every_rule()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (var rig = new Rig(maxBytes: 20 * Entry, concurrency: 4))
 			{
 				rig.Decoder.Delay = TimeSpan.FromMilliseconds(2);
@@ -898,7 +898,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				Assert.Equal(0, stats.Queued);
 			}
 			Gc.Flush();
-			Assert.Equal(live, PixelBlock.LiveCount);
+			Assert.Equal(live, Gc.Live);
 		}
 	}
 }

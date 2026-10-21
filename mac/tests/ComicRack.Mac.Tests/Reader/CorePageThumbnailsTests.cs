@@ -67,7 +67,7 @@ namespace ComicRack.Mac.Tests.Reader
 		[Fact]
 		public void A_picture_is_asked_for_once_arrives_with_Ready_and_is_handed_out_with_a_reference_for_every_caller()
 		{
-			long live = Gc.SettleLive();
+			long live = Gc.BeginCount();
 			using (var rig = new Rig())
 			{
 				Assert.Null(rig.Thumbs.Get(3, 200)); // not there yet: the page number shows, the picture is made
@@ -108,7 +108,7 @@ namespace ComicRack.Mac.Tests.Reader
 			Assert.Equal(live, PixelBlockLive());
 		}
 
-		private static long PixelBlockLive() => ComicRack.Mac.Thumbnails.PixelBlock.LiveCount;
+		private static long PixelBlockLive() => ComicRack.Mac.Tests.Thumbnails.Gc.Live;
 
 		[Fact]
 		public void Only_the_last_64_pictures_are_kept_and_an_evicted_one_is_released_and_made_again_when_it_is_asked_for()
@@ -174,7 +174,7 @@ namespace ComicRack.Mac.Tests.Reader
 		[Fact]
 		public void Closing_while_a_picture_is_still_being_made_raises_nothing_and_leaves_no_pixels_behind()
 		{
-			long live = Gc.SettleLive();
+			long live = Gc.BeginCount();
 			using (var rig = new Rig())
 			{
 				rig.Decoder.Hold();

@@ -93,7 +93,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(24, session.PageCount); // the stand-ins have 24 pages
 					Assert.Equal(0, session.ResumePage);
 					Assert.False(string.IsNullOrEmpty(session.Title));
-					long live = PixelBlock.LiveCount;
+					long live = Gc.Live;
 					PixelBlock first = session.Decoder.Decode(0, CancellationToken.None);
 					PixelBlock last = session.Decoder.Decode(23, CancellationToken.None);
 					try
@@ -101,14 +101,14 @@ namespace ComicRack.Mac.Tests.Reader
 						Assert.InRange(first.Width, 400, 900);
 						Assert.InRange(first.Height, 600, 1000);
 						Assert.Equal(SKAlphaType.Opaque, first.AlphaType); // JPEG page: opaque without a scan
-						Assert.Equal(live + 2, PixelBlock.LiveCount);
+						Assert.Equal(live + 2, Gc.Live);
 					}
 					finally
 					{
 						first.Release();
 						last.Release();
 					}
-					Assert.Equal(live, PixelBlock.LiveCount);
+					Assert.Equal(live, Gc.Live);
 
 					// a page that does not exist is an error, not a crash
 					Assert.ThrowsAny<Exception>(() => session.Decoder.Decode(24, CancellationToken.None));

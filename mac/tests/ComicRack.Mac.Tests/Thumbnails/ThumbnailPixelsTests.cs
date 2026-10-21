@@ -42,11 +42,11 @@ namespace ComicRack.Mac.Tests.Thumbnails
 			{
 				byte[] jpeg = Encode(source, SKEncodedImageFormat.Jpeg);
 				Gc.Flush();
-				long live = PixelBlock.LiveCount;
+				long live = Gc.Live;
 				PixelBlock block = ThumbnailPixels.Decode(jpeg, 288);
 				try
 				{
-					Assert.Equal(live + 1, PixelBlock.LiveCount); // the reduction did not leave the full size bitmap behind
+					Assert.Equal(live + 1, Gc.Live); // the reduction did not leave the full size bitmap behind
 					Assert.Equal(288, block.Height);
 					Assert.Equal(191, block.Width); // 340 * 288 / 512 = 191.25
 					Assert.Equal(SKAlphaType.Opaque, block.AlphaType);
@@ -65,7 +65,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				{
 					block.Release();
 				}
-				Assert.Equal(live, PixelBlock.LiveCount);
+				Assert.Equal(live, Gc.Live);
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		public void Bad_data_is_an_error_not_a_crash_and_leaks_nothing()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			Assert.Throws<InvalidDataException>(() => ThumbnailPixels.Decode(null, 100));
 			Assert.Throws<InvalidDataException>(() => ThumbnailPixels.Decode(new byte[0], 100));
 			Assert.Throws<InvalidDataException>(() => ThumbnailPixels.Decode(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 100));
@@ -132,21 +132,21 @@ namespace ComicRack.Mac.Tests.Thumbnails
 				Array.Copy(jpeg, truncated, truncated.Length);
 				Assert.Throws<InvalidDataException>(() => ThumbnailPixels.Decode(truncated, 100));
 			}
-			Assert.Equal(live, PixelBlock.LiveCount);
+			Assert.Equal(live, Gc.Live);
 		}
 
 		[Fact]
 		public void Decoding_can_be_cancelled_and_leaks_nothing()
 		{
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			using (SKBitmap source = Gradient(340, 512))
 			using (var cts = new System.Threading.CancellationTokenSource())
 			{
 				cts.Cancel();
 				Assert.Throws<OperationCanceledException>(() => ThumbnailPixels.Decode(Encode(source, SKEncodedImageFormat.Jpeg), 200, cts.Token));
 			}
-			Assert.Equal(live, PixelBlock.LiveCount);
+			Assert.Equal(live, Gc.Live);
 		}
 
 		[Fact]
@@ -349,7 +349,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 		{
 			int freed = 0;
 			Gc.Flush();
-			long live = PixelBlock.LiveCount;
+			long live = Gc.Live;
 			var block = PixelBlock.FromBitmap(Gradient(10, 10), onFree: () => freed++);
 			SKImage first = block.CreateImage();
 			SKImage second = block.CreateImage();
@@ -362,7 +362,7 @@ namespace ComicRack.Mac.Tests.Thumbnails
 			second.Dispose();
 			Assert.True(block.IsFreed);
 			Assert.Equal(1, freed);
-			Assert.Equal(live, PixelBlock.LiveCount);
+			Assert.Equal(live, Gc.Live);
 			Assert.Throws<ObjectDisposedException>(() => block.CreateImage());
 			first.Dispose(); // disposing again changes nothing
 			Assert.Equal(1, freed);
