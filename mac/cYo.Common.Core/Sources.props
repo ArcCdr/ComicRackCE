@@ -14,6 +14,8 @@
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Drawing\ExtendedColors\KnownColorTableEx.cs" />
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\UserCredentialsDialog.cs" />
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\FileSystemEnumerable.cs" />
+    <!-- ShellFile deletes through the Windows shell; the replacement sends files to the Trash through a handler of the Mac host (P2.1). -->
+    <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Win32\ShellFile.cs" />
     <!-- Thread.Abort is not supported on .NET 10: the replacements report and abandon a thread that ignores its timeout (P1.1). -->
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Threading\ThreadUtility.cs" />
     <Compile Remove="$(MSBuildThisFileDirectory)..\..\cYo.Common\Threading\BackgroundRunner.cs" />

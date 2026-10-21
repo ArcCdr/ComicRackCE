@@ -78,6 +78,15 @@
       "reason": "lists folders with kernel32 FindFirstFile/FindNextFile; the replacement uses System.IO"
     },
     {
+      "original": "cYo.Common/Win32/ShellFile.cs",
+      "replacement": "mac/cYo.Common.Core/Replacements/PassB/ShellFile.cs",
+      "kind": "rewrite",
+      "pass": "B",
+      "base": "7fd9fd35a9cf829fffc6aa9cd0b44c7325df0cb7",
+      "sha256": "9dad0daf6b4f968e17e2248106f19a1f6f76073295fc6e48b1b0bb42185872ef",
+      "reason": "deletes through the Windows shell (IFileOperation); the replacement calls a Trash handler installed by the Mac host (MacShell, P2.1)"
+    },
+    {
       "replacement": "mac/cYo.Common.Core/Replacements/SystemWebServicesProtocols.cs",
       "kind": "stub",
       "pass": "both",

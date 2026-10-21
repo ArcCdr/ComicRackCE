@@ -13,6 +13,7 @@ using cYo.Projects.ComicRack.Engine.Database;
 using cYo.Projects.ComicRack.Engine.IO.Cache;
 using cYo.Projects.ComicRack.Engine.Sync;
 using ComicRack.Mac.Host.Library;
+using ComicRack.Mac.Host.Platform;
 using cYo.Projects.ComicRack.Plugins;
 
 namespace ComicRack.Mac.Host
@@ -171,6 +172,9 @@ namespace ComicRack.Mac.Host
 			// The archive engines default to SevenZip (a Windows DLL); SharpCompress is managed.
 			EngineConfiguration config = EngineConfiguration.Default;
 			config.CbzUses = config.CbrUses = config.Cb7Uses = config.CbtUses = EngineConfiguration.CbEngines.SharpCompress;
+
+			// ShellFile.DeleteFile (queue, exporter, backups) sends files to the Trash; the pass B ShellFile has no shell of its own (P2.1).
+			cYo.Common.Win32.ShellFile.TrashHandler = path => MacShell.MoveToTrash(path);
 
 			// The NTFS alternate data stream store (NtfsInfoStorage) calls kernel32 CreateFile for every scanned book.
 			config.DisableNTFS = true;
