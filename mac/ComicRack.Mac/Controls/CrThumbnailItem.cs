@@ -460,41 +460,8 @@ namespace ComicRack.Mac.Controls
 				DrawCaptionSelection(context);
 			}
 
-			// ThumbRenderer.DrawShadow: BlurShadowParts.Default (right edge, bottom edge and the three corners that touch them) of a 4 unit
-			// shadow of the rectangle grown by 4; each part is a quarter or an edge of a radial fall-off from 0.33 black to nothing.
-			private void DrawShadow(DrawingContext context, Rect t)
-			{
-				IBrush shadow = ChromePaint.ResourceBrush(item, "Cr.Thumb.ShadowBrush");
-				if (!(shadow is ISolidColorBrush solid))
-				{
-					return;
-				}
-				double d = ThumbnailMetrics.ShadowDepth;
-				Color near = solid.Color, far = new Color(0, near.R, near.G, near.B); // the same colour, fully transparent
-				var stops = new[] { new ImmutableGradientStop(0, near), new ImmutableGradientStop(1, far) };
-				if (t.Height > d)
-				{
-					context.DrawRectangle(Linear(stops, 0, 0, 1, 0), null, new Rect(t.Right, t.Y + d, d, t.Height - d));
-				}
-				if (t.Width > d)
-				{
-					context.DrawRectangle(Linear(stops, 0, 0, 0, 1), null, new Rect(t.X + d, t.Bottom, t.Width - d, d));
-				}
-				context.DrawRectangle(Radial(stops, 0, 1), null, new Rect(t.Right, t.Y, d, d));
-				context.DrawRectangle(Radial(stops, 0, 0), null, new Rect(t.Right, t.Bottom, d, d));
-				context.DrawRectangle(Radial(stops, 1, 0), null, new Rect(t.X, t.Bottom, d, d));
-			}
-
-			private static IBrush Linear(ImmutableGradientStop[] stops, double x0, double y0, double x1, double y1)
-			{
-				return new ImmutableLinearGradientBrush(stops, 1, null, null, GradientSpreadMethod.Pad, new RelativePoint(x0, y0, RelativeUnit.Relative), new RelativePoint(x1, y1, RelativeUnit.Relative));
-			}
-
-			private static IBrush Radial(ImmutableGradientStop[] stops, double cx, double cy)
-			{
-				var centre = new RelativePoint(cx, cy, RelativeUnit.Relative);
-				return new ImmutableRadialGradientBrush(stops, 1, null, null, GradientSpreadMethod.Pad, centre, centre, new RelativeScalar(1, RelativeUnit.Relative), new RelativeScalar(1, RelativeUnit.Relative));
-			}
+			// ThumbRenderer.DrawShadow (ThumbnailShadow)
+			private void DrawShadow(DrawingContext context, Rect t) => ThumbnailShadow.Draw(context, item, t);
 
 			// ThumbRenderer.DrawMissingThumbnail: a white tile with the text in light grey Arial 6 pt, four units in from the edge.
 			private void DrawMissingThumbnail(DrawingContext context, Rect t)
@@ -801,6 +768,47 @@ namespace ComicRack.Mac.Controls
 				Stars(rated, alpha1);
 				Stars(rest, alpha2);
 			}
+		}
+	}
+
+	/// <summary>
+	/// <c>ThumbRenderer.DrawShadow</c>: <c>BlurShadowParts.Default</c> (right edge, bottom edge and the three corners that touch them) of a 4 unit shadow of the
+	/// rectangle grown by 4; each part is a quarter or an edge of a radial fall-off from 0.33 black to nothing. The thumbnail item and the cover of the Info dialog use it.
+	/// </summary>
+	public static class ThumbnailShadow
+	{
+		public static void Draw(DrawingContext context, Control owner, Rect t)
+		{
+			IBrush shadow = ChromePaint.ResourceBrush(owner, "Cr.Thumb.ShadowBrush");
+			if (!(shadow is ISolidColorBrush solid))
+			{
+				return;
+			}
+			double d = ThumbnailMetrics.ShadowDepth;
+			Color near = solid.Color, far = new Color(0, near.R, near.G, near.B); // the same colour, fully transparent
+			var stops = new[] { new ImmutableGradientStop(0, near), new ImmutableGradientStop(1, far) };
+			if (t.Height > d)
+			{
+				context.DrawRectangle(Linear(stops, 0, 0, 1, 0), null, new Rect(t.Right, t.Y + d, d, t.Height - d));
+			}
+			if (t.Width > d)
+			{
+				context.DrawRectangle(Linear(stops, 0, 0, 0, 1), null, new Rect(t.X + d, t.Bottom, t.Width - d, d));
+			}
+			context.DrawRectangle(Radial(stops, 0, 1), null, new Rect(t.Right, t.Y, d, d));
+			context.DrawRectangle(Radial(stops, 0, 0), null, new Rect(t.Right, t.Bottom, d, d));
+			context.DrawRectangle(Radial(stops, 1, 0), null, new Rect(t.X, t.Bottom, d, d));
+		}
+
+		private static IBrush Linear(ImmutableGradientStop[] stops, double x0, double y0, double x1, double y1)
+		{
+			return new ImmutableLinearGradientBrush(stops, 1, null, null, GradientSpreadMethod.Pad, new RelativePoint(x0, y0, RelativeUnit.Relative), new RelativePoint(x1, y1, RelativeUnit.Relative));
+		}
+
+		private static IBrush Radial(ImmutableGradientStop[] stops, double cx, double cy)
+		{
+			var centre = new RelativePoint(cx, cy, RelativeUnit.Relative);
+			return new ImmutableRadialGradientBrush(stops, 1, null, null, GradientSpreadMethod.Pad, centre, centre, new RelativeScalar(1, RelativeUnit.Relative), new RelativeScalar(1, RelativeUnit.Relative));
 		}
 	}
 }

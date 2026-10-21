@@ -148,8 +148,10 @@ namespace ComicRack.Mac.Tests.Browser
 					MainViewModel vm = launch.ViewModel;
 					NativeMenu bar = ComicRack.Mac.MainMenu.BuildMenuBar(vm);
 					NativeMenuItem edit = bar.Items.OfType<NativeMenuItem>().Single(i => i.Header == "Edit");
-					NativeMenuItem rating = edit.Menu.Items.OfType<NativeMenuItem>().Single();
-					Assert.Equal("My Rating", rating.Header);
+					// Info..., Undo, Redo and My Rating in the original's order, a separator after Info and after Redo
+					Assert.Equal(new[] { "Info...", "-", "Undo", "Redo", "-", "My Rating" },
+						edit.Menu.Items.OfType<NativeMenuItem>().Select(i => i is NativeMenuItemSeparator ? "-" : i.Header).ToArray());
+					NativeMenuItem rating = edit.Menu.Items.OfType<NativeMenuItem>().Single(i => i.Header == "My Rating");
 					var items = rating.Menu.Items.OfType<NativeMenuItem>().Where(i => !(i is NativeMenuItemSeparator)).ToArray();
 					Assert.Equal(new[] { "None", "* (1 Star)", "** (2 Stars)", "*** (3 Stars)", "**** (4 Stars)", "***** (5 Stars)", "Quick Rating and Review..." }, items.Select(i => i.Header).ToArray());
 					Assert.Equal(new[] { Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.Q }, items.Select(i => i.Gesture.Key).ToArray());

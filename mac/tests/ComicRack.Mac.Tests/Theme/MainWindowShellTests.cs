@@ -102,8 +102,8 @@ namespace ComicRack.Mac.Tests.Theme
 				string[] images = { "Sidebar", "BrowsePrevious", "BrowseNext", "View", "Group", "Stacking", "SortUp", "ListLayout", "AddList", "Undo", "Redo" };
 				string[] shown = toolbar.Children.OfType<CrToolButton>().Select(b => b.IconName).ToArray();
 				Assert.Equal(images, shown);
-				// enabled: the Sidebar button and Arrange; everything whose task is not done is present and disabled
-				string[] enabled = toolbar.Children.OfType<CrToolButton>().Where(b => b.IsEnabled).Select(b => b.Name).ToArray();
+				// enabled: the Sidebar button and Arrange (Undo and Redo follow the undo list of the library, which is empty here); everything whose task is not done is present and disabled
+				string[] enabled = toolbar.Children.OfType<CrToolButton>().Where(b => b.IsEffectivelyEnabled).Select(b => b.Name).ToArray();
 				Assert.Equal(new[] { "SidebarButton", "ArrangeButton" }, enabled);
 				// the texts are the original's (ComicBrowserControl.xml): a tool tip on every button, text on the split buttons that have one
 				Assert.Equal("Previous", ToolTip.GetTip(Part<CrToolButton>(window, "BrowsePreviousButton")));

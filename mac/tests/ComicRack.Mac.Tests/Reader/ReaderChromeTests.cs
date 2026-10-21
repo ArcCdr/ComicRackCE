@@ -528,7 +528,7 @@ namespace ComicRack.Mac.Tests.Reader
 		}
 
 		[Fact]
-		public async Task The_page_menu_has_my_rating_and_page_layout_without_Info_until_the_dialog_exists_and_the_rating_is_written_to_the_book()
+		public async Task The_page_menu_has_info_my_rating_and_page_layout_and_the_rating_is_written_to_the_book()
 		{
 			await Ui.Run(async () =>
 			{
@@ -536,11 +536,13 @@ namespace ComicRack.Mac.Tests.Reader
 				using (ReaderHarness h = await ReaderHarness.Open(session, 800, 600))
 				{
 					var flyout = (MenuFlyout)h.Window.ReadingArea.ContextFlyout;
-					// Info... (Cmd+I) comes with the Info dialog, P5.7a: an item that does nothing is not shown
-					Assert.Equal(2, flyout.Items.Count);
-					var items = flyout.Items.OfType<MenuItem>().ToArray();
-					Assert.DoesNotContain(items, m => (string)m.Header == "Info...");
-					Assert.DoesNotContain(items, m => m.InputGesture != null && m.InputGesture.Equals(new KeyGesture(Key.I, KeyModifiers.Meta)));
+					// Info... (cmShowInfo, Cmd+I) comes first, as in the original's page menu (PC.01)
+					Assert.Equal(3, flyout.Items.Count);
+					MenuItem[] all = flyout.Items.OfType<MenuItem>().ToArray();
+					Assert.Equal("Info...", all[0].Header);
+					Assert.Equal(new KeyGesture(Key.I, KeyModifiers.Meta), all[0].InputGesture);
+					Assert.NotNull(all[0].Command);
+					var items = all.Skip(1).ToArray();
 					Assert.Equal("My Rating", items[0].Header);
 					var stars = items[0].Items.OfType<MenuItem>().ToArray();
 					Assert.Equal(6, stars.Length);
@@ -557,11 +559,13 @@ namespace ComicRack.Mac.Tests.Reader
 					layout[1].Command.Execute(null);
 					Assert.True(layout[1].IsChecked);
 					Assert.False(layout[0].IsChecked);
-					// the key does not reach a command either: nothing is asked for
+					// the item asks for the dialog; the key Cmd+I is the Edit menu's (the native menu bar), not one of the reader's own keys
 					bool info = false;
 					h.Vm.InfoRequested += (s, e) => info = true;
 					Assert.False(h.Vm.HandleKey(Key.I, KeyModifiers.Meta));
 					Assert.False(info);
+					all[0].Command.Execute(null);
+					Assert.True(info);
 				}
 			});
 		}

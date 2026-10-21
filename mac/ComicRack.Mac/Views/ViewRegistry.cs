@@ -32,6 +32,22 @@ namespace ComicRack.Mac.Views
 			Register("ChromeGallery", () => new ChromeGalleryWindow());
 			Register("BookGrid", () => new BookGridWindow());
 			Register("Reader", OpenFirstBook);
+			Register("ComicBookDialog", InfoOfFirstBook);
+		}
+
+		/// <summary>
+		/// The Info dialog of the original (<c>--show ComicBookDialog</c>): the dialog of the first book of the library with the list as its Previous and Next books, shown over the
+		/// library window without blocking it (the contact sheet and the e2e cases look at it and close it).
+		/// </summary>
+		private static Window InfoOfFirstBook()
+		{
+			ViewModels.MainViewModel library = Library ?? throw new InvalidOperationException("The library window is not open.");
+			ComicRack.Mac.Browser.BookItem[] items = library.Browser.Items;
+			if (items.Length == 0 || items[0].Book == null)
+			{
+				throw new InvalidOperationException("The library has no book to show (use --fixture-library).");
+			}
+			return new ComicBookDialog(library.CreateBookInfoRequest(items[0].Book, items.Where(i => i.Book != null).Select(i => i.Book).ToArray()));
 		}
 
 		/// <summary>

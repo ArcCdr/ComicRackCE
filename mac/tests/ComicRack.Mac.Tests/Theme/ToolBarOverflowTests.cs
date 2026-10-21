@@ -230,7 +230,7 @@ namespace ComicRack.Mac.Tests.Theme
 				bar.ShowOverflow();
 				Dispatcher.UIThread.RunJobs();
 				Assert.True(bar.IsOverflowOpen);
-				Assert.False(window.FindControl<CrToolButton>("UndoButton").IsEnabled);
+				Assert.False(window.FindControl<CrToolButton>("UndoButton").IsEffectivelyEnabled);
 				bar.HideOverflow();
 				Assert.False(bar.IsOverflowOpen);
 				Assert.Contains(window.FindControl<CrToolButton>("RedoButton"), bar.Children);

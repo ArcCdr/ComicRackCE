@@ -60,7 +60,7 @@ namespace ComicRack.Cli.Tests
 		{
 			string[] expected =
 			{
-				"book-tabs", "chrome", "chrome-gallery", "context-menu-1", "fullscreen", "grid-keys", "grid-look", "grid-marquee", "grid-multiselect", "hidpi", "import", "info-panel", "launch-quit",
+				"book-tabs", "chrome", "chrome-gallery", "context-menu-1", "fullscreen", "grid-keys", "grid-look", "grid-marquee", "grid-multiselect", "hidpi", "import", "info-edit", "info-panel", "launch-quit",
 				"menu-structure", "open-folder", "overlay", "pdf-cb7", "quit-during-scan", "reader-keys", "reader-look", "refresh-after-read", "small-preview", "state-restore",
 			};
 			string[] names = CaseFiles().Select(f => Path.GetFileNameWithoutExtension(f)).OrderBy(n => n, StringComparer.Ordinal).ToArray();

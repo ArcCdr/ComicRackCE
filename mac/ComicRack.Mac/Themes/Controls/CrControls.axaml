@@ -62,6 +62,16 @@
     <Setter Property="Padding" Value="6,0,6,0" />
   </Style>
 
+  <!-- The Check view of the list selector (CrCheckList): a list whose items have a check box; the checked items are the selected ones. -->
+  <Style Selector="ListBox.cr-check-list ListBoxItem">
+    <Setter Property="Padding" Value="2,1" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <CheckBox Padding="{TemplateBinding Padding}" IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}" Content="{TemplateBinding Content}" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
   <!-- Keyboard focus (C-FOCUS-1): the system accent ring around the control instead of the dotted rectangle. -->
   <Style Selector=":is(Control)">
     <Setter Property="FocusAdorner">

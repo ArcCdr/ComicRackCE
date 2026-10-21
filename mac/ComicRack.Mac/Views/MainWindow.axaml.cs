@@ -55,8 +55,6 @@ namespace ComicRack.Mac.Views
 			Label("StackButton", "tbbStack", "Stack", true);
 			Label("ListLayoutsButton", "tsListLayouts", "List Layouts", false);
 			Label("DuplicateButton", "tbbDuplicateList", "Duplicate", false);
-			Label("UndoButton", "tbUndo", "Undo", false);
-			Label("RedoButton", "tbRedo", "Redo", false);
 			this.FindControl<CrSearchBox>("SearchBox").CueText = UiText.Default("Search", "Search") + " " + UiText.Get("ComicBrowserControl", "miSearchAll", "All");
 			this.FindControl<Button>("CancelButton").Content = UiText.Get("PreferencesDialog", "btCancel", "&Cancel");
 		}

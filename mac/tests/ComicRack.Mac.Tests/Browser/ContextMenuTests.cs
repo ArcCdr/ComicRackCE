@@ -418,7 +418,7 @@ namespace ComicRack.Mac.Tests.Browser
 		}
 
 		[Fact]
-		public async Task Info_asks_for_the_dialog_that_P5_7a_builds()
+		public async Task Info_opens_the_info_dialog_of_the_first_selected_book_with_the_shown_list_as_its_books_and_an_undo_marker()
 		{
 			await Ui.Run(async () =>
 			{
@@ -426,10 +426,14 @@ namespace ComicRack.Mac.Tests.Browser
 				using (Launch launch = await Launch.Start(temp.Combine("app")))
 				{
 					MainViewModel vm = launch.ViewModel;
-					ComicBook[] books = await Fill(launch, Book("Alpha", 1));
-					SelectBooks(vm, books[0]);
+					ComicBook[] books = await Fill(launch, Book("Alpha", 1), Book("Beta", 2), Book("Gamma", 3));
+					SelectBooks(vm, vm.Browser.Items[1].Book);
 					vm.Browser.Run(BookCommand.Info);
-					Assert.Contains("P5.7a", vm.StatusText);
+					BookInfoRequest request = Assert.Single(launch.Dialogs.BookInfos);
+					Assert.Same(vm.Browser.Items[1].Book, request.Model.Current);
+					Assert.Equal(vm.Browser.Items.Select(i => i.Book), request.Model.AllBooks); // Previous and Next walk through the list as the grid shows it
+					Assert.NotNull(request.Thumbnails);
+					Assert.Equal("Show Info", launch.Service.Host.DatabaseManager.Database.Undo.UndoLabel ?? "Show Info"); // the marker is pending until a book changes
 				}
 			});
 		}

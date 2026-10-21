@@ -93,6 +93,13 @@ namespace ComicRack.Mac.Services
 
 		private static string CrDialogText(string text) => ComicRack.Mac.Controls.CrDialogWindow.StripMnemonic(text);
 
+		/// <summary>The Info dialog over the main window.</summary>
+		public Task<bool> ShowBookInfoAsync(BookInfoRequest request)
+		{
+			request.ShowProblem = message => ShowMessageAsync(UiText.Message("Attention", "Attention"), message);
+			return new ComicBookDialog(request).ShowDialogAsync(owner);
+		}
+
 		/// <summary>The Quick Rating dialog over the main window.</summary>
 		public Task<QuickRatingResult> AskQuickRatingAsync(QuickRatingRequest request)
 		{

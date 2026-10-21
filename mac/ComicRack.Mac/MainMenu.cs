@@ -41,6 +41,8 @@ namespace ComicRack.Mac
 				new KeyBinding { Gesture = new KeyGesture(Key.F9, KeyModifiers.Meta), Command = vm.ShowSettingsCommand },
 				// Close (the book tab): Option+Cmd+X on the menu item, alias Cmd+W (MF.02)
 				new KeyBinding { Gesture = new KeyGesture(Key.W, KeyModifiers.Meta), Command = vm.CloseBookCommand },
+				// Redo: Cmd+Y on the menu item, alias Cmd+Shift+Z (ME.03)
+				new KeyBinding { Gesture = new KeyGesture(Key.Z, KeyModifiers.Meta | KeyModifiers.Shift), Command = vm.RedoCommand },
 				// Open in new Tab (BC.02, Ctrl+Shift+O of the original): the focused book of the browser in a tab of its own
 				new KeyBinding { Gesture = new KeyGesture(Key.O, KeyModifiers.Meta | KeyModifiers.Shift), Command = vm.Browser.OpenSelectedInNewTabCommand },
 			};
@@ -105,6 +107,13 @@ namespace ComicRack.Mac
 				}),
 				Submenu(Text("editMenu", "&Edit"), new NativeMenu
 				{
+					// ME.01: the Info dialog of the book of the current tab, or of the selected books of the browser
+					Item(Text("miShowInfo", "Info..."), vm.ShowInfoCommand, Key.I),
+					new NativeMenuItemSeparator(),
+					// ME.02, ME.03: the undo of the Core, with the label of the step in the text (Undo: Change Rating)
+					UndoItem(vm, Text("miUndo", "&Undo"), vm.UndoCommand, Key.Z, v => v.UndoText, nameof(MainViewModel.UndoText)),
+					UndoItem(vm, Text("miRedo", "&Redo"), vm.RedoCommand, Key.Y, v => v.RedoText, nameof(MainViewModel.RedoText)),
+					new NativeMenuItemSeparator(),
 					// ME.04: the rating of the book of the current tab, or of the selected books of the browser
 					RatingItem(vm),
 				}),
@@ -178,6 +187,22 @@ namespace ComicRack.Mac
 					Item(Text("miWebHelp", "ComicRack Documentation..."), vm.ShowHelpCommand, Key.F1, KeyModifiers.None),
 				}),
 			};
+		}
+
+		// Edit > Undo and Redo: the text follows the label of the step (editMenu_DropDownOpening), the item is off when there is nothing to do and while a dialog is open
+		// (Cmd+Z is then the text field's own undo).
+		private static NativeMenuItem UndoItem(MainViewModel vm, string header, ICommand command, Key key, Func<MainViewModel, string> text, string property)
+		{
+			NativeMenuItem item = Item(header, command, key);
+			item.Header = text(vm);
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == property)
+				{
+					item.Header = text(vm);
+				}
+			};
+			return item;
 		}
 
 		// Edit > My Rating (miRating, ME.04): None, 1 to 5 stars, Quick Rating and Review..., Option+Shift+0 to 5 and Q. The picture of five stars the original's

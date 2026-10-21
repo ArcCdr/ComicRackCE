@@ -85,6 +85,17 @@ namespace ComicRack.Mac.Controls
 			};
 		}
 
+		/// <summary>
+		/// The space around the button row: left of the footer, above the row, right of the buttons, below it. The default (15, 12, 15, 12) is the
+		/// frame of the Preferences-style dialogs; a dialog whose original puts its buttons elsewhere sets the original's margins (the Info dialog's
+		/// buttons are 6 below the tab control, 10 from the bottom and 8 and 12 from the sides).
+		/// </summary>
+		public Thickness ButtonBarMargin
+		{
+			get => bottomBar.Margin;
+			set => bottomBar.Margin = value;
+		}
+
 		/// <summary>The dialog's content: the original's controls.</summary>
 		public Control Body
 		{

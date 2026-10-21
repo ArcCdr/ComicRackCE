@@ -41,5 +41,8 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>The Quick Rating dialog (DL.18). Null: cancelled. The default cancels.</summary>
 		Task<QuickRatingResult> AskQuickRatingAsync(QuickRatingRequest request) => Task.FromResult<QuickRatingResult>(null);
+
+		/// <summary>The Info dialog (DL.01, <c>ComicBookDialog</c>): true after OK. It writes the books itself (OK, Apply, Previous and Next call the model). The default cancels.</summary>
+		Task<bool> ShowBookInfoAsync(BookInfoRequest request) => Task.FromResult(false);
 	}
 }

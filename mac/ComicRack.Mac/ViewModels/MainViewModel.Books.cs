@@ -37,8 +37,8 @@ namespace ComicRack.Mac.ViewModels
 			switch (e.Command)
 			{
 				case BookCommand.Info:
-					// Info... (miProperties) opens the Info dialog of the books; the dialog is P5.7a
-					NotYet(UiText.Get("ComicBrowserControl", "miProperties", "Info..."), "P5.7a");
+					// Info... (miProperties, MainForm.ShowInfo): the Info dialog of the selected books
+					_ = ShowInfoAsync(e.Books);
 					break;
 				case BookCommand.Reveal:
 					RevealBooks(e.Books);

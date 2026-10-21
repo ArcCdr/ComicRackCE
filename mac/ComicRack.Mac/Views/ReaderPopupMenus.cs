@@ -135,11 +135,13 @@ namespace ComicRack.Mac.Views
 			});
 		}
 
-		/// <summary>The Tools button (TB.09): the items of <c>toolsContextMenu</c> that exist: About and Exit.</summary>
+		/// <summary>The Tools button (TB.09): the items of <c>toolsContextMenu</c> that exist: Info, About and Exit.</summary>
 		public static MenuFlyout Tools(MainViewModel vm)
 		{
 			return Flyout(new Control[]
 			{
+				// tbShowInfo (TB.09): the Info dialog of the book of the tab or the selected books
+				Item(Text("tbShowInfo", "Info..."), "GetInfo", vm.ShowInfoCommand, Key.I),
 				Item(Text("tbAbout", "&About..."), "About", vm.AboutCommand, Key.F1, KeyModifiers.Alt),
 				Line(),
 				Item(Text("tbExit", "&Exit"), null, vm.ExitCommand, Key.Q),
@@ -148,7 +150,7 @@ namespace ComicRack.Mac.Views
 
 		// ---- the page menu --------------------------------------------------------------------------------------------
 
-		/// <summary>The menu of a right click on the page (<c>pageContextMenu</c>): My Rating, Page Layout. Info... comes with P5.7a (PC.01).</summary>
+		/// <summary>The menu of a right click on the page (<c>pageContextMenu</c>): Info..., My Rating, Page Layout (PC.01).</summary>
 		public static MenuFlyout Page(ReaderViewModel vm)
 		{
 			var rating = new MenuItem { Header = Text("cmRating", "My R&ating") };
@@ -181,9 +183,10 @@ namespace ComicRack.Mac.Views
 			layout.Items.Add(Choice(vm, Text("cmTwoPages", "Two Pages"), "TwoPageForced", vm.TwoPageLayoutCommand, Key.D8, () => vm.LayoutMode == PageLayoutMode.Double, nameof(ReaderViewModel.LayoutMode)));
 			layout.Items.Add(Choice(vm, Text("cmTwoPagesAdaptive", "Two Pages (adaptive)"), "TwoPage", vm.AdaptiveTwoPageLayoutCommand, Key.D9, () => vm.LayoutMode == PageLayoutMode.DoubleAdaptive, nameof(ReaderViewModel.LayoutMode)));
 			layout.Items.Add(Check(vm, Text("cmRightToLeft", "Right to Left"), "RightToLeft", vm.ToggleRightToLeftCommand, Key.D0, () => vm.RightToLeft, nameof(ReaderViewModel.RightToLeft)));
-			// Info... (cmShowInfo, Cmd+I) is not here: the Info dialog arrives with P5.7a, which adds the item and the key together
 			return Flyout(new Control[]
 			{
+				// cmShowInfo, Cmd+I: the Info dialog of the book of the tab
+				Item(Text("cmShowInfo", "Info..."), "GetInfo", vm.ShowInfoCommand, Key.I),
 				rating,
 				layout,
 			});

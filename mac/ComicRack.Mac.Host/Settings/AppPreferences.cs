@@ -776,6 +776,9 @@ namespace ComicRack.Mac.Host
 		private bool twoPagePreview;
 		private bool showInfo;
 		private double infoBrowserSize = DefaultInfoBrowserSize;
+		private double infoDialogWidth;
+		private double infoDialogHeight;
+		private string[] recentThumbnailFiles;
 
 		/// <summary>The width of the side panel when it is open (<c>ComicExplorerView</c>'s <c>SizableContainer</c>, 252).</summary>
 		public const double DefaultSidebarWidth = 252;
@@ -800,6 +803,52 @@ namespace ComicRack.Mac.Host
 
 		/// <summary>The name of the page layout a reader starts with (<c>PageLayoutMode</c>).</summary>
 		public const string DefaultReaderLayout = "Single";
+
+		/// <summary>
+		/// The size of the Info dialog when the user made it larger than its minimum (<c>ComicBookDialog.SafeSize</c>, saved by OK and Apply as
+		/// <c>Workspace.ComicBookDialogOutputSize</c>); 0 means the minimum size. The size of the client area in device independent pixels.
+		/// </summary>
+		[MacOnly]
+		[DefaultValue(0.0)]
+		public double InfoDialogWidth
+		{
+			get { return infoDialogWidth; }
+			set { Set(ref infoDialogWidth, value); }
+		}
+
+		[MacOnly]
+		[DefaultValue(0.0)]
+		public double InfoDialogHeight
+		{
+			get { return infoDialogHeight; }
+			set { Set(ref infoDialogHeight, value); }
+		}
+
+		/// <summary>The picture files most recently chosen as a custom thumbnail, newest first (<c>Settings.ThumbnailFiles</c>); the thumbnail menu of the Info dialog lists them.</summary>
+		[MacOnly]
+		[DefaultValue(null)]
+		public string[] RecentThumbnailFiles
+		{
+			get { return recentThumbnailFiles; }
+			set { Set(ref recentThumbnailFiles, value != null && value.Length == 0 ? null : value); }
+		}
+
+		/// <summary><c>Settings.ThumbnailFiles.UpdateMostRecent</c>: the file goes to the front of the list (once), the list keeps 20 files.</summary>
+		public void AddRecentThumbnailFile(string file)
+		{
+			if (string.IsNullOrEmpty(file))
+			{
+				return;
+			}
+			var list = new System.Collections.Generic.List<string>(recentThumbnailFiles ?? System.Array.Empty<string>());
+			list.RemoveAll(f => string.Equals(f, file, System.StringComparison.Ordinal));
+			list.Insert(0, file);
+			if (list.Count > 20)
+			{
+				list.RemoveRange(20, list.Count - 20);
+			}
+			RecentThumbnailFiles = list.ToArray();
+		}
 
 		/// <summary>Where the library window was, or null before it was ever moved.</summary>
 		[MacOnly]

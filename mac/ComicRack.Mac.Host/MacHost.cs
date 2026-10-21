@@ -159,6 +159,26 @@ namespace ComicRack.Mac.Host
 			Log.Info("Host open.");
 		}
 
+		/// <summary>
+		/// <c>Program.LoadCustomThumbnail</c> for a picture file: the picture becomes a custom thumbnail in the Core's image pool and its key is returned (a book without a file
+		/// shows it as its cover). Null when the file cannot be read as a picture.
+		/// </summary>
+		public string AddCustomThumbnail(string file)
+		{
+			try
+			{
+				using (var bitmap = cYo.Common.Drawing.BitmapExtensions.BitmapFromFile(file))
+				{
+					return bitmap == null ? null : ImagePool.AddCustomThumbnail(bitmap);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log?.Error("The thumbnail picture " + file + " could not be used.", ex);
+				return null;
+			}
+		}
+
 		/// <summary>The static configuration that StartNew applies before the services exist.</summary>
 		private void ConfigureCore()
 		{
@@ -203,6 +223,21 @@ namespace ComicRack.Mac.Host
 			VirtualTagsCollection.RegisterSettings(Settings);
 
 			WarmLanguageCultures();
+			ConfigureIcons();
+		}
+
+		// Program.cs:838-843: the publisher, age rating, format and special icon packages that the covers and the Info dialog show. The folder of the program
+		// holds the repository's icons; a folder Resources/Icons in the data folder takes the user's own (the Windows app reads the same relative path in its data folders).
+		private void ConfigureIcons()
+		{
+			try
+			{
+				IconPackages.Load(new[] { IconPackages.DefaultFolder, System.IO.Path.Combine(Paths.DataFolder, "Resources", "Icons") });
+			}
+			catch (Exception ex)
+			{
+				Log?.Error("The icon packages could not be loaded.", ex);
+			}
 		}
 
 		private static readonly object WarmGate = new object();

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoSummaryPage"
+             x:DataType="e:BookEditorModel">
+  <!-- Generated from the positions of ComicBookDialog.Designer.cs (tab page 566 x 442): a margin is the position, the alignment is the anchor. Texts are the
+       Designer's English texts; the code behind replaces every Tag'd label by the original's translation (TR section ComicBookDialog, key = the Tag). -->
+  <Panel>
+    <c:CrBookTile Name="CoverTile" Margin="21,19,25,180" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    <Border Classes="cr-comicbook-panel" Margin="23,0,23,173" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="1" />
+    <Label Name="labelType" Tag="labelType" Content="Type:" Margin="19,0,0,137" HorizontalAlignment="Left" Width="68" VerticalAlignment="Bottom" Height="20" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0" IsVisible="{Binding ShowFileInfo}" />
+    <Border Margin="93,0,0,129" HorizontalAlignment="Left" Width="160" VerticalAlignment="Bottom" Height="41" IsVisible="{Binding ShowFileInfo}"><TextBlock Name="lblType" Text="{Binding TypeText}" TextWrapping="Wrap" VerticalAlignment="Center" /></Border>
+    <Label Name="labelPages" Tag="labelPages" Content="Pages:" Margin="21,0,0,109" HorizontalAlignment="Left" Width="66" VerticalAlignment="Bottom" Height="20" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0" IsVisible="{Binding ShowFileInfo}" />
+    <Label Name="lblPages" Content="{Binding PagesText}" Margin="93,0,0,109" HorizontalAlignment="Left" Width="105" VerticalAlignment="Bottom" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" IsVisible="{Binding ShowFileInfo}" />
+    <Label Name="labelMyRating" Tag="labelMyRating" Content="My Rating:" Margin="0,0,200,137" HorizontalAlignment="Right" Width="147" VerticalAlignment="Bottom" Height="20" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0" />
+    <c:CrRatingStars Name="txRating" Rating="{Binding Rating, Mode=TwoWay}" IsEnabled="{Binding RatingEnabled}" Margin="0,0,42,136" HorizontalAlignment="Right" Width="152" VerticalAlignment="Bottom" Height="21" />
+    <Label Name="labelCommunityRating" Tag="labelCommunityRating" Content="Community Rating:" Margin="0,0,200,109" HorizontalAlignment="Right" Width="149" VerticalAlignment="Bottom" Height="20" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0" />
+    <c:CrRatingStars Name="txCommunityRating" Rating="{Binding CommunityRating, Mode=TwoWay}" IsEnabled="{Binding CommunityRatingEnabled}" Margin="0,0,42,109" HorizontalAlignment="Right" Width="152" VerticalAlignment="Bottom" Height="21" />
+    <Border Classes="cr-comicbook-separator" IsVisible="{Binding ShowWhere}" Margin="19,0,27,81" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="1" />
+    <Label Name="labelWhere" Tag="labelWhere" Content="Where:" Margin="19,0,0,52" HorizontalAlignment="Left" Width="68" VerticalAlignment="Bottom" Height="17" HorizontalContentAlignment="Right" VerticalContentAlignment="Top" Padding="0" IsVisible="{Binding ShowWhere}" />
+    <Border Margin="93,0,0,34" HorizontalAlignment="Left" Width="431" VerticalAlignment="Bottom" Height="35" IsVisible="{Binding ShowWhere}"><TextBlock Name="lblPath" Text="{Binding PathText}" TextWrapping="Wrap" VerticalAlignment="Top" /></Border>
+    <SplitButton Name="btThumbnail" MinHeight="23" Tag="btThumbnail" Content="Thumbnail..." IsVisible="{Binding ShowThumbnailButtons}" Margin="0,0,42,72" HorizontalAlignment="Right" Width="152" VerticalAlignment="Bottom" Height="23" />
+    <Button Name="btLinkFile" Tag="btLinkFile" Content="Link to File..." IsVisible="{Binding ShowThumbnailButtons}" Margin="0,0,42,46" HorizontalAlignment="Right" Width="152" VerticalAlignment="Bottom" Height="23" />
+    <TextBlock Name="linkLabel" Classes="cr-link" Text="{Binding WebLink}" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="3,0,3,19" />
+  </Panel>
+</UserControl>

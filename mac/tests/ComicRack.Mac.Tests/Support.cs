@@ -288,5 +288,17 @@ namespace ComicRack.Mac.Tests
 			QuickRatings.Add(request);
 			return Task.FromResult(QuickRatingToReturn);
 		}
+
+		/// <summary>The Info dialogs that were opened, in order.</summary>
+		public System.Collections.Generic.List<BookInfoRequest> BookInfos { get; } = new System.Collections.Generic.List<BookInfoRequest>();
+
+		/// <summary>What a test does while the Info dialog is "open" (it edits the model, then answers OK or Cancel); the default answers Cancel at once.</summary>
+		public Func<BookInfoRequest, Task<bool>> BookInfoHandler { get; set; }
+
+		public Task<bool> ShowBookInfoAsync(BookInfoRequest request)
+		{
+			BookInfos.Add(request);
+			return BookInfoHandler != null ? BookInfoHandler(request) : Task.FromResult(false);
+		}
 	}
 }

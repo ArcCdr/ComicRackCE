@@ -33,9 +33,9 @@
 | MF.16 | Recent Books | File `miOpenRecent` | — | P5.10a | todo | label stays "Recent Books" |
 | MF.17 | Restart | File `miRestart` | Ctrl+Shift+Q → Ctrl+Cmd+Shift+Q | P5.10b | todo | Cmd+Shift+Q and Option+Cmd+Shift+Q are system Log Out |
 | MF.18 | Exit | File `miExit` | Ctrl+Q → Cmd+Q | P5.10b | deviation | native: Quit lives in the app menu (chrome rule C-MENU-1) |
-| ME.01 | Info... | Edit `miShowInfo` | Ctrl+I → Cmd+I | P5.7a | todo | |
-| ME.02 | Undo | Edit `miUndo` (`Database.Undo`) | Ctrl+Z → Cmd+Z | P5.7a | todo | |
-| ME.03 | Redo | Edit `miRedo` | Ctrl+Y → Cmd+Y, alias Cmd+Shift+Z | P5.7a | todo | |
+| ME.01 | Info... | Edit `miShowInfo` | Ctrl+I → Cmd+I | P5.7a | done 2026-10-21 | the Info dialog of the selected book (several selected books: the multi edit dialog, P5.8, until then the status bar says so), or of the book of the current tab when the reader has the focus; an undo marker "Show Info" is set first; the item is off while the dialog is open |
+| ME.02 | Undo | Edit `miUndo` (`Database.Undo`) | Ctrl+Z → Cmd+Z | P5.7a | done 2026-10-21 | `Database.Undo` of the Core; the text carries the label of the step ("Undo: Show Info") and follows the undo list; off while the Info dialog is open (Cmd+Z is then the text field's own undo) |
+| ME.03 | Redo | Edit `miRedo` | Ctrl+Y → Cmd+Y, alias Cmd+Shift+Z | P5.7a | done 2026-10-21 | as ME.02; the alias is a window key binding |
 | ME.04 | My Rating (None, 1 to 5 stars, Quick Rating and Review...) | Edit `miRating` → `contextRating`, `miRate0`, `miRate1`, `miRate2`, `miRate3`, `miRate4`, `miRate5`, `miQuickRating` | — | P5.5 | done 2026-10-21 | Edit > My Rating: None, 1 to 5 stars, Quick Rating and Review... with Option+Shift+0 to 5 and Q, marks follow the selection or the book of the reader; the five stars editor is only in the context menu (C-MENU-5) |
 | ME.05 | Page Type | Edit `miPageType` | — | P5.23b | todo | |
 | ME.06 | Page Rotation | Edit `miPageRotate` | — | P5.23b | todo | |
@@ -135,7 +135,7 @@
 | TB.06 | Rotate split button showing "0°" (rotation items, Autorotate) | `tbRotate`, `tbRotateLeft`, `tbRotateRight`, `tbRotate0`, `tbRotate90`, `tbRotate180`, `tbRotate270`, `tbAutoRotate` | as MD rows | P5.R3 | todo | |
 | TB.07 | Magnifier split button | `tbMagnify` | — | P5.23d | todo | drop-down holds `MagnifySetupControl` |
 | TB.08 | Full Screen button | `tbFullScreen` | — | P5.R3 | done 2026-10-21 | checked while full screen |
-| TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools`, `tbOpenComic`, `tbOpenRemoteLibrary`, `tbShowInfo`, `tsWorkspaces`, `tsSaveWorkspace`, `tsEditWorkspaces`, `tbBookmarks`, `tbSetBookmark`, `tbRemoveBookmark`, `tbAutoScroll`, `tbMinimalGui`, `tbReaderUndocked`, `tbScan`, `tbUpdateAllComicFiles`, `tbUpdateWebComics`, `tbCacheThumbnails`, `tsSynchronizeDevices`, `tbComicDisplaySettings`, `tbPreferences`, `tbAbout`, `tbExit` | items as their menu rows | P5.22a | todo | the drop-down has About... and Exit since P5.R3; the other items arrive with their tasks (Preferences P5.22a, Open Book P5.10a, Info P5.7a, Book Display Settings P5.23c, workspaces, bookmarks, scan items) |
+| TB.09 | Tools drop-down (`toolsContextMenu`: Open Book..., Open Remote Library..., Info..., Workspaces, Bookmarks, Auto Scrolling, Minimal UI, Reader in own Window, Scan, Update all Book Files, Update Web Comics, Generate Cover Thumbnails, Synchronize Devices, Book Display Settings..., Preferences..., About..., Show Main Menu, Exit) | `tbTools`, `tbOpenComic`, `tbOpenRemoteLibrary`, `tbShowInfo`, `tsWorkspaces`, `tsSaveWorkspace`, `tsEditWorkspaces`, `tbBookmarks`, `tbSetBookmark`, `tbRemoveBookmark`, `tbAutoScroll`, `tbMinimalGui`, `tbReaderUndocked`, `tbScan`, `tbUpdateAllComicFiles`, `tbUpdateWebComics`, `tbCacheThumbnails`, `tsSynchronizeDevices`, `tbComicDisplaySettings`, `tbPreferences`, `tbAbout`, `tbExit` | items as their menu rows | P5.22a | todo | the drop-down has Info..., About... and Exit (Info since P5.7a); the other items arrive with their tasks (Preferences P5.22a, Open Book P5.10a, Book Display Settings P5.23c, workspaces, bookmarks, scan items) |
 | TB.10 | Show Main Menu (toggle menu strip) | `tbShowMainMenu` | Shift+F10 | P5.23f | deviation | impossible: the macOS menu bar cannot be removed from a window; in full screen it auto-hides natively |
 | TC.01 | Book tabs bar (one tab per open book, current tab, close box) | `fileTabs` (`TabBar`) | — | P5.32a | done 2026-10-21 | `CrTabBar` in the main window: one tab per open book (cover icon later, section 9), the close box, 100 wide at least, the tool tip with the caption and the shortcut, the New Tab button at the right end, scroll arrows and a drop-down list when the tabs do not fit (`TabBar.ShowDropDown`); the tabs cannot be dragged to a new order yet (section 9) |
 | TC.02 | Tab menu: Close | `cmClose` | as MF.02 | P5.32a | done 2026-10-21 | right click on a tab selects it and opens the menu |
@@ -144,7 +144,7 @@
 | TC.05 | Tab menu: Show in Browser | `cmSyncBrowser` | as MR.08 | P5.32a | done 2026-10-21 |  |
 | TC.06 | Tab menu: Reveal in Explorer | `cmRevealInExplorer` | Ctrl+G → Cmd+G | P5.32a | deviation | native: label "Reveal in Finder" (platform name) |
 | TC.07 | Tab menu: Copy Full Path to Clipboard | `cmCopyPath` | — | P5.32a | done 2026-10-21 |  |
-| PC.01 | Page menu: Info... | `pageContextMenu.cmShowInfo` | Cmd+I | P5.7a | todo | the item and Cmd+I are not shown until the Info dialog exists (RV8 hid them: an item that does nothing is not a feature); P5.7a adds the item, the key and the dialog together (`ReaderViewModel.ShowInfo` and its event are there) |
+| PC.01 | Page menu: Info... | `pageContextMenu.cmShowInfo` | Cmd+I | P5.7a | done 2026-10-21 | first item of the page menu; opens the Info dialog of the book of the tab alone (no Previous and Next). The original asks the visible browser (`FindActiveService`) and so shows the selection of the browser while the reader has the focus; a flip is one line in `MainViewModel.OnReaderInfoRequested` |
 | PC.02 | Page menu: My Rating | `cmRating` → `contextRating2`, `cmRate0`, `cmRate1`, `cmRate2`, `cmRate3`, `cmRate4`, `cmRate5`, `cmQuickRating` | — | P5.5 | todo | None and 1 to 5 stars, radio mark, written to the book (P5.R3); since RV8 Option+Shift+0 to 5 also rate from the keyboard (`ReaderViewModel.HandleKey`, the shortcuts of `cmRate0` to `cmRate5`), not only while the menu is open; Quick Rating and Review... arrive with P5.5 |
 | PC.03 | Page menu: Page Type, Page Rotation | `cmPageType`, `cmPageRotate` | — | P5.23b | todo | |
 | PC.04 | Page menu: Bookmarks (Set, Remove, Previous, Next, Last Page Read) | `cmBookmarks`, `cmSetBookmark`, `cmRemoveBookmark`, `cmPrevBookmark`, `cmNextBookmark`, `cmLastPageRead` | as ME rows | P5.23a | todo | |
@@ -187,7 +187,7 @@
 | BT.09 | Toolbar: Quick search box with scope menu (All, Series, Writer, Artists, Descriptive, Catalog, Filename) | `tsQuickSearch`, `contextQuickSearch`, `miSearchAll`, `miSearchSeries`, `miSearchWriter`, `miSearchArtists`, `miSearchDescriptive`, `miSearchCatalog`, `miSearchFile` | Ctrl+F → Cmd+F (focus) | P5.15a | todo | |
 | BT.10 | Toolbar: List Layouts (Edit, Save, Reset List Background, Edit Layouts, saved layouts) | `tsListLayouts`, `tsEditListLayout`, `tsSaveListLayout`, `tsEditLayouts` | Ctrl+L, Ctrl+Alt+L as MB rows | P5.11b | todo | |
 | BT.11 | Toolbar: Duplicate list (into a new list or smart list) | `tbbDuplicateList`, `dummyEntryToolStripMenuItem2` | — | P5.16a | todo | |
-| BT.12 | Toolbar: Undo / Redo | `tbUndo`, `tbRedo` | as ME.02/03 | P5.7a | todo | |
+| BT.12 | Toolbar: Undo / Redo | `tbUndo`, `tbRedo` | as ME.02/03 | P5.7a | done 2026-10-21 | the buttons run the same commands, are dimmed without a step and carry the label of the step as their tool tip; the original hides them for a list other than the library (the Mac browser shows the library only until P5.14/P5.16) |
 | BV.01 | Thumbnails view (cover, title lines, rating, badges) | `ItemView` + `ComicBookViewItem` | — | P5.R2 | done 2026-10-20 | thumbnail items drawn as `ThumbRenderer` and `ThumbIconRenderer` draw them (`CrThumbnailItem`, spec `CoverViewItem`): shadow, frame, empty tile, caption of three lines with the selection style, dog-ear, ribbons, state icons, ratings. Uniform item width (the grid is the MVP's `UniformGridLayout`): a variable width per cover is a section 9 item; the open and last markers are filled by P5.2 (`BrowserViewModel.MarkerOf`: open in a reader, else the book opened last in the shown list, as `ComicBrowserControl.UpdateBookMarkers`); clicking the stars to rate is P5.5 |
 | BV.02 | Tiles view | `ItemView` tiles | — | P5.12 | todo | |
 | BV.03 | Details view (columns, sort by header, column chooser) | `ItemView` details | — | P5.11a | todo | |
@@ -203,7 +203,7 @@
 | BC.01 | Context: Open | `contextMenuItems.miRead` | Ctrl+O → Cmd+O | P5.5 | done 2026-10-21 | `BrowserContextMenu` item Open (Cmd+O in the grid too); enabled for a selection whose books all have a file; opens the focused book as the setting says |
 | BC.02 | Context: Open in new Tab | `miReadTab` | Ctrl+Shift+O → Cmd+Shift+O | P5.5 | done 2026-10-21 | the item (Cmd+Shift+O) joins the command that P5.32a built |
 | BC.03 | Context: Open With (programs, Manage Programs...) | `miOpenWith`, `contextOpenWith`, `miOpenWithManager` | — | P5.21 | todo | |
-| BC.04 | Context: Info... | `miProperties` | Cmd+I | P5.7a | todo | the item and the command are in place (Cmd+I in the grid, `BookCommand.Info`); the Info dialog is P5.7a, until then the status bar says so |
+| BC.04 | Context: Info... | `miProperties` | Cmd+I | P5.7a | done 2026-10-21 | the Info dialog of the selected books (BC.04 and ME.01 share `MainViewModel.ShowInfoAsync`) |
 | BC.05 | Context: Web... (open the book's Web field) | `miShowWeb` | Ctrl+R → Cmd+R | P5.20 | todo | |
 | BC.06 | Context: Edit (in-place edit of the focused field) | `miEdit` | F2 | P5.11a | todo | |
 | BC.07 | Context: My Rating (None, 1 to 5, Quick Rating and Review...) | `miRateMenu`, `contextRating`, `miRating0`, `miRating1`, `miRating2`, `miRating3`, `miRating4`, `miRating5` | Alt+Shift+0..5, Alt+Shift+Q → Option+Shift+0..5, Option+Shift+Q | P5.5 | done 2026-10-21 | My Rating with None, 1 to 5 stars (radio mark of the rating the selected books share), the five stars editor (`CrRatingStars`, applied when the menu closes, only if used) and Quick Rating and Review...; Option+Shift+0 to 5 and Q in the grid; an undo marker "Change Rating" as `RatingEditor.SetRating` |
@@ -303,7 +303,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 
 | ID | Dialog | Original | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|
-| DL.01 | Info (book) | `ComicBookDialog` (tabs: IN rows) | P5.7a | todo | |
+| DL.01 | Info (book) | `ComicBookDialog` (tabs: IN rows) | P5.7c | todo | P5.7a: the frame (tabs in the original's order, Previous/Next, OK/Cancel/Apply, size 593 x 517 and resizable), Summary and Details; P5.7b: Plot & Notes, Catalog, Custom; P5.7c: Pages and Colors. View spec `ComicBookDialog` |
 | DL.02 | Multiple Book Information | `MultipleComicBooksDialog` | P5.8 | todo | |
 | DL.03 | Paste Data to {0} Books | `ComicDataPasteDialog` | P5.20 | todo | |
 | DL.04 | Book Display Settings | `ComicDisplaySettingsDialog` | P5.23c | todo | |
@@ -337,14 +337,14 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.32 | Key input (shortcut capture) | `KeyInputForm` | P5.22c | todo | |
 | DL.33 | Magnifier setup | `ComicRack.Engine/Controls/MagnifySetupControl` | P5.23d | todo | |
 | DL.34 | Standard dialogs: open, save, folder, message boxes | `OpenFileDialog`, `SaveFileDialog`, `FolderBrowserDialog`, `MessageBox` | P5.R1 | deviation | native: macOS panels and alerts (C-DLG-1) |
-| IN.01 | Info: Summary tab | `ComicBookDialog` | P5.7a | todo | 3D cover (`InformationCover3D`) |
-| IN.02 | Info: Details tab | `ComicBookDialog` | P5.7a | todo | |
+| IN.01 | Info: Summary tab | `ComicBookDialog` | P5.7a | done 2026-10-21 | cover tile with the 3D book (`InformationCover3D`) or the flat cover, text beside it, icons of the book; type, pages, where; My Rating and Community Rating; thumbnail and link buttons for a book without a file; web link. Not done: drag and drop of a picture or file, the ribbons and state icons of a flat cover (`full-port.md` section 9) |
+| IN.02 | Info: Details tab | `ComicBookDialog` | P5.7a | done 2026-10-21 | every field at the Designer's position, the library's values as completions and drop-downs (`DefaultLists`), icons in the Format, Age Rating, Publisher and Imprint lists, spin buttons and digit keys on the number boxes, proposed values as prompts, the list selector popup of the credits, genre and tags |
 | IN.03 | Info: Plot & Notes tab (Summary, Notes, Review sub-tabs) | `ComicBookDialog` | P5.7b | todo | |
 | IN.04 | Info: Catalog tab (`CatalogOnlyForFileless`) | `ComicBookDialog` | P5.7b | todo | |
 | IN.05 | Info: Custom tab (`ShowCustomBookFields`) | `ComicBookDialog` | P5.7b | todo | |
 | IN.06 | Info: Pages tab (menu: Order by Name, Order by Name numeric) | `ComicBookDialog`, `cmResetPages`, `miOrderByName`, `miOrderByNameNumeric` | P5.7c | todo | |
 | IN.07 | Info: Colors tab ("Double Click on Color to set White Point") | `ComicBookDialog` | P5.7c | todo | |
-| IN.08 | Info: thumbnail menu (Reset) and Previous/Next book buttons | `cmThumbnail`, buttons, `miResetThumbnail` | P5.7a | todo | |
+| IN.08 | Info: thumbnail menu (Reset) and Previous/Next book buttons | `cmThumbnail`, buttons, `miResetThumbnail` | P5.7a | done 2026-10-21 | Reset and the recent picture files in the menu of the Thumbnail... split button (a book without a file); Previous and Next write the book and move to the book before or after in the shown list (also the wheel over the cover) |
 
 ## Preferences (`ComicRack/Dialogs/PreferencesDialog.Designer.cs`; tabs Reader, Libraries, Behavior, Scripts, Advanced)
 
@@ -418,7 +418,7 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | PB.35 | Application | Close moves ComicRack into the Notification Area (`CloseMinimizesToTray`) | true | P5.33 | todo | |
 | PB.36 | Application | Animate expanding and collapsing Panels (`AnimatePanels`) | true | P5.32b | todo | |
 | PB.37 | Application | Show Main Menu if no Book is open (`ShowMainMenuNoComicOpen`) | true | P5.23f | deviation | impossible: macOS menu bar is always present (TB.10) |
-| PB.38 | Application | 3D display of covers in Book Info Dialog (`InformationCover3D`) | true | P5.7a | todo | |
+| PB.38 | Application | 3D display of covers in Book Info Dialog (`InformationCover3D`) | true | P5.7a | done 2026-10-21 | read when the dialog opens, flipped by a click on the cover and saved; the Preferences check box is P5.22a |
 | PB.39 | Application | Newly added Books are checked (`NewBooksChecked`) | true | P5.19a | todo | |
 | PB.40 | Import & Export | Exported Book Lists contain filenames (`ExportedListsContainFilenames`) | false | P5.16c | todo | |
 

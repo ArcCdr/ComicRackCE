@@ -1,0 +1,111 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             xmlns:e="clr-namespace:ComicRack.Mac.Editor"
+             x:Class="ComicRack.Mac.Views.InfoDetailsPage"
+             x:DataType="e:BookEditorModel">
+  <!-- Generated from the positions of ComicBookDialog.Designer.cs (tab page 566 x 442): a margin is the position, the alignment is the anchor. Texts are the
+       Designer's English texts; the code behind replaces every Tag'd label by the original's translation (TR section ComicBookDialog, key = the Tag). -->
+  <Panel>
+    <Label Name="labelSeries" Tag="labelSeries" Content="Series:" Margin="9,13,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <AutoCompleteBox Name="txSeries" MinWidth="0" Text="{Binding Series, Mode=TwoWay}" Margin="11,28,354,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelVolume" Tag="labelVolume" Content="Volume:" Margin="0,13,243,0" HorizontalAlignment="Right" Width="107" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txVolume" MinWidth="0" Text="{Binding Volume, Mode=TwoWay}" Margin="0,28,304,0" HorizontalAlignment="Right" Width="46" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txVolumeSpin" Margin="0,28,292,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelNumber" Tag="labelNumber" Content="Number:" Margin="0,13,182,0" HorizontalAlignment="Right" Width="108" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txNumber" MinWidth="0" Text="{Binding Number, Mode=TwoWay}" Margin="0,28,234,0" HorizontalAlignment="Right" Width="54" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txNumberSpin" Margin="0,28,222,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelCount" Tag="labelCount" Content="of:" Margin="0,13,140,0" HorizontalAlignment="Right" Width="79" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txCount" MinWidth="0" Text="{Binding Count, Mode=TwoWay}" Margin="0,28,173,0" HorizontalAlignment="Right" Width="44" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txCountSpin" Margin="0,28,161,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelFormat" Tag="labelFormat" Content="Format:" Margin="0,13,47,0" HorizontalAlignment="Right" Width="105" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbFormat" IsEditable="True" Value="{Binding Format, Mode=TwoWay}" Margin="0,27,11,0" HorizontalAlignment="Right" Width="139" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelTitle" Tag="labelTitle" Content="Title:" Margin="9,51,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <AutoCompleteBox Name="txTitle" MinWidth="0" Text="{Binding Title, Mode=TwoWay}" Margin="11,66,354,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelYear" Tag="labelYear" Content="Year:" Margin="0,52,259,0" HorizontalAlignment="Right" Width="91" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txYear" MinWidth="0" Text="{Binding Year, Mode=TwoWay}" Margin="0,66,304,0" HorizontalAlignment="Right" Width="46" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txYearSpin" Margin="0,66,292,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelMonth" Tag="labelMonth" Content="Month:" Margin="0,51,189,0" HorizontalAlignment="Right" Width="101" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txMonth" MinWidth="0" Text="{Binding Month, Mode=TwoWay}" Margin="0,66,234,0" HorizontalAlignment="Right" Width="54" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txMonthSpin" Margin="0,66,222,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelDay" Tag="labelDay" Content="Day:" Margin="0,51,128,0" HorizontalAlignment="Right" Width="89" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txDay" MinWidth="0" Text="{Binding Day, Mode=TwoWay}" Margin="0,65,173,0" HorizontalAlignment="Right" Width="44" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txDaySpin" Margin="0,65,161,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelPublisher" Tag="labelPublisher" Content="Publisher:" Margin="0,51,36,0" HorizontalAlignment="Right" Width="116" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbPublisher" IsEditable="True" Value="{Binding Publisher, Mode=TwoWay}" Margin="0,65,11,0" HorizontalAlignment="Right" Width="139" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelAlternateSeries" Tag="labelAlternateSeries" Content="Alternate Series or Storyline Title:" Margin="9,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <AutoCompleteBox Name="txAlternateSeries" MinWidth="0" Text="{Binding AlternateSeries, Mode=TwoWay}" Margin="11,104,293,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelAlternateNumber" Tag="labelAlternateNumber" Content="Number:" Margin="0,89,182,0" HorizontalAlignment="Right" Width="108" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txAlternateNumber" MinWidth="0" Text="{Binding AlternateNumber, Mode=TwoWay}" Margin="0,104,234,0" HorizontalAlignment="Right" Width="54" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txAlternateNumberSpin" Margin="0,104,222,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelAlternateCount" Tag="labelAlternateCount" Content="of:" Margin="0,89,140,0" HorizontalAlignment="Right" Width="79" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <TextBox Name="txAlternateCount" MinWidth="0" Text="{Binding AlternateCount, Mode=TwoWay}" Margin="0,104,173,0" HorizontalAlignment="Right" Width="44" VerticalAlignment="Top" Height="20" />
+    <c:CrSpinButton Name="txAlternateCountSpin" Margin="0,104,161,0" HorizontalAlignment="Right" Width="11" VerticalAlignment="Top" Height="20" />
+    <Label Name="labelImprint" Tag="labelImprint" Content="Imprint:" Margin="0,88,47,0" HorizontalAlignment="Right" Width="105" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <c:CrValueComboBox Name="cbImprint" IsEditable="True" Value="{Binding Imprint, Mode=TwoWay}" Margin="0,103,11,0" HorizontalAlignment="Right" Width="139" VerticalAlignment="Top" Height="21" />
+    <Grid Name="tableLayoutPanel1" ColumnDefinitions="*,*,12,139" RowDefinitions="12,20,26,12,26,12,26,12,26,12,26" Height="210" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="11,129,12,0">
+      <Label Name="labelStoryArc" Tag="labelStoryArc" Content="Story Arc:" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelSeriesGroup" Tag="labelSeriesGroup" Content="Series Group:" Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelSeriesComplete" Tag="labelSeriesComplete" Content="Series complete:" Grid.Column="3" Grid.Row="0" VerticalAlignment="Bottom" Padding="0" />
+      <AutoCompleteBox Name="txStoryArc" MinWidth="0" Text="{Binding StoryArc, Mode=TwoWay}" Grid.Column="0" Grid.Row="1" Margin="0,0,3,0" Height="20" VerticalAlignment="Top" />
+      <AutoCompleteBox Name="txSeriesGroup" MinWidth="0" Text="{Binding SeriesGroup, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="3,0,0,0" Height="20" VerticalAlignment="Top" />
+      <c:CrValueComboBox Name="cbSeriesComplete" Value="{Binding SeriesComplete, Mode=TwoWay}" Grid.Column="3" Grid.Row="1" Height="21" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+      <Label Name="labelWriter" Tag="labelWriter" Content="Writer:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelPenciller" Tag="labelPenciller" Content="Penciller:" Grid.Column="1" Grid.Row="3" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelAgeRating" Tag="labelAgeRating" Content="Age Rating:" Grid.Column="3" Grid.Row="3" VerticalAlignment="Bottom" Padding="0" />
+      <Grid Grid.Column="0" Grid.Row="4" ColumnDefinitions="*,16" Margin="0,0,3,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txWriter" MinWidth="0" Text="{Binding Writer, Mode=TwoWay}" />
+        <Button Name="txWriterSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <Grid Grid.Column="1" Grid.Row="4" ColumnDefinitions="*,16" Margin="3,0,0,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txPenciller" MinWidth="0" Text="{Binding Penciller, Mode=TwoWay}" />
+        <Button Name="txPencillerSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <c:CrValueComboBox Name="cbAgeRating" IsEditable="True" Value="{Binding AgeRating, Mode=TwoWay}" Grid.Column="3" Grid.Row="4" Height="21" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+      <Label Name="labelInker" Tag="labelInker" Content="Inker:" Grid.Column="0" Grid.Row="5" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelColorist" Tag="labelColorist" Content="Colorist:" Grid.Column="1" Grid.Row="5" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelManga" Tag="labelManga" Content="Manga:" Grid.Column="3" Grid.Row="5" VerticalAlignment="Bottom" Padding="0" />
+      <Grid Grid.Column="0" Grid.Row="6" ColumnDefinitions="*,16" Margin="0,0,3,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txInker" MinWidth="0" Text="{Binding Inker, Mode=TwoWay}" />
+        <Button Name="txInkerSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <Grid Grid.Column="1" Grid.Row="6" ColumnDefinitions="*,16" Margin="3,0,0,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txColorist" MinWidth="0" Text="{Binding Colorist, Mode=TwoWay}" />
+        <Button Name="txColoristSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <c:CrValueComboBox Name="cbManga" Value="{Binding Manga, Mode=TwoWay}" Grid.Column="3" Grid.Row="6" Height="21" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+      <Label Name="labelLetterer" Tag="labelLetterer" Content="Letterer:" Grid.Column="0" Grid.Row="7" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelCoverArtist" Tag="labelCoverArtist" Content="Cover Artist:" Grid.Column="1" Grid.Row="7" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelLanguage" Tag="labelLanguage" Content="Language:" Grid.Column="3" Grid.Row="7" VerticalAlignment="Bottom" Padding="0" />
+      <Grid Grid.Column="0" Grid.Row="8" ColumnDefinitions="*,16" Margin="0,0,3,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txLetterer" MinWidth="0" Text="{Binding Letterer, Mode=TwoWay}" />
+        <Button Name="txLettererSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <Grid Grid.Column="1" Grid.Row="8" ColumnDefinitions="*,16" Margin="3,0,0,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txCoverArtist" MinWidth="0" Text="{Binding CoverArtist, Mode=TwoWay}" />
+        <Button Name="txCoverArtistSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <c:CrValueComboBox Name="cbLanguage" Value="{Binding Language, Mode=TwoWay}" Grid.Column="3" Grid.Row="8" Height="21" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+      <Label Name="labelEditor" Tag="labelEditor" Content="Editor:" Grid.Column="0" Grid.Row="9" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelTranslator" Tag="labelTranslator" Content="Translator:" Grid.Column="1" Grid.Row="9" VerticalAlignment="Bottom" Padding="0" />
+      <Label Name="labelBlackAndWhite" Tag="labelBlackAndWhite" Content="Black and White:" Grid.Column="3" Grid.Row="9" VerticalAlignment="Bottom" Padding="0" />
+      <Grid Grid.Column="0" Grid.Row="10" ColumnDefinitions="*,16" Margin="0,0,3,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txEditor" MinWidth="0" Text="{Binding Editor, Mode=TwoWay}" />
+        <Button Name="txEditorSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <Grid Grid.Column="1" Grid.Row="10" ColumnDefinitions="*,16" Margin="3,0,0,0" Height="20" VerticalAlignment="Top">
+        <AutoCompleteBox Name="txTranslator" MinWidth="0" Text="{Binding Translator, Mode=TwoWay}" />
+        <Button Name="txTranslatorSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button>
+      </Grid>
+      <c:CrValueComboBox Name="cbBlackAndWhite" Value="{Binding BlackAndWhite, Mode=TwoWay}" Grid.Column="3" Grid.Row="10" Height="21" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+    </Grid>
+    <Label Name="labelGenre" Tag="labelGenre" Content="Genre:" Margin="11,357,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="10,372,164,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20"><AutoCompleteBox Name="txGenre" MinWidth="0" Text="{Binding Genre, Mode=TwoWay}" /><Button Name="txGenreSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button></Grid>
+    <Label Name="labelTags" Tag="labelTags" Content="Tags:" Margin="11,395,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" />
+    <Grid ColumnDefinitions="*,16" Margin="11,411,163,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="20"><AutoCompleteBox Name="txTags" MinWidth="0" Text="{Binding Tags, Mode=TwoWay}" /><Button Name="txTagsSelector" Grid.Column="1" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="False"><c:CrIcon IconName="Route" /></Button></Grid>
+    <Label Name="labelEnableDynamicUpdate" Tag="labelEnableDynamicUpdate" Content="Include in Updates:" Margin="0,357,-11,0" HorizontalAlignment="Right" Width="163" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" IsVisible="{Binding ShowDynamicUpdate}" />
+    <c:CrValueComboBox Name="cbEnableDynamicUpdate" Value="{Binding EnableDynamicUpdate, Mode=TwoWay}" IsVisible="{Binding ShowDynamicUpdate}" Margin="0,371,11,0" HorizontalAlignment="Right" Width="139" VerticalAlignment="Top" Height="21" />
+    <Label Name="labelEnableProposed" Tag="labelEnableProposed" Content="Proposed Values:" Margin="0,395,-2,0" HorizontalAlignment="Right" Width="154" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="0" IsVisible="{Binding ShowProposedValues}" />
+    <c:CrValueComboBox Name="cbEnableProposed" Value="{Binding EnableProposed, Mode=TwoWay}" IsEnabled="{Binding ProposedEnabled}" IsVisible="{Binding ShowProposedValues}" Margin="0,410,11,0" HorizontalAlignment="Right" Width="139" VerticalAlignment="Top" Height="21" />
+  </Panel>
+</UserControl>

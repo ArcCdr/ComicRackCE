@@ -99,8 +99,8 @@
             <c:CrToolSeparator />
             <c:CrDropDownButton Name="DuplicateButton" IconName="AddList" IsEnabled="False" />
             <c:CrToolSeparator />
-            <c:CrToolButton Name="UndoButton" IconName="Undo" IsEnabled="False" />
-            <c:CrToolButton Name="RedoButton" IconName="Redo" IsEnabled="False" />
+            <c:CrToolButton Name="UndoButton" IconName="Undo" Command="{Binding UndoCommand}" ToolTip.Tip="{Binding UndoToolTip}" />
+            <c:CrToolButton Name="RedoButton" IconName="Redo" Command="{Binding RedoCommand}" ToolTip.Tip="{Binding RedoToolTip}" />
             <c:CrSearchBox Name="SearchBox" Text="{Binding Browser.SearchText, Mode=TwoWay}" c:CrToolBar.Alignment="Right" c:CrToolBar.Overflow="Never" />
           </c:CrToolBar>
 

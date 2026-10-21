@@ -249,7 +249,7 @@ namespace ComicRack.Mac.Tests.Reader
 					Assert.Equal(5, ((MenuFlyout)h.Find<CrSplitButton>("PageLayoutButton").DropDown).Items.Count);
 					Assert.Equal(3, ((MenuFlyout)h.Find<CrSplitButton>("FitButton").DropDown).Items.Count);
 					var tools = (MenuFlyout)h.Find<CrToolButton>("ToolsButton").Flyout;
-					Assert.Equal(new[] { "About...", "Exit" }, tools.Items.OfType<MenuItem>().Select(m => (string)m.Header).ToArray());
+					Assert.Equal(new[] { "Info...", "About...", "Exit" }, tools.Items.OfType<MenuItem>().Select(m => (string)m.Header).ToArray());
 					tools.Items.OfType<MenuItem>().Last().Command.Execute(null);
 					Assert.Equal(1, h.Shell.Quits);
 				}

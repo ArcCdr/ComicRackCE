@@ -99,6 +99,9 @@ namespace ComicRack.Mac.Controls
 		/// <summary><c>SystemFonts.IconTitleFont</c> (Segoe UI 9 pt): item views, trees, tiles.</summary>
 		public const double ItemSize = 12;
 
+		/// <summary>Microsoft Sans Serif 9.75 pt: the text beside the cover in the Info dialog (<c>coverThumbnail.Font</c>).</summary>
+		public const double TileSize = 13;
+
 		/// <summary>Group headers of the item view: 1.15 x the item font.</summary>
 		public const double GroupHeaderSize = ItemSize * 1.15;
 

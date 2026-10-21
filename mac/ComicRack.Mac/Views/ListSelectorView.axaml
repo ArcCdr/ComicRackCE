@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:ComicRack.Mac.Controls"
+             x:Class="ComicRack.Mac.Views.ListSelectorView"
+             Width="308" Height="278">
+  <!-- The popup of the list selector (ListSelectorControl.Designer.cs, 308 x 278), at the positions of the Designer: the three views at (7,7) 291 x 243 and the buttons that
+       choose between them at (11,245), (79,245) and (147,245), 67 x 24. -->
+  <Panel>
+    <TextBox Name="TextView" Margin="7,7,10,28" AcceptsReturn="True" TextWrapping="Wrap" IsVisible="False" />
+    <Border Name="CheckFrame" Classes="cr-card" Margin="7,7,10,28" IsVisible="False">
+      <c:CrCheckList Name="CheckView" />
+    </Border>
+    <Panel Name="ListsView" Margin="7,7,10,28">
+      <Border Classes="cr-card" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,46,0" Height="95">
+        <ListBox Name="OwnList" SelectionMode="Multiple" />
+      </Border>
+      <Button Name="btAllToOwn" Tag="btAllToOwn" Content="&lt;&lt;" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="23" Margin="0,0,0,0" Padding="0" HorizontalContentAlignment="Center" />
+      <Button Name="btSelectedToOwn" Tag="btSelectedToOwn" Content="&lt;" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="23" Margin="0,25,0,0" Padding="0" HorizontalContentAlignment="Center" />
+      <Button Name="btSelectedToPool" Tag="btSelectedToPool" Content="&gt;" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="23" Margin="0,49,0,0" Padding="0" HorizontalContentAlignment="Center" />
+      <Button Name="btAllToPool" Tag="btAllToPool" Content="&gt;&gt;" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="23" Margin="0,73,0,0" Padding="0" HorizontalContentAlignment="Center" />
+      <Border Classes="cr-card" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,101,0,0">
+        <ListBox Name="PoolList" SelectionMode="Multiple" />
+      </Border>
+    </Panel>
+    <Button Name="btLists" Tag="btLists" Content="Lists" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Height="24" Margin="11,245,0,0" Padding="0" HorizontalContentAlignment="Center" />
+    <Button Name="btCheck" Tag="btCheck" Content="Check" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Height="24" Margin="79,245,0,0" Padding="0" HorizontalContentAlignment="Center" />
+    <Button Name="btText" Tag="btText" Content="Text" HorizontalAlignment="Left" VerticalAlignment="Top" Width="67" Height="24" Margin="147,245,0,0" Padding="0" HorizontalContentAlignment="Center" />
+  </Panel>
+</UserControl>
