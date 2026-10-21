@@ -14,11 +14,11 @@ Run state: RUNNING (2026-10-21, orchestrator; next task: RV5b)
 | P2 Platform pieces | 9 | 2 | P2.4a | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
 | P4 Scripting and Script UI layer | 36 | 2 | P4.3 | S4 and S6 spikes first, go/no-go recorded |
-| P5 Screens (main window parity) | 66 | 14 | P5.6 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
+| P5 Screens (main window parity) | 68 | 15 | P5.6a | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 12 | 10 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **169** | **44** | | estimate in §10 |
+| RV Review fixes and upstream sync | 12 | 11 | RV5b | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **171** | **46** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -604,7 +604,7 @@ A checkpoint is a block in `mac/plans/OWNER-ACTIONS.md` (template in `RUNBOOK.md
 The orchestrator takes the first task in this list whose status is `todo` and whose dependencies are `done` or `done-with-caveat`. Waves are not barriers; they set priority. The full gate and a review run at each wave end.
 
 - **Wave A, safety net and tooling:** P0.2, P0.3, P0.4, P0.6a, P0.6b, P0.8, P1.2, P1.1, P1.3, P0.5a, P0.5b, P0.5c, P0.7a, P0.7b, P4.1 (S4), P4.2 (S6).
-- **Wave B, chrome foundation, then daily use of the main window:** P5.0, P2.6, P5.T1, P5.T2, P5.T3, P5.T4, P5.R1, P5.R2, P5.R3, P5.1, P5.2, P5.3, P5.4, P2.1, P5.32a, P5.5, P5.6, P2.4a, P2.4b, P5.7a, P5.7b, P5.7c, P5.8, P5.9, P5.10a, P5.10b, P4.3, P3.9, P5.T5 (optional). → **C2** (with the C2 contact sheet).
+- **Wave B, chrome foundation, then daily use of the main window:** P5.0, P2.6, P5.T1, P5.T2, P5.T3, P5.T4, P5.R1, P5.R2, P5.R3, P5.1, P5.2, P5.3, P5.4, P2.1, P5.32a, P5.5, P5.6a, P5.6b, P2.4a, P2.4b, P5.7a, P5.7b, P5.7c, P5.8, P5.9, P5.10a, P5.10b, P4.3, P3.9, P5.T5 (optional). → **C2** (with the C2 contact sheet).
 - **Wave C, browsing and library management:** P5.32b, P5.11a, P5.11b, P5.12, P5.13a, P5.13b, P5.14, P5.15a, P5.15b, P5.16a, P5.16b, P5.16c, P5.17a, P5.17b, P5.17c, P5.18, P2.2, P5.19a, P5.19b, P5.20, P5.21, P3.1, P3.2, P3.3, P3.10, P4.4, P4.5, P4.6a, P4.6b.
 - **Wave D, reader, preferences, export, codecs:** P3.4, P3.5a, P3.5b, P3.6, P5.22a, P5.22b, P5.22c, P5.32c, P5.33, P5.23a, P5.23b, P5.23c, P5.23d, P5.23e, P5.23f, P2.3a, P2.3b, P2.3c, P2.5, P5.24a, P5.24b, P5.25, P5.26, P5.27a, P5.27b, P5.28a, P5.28b, P5.29, P5.30, P5.31, P5.34, P3.7, P3.8.
 - **Wave E, Script UI layer** (runs only if P4.2 is GO, else C3): P4.7, P4.8, P4.9a, P4.9b, P4.9c, P4.9d, P4.9e, P4.9f, P4.9g, P4.10a, P4.10b, P4.10c, P4.10d, P4.10e, P4.10f, P4.10g, P4.11a, P4.11b, P4.11c, P4.11d, P4.11e, P4.12a, P4.12b, P4.13a, P4.13b, P4.13c, P4.14, P4.15 → **C4**; P4.16 (optional).
@@ -1069,7 +1069,7 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Accept: tests; `verify.sh`.
 
 #### P4.11a Hook host: `ComicInfoUI` and `QuickOpenUI` panels
-- Depends: P4.10a, P5.6, P5.29 · Effort: high · Unattended: yes · Status: todo
+- Depends: P4.10a, P5.6b, P5.29 · Effort: high · Unattended: yes · Status: todo
 - Goal: `ScriptPanelHost` shows a script's control as a tab of the info panel and in Quick Open, calls `ShowInfo(books)` on selection change (contract of `ComicRack/ScriptUtility.cs` `CreatePagesUI`).
 - Accept: tests with `Sample.py`; e2e case `script-panel`; `verify.sh`.
 - Parity: SC.14, SC.16, IP.01; view spec `ComicPageContainerControl`.
@@ -1244,14 +1244,26 @@ Every P5 task: view-model tests on the headless platform (frames saved when `CRM
 - Accept: tests; e2e case `context-menu-1` (right click via ui-drive, mark read, count changes); `verify.sh`.
 - Parity: BC.01, BC.04, BC.07, BC.08, BC.17, BC.23, ME.04, DL.06, DL.18, DL.30, PB.18; view spec `ComicBrowserControl` (context menu), `QuickRatingDialog`, `DeleteItemDialog`; C-MENU-3, C-DLG-1, C-DLG-2.
 
-#### P5.6 Info panel and small preview
-- Depends: P5.4 · Effort: medium · Unattended: yes · Status: todo
-- Goal: the Info Panel (Shift+F9; `ComicExplorerView.pluginContainer`, `ComicPageContainerControl` book info page with cover, fields, search links (`ShowSearchLinks`), read state; multiple selection summary) and the Small Preview (Shift+F7; `SmallComicPreview`: page viewer with its toolbar Open, First, Previous, Next, Last, Two Pages, Refresh, Close, "Nothing Selected"), both in the original positions and sizes (162 high at the bottom; 207 high under the tree).
-- Accept: tests; e2e case `info-panel`; `mac/tools/chrome-sheet.sh P5.6 MainWindow`; `verify.sh`.
+#### P5.6 Info panel and small preview (SPLIT into P5.6a and P5.6b)
+- Depends: P5.4 · Effort: n/a · Unattended: yes · Status: split -> P5.6a, P5.6b (2026-10-21)
+- Reason: the first attempt read the original and found that the original Info Panel (`pluginContainer`, `ComicPageContainerControl`) has NO built-in book page: its pages come only from scripts (`ComicInfoHtml`/`ComicInfoUI` hooks). R9 (identical features) therefore forbids a Mac-only built-in info page. The container is ported now; its pages arrive with P4.11a.
 - Parity: MB.06, MB.08, IP.01, SP.01, PB.22; view specs `SmallComicPreview`, `ComicPageContainerControl`.
 
+#### P5.6a Small preview pane (Shift+F7)
+- Depends: P5.4 · Effort: high · Unattended: yes · Status: todo
+- Goal: port `ComicRack/Views/SmallComicPreview.cs` and its host in `ComicExplorerView`: a `CrSizableContainer` docked bottom under the tree, 207 high (flat border, hidden by default), 500 ms `previewTimer` after a selection change, shows the first selected book copy (`new ComicBook(first)`, `IncreaseOpenedCount` false). Toolbar order: Open, sep, First, Previous, Next, Last, sep, Two Pages, sep, Refresh, Close (right aligned, overflow never) with icons Open, GoFirst, GoPrevious, GoNext, GoLast, TwoPage, Refresh, SmallClose and TR texts from the `SmallComicPreview` language files (tsbOpen, tsbFirst + .Tooltip, ..., 'Nothing Selected', 'Preview is only available for Books'). Behaviour: Previous/Next move by page (by two in double mode), Two Pages toggles DoubleAdaptive/Single, Up/Down and the wheel scroll, double click opens the book in a new tab, no context menu. Reuse `ReaderViewModel`/`ReaderView` with a `CoreReadingSession` (no reader overlays). Settings `ShowPreview`, `PreviewSplit`, `TwoPagePreview` persisted; Browse > Small Preview item (Shift+F7 mapping per DD20) enabled; the splitter size persists.
+- Out of scope: the Info Panel (P5.6b).
+- Accept: tests (view model + frames at 1x/2x); e2e case `small-preview` (toggle with the menu item, select a book, wait 500 ms, shot shows a page; Next works); `mac/tools/chrome-sheet.sh P5.6a MainWindow`; `mac/tools/verify.sh`.
+- Parity: MB.08, SP.01, PB.22; view spec `SmallComicPreview`.
+
+#### P5.6b Info panel container (Shift+F9) hosting script pages
+- Depends: P5.6a · Effort: medium · Unattended: yes · Status: todo
+- Goal: port the container only: `pluginContainer` (`ComicPageContainerControl`), 162 high, docked bottom of the browser area, 6 unit padding, hidden by default, tab strip of its pages, `ISidebar.HasInfoPanels` false when there are no pages (menu item Browse > Info Panel disabled, as in the original), settings `ShowInfo`, `InfoBrowserSize` persisted, splitter. It hosts `ComicPageControl` pages supplied through a Mac interface that P4.11a (ComicInfoHtml/ComicInfoUI hooks) implements; add a test page implementation so the container, tabs, enable/disable logic and persistence are tested now. No built-in book page (the original has none); note in the ledger that IP.01 completes with P4.11a. Search links (`ShowSearchLinks`, `SearchContextMenuBuilder`, `WikiSearch`) belong to the cover item/context menu: implement them here if not yet present (cover search-link button, menu, Wikipedia via the Common search classes, opens the default browser through `MacShell.OpenWithDefaultApp`), with a fake HTTP seam in tests.
+- Accept: tests; e2e `info-panel` (menu item disabled with no pages, enabled with the test page behind a hidden option); `mac/tools/chrome-sheet.sh P5.6b MainWindow`; `mac/tools/verify.sh`.
+- Parity: MB.06, IP.01 (partly, completes at P4.11a), PR.* search link options; view spec `ComicPageContainerControl`.
+
 #### P5.7a Info editor: shell, Summary and Details
-- Depends: P5.6 · Effort: high · Unattended: yes · Status: todo
+- Depends: P5.6a · Effort: high · Unattended: yes · Status: todo
 - Goal: the `ComicBookDialog` (`ComicRack/Dialogs/ComicBookDialog.cs`) exactly: window size and tabs (Summary, Details, Plot & Notes, Catalog, Custom, Pages, Colors; the tab set of the original even where later tasks fill them), Previous/Next book, OK/Cancel/Apply, Summary and Details fields with their labels (TR `ComicBookDialog`), the Core's value lists (autocomplete from library values), the 3D cover (`InformationCover3D`), the thumbnail menu (Reset); Undo/Redo through the Core's `Database.Undo` (`ComicBookContainerUndo`) where the WinForms app uses it, also in the Edit menu and the browser toolbar.
 - Accept: tests (edit, apply, cancel restores, previous/next keeps edits, undo/redo); e2e case `info-edit` (edit Series, OK, grid shows it); `mac/tools/chrome-sheet.sh P5.7a ComicBookDialog`; `verify.sh`.
 - Parity: ME.01 to ME.03, BT.12, DL.01, IN.01, IN.02, IN.08, PB.38; view spec `ComicBookDialog`; C-DLG-2, C-CTRL-1.
