@@ -135,6 +135,8 @@ namespace ComicRack.Mac.Host
 			DatabaseManager = new DatabaseManager();
 			IsNewDatabase = !File.Exists(DatabaseFile);
 			DatabaseManager.Open(DatabaseFile.Substring(0, DatabaseFile.Length - ".xml".Length), null, dontLoadQueryCaches: false, progress: null);
+			// DatabaseManager.Database is not safe for two first accesses at once (the first one closes its wait handle): make it here, on the opening thread.
+			_ = DatabaseManager.Database;
 			OpenMessage = IsNewDatabase ? null : DatabaseManager.OpenMessage;
 			if (OpenMessage != null)
 			{

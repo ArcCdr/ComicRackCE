@@ -414,10 +414,14 @@ namespace ComicRack.Mac.ViewModels
 		[NotifyCanExecuteChangedFor(nameof(CancelOperationCommand))]
 		public partial bool CanCancel { get; set; }
 
+		/// <summary>How many times <see cref="OnHostOpened"/> ran (a launch announces each host once; a test may refresh on purpose).</summary>
+		public int HostOpenedRuns { get; private set; }
+
 		/// <summary>Called on the UI thread when the host opened or failed.</summary>
 		public void OnHostOpened()
 		{
 			var host = hostService.Host;
+			HostOpenedRuns++;
 			if (host == null)
 			{
 				HostText = "Engine failed to start";

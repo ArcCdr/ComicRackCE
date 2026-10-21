@@ -505,6 +505,10 @@ Applies to every task that adds or changes something a user sees: all P5 tasks, 
 - Test strength: `PreferencesTests` checks that nothing is kept without preferences (a second view model has the defaults), `SettingsStoreTests` checks that a save replaces the old content, `LiveRefreshTests` scrolls to the selected cell instead of `if (cell != null)`, `GridHiDpiTests` has 1.5x again for the exact cover (the P5.R2 snapping already makes it pass), `E2eScriptTests` lists all 19 cases and fails when a case is added without being listed. `ChromeSnapshotTests` in `mac/tools/verify.sh --full` (which exports `CRMAC_FULL_GATE=1`) needs the baseline frames in `mac/artifacts/chrome/baseline` (or `CRMAC_CHROME_BASELINE_DIR`) and fails with the command that takes them; RUNBOOK section 4 says so. The baseline of this Mac was taken after RV8 (the toolbar of the library window changed).
 - Mutation checks (once): the Arrange click opening the menu again, `lastOpened = newest` without `SetLastOpened`, and the old anchor rule each failed their new test (`The_arrange_button_flips...`, `The_open_and_the_last_opened_book...` (the `Changed` count), `A_new_list_has_no_anchor...`); restored.
 
+**Facts from RV9 (2026-10-21)**
+- The product never announced a host twice: `HostService.Complete` posts `Opened` once per open (start, and again after an import with the new host) and `App` has the only subscription. The double call was test-only: `Launch.Start` subscribed `Opened` and also called `OnHostOpened` itself. `Launch.Announce` now calls it once per host (or failure), whichever comes first (the explicit call serves tests that start off the UI thread, the event serves the reopen after an import); `MainViewModel.HostOpenedRuns` counts the runs. `OnHostOpened` itself stays re-runnable on purpose (tests refresh the library with it).
+- `DatabaseManager.Database` (original Core) closes its init wait handle on the first access, so two threads making the first access can hit `ObjectDisposedException`; `MacHost` now makes that first access itself right after `DatabaseManager.Open`, on the opening thread, before the host is handed out.
+
 ---
 
 ## 4. Checkpoints (the only times the owner is asked)
@@ -664,7 +668,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: each fix has a test that fails without it (show once for the groups 1, 4, 5); `mac/tools/verify.sh`; ledger rows corrected; `ledger-check` passes.
 
 #### RV9 Launch.Start double OnHostOpened race (intermittent test failure)
-- Depends: none · Effort: medium · Unattended: yes · Status: todo
+- Depends: none · Effort: medium · Unattended: yes · Status: done 2026-10-21
 - Goal: found by RV8: `Launch.Start` calls `OnHostOpened` twice and `DatabaseManager.Database` is not safe for two first accesses; the fast gate failed once with an `ObjectDisposedException` in `LibraryFlowTests.Cancelling_a_big_scan...`. Find whether this is test-only (Launch helper) or also a product path (App startup, import reopen); fix so `OnHostOpened` runs once per host and first access to the database is serialized; add a deterministic regression test (gate the second call).
 - Accept: new test fails without the fix; `LibraryFlowTests` passes 5 times in a row; `mac/tools/verify.sh`.
 

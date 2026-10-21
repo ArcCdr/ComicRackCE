@@ -26,6 +26,23 @@ namespace ComicRack.Mac.Tests
 			this.output = output;
 		}
 
+		[Fact]
+		public async Task A_launch_announces_the_opened_host_to_the_view_model_exactly_once()
+		{
+			using (new RealLibraryGuard())
+			using (var temp = new TempDir())
+			{
+				await Ui.Run(async () =>
+				{
+					using (Launch launch = await Launch.Start(temp.Combine("app")))
+					{
+						await Dispatcher.UIThread.InvokeAsync(() => { }); // anything still posted would run now
+						Assert.Equal(1, launch.ViewModel.HostOpenedRuns);
+					}
+				});
+			}
+		}
+
 		[FixtureFact("BD-reader")]
 		public async Task Scan_save_quit_relaunch_shows_the_same_book_count()
 		{

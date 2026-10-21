@@ -35,10 +35,13 @@ namespace ComicRack.Mac.Tests
 			{
 				launch.Service = new HostService(options);
 				launch.ViewModel = new MainViewModel(new NullShell(), launch.Service, launch.Dialogs, readers?.Invoke(launch.Service), launch.Service.Preferences.Current);
-				launch.Service.Opened += (sender, e) => launch.ViewModel.OnHostOpened();
+				// One announcement per host, whoever is first: App gets it from the posted Opened event (also after an import, which opens
+				// a new host); a launch here also makes it itself, because a test may start off the UI thread where the post does not run.
+				// Two calls for the same host raced on the first access to the database.
+				launch.Service.Opened += (sender, e) => launch.Announce();
 				launch.Service.Start();
 				await launch.Service.Ready;
-				launch.ViewModel.OnHostOpened();
+				launch.Announce();
 				// The sidebar and the grid load on worker threads that read the library's list caches; a test that then changes the library
 				// itself must not do it while they run (the Core's cache bookkeeping is not safe against that).
 				Task shown = launch.ViewModel.WhenLibraryShownAsync();
@@ -65,6 +68,19 @@ namespace ComicRack.Mac.Tests
 				}
 				throw;
 			}
+		}
+
+		private object announced;
+
+		private void Announce()
+		{
+			object key = (object)Service.Host ?? (object)Service.Failure ?? this;
+			if (ReferenceEquals(announced, key))
+			{
+				return;
+			}
+			announced = key;
+			ViewModel.OnHostOpened();
 		}
 
 		/// <summary>Cmd+Q: cancel a running operation, close the host (which saves) and check the saved file. Returns the check.</summary>
