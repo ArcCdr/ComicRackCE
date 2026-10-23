@@ -60,3 +60,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-21 17:57 | P5.7c | done | 77c045f |  | Info editor: Pages, Colors and cover (page list with thumbnails, tiles and details, page menu, Order by Name, sorting, merge; Colors tab with the Core's colo... |
 | 2026-10-21 19:40 | RV5b | done | a22f3c3 |  | Chrome isolation part 2 (every element switchable Original/Native: stock packs for Buttons, ComboBox, Menus, Tree; Native palette and shapes for the self-dra... |
 | 2026-10-21 20:25 | P5.8 | done | 645acc9 |  | Multi-edit (MultipleComicBooksDialog: 525 x 460 form with five collapsible groups at the Designer's positions, check box in front of every box, shared values... |
+| 2026-10-24 00:22 | P5.9 | done | bb46db7 |  | ComicInfo write-back UI (Update Book Files in the book menu, File > Update all Book Files Cmd+Shift+U, marking and automatic update through the Core file upd... |
