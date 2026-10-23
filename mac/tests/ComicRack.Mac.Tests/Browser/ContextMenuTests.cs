@@ -204,10 +204,13 @@ namespace ComicRack.Mac.Tests.Browser
 					{
 						Assert.True(menu.MenuItemOf(name).IsEnabled, name + " is enabled for a selection of books with files");
 					}
-					foreach (string name in new[] { "miOpenWith", "miEditList", "miAddList", "miAddLibrary", "miShowOnly", "miShowInList", "miExportComics", "miAutomation", "miUpdateComicFiles", "miCopyData", "miPasteData", "miClearData", "miRefreshInformation", "miSetListBackground" })
+					foreach (string name in new[] { "miOpenWith", "miEditList", "miAddList", "miAddLibrary", "miShowOnly", "miShowInList", "miExportComics", "miAutomation", "miCopyData", "miPasteData", "miClearData", "miRefreshInformation", "miSetListBackground" })
 					{
 						Assert.True(menu.MenuItemOf(name) != null && !menu.MenuItemOf(name).IsEnabled, name + " waits for its task");
 					}
+					// Update Book Files (P5.9) works with a file and shows only for a book with changes that are not in its file
+					Assert.True(menu.MenuItemOf("miUpdateComicFiles").IsEnabled);
+					Assert.False(menu.MenuItemOf("miUpdateComicFiles").IsVisible);
 					Assert.False(menu.MenuItemOf("miEdit").IsVisible); // Details view only
 					Assert.False(menu.MenuItemOf("miSetTopOfStack").IsVisible); // stacks only
 					Assert.False(menu.MenuItemOf("miShowWeb").IsVisible); // only for a book with a Web field
@@ -217,6 +220,7 @@ namespace ComicRack.Mac.Tests.Browser
 					menu.Update();
 					Assert.False(menu.MenuItemOf("miRead").IsEnabled);
 					Assert.False(menu.MenuItemOf("miRevealBrowser").IsEnabled);
+					Assert.False(menu.MenuItemOf("miUpdateComicFiles").IsEnabled); // AnySelectedLinked
 					Assert.True(menu.MenuItemOf("miMarkAs").IsEnabled);
 					Assert.True(menu.MenuItemOf("miRemove").IsEnabled);
 

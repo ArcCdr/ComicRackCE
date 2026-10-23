@@ -167,7 +167,7 @@ namespace ComicRack.Mac.Views
 			export.Items.Add(Later("miExportComicsWithPrevious", "Export with Previous", null, Key.E, KeyModifiers.Meta | KeyModifiers.Alt));
 			Add(export);
 			Add(Later("miAutomation", "Automation"));
-			Add(Later("miUpdateComicFiles", "Update Book Files", "UpdateSmall"));
+			Add(Make("miUpdateComicFiles", "Update Book Files", "UpdateSmall", click: () => browser.Run(BookCommand.UpdateFiles)));
 			// the platform name replaces Explorer (ledger BC.17, as for the tab menu)
 			MenuItem reveal = Make("miRevealBrowser", "Reveal Book in &Explorer", "RevealExplorer", Key.G, click: () => browser.Run(BookCommand.Reveal));
 			reveal.Header = UiText.Get("MacOnly", "RevealInFinder", "Reveal in Finder");
@@ -227,6 +227,9 @@ namespace ComicRack.Mac.Views
 			stars.Rating = rating < 0 ? 0 : rating;
 			stars.UserChanged = false;
 			MenuItemOf("miRevealBrowser").IsEnabled = browser.CanRun(BookCommand.Reveal);
+			// Update Book Files: shown when a selected book has changes that are not in its file, enabled when one has a file
+			MenuItemOf("miUpdateComicFiles").IsEnabled = browser.CanRun(BookCommand.UpdateFiles);
+			MenuItemOf("miUpdateComicFiles").IsVisible = browser.SelectedBooks.Any(book => book.ComicInfoIsDirty || book.ComicBookIsDirty);
 			MenuItemOf("miRemove").IsEnabled = any;
 			// the items of the original that show only for a book with a Web field, in the Details view, or on a stack
 			MenuItemOf("miShowWeb").IsVisible = HasWeb(browser.SelectedItem?.Book);

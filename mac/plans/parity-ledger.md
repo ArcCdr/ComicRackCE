@@ -21,7 +21,7 @@
 | MF.04 | New Tab (empty reader slot) | File `miAddTab` (`OpenBooks.AddSlot`) | Ctrl+T → Cmd+T | P5.32a | done 2026-10-21 | an empty tab at the right end that becomes current; the next book opened takes its place (`NavigatorManager.Open` without `OpenInNewSlot`); the "+" tab of the strip does the same |
 | MF.05 | Add Folder to Library... | File `miAddFolderToLibrary` | Ctrl+Shift+A → Cmd+Shift+A | P5.10a | todo | label and shortcut applied by P5.R1 (the MVP's Open Folder with the native folder picker); P5.10a adds the name-or-path dialog and the original's background scan |
 | MF.06 | Scan Book Folders | File `miScan` | Ctrl+Shift+S → Cmd+Shift+S | P5.19b | todo | |
-| MF.07 | Update all Book Files | File `miUpdateAllComicFiles` | Ctrl+Shift+U → Cmd+Shift+U | P5.9 | todo | |
+| MF.07 | Update all Book Files | File `miUpdateAllComicFiles` | Ctrl+Shift+U → Cmd+Shift+U | P5.9 | done 2026-10-23 | `MainViewModel.UpdateAllBookFilesCommand` queues every book of the library and every temporary book with `alwaysWrite`; the item hides while "Book files are updated automatically" is on (`fileMenu_DropDownOpening`); the Core writes only when "Allow writing of Book info into files" is on (the Preferences check boxes are P5.22a; the log says when the setting is off) |
 | MF.08 | Update Web Comics | File `miUpdateWebComics` | Ctrl+Shift+W → Cmd+Shift+W | P5.19b | todo | Core feature; DD18 overridden by R9 |
 | MF.09 | Generate Cover Thumbnails | File `miCacheThumbnails` | — | P5.19b | todo | |
 | MF.10 | Synchronize Devices | File `miSynchronizeDevices` | — | — | deferred (D4) | device sync |
@@ -158,7 +158,7 @@
 | ID | Feature | Original location | Win → Mac | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|---|
 | SB.01 | Status text ("Ready", messages) | `tsText` | — | P5.R1 | done 2026-10-20 | the browser's `SelectionInfo` (list name, books, filtered, size, selection) while a library is open, else the app's message |
-| SB.02 | Activity icons: backup, export, read info, write info, page reading, scanning (animated) | `tsBackupActivity`, `tsExportActivity`, `tsReadInfoActivity`, `tsWriteInfoActivity`, `tsPageActivity`, `tsScanActivity` | — | P5.26 | todo | original animated images |
+| SB.02 | Activity icons: backup, export, read info, write info, page reading, scanning (animated) | `tsBackupActivity`, `tsExportActivity`, `tsReadInfoActivity`, `tsWriteInfoActivity`, `tsPageActivity`, `tsScanActivity` | — | P5.26 | todo | original animated images; P5.9 built the write info icon (`tsWriteInfoActivity`, still picture `UpdateInfoAnimation`) and the update error icon (`ExportError`) as `CrStatusSlot`s that follow the write queue every second; animation, click actions and the other icons are P5.26 |
 | SB.03 | Activity icons: device sync, server, data source state | `tsDeviceSyncActivity`, `tsServerActivity`, `tsDataSourceState` | — | — | deferred (D4) | |
 | SB.04 | Book / Page / page count segments | `tsBook`, `tsCurrentPage`, `tsPageCount` | — | P5.32a | done 2026-10-21 | the segments follow the book of the current tab; the padlock of `tsCurrentPage` shows while Track current Page is off; the index retrieval image of `tsPageCount` is not drawn |
 | SB.05 | Thumbnail size slider (visible when the browser is shown) | `ToolStripThumbSize` inserted at `MainForm.cs:963` | — | P5.R1 | done 2026-10-20 | the slider is the last segment of the status bar |
@@ -215,7 +215,7 @@
 | BC.13 | Context: Show in List (lists containing the book) | `miShowInList`, `dummyEntryToolStripMenuItem1` | — | P5.20 | todo | |
 | BC.14 | Context: Export Books (Export Books..., Export with Previous) | `miExportComics`, `contextExport`, `miExportComicsAs`, `miExportComicsWithPrevious` | Ctrl+Shift+E, Ctrl+Alt+E → Cmd+Shift+E, Option+Cmd+E | P5.24a | todo | |
 | BC.15 | Context: Automation (script commands) | `miAutomation` | — | P4.5 | todo | |
-| BC.16 | Context: Update Book Files | `miUpdateComicFiles` | — | P5.9 | todo | |
+| BC.16 | Context: Update Book Files | `miUpdateComicFiles` | — | P5.9 | done 2026-10-23 | enabled when a selected book has a file (`AnySelectedLinked`), shown only when a selected book has changes that are not in its file (`ComicInfoIsDirty` or `ComicBookIsDirty`); writes the selected books with a file at once |
 | BC.17 | Context: Reveal Book in Explorer | `miRevealBrowser` | Ctrl+G → Cmd+G | P5.5 | deviation | native: label "Reveal in Finder"; works since P5.5 (Cmd+G in the grid too, enabled when every selected book has a file) |
 | BC.18 | Context: Copy Data / Paste Data... / Clear Data | `miCopyData`, `miPasteData`, `miClearData` | Ctrl+C/V → Cmd+C/V | P5.20 | todo | |
 | BC.19 | Context: Select All / Invert Selection | `miSelectAll`, `miInvertSelection` | as BV.09 | P5.3 | done 2026-10-21 | Select All (Cmd+A) and Invert Selection in the context menu |

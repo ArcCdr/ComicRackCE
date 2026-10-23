@@ -73,6 +73,9 @@ namespace ComicRack.Mac.ViewModels
 				case BookCommand.QuickRating:
 					_ = QuickRatingAsync(e.Books);
 					break;
+				case BookCommand.UpdateFiles:
+					UpdateBookFiles(e.Books);
+					break;
 			}
 		}
 
@@ -189,6 +192,8 @@ namespace ComicRack.Mac.ViewModels
 		// closes its readers (quit, import), and one dialog at a time when several tabs close together.
 		private void OnBookClosed(ComicBook book)
 		{
+			// OnBookClosed of the original: a book that was kept back from the write queue while it was open goes in now
+			fileUpdates?.BookClosed(book);
 			if (closingEverything || book == null || preferences == null || !preferences.AutoShowQuickReview || !book.HasBeenRead || book.Rating != 0f)
 			{
 				return;

@@ -99,6 +99,8 @@ namespace ComicRack.Mac
 					new NativeMenuItemSeparator(),
 					// MF.05: the MVP's Open Folder. The original asks for a name or path with a Browse button and scans in the background (P5.10a).
 					Item(Text("miAddFolderToLibrary", "&Add Folder to Library..."), vm.OpenFolderCommand, Key.A, KeyModifiers.Meta | KeyModifiers.Shift),
+					// MF.07: Ctrl+Shift+U of the original; hidden while the book files are updated automatically (fileMenu_DropDownOpening)
+					UpdateAllItem(vm),
 					// Import from a Windows installation has no counterpart in the original: a Mac-only addition (ledger MA.04).
 					Item(UiText.Get("MacOnly", "ImportWindowsLibrary", "Import Windows Library…"), vm.ImportWindowsLibraryCommand),
 					new NativeMenuItemSeparator(),
@@ -187,6 +189,22 @@ namespace ComicRack.Mac
 					Item(Text("miWebHelp", "ComicRack Documentation..."), vm.ShowHelpCommand, Key.F1, KeyModifiers.None),
 				}),
 			};
+		}
+
+		// File > Update all Book Files (miUpdateAllComicFiles, Cmd+Shift+U, MF.07): every book is written now; the item is not shown while "Book files are updated
+		// automatically" is on, as the original hides it when the file menu opens. A hidden item has no shortcut.
+		private static NativeMenuItem UpdateAllItem(MainViewModel vm)
+		{
+			NativeMenuItem item = Item(Text("miUpdateAllComicFiles", "Update all Book Files"), vm.UpdateAllBookFilesCommand, Key.U, KeyModifiers.Meta | KeyModifiers.Shift);
+			item.IsVisible = vm.IsUpdateAllVisible;
+			vm.PropertyChanged += (sender, e) =>
+			{
+				if (e.PropertyName == nameof(MainViewModel.IsUpdateAllVisible))
+				{
+					item.IsVisible = vm.IsUpdateAllVisible;
+				}
+			};
+			return item;
 		}
 
 		// Edit > Undo and Redo: the text follows the label of the step (editMenu_DropDownOpening), the item is off when there is nothing to do and while a dialog is open

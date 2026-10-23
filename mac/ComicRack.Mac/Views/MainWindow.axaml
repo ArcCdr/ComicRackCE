@@ -24,6 +24,10 @@
       <!-- the padlock of tsCurrentPage while Track current Page is off -->
       <c:CrIcon Name="PageLockIcon" DockPanel.Dock="Right" IconName="Locked" IsVisible="{Binding ShowPageLock}" VerticalAlignment="Center" />
       <TextBlock Name="BookSegment" DockPanel.Dock="Right" Text="{Binding BookSegmentText}" ToolTip.Tip="{Binding BookSegmentTip}" VerticalAlignment="Center" Margin="4,0" />
+      <!-- the activity icons (SB.02), left of the book segment: tsWriteInfoActivity while the Core writes book files (P5.9), tsExportActivity (its error image) while writes have failed;
+           the clicks (Tasks and Errors dialogs) and the other icons are P5.26 -->
+      <c:CrStatusSlot Name="WriteInfoSlot" DockPanel.Dock="Right" Margin="2,3,2,2" IconName="UpdateInfoAnimation" IsVisible="{Binding IsWriteInfoActive}" ToolTip.Tip="{Binding WriteInfoToolTip}" />
+      <c:CrStatusSlot Name="UpdateErrorsSlot" DockPanel.Dock="Right" IconName="ExportError" IsVisible="{Binding HasUpdateErrors}" ToolTip.Tip="{Binding UpdateErrorsToolTip}" />
       <TextBlock Name="StatusLabel" Text="{Binding StatusLine}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="4,0" />
     </c:CrStatusBar>
 

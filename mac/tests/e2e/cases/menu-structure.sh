@@ -35,6 +35,7 @@ expect_item File "Close" "Option+Cmd+X"
 expect_item File "Close All" "Shift+Cmd+X"
 expect_item File "New Tab" "Cmd+T"
 expect_item File "Add Folder to Library..." "Shift+Cmd+A"
+expect_item File "Update all Book Files" "Shift+Cmd+U"
 expect_item File "Import Windows Library…" ""
 # Browse: MB.01 Browser (F3, checked while the browser dock is open) and MB.05 Sidebar, Shift+F6, checked while the side panel shows
 expect_item Browse "Browser" "*" "✓"

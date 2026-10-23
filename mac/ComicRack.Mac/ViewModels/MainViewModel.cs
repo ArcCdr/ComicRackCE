@@ -55,6 +55,7 @@ namespace ComicRack.Mac.ViewModels
 				Browser.Thumbnails = null; // the cover service is about to be disposed (import)
 				StopWatching();
 				StopUndoTracking();
+				StopFileUpdates();
 			};
 			if (readers != null)
 			{
@@ -71,6 +72,7 @@ namespace ComicRack.Mac.ViewModels
 			WirePreview();
 			WireInfo();
 			WireBookInfo();
+			WireFileUpdates();
 		}
 
 		// ---- live refresh (P5.2)
@@ -480,6 +482,7 @@ namespace ComicRack.Mac.ViewModels
 			ReloadBrowser();
 			StartWatching();
 			StartUndoTracking();
+			StartFileUpdates();
 			RestoreSession();
 			StatusText = $"Library engine ready. {BookCount} books. Data: {host.Paths.DataFolder}";
 		}

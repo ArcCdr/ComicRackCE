@@ -52,6 +52,9 @@ namespace ComicRack.Mac.ViewModels
 
 		/// <summary>Quick Rating and Review... (<c>miQuickRating</c>, Option+Shift+Q).</summary>
 		QuickRating,
+
+		/// <summary>Update Book Files (<c>miUpdateComicFiles</c>): the selected books that have a file are written now (P5.9).</summary>
+		UpdateFiles,
 	}
 
 	/// <summary>A <see cref="BookCommand"/> to carry out on the selected books.</summary>
@@ -697,6 +700,18 @@ namespace ComicRack.Mac.ViewModels
 			IReadOnlyList<ComicBook> books = SelectedBooks;
 			if (books.Count == 0)
 			{
+				return false;
+			}
+			if (command == BookCommand.UpdateFiles)
+			{
+				// commands.Add(UpdateFiles, AnySelectedLinked, miUpdateComicFiles)
+				foreach (ComicBook book in books)
+				{
+					if (book.IsLinked)
+					{
+						return true;
+					}
+				}
 				return false;
 			}
 			if (command == BookCommand.Reveal)

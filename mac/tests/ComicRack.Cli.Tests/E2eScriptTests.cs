@@ -61,7 +61,7 @@ namespace ComicRack.Cli.Tests
 			string[] expected =
 			{
 				"book-tabs", "chrome", "chrome-gallery", "context-menu-1", "fullscreen", "grid-keys", "grid-look", "grid-marquee", "grid-multiselect", "hidpi", "import", "info-edit", "info-pages", "info-panel", "launch-quit", "multi-edit",
-				"menu-structure", "open-folder", "overlay", "pdf-cb7", "quit-during-scan", "reader-keys", "reader-look", "refresh-after-read", "small-preview", "state-restore",
+				"menu-structure", "open-folder", "overlay", "pdf-cb7", "quit-during-scan", "reader-keys", "reader-look", "refresh-after-read", "small-preview", "state-restore", "write-back",
 			};
 			string[] names = CaseFiles().Select(f => Path.GetFileNameWithoutExtension(f)).OrderBy(n => n, StringComparer.Ordinal).ToArray();
 			Assert.Equal(expected.OrderBy(n => n, StringComparer.Ordinal).ToArray(), names);

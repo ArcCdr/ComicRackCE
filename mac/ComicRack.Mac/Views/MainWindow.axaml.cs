@@ -23,6 +23,7 @@ namespace ComicRack.Mac.Views
 		private BrowserContextMenu contextMenu;
 		private MenuItem revealItem, copyPathItem;
 		private Separator revealSeparator;
+		private DispatcherTimer activityTimer;
 
 		public MainWindow()
 		{
@@ -118,8 +119,14 @@ namespace ComicRack.Mac.Views
 				}
 			}
 			model = next;
+			// updateActivityTimer (MainForm.Designer.cs:3471, 1000 ms): the activity icons of the status bar follow the Core's queues
+			activityTimer?.Stop();
+			activityTimer = null;
 			if (model != null)
 			{
+				MainViewModel followed = model;
+				activityTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Background, (sender, e) => followed.RefreshActivity());
+				activityTimer.Start();
 				model.IsFullScreen = WindowState == WindowState.FullScreen;
 				KeyBindings.Clear();
 				KeyBindings.AddRange(MainMenu.Aliases(model));
@@ -463,6 +470,8 @@ namespace ComicRack.Mac.Views
 
 		protected override void OnClosed(EventArgs e)
 		{
+			activityTimer?.Stop();
+			activityTimer = null;
 			readerFrame?.Dispose();
 			if (readerWindow != null)
 			{

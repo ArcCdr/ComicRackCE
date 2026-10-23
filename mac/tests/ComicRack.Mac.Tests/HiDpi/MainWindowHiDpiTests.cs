@@ -54,5 +54,48 @@ namespace ComicRack.Mac.Tests.HiDpi
 				window.Close();
 			});
 		}
+
+		/// <summary>
+		/// P5.9: the write info and update error icons of the status bar (SB.02) are the status bar's 20 x 19 slots, left of the book segment, at the same logical size
+		/// at every scale; their sunken frame is one unit of the token colours (<c>ButtonShadow</c> left, <c>ButtonHighlight</c> right) and the picture inside is drawn.
+		/// </summary>
+		[Theory]
+		[MemberData(nameof(Scales.MainData), MemberType = typeof(Scales))]
+		public async Task The_activity_slots_of_the_write_queue_keep_their_size_and_a_crisp_sunken_frame(double scale)
+		{
+			await InAppearance("Light", () =>
+			{
+				var service = new HostService(AppOptions.Parse(new[] { "--data-dir", Path.Combine(Path.GetTempPath(), "crmac-never-started") }));
+				var vm = new MainViewModel(new NullShell(), service, new FakeDialogs());
+				var window = new MainWindow { DataContext = vm, Width = 900, Height = 500 };
+				window.Show();
+				vm.IsWriteInfoActive = true;
+				vm.HasUpdateErrors = true;
+				Dpi.Apply(window, scale);
+				Dpi.Settle(window);
+				var write = window.FindControl<CrStatusSlot>("WriteInfoSlot");
+				var errors = window.FindControl<CrStatusSlot>("UpdateErrorsSlot");
+				Assert.Equal(new Size(20, 19), write.Bounds.Size);
+				Assert.Equal(new Size(20, 19), errors.Bounds.Size);
+				Assert.True(errors.Bounds.X < write.Bounds.X); // the original's order: export, read info, write info
+				Assert.True(write.Bounds.Right <= window.FindControl<TextBlock>("BookSegment").Bounds.X + 0.01);
+				Raster frame = Dpi.Capture(window, "status-activity@" + Scales.Tag(scale));
+				SKColor shadow = Token(ThemeTokens.Names.ButtonShadow, "Light");
+				SKColor lightEdge = Token(ThemeTokens.Names.ButtonHighlight, "Light");
+				int w = Scales.Device(1, scale);
+				foreach (CrStatusSlot slot in new[] { write, errors })
+				{
+					Rect area = Dpi.Area(slot, window);
+					int x0 = Scales.Device(area.X, scale), y = Scales.Device(area.Y + 9, scale);
+					Assert.Equal(w, frame.CountInRow(y, x0, x0 + w, c => Raster.Near(c, shadow, 1)));
+					int x1 = Scales.Device(area.Right - 1, scale);
+					Assert.Equal(w, frame.CountInRow(y, x1, x1 + w, c => Raster.Near(c, lightEdge, 1)));
+					// the picture is in the slot: some pixel inside the frame differs from the status bar's own colour
+					int inside = frame.CountInRow(y, x0 + w + Scales.Device(2, scale), x1 - Scales.Device(2, scale), c => !Raster.Near(c, frame[x0 + w + 1, y], 1));
+					Assert.True(inside > 0, "no picture drawn in " + slot.Name);
+				}
+				window.Close();
+			});
+		}
 	}
 }
