@@ -1,0 +1,10 @@
+# Paths below a scanned folder that crcli script-scan leaves out (--exclude-file), relative to mac/fixtures/plugins.
+# Only content of a source checkout that a user never installs: build tools, tests and program assemblies kept for reference.
+# A plugin's own files are never listed here.
+
+# Reference copies of the program's own assemblies, a test launcher and the build recipe (the plugin is src/).
+comic-vine-scraper/tools
+comic-vine-scraper/src/py/tests
+
+# Packaging script of the repository (Python 3); not part of the plugin.
+manga-update-scraper/CreatePlugin.py

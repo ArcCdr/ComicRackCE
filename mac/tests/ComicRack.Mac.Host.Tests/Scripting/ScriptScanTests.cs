@@ -450,6 +450,93 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		}
 
 		[Fact]
+		public void A_package_file_inside_a_plugin_folder_belongs_to_that_folder()
+		{
+			string root = Path.Combine(temp.Path, "nested");
+			Directory.CreateDirectory(Path.Combine(root, "plugin-one"));
+			using (ZipArchive zip = ZipFile.Open(Path.Combine(root, "plugin-one", "inner.zip"), ZipArchiveMode.Create))
+			{
+				Add(zip, "mod.py", "x = 1\n");
+			}
+			File.WriteAllText(Path.Combine(root, "plugin-one", "main.py"), "from System.Windows.Forms import *\nForm()\n");
+			ScanReport report = Scanner().Scan(new[] { root });
+			Assert.Equal(new[] { "plugin-one" }, report.Units.Select(u => u.Package).Distinct().ToArray());
+			Assert.Equal(1, report.Packages);
+		}
+
+		[Fact]
+		public void Excluded_paths_are_left_out_with_their_content_and_the_list_file_allows_comments()
+		{
+			string root = Path.Combine(temp.Path, "excl");
+			Directory.CreateDirectory(Path.Combine(root, "plug", "tools", "deep"));
+			Directory.CreateDirectory(Path.Combine(root, "plug", "src"));
+			string form = "from System.Windows.Forms import *\nForm()\n";
+			File.WriteAllText(Path.Combine(root, "plug", "tools", "deep", "a.py"), form);
+			File.WriteAllText(Path.Combine(root, "plug", "tools", "b.py"), form);
+			File.WriteAllText(Path.Combine(root, "plug", "src", "c.py"), form);
+			File.WriteAllText(Path.Combine(root, "plug", "build.py"), form);
+			File.WriteAllText(Path.Combine(root, "plug", "toolsbox.py"), form);
+			string list = Path.Combine(temp.Path, "exclude.txt");
+			File.WriteAllText(list, "# build tools\nPLUG/tools   # reference copies\n\nplug\\build.py\n");
+			ScriptScanner scanner = Scanner();
+			scanner.Exclude = ScriptScanner.ReadExcludeList(list);
+			Assert.Equal(new[] { "PLUG/tools", "plug/build.py" }, scanner.Exclude.ToArray());
+			ScanReport report = scanner.Scan(new[] { root });
+			Assert.Equal(new[] { "plug/src/c.py", "plug/toolsbox.py" }, report.Units.Select(u => u.Path).ToArray());
+		}
+
+		[Fact]
+		public void A_domain_name_is_not_a_windows_program_but_a_dos_program_path_is()
+		{
+			Assert.Null(WindowsOnlyApi.StringWarning("www.example.com"));
+			Assert.Null(WindowsOnlyApi.StringWarning("https://www.example.com/series"));
+			Assert.Null(WindowsOnlyApi.StringWarning("Example.com - Page"));
+			Assert.NotNull(WindowsOnlyApi.StringWarning("tools\\setup.com"));
+			Assert.NotNull(WindowsOnlyApi.StringWarning("Fetcher.exe"));
+		}
+
+		[Fact]
+		public void The_usage_report_gives_tier_counts_ranked_tables_and_findings_and_is_stable()
+		{
+			string root = Path.Combine(temp.Path, "usage");
+			Directory.CreateDirectory(Path.Combine(root, "one"));
+			Directory.CreateDirectory(Path.Combine(root, "two"));
+			File.WriteAllText(Path.Combine(root, "one", "a.py"), "from System.Windows.Forms import *\nf = Form()\nf.Text = 'x'\nButton().Text = 'y'\n");
+			File.WriteAllText(Path.Combine(root, "one", "b.py"), "from System.Windows.Forms import *\nForm()\nListView()\n");
+			File.WriteAllText(Path.Combine(root, "two", "c.py"), "import ctypes\nfrom System.Windows.Forms import *\nForm()\nctypes.windll.user32.MessageBeep(0)\n");
+			File.WriteAllText(Path.Combine(root, "two", "d.py"), "print 1\n");
+			File.WriteAllText(Path.Combine(root, "two", "e.py"), "def (:\n");
+			var options = new UsageReportOptions { Commands = new[] { "crcli script-scan usage" }, Notes = new[] { "a note" } };
+			string Render()
+			{
+				var w = new StringWriter { NewLine = "\n" };
+				UsageReport.Write(Scanner().Scan(new[] { root }), w, options);
+				return w.ToString();
+			}
+			string text = Render();
+			Assert.Equal(text, Render());
+			Assert.DoesNotContain(temp.Path, text);
+			Assert.Contains("    crcli script-scan usage", text);
+			Assert.Contains("- a note", text);
+			Assert.Contains("| A | uses only Tier A", text);
+			Assert.Matches(@"\| A \|[^|]*\| 1 \| 1 \|", text);
+			Assert.Matches(@"\| B \|[^|]*\| 1 \| 1 \|", text);
+			Assert.Matches(@"\| C \|[^|]*\| 1 \| 1 \|", text);
+			Assert.Matches(@"\| none \|[^|]*\| 1 \| 0 \|", text);
+			Assert.Matches(@"\| \? \|[^|]*\| 1 \| 0 \|", text);
+			Assert.Matches(@"\| one \| B \| 2 \|", text);
+			Assert.Matches(@"\| two \| C \| 3 \|", text);
+			Assert.Matches(@"\| 1 \| Form \| A \| 3 \| 2 \| 3 \|", text);
+			Assert.Contains("Form..ctor | constructor | A | 3 | 2 | 3 |", text);
+			Assert.Contains("user32.MessageBeep", text);
+			Assert.Contains("**Unreadable units: 1.**", text);
+			foreach (string heading in new[] { "## 1.", "## 2.", "## 3.", "## 4.", "## 5.", "## 6.", "## 7.", "## 8." })
+			{
+				Assert.Contains("\n" + heading, text);
+			}
+		}
+
+		[Fact]
 		public void A_missing_path_is_an_error()
 		{
 			Assert.Throws<FileNotFoundException>(() => Scanner().Scan(new[] { Path.Combine(temp.Path, "nothing-here") }));

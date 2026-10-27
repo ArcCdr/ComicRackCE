@@ -87,7 +87,8 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 
 		private static readonly Regex PercentVariable = new Regex(@"%(APPDATA|LOCALAPPDATA|PROGRAMFILES|PROGRAMFILES\(X86\)|USERPROFILE|TEMP|TMP|SYSTEMROOT|WINDIR|PROGRAMDATA|HOMEDRIVE|HOMEPATH)%", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-		private static readonly Regex WindowsExecutable = new Regex(@"(^|[\\/\s""'])[\w\-. ]+\.(exe|bat|cmd|com|msi|lnk)(\s|$|""|')", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+		// ".com" counts only behind a backslash: without one it is a domain name (www.example.com), not a DOS program.
+		private static readonly Regex WindowsExecutable = new Regex(@"(^|[\\/\s""'])[\w\-. ]+\.(exe|bat|cmd|msi|lnk)(\s|$|""|')|\\[\w\-. ]+\.com(\s|$|""|')", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
 		/// <summary>True when the name is a native Windows library (<c>user32</c>, <c>kernel32.dll</c>, ...).</summary>
 		public static bool IsWindowsLibrary(string name)

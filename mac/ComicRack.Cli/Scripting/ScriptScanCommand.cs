@@ -12,10 +12,12 @@ namespace ComicRack.Cli.Scripting
 	/// </summary>
 	internal static class ScriptScanCommand
 	{
-		public const string Usage = "script-scan <file-or-folder>... [--json out.json] [--top N] [--reference-pack <dir>] [--fail-on-error]\n"
+		public const string Usage = "script-scan <file-or-folder>... [--json out.json] [--top N] [--reference-pack <dir>] [--exclude-file <file>] [--markdown <out.md>] [--fail-on-error]\n"
 			+ "  Scans .py scripts (parsed with the IronPython parser), .dll/.exe assemblies (member references of the metadata), .html files and .crplugin/.zip packages (read in memory).\n"
 			+ "  Prints a summary, the first N (default 50) rows of the ranked types, members and referenced assemblies, every finding and one line per unit. With --json the whole report is written to the file.\n"
 			+ "  --reference-pack names the folder of System.Windows.Forms.dll (default: COMICRACK_WINFORMS_REFERENCE, the NuGet cache of the Windows Desktop reference pack, else the macOS facade).\n"
+			+ "  --exclude-file names a text file of paths to leave out, relative to a scanned folder, one per line (# starts a comment).\n"
+			+ "  --markdown writes the usage report (tier counts, plugins, ranked types and members, untyped names, assemblies, findings; mac/scripting/compat-usage.md).\n"
 			+ "  Exit 0; with --fail-on-error 1 when any unit has a Tier C finding.";
 
 		public static int Run(string[] args, TextWriter output, TextWriter error)
@@ -33,7 +35,35 @@ namespace ComicRack.Cli.Scripting
 				}
 			}
 			ApiCatalog catalog = ReferenceSurface.Load(o.Get("reference-pack"));
-			ScanReport report = new ScriptScanner(catalog).Scan(o.PositionalArguments);
+			var scanner = new ScriptScanner(catalog);
+			string excludeFile = o.Get("exclude-file");
+			if (excludeFile != null)
+			{
+				if (!File.Exists(excludeFile))
+				{
+					throw new UsageException("No exclude file at " + excludeFile);
+				}
+				scanner.Exclude = ScriptScanner.ReadExcludeList(excludeFile);
+			}
+			ScanReport report = scanner.Scan(o.PositionalArguments);
+			string markdown = o.Get("markdown");
+			if (markdown != null)
+			{
+				string full = Path.GetFullPath(markdown);
+				Directory.CreateDirectory(Path.GetDirectoryName(full));
+				using (var writer = new StreamWriter(full, false, new System.Text.UTF8Encoding(false)) { NewLine = "\n" })
+				{
+					UsageReport.Write(report, writer, new UsageReportOptions
+					{
+						Commands = new[]
+						{
+							"mac/scripting/fetch-corpus.sh",
+							"crcli script-scan " + string.Join(" ", o.PositionalArguments.Select(a => a.Replace('\\', '/'))) + (excludeFile != null ? " --exclude-file " + excludeFile.Replace('\\', '/') : string.Empty) + " --markdown " + markdown.Replace('\\', '/'),
+						},
+						Notes = excludeFile == null ? Array.Empty<string>() : new[] { scanner.Exclude.Count + " paths of the checkouts are left out (build tools, tests, program assemblies kept for reference): `" + Path.GetFileName(excludeFile) + "`." },
+					});
+				}
+			}
 			string json = o.Get("json");
 			if (json != null)
 			{

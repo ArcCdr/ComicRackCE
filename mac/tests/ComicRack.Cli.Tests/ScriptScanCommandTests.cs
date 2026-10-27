@@ -91,5 +91,27 @@ namespace ComicRack.Cli.Tests
 			Assert.Equal(2, missing.code);
 			Assert.Contains("Nothing to scan", missing.error);
 		}
+
+		[Fact]
+		public void The_exclude_file_and_the_markdown_report_are_applied_and_the_report_names_the_command()
+		{
+			string root = Path.Combine(temp, "corpus");
+			Directory.CreateDirectory(Path.Combine(root, "plug", "tools"));
+			File.WriteAllText(Path.Combine(root, "plug", "a.py"), "from System.Windows.Forms import *\nForm()\n");
+			File.WriteAllText(Path.Combine(root, "plug", "tools", "b.py"), "from System.Windows.Forms import *\nForm()\nButton()\n");
+			string list = Path.Combine(temp, "exclude.txt");
+			File.WriteAllText(list, "# tools are not part of the plugin\nplug/tools\n");
+			string md = Path.Combine(temp, "out", "usage.md");
+			var r = Crcli("script-scan", root, "--exclude-file", list, "--markdown", md);
+			Assert.Equal(0, r.code);
+			Assert.Contains("script-scan: 1 units", r.output);
+			string text = File.ReadAllText(md);
+			Assert.StartsWith("# Script compatibility usage", text);
+			Assert.Contains("--exclude-file " + list.Replace('\\', '/') + " --markdown " + md.Replace('\\', '/'), text);
+			Assert.Contains("| plug | A | 1 |", text);
+			Assert.DoesNotContain("Button", text);
+			Assert.DoesNotContain("\r", text);
+			Assert.Equal(2, Crcli("script-scan", root, "--exclude-file", Path.Combine(temp, "nope.txt")).code);
+		}
 	}
 }

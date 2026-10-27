@@ -33,6 +33,28 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 
 		public ApiCatalog Catalog => catalog;
 
+		/// <summary>
+		/// Paths below a scanned folder that are skipped, relative to that folder with <c>/</c> (a folder or a file; the folder's content goes with it; case is ignored). For content of a source checkout that is not
+		/// part of what a user installs (build tools, tests, program assemblies kept for reference). The corpus run keeps its list in <c>mac/scripting/corpus-exclude.txt</c>.
+		/// </summary>
+		public IReadOnlyList<string> Exclude { get; set; } = Array.Empty<string>();
+
+		/// <summary>Reads an exclude list: one relative path per line, <c>#</c> starts a comment, blank lines are ignored.</summary>
+		public static IReadOnlyList<string> ReadExcludeList(string path)
+		{
+			return File.ReadAllLines(path).Select(l => l.Contains('#') ? l.Substring(0, l.IndexOf('#')) : l).Select(l => l.Trim().Replace('\\', '/').Trim('/')).Where(l => l.Length > 0).ToList();
+		}
+
+		private bool IsExcluded(string root, string path)
+		{
+			if (Exclude.Count == 0)
+			{
+				return false;
+			}
+			string relative = Relative(root, path);
+			return Exclude.Any(e => string.Equals(relative, e, StringComparison.OrdinalIgnoreCase) || relative.StartsWith(e + "/", StringComparison.OrdinalIgnoreCase));
+		}
+
 		/// <summary>Scans the files and folders; the result lists every unit in a stable order.</summary>
 		public ScanReport Scan(IEnumerable<string> paths)
 		{
@@ -87,7 +109,10 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		{
 			foreach (string file in EnumerateFiles(root))
 			{
-				ScanFileEntry(file, root, units, bundled);
+				if (!IsExcluded(root, file))
+				{
+					ScanFileEntry(file, root, units, bundled);
+				}
 			}
 		}
 
@@ -129,7 +154,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			string package = PackageOf(relative);
 			if (PackageExtensions.Contains(extension))
 			{
-				ScanPackage(file, relative, Path.GetFileNameWithoutExtension(file), units, bundled);
+				ScanPackage(file, relative, package, units, bundled);
 				return;
 			}
 			if (!IsScannable(extension))
