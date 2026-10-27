@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Build step of the macOS port (P4.3): patches IronPython.dll 2.7.12 so that Python classes can be created on .NET 9 and later (see Program.cs).
+       Every project whose output holds IronPython.dll runs it through mac/Directory.Build.targets; mac/tools/make-app.sh runs it on the bundle. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>patch-ironpython</AssemblyName>
+    <RootNamespace>PatchIronPython</RootNamespace>
+    <!-- A publish with -r osx-arm64 passes the runtime identifier to this project too; the build step looks for the tool in bin/<config>/net10.0 whatever the caller builds with. -->
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+  </ItemGroup>
+</Project>

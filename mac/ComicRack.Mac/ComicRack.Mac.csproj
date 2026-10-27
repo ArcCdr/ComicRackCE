@@ -51,6 +51,10 @@
     <AvaloniaResource Include="..\..\ComicRack.Engine.Display.Forms\Resources\**" Link="Assets\Original\ComicRack.Engine.Display.Forms\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\ComicRack\Icons\*.ico" Link="Assets\Original\ComicRack\Icons\%(Filename)%(Extension)" />
   </ItemGroup>
+  <!-- P4.3: make-app.sh patches IronPython.dll after the publish (mac/tools/patch-ironpython, Mono.Cecil); a ReadyToRun image of it cannot be patched, so it stays plain IL. -->
+  <ItemGroup>
+    <PublishReadyToRunExclude Include="IronPython.dll" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
   </ItemGroup>

@@ -431,20 +431,20 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | SC.02 | `NewBooks` | Create New Books Commands | P4.3, P4.5 | todo | |
 | SC.03 | `Library` | Library commands | P4.3, P4.5 | todo | |
 | SC.04 | `Editor` | Editor commands (Info dialog) | P4.5 | todo | added to P4.5 by R9 |
-| SC.05 | `ParseComicPath` | Book Path Parsers | P4.3 | todo | |
-| SC.06 | `CreateBookList` | Script lists | P4.3 | todo | |
+| SC.05 | `ParseComicPath` | Book Path Parsers | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
+| SC.06 | `CreateBookList` | Script lists | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
 | SC.07 | `BookOpened` | Actions when Books are opened | P4.5 | todo | added to P4.5 by R9 |
 | SC.08 | `ReaderResized` | Actions when Reader is resized | P4.5 | todo | added to P4.5 by R9 |
-| SC.09 | `NetSearch` | Additional Search Providers | P4.3 | todo | |
-| SC.10 | `Startup` | Actions when ComicRack starts | P4.3 | todo | |
-| SC.11 | `Shutdown` | Actions when ComicRack shuts down | P4.3 | todo | |
+| SC.09 | `NetSearch` | Additional Search Providers | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
+| SC.10 | `Startup` | Actions when ComicRack starts | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
+| SC.11 | `Shutdown` | Actions when ComicRack shuts down | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
 | SC.12 | `ConfigScript` | Script configuration | P4.11e | todo | |
 | SC.13 | `ComicInfoHtml` | Book Information Panels (HTML) | P4.11d | todo | |
 | SC.14 | `ComicInfoUI` | Book Information Panels (WinForms) | P4.11a | todo | |
 | SC.15 | `QuickOpenHtml` | Quick Open Panels (HTML) | P4.11d | todo | |
 | SC.16 | `QuickOpenUI` | Quick Open Panels (WinForms) | P4.11a | todo | |
 | SC.17 | `DrawThumbnailOverlay` | Custom Book Thumbnail Overlays | P4.11b | todo | |
-| SC.18 | Python smart-list expressions and `ComicBookPluginMatcher` | | P4.3 | todo | |
+| SC.18 | Python smart-list expressions and `ComicBookPluginMatcher` | | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
 
 ## Files and formats (must stay byte-compatible in meaning)
 

@@ -45,6 +45,23 @@ if [ -e "$APP/Contents/MacOS/Resources/x64" ] || [ -e "$APP/Contents/MacOS/Resou
 	exit 1
 fi
 
+# P4.3: IronPython 2.7.12 cannot create a Python class on .NET 9 and later. The tool patches the copy in the bundle (idempotent), the Python standard
+# library sits in Contents/MacOS/Lib (package IronPython.StdLib, found next to IronPython.dll), and the Apache-2.0 licence text goes to Contents/Resources.
+dotnet build "$ROOT/mac/tools/patch-ironpython" -c Release -v q --nologo >/dev/null
+dotnet "$ROOT/mac/tools/patch-ironpython/bin/Release/net10.0/patch-ironpython.dll" "$APP/Contents/MacOS/IronPython.dll"
+dotnet "$ROOT/mac/tools/patch-ironpython/bin/Release/net10.0/patch-ironpython.dll" --check "$APP/Contents/MacOS/IronPython.dll" >/dev/null \
+	|| { echo "FAIL: IronPython.dll in the bundle is not patched." >&2; exit 1; }
+if [ ! -e "$APP/Contents/MacOS/Lib/os.py" ]; then
+	echo "FAIL: the Python standard library (Contents/MacOS/Lib) is missing from the bundle." >&2
+	exit 1
+fi
+IRONPYTHON_PKG="${NUGET_PACKAGES:-$HOME/.nuget/packages}/ironpython/2.7.12"
+if [ ! -f "$IRONPYTHON_PKG/LICENSE" ]; then
+	echo "FAIL: the IronPython licence text was not found at $IRONPYTHON_PKG/LICENSE." >&2
+	exit 1
+fi
+cp "$IRONPYTHON_PKG/LICENSE" "$APP/Contents/Resources/IronPython-License.txt"
+
 # P2.4a: the official 7-Zip console binary (ComicInfo writes, CB7 creation; DD10) sits next to the executable, where ToolLocator.SevenZip looks.
 # fetch-7zz.sh does nothing when the pinned, verified copy is already in mac/artifacts/native. Its licence text goes to Contents/Resources.
 "$ROOT/mac/native/fetch-7zz.sh"

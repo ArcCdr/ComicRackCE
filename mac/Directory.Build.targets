@@ -1,0 +1,16 @@
+<Project>
+  <!-- P4.3: IronPython 2.7.12 cannot create a Python class on .NET 9 and later (mac/reports/s4-ironpython.md). Every project whose output folder holds
+       IronPython.dll (the app, crcli and the test projects: a library project does not copy package assemblies) patches that copy after the build
+       with mac/tools/patch-ironpython (Mono.Cecil, idempotent). The tool is built before, through a project reference of ComicRack.Plugins.Core, which every
+       project that holds IronPython.dll depends on. mac/tools/make-app.sh patches the copy in the bundle. Spikes keep the stock file (PatchIronPython=false). -->
+  <PropertyGroup>
+    <PatchIronPythonTool>$(MSBuildThisFileDirectory)tools\patch-ironpython\bin\$(Configuration)\net10.0\patch-ironpython.dll</PatchIronPythonTool>
+    <PatchIronPythonHost>$(DOTNET_HOST_PATH)</PatchIronPythonHost>
+    <PatchIronPythonHost Condition="'$(PatchIronPythonHost)' == ''">dotnet</PatchIronPythonHost>
+  </PropertyGroup>
+  <Target Name="PatchIronPython" AfterTargets="CopyFilesToOutputDirectory"
+          Condition="'$(PatchIronPython)' != 'false' And !$(MSBuildProjectDirectory.Contains('spikes')) And Exists('$(OutDir)IronPython.dll')">
+    <Error Condition="!Exists('$(PatchIronPythonTool)')" Text="IronPython.dll cannot be patched: $(PatchIronPythonTool) is missing (build mac/tools/patch-ironpython first)." />
+    <Exec Command="&quot;$(PatchIronPythonHost)&quot; &quot;$(PatchIronPythonTool)&quot; &quot;$(OutDir)IronPython.dll&quot;" StandardOutputImportance="low" />
+  </Target>
+</Project>

@@ -9,6 +9,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
+using ComicRack.Mac.Host.Scripting;
 using ComicRack.Mac.Tests.Browser;
 using ComicRack.Mac.ViewModels;
 using ComicRack.Mac.Views;
@@ -245,7 +246,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 						vm.Sidebar.Select(Find("Script list"));
 						await WaitFor(() => vm.Browser.TotalCount == 0 && !vm.Browser.IsLoading && vm.Sidebar.HasNotice, "the script list notice");
 						Assert.Empty(vm.Browser.Items);
-						Assert.Contains("Requires scripts (not in MVP)", vm.Sidebar.Notice);
+						Assert.Contains(SidebarNode.MissingScriptsBadge(new[] { MissingKey }), vm.Sidebar.Notice);
 						Assert.Equal(errors, Services.AppLog.ErrorCount);
 
 						// An empty result says so.
@@ -374,7 +375,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 							Assert.True(expected.TryGetValue(node.Name, out var e), "crcli lists " + node.Name);
 							Assert.Equal(e.kind, node.Kind.ToString());
 							Assert.Equal(e.count, node.Count);
-							Assert.Equal(e.note == "requires scripts", node.HasBadge);
+							Assert.Equal(e.note == "requires scripts" || e.note.StartsWith("script not found"), node.HasBadge);
 							if (node.Kind == ListKind.Smart && !node.HasBadge && node.Count > 0 && node.Count < 14706)
 							{
 								middle++;
