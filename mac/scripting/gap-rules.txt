@@ -1,0 +1,143 @@
+# Planning data of the plugin gap report (P4.17, mac/reports/plugin-gap-bedetheque.md; read by `crcli plugin-gap --rules`).
+#   owner <pattern> <task>             the task that implements a type or member that is a stub, partial or missing
+#   note  <pattern> <differs|-> <text>  a fact about a member that exists on .NET 10 but behaves differently on macOS (differs makes the row `differs`)
+# A pattern is a CLR type name (all its members and nested types), `Type::Member`, or a prefix of the string `Type::Member` that ends in `*`.
+# The first matching line wins, so specific lines come first. The lines name types of the framework and of the facades only (R11: no plugin is named here).
+# A stub or missing row that no line matches is reported as `NO TASK` by `--require-tasks`; the task ids must exist as `#### <id>` in mac/plans/full-port.md (tested).
+
+# ---- System.Windows.Forms: object model, layout, threading, modal loops (P4.9x)
+owner System.Windows.Forms.Control::Anchor P4.9b
+owner System.Windows.Forms.Control::Dock P4.9b
+owner System.Windows.Forms.Control::Margin P4.9b
+owner System.Windows.Forms.Control::Padding P4.9b
+owner System.Windows.Forms.Control::SuspendLayout P4.9b
+owner System.Windows.Forms.Control::ResumeLayout P4.9b
+owner System.Windows.Forms.Control::PerformLayout P4.9b
+owner System.Windows.Forms.Control::Layout P4.9b
+owner System.Windows.Forms.Control::Width P4.9b
+owner System.Windows.Forms.Control::Height P4.9b
+owner System.Windows.Forms.Control::Left P4.9b
+owner System.Windows.Forms.Control::Top P4.9b
+owner System.Windows.Forms.Control::AutoSize P4.9d
+owner System.Windows.Forms.Control::Font P4.9d
+owner System.Windows.Forms.Control::Invoke P4.9e
+owner System.Windows.Forms.Control::BeginInvoke P4.9e
+owner System.Windows.Forms.Control::EndInvoke P4.9e
+owner System.Windows.Forms.Control::InvokeRequired P4.9e
+owner System.Windows.Forms.Control::CreateGraphics P4.10e
+owner System.Windows.Forms.Control::Paint P4.10e
+owner System.Windows.Forms.Control::OnPaint P4.10e
+owner System.Windows.Forms.Control::Invalidate P4.10e
+owner System.Windows.Forms.Control::Refresh P4.10e
+owner System.Windows.Forms.Control::Handle P4.17.6
+owner System.Windows.Forms.Control P4.9a
+owner System.Windows.Forms.Form::ShowDialog P4.9f
+owner System.Windows.Forms.Form::DialogResult P4.9f
+owner System.Windows.Forms.Form::AcceptButton P4.9f
+owner System.Windows.Forms.Form::CancelButton P4.9f
+owner System.Windows.Forms.Form::Owner P4.9f
+owner System.Windows.Forms.Form P4.9a
+owner System.Windows.Forms.ContainerControl P4.9a
+owner System.Windows.Forms.ScrollableControl P4.10d
+owner System.Windows.Forms.Application::DoEvents P4.9e
+owner System.Windows.Forms.Application P4.9e
+owner System.Windows.Forms.Timer P4.9e
+owner System.Windows.Forms.MessageBox P4.9f
+owner System.Windows.Forms.IWin32Window P4.9f
+owner System.Windows.Forms.Layout* P4.9c
+owner System.Windows.Forms.FlowLayoutPanel P4.9c
+owner System.Windows.Forms.TableLayoutPanel P4.9c
+
+# ---- System.Windows.Forms: backend peers (P4.10x)
+owner System.Windows.Forms.KeyPressEventArgs P4.9a
+owner System.Windows.Forms.KeyEventArgs P4.9a
+owner System.Windows.Forms.MouseEventArgs P4.9a
+owner System.Windows.Forms.FormClosingEventArgs P4.9a
+owner System.Windows.Forms.Label P4.10a
+owner System.Windows.Forms.ButtonBase P4.10a
+owner System.Windows.Forms.Button P4.10a
+owner System.Windows.Forms.Panel P4.10a
+owner System.Windows.Forms.GroupBox P4.10a
+owner System.Windows.Forms.TextBoxBase P4.10b
+owner System.Windows.Forms.TextBox P4.10b
+owner System.Windows.Forms.CheckBox P4.10b
+owner System.Windows.Forms.RadioButton P4.10b
+owner System.Windows.Forms.ListControl P4.10b
+owner System.Windows.Forms.ComboBox P4.10b
+owner System.Windows.Forms.ListBox P4.10b
+owner System.Windows.Forms.CheckedListBox P4.10b
+owner System.Windows.Forms.NumericUpDown P4.10b
+owner System.Windows.Forms.UpDownBase P4.10b
+owner System.Windows.Forms.PictureBox P4.10c
+owner System.Windows.Forms.ProgressBar P4.10c
+owner System.Windows.Forms.TrackBar P4.10c
+owner System.Windows.Forms.ToolTip P4.10c
+owner System.Windows.Forms.TabControl P4.10d
+owner System.Windows.Forms.TabPage P4.10d
+owner System.Windows.Forms.SplitContainer P4.10d
+owner System.Windows.Forms.UserControl P4.10d
+owner System.Windows.Forms.CommonDialog P4.10f
+owner System.Windows.Forms.FileDialog P4.10f
+owner System.Windows.Forms.OpenFileDialog P4.10f
+owner System.Windows.Forms.SaveFileDialog P4.10f
+owner System.Windows.Forms.FolderBrowserDialog P4.10f
+owner System.Windows.Forms.ToolStripComboBox P4.17.1
+owner System.Windows.Forms.ToolStripControlHost P4.17.1
+owner System.Windows.Forms.ToolStrip* P4.10g
+owner System.Windows.Forms.MenuStrip P4.10g
+owner System.Windows.Forms.StatusStrip P4.10g
+owner System.Windows.Forms.ContextMenuStrip P4.10g
+
+# ---- System.Windows.Forms: tier B controls (P4.13x) and the components no earlier task names (P4.17.1)
+owner System.Windows.Forms.ListView P4.13a
+owner System.Windows.Forms.ImageList P4.13a
+owner System.Windows.Forms.TreeView P4.13b
+owner System.Windows.Forms.DataGridView* P4.13b
+owner System.Windows.Forms.ScrollBar P4.13c
+owner System.Windows.Forms.VScrollBar P4.13c
+owner System.Windows.Forms.HScrollBar P4.13c
+owner System.Windows.Forms.RichTextBox P4.13c
+owner System.Windows.Forms.ErrorProvider P4.17.1
+owner System.Windows.Forms.BindingSource P4.17.1
+owner System.Windows.Forms.SystemInformation P4.17.1
+owner System.Windows.Forms.* P4.19
+
+# ---- System.Drawing
+owner System.Drawing.Font P3.4
+owner System.Drawing.FontFamily P3.4
+owner System.Drawing.StringFormat P3.4
+owner System.Drawing.Graphics::MeasureString P3.4
+owner System.Drawing.Graphics::DrawString P3.4
+owner System.Drawing.Graphics P3.5a
+owner System.Drawing.Image P4.17.2
+owner System.Drawing.Bitmap P4.17.2
+owner System.Drawing.Icon P4.17.2
+owner System.Drawing.* P4.19
+
+# ---- Windows Presentation Foundation: the assemblies and types exist as throwing stubs (P4.17.3, enough to import a script that names them); a XAML loader for a subset is P4.17.6
+owner PresentationCore P4.17.3
+owner PresentationFramework P4.17.3
+owner WindowsBase P4.17.3
+owner System.Xaml P4.17.3
+owner System.Windows.Interop* P4.17.3
+owner System.Windows.Markup* P4.17.3
+owner System.Windows.Media* P4.17.3
+owner System.Windows.Controls* P4.17.3
+owner System.Windows.Visibility* P4.17.3
+owner System.Windows.Window* P4.17.3
+
+# ---- .NET 10 members that exist and behave differently on macOS
+owner Microsoft.VisualBasic.FileIO.FileSystem P4.17.4
+note Microsoft.VisualBasic.FileIO.FileSystem::DeleteFile differs UIOption and RecycleOption are not supported on macOS: DeleteFile(path, OnlyErrorDialogs, SendToRecycleBin) throws "UI not available for copy or move" (measured in the plugin host); there is no Recycle Bin call, the Trash is not used
+note Microsoft.VisualBasic.FileIO.FileSystem::DeleteDirectory differs same limits as DeleteFile (UIOption, RecycleOption)
+note Microsoft.VisualBasic.FileIO.FileSystem::CopyFile differs same limits as DeleteFile (UIOption)
+note Microsoft.VisualBasic.FileIO.FileSystem::MoveFile differs same limits as DeleteFile (UIOption)
+owner System.Diagnostics.Process P4.20
+note System.Diagnostics.Process::Start differs starting a Windows executable fails with "Exec format error" (WindowsError 22 in Python; measured in the plugin host); native macOS programs and scripts with a shebang start normally
+
+# ---- findings of the scanner (not rows): the task that handles the kind
+owner finding:windows-path P4.17.5
+owner finding:native-binary P4.20
+owner finding:wpf P4.17.3
+owner finding:windows-member P4.17.6
+owner finding:windows-type P4.17.3

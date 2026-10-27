@@ -60,10 +60,11 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			"win32print", "win32ui", "win32pdh", "win32security", "win32net", "win32crypt", "pywintypes", "pythoncom", "winerror", "wmi", "winsound", "_subprocess", "comtypes", "_winapi",
 		};
 
-		/// <summary>Assemblies of the .NET Framework that .NET 10 does not have (web server, remoting, WCF, enterprise services, workflow, charts).</summary>
+		/// <summary>Assemblies of the .NET Framework that .NET 10 does not have and the layer does not provide (web server, remoting, WCF, enterprise services, workflow, charts). <c>System.Web.Extensions</c>
+		/// (JavaScriptSerializer) is provided by mac/cYo.Compat.Web since P4.17, so it is a "framework" assembly here.</summary>
 		private static readonly string[] FrameworkOnlyNames =
 		{
-			"System.Web", "System.Web.Extensions", "System.Web.Services", "System.Web.ApplicationServices", "System.Web.Mobile", "System.Web.RegularExpressions", "System.Runtime.Remoting",
+			"System.Web", "System.Web.Services", "System.Web.ApplicationServices", "System.Web.Mobile", "System.Web.RegularExpressions", "System.Runtime.Remoting",
 			"System.EnterpriseServices", "System.Configuration.Install", "System.Deployment", "System.Data.OracleClient", "System.Messaging", "System.Windows.Forms.DataVisualization",
 			"System.Workflow.Activities", "System.Workflow.ComponentModel", "System.Workflow.Runtime", "System.Data.Entity", "System.Data.Linq", "System.IdentityModel", "System.ServiceModel",
 			"System.Runtime.Serialization.Formatters.Soap", "Microsoft.JScript", "Microsoft.Vsa", "System.Web.Extensions.Design", "System.Data.Services",
@@ -80,6 +81,8 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		};
 
 		private static readonly string[] WindowsEnvironment = { "ProgramFiles", "ProgramFiles(x86)", "SystemRoot", "windir", "SystemDrive", "ProgramData", "ComSpec" };
+
+		private static readonly Regex BackslashFile = new Regex(@"^\\{1,2}[A-Za-z0-9_][\w .\-]*\.[A-Za-z0-9]{1,6}$", RegexOptions.CultureInvariant);
 
 		private static readonly Regex DrivePath = new Regex(@"^[A-Za-z]:[\\/]", RegexOptions.CultureInvariant);
 
@@ -143,6 +146,17 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 				}
 			}
 			return null;
+		}
+
+		/// <summary>True when the name inside the namespace is one the tables above know (a star import binds only those names to the namespace; any other capitalised name belongs to something else).</summary>
+		public static bool MentionsName(string ns, string name)
+		{
+			if (ns == null || name == null)
+			{
+				return false;
+			}
+			string full = ns + "." + name;
+			return WindowsOnlyNamespaces.Contains(ns) || WindowsOnlyNamespaces.Contains(full) || TypeReasons.ContainsKey(full) || MemberReasons.ContainsKey(full) || TypeReason(full) != null;
 		}
 
 		/// <summary>True when the namespace holds a type or member the table above knows (so a star import from it is worth resolving).</summary>
@@ -277,6 +291,10 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			if (DrivePath.IsMatch(text) || UncPath.IsMatch(text))
 			{
 				return "Windows path \"" + Shorten(text) + "\"";
+			}
+			if (BackslashFile.IsMatch(text))
+			{
+				return "Windows path separator \"" + Shorten(text) + "\"";
 			}
 			Match m = PercentVariable.Match(text);
 			if (m.Success)

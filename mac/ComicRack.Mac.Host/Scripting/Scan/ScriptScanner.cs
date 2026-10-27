@@ -33,6 +33,13 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 
 		public ApiCatalog Catalog => catalog;
 
+		/// <summary>Tells whether <c>(namespace, simple name)</c> is a .NET type outside the WinForms and GDI+ surface; lets the Python scan follow the names of star imports (see <see cref="PythonScanner.ForeignTypeLookup"/>).</summary>
+		public Func<string, string, bool> ForeignTypeLookup
+		{
+			get => python.ForeignTypeLookup;
+			set => python.ForeignTypeLookup = value;
+		}
+
 		/// <summary>
 		/// Paths below a scanned folder that are skipped, relative to that folder with <c>/</c> (a folder or a file; the folder's content goes with it; case is ignored). For content of a source checkout that is not
 		/// part of what a user installs (build tools, tests, program assemblies kept for reference). The corpus run keeps its list in <c>mac/scripting/corpus-exclude.txt</c>.

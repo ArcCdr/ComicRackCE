@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ComicRack.Cli.Tests
 {
-	/// <summary>The corpus tooling of P4.6b (mac/scripting) and the R11 rule that the scripting layer knows no single plugin.</summary>
+	/// <summary>The corpus tooling of P4.6b (mac/scripting). The R11 rule that nothing under mac/ names a plugin is PluginNamesRuleTests.</summary>
 	public class CorpusToolTests : IDisposable
 	{
 		private readonly string temp = Path.Combine(Path.GetTempPath(), "crcorpus-" + Guid.NewGuid().ToString("N"));
@@ -72,22 +72,6 @@ namespace ComicRack.Cli.Tests
 			Assert.Equal(1, r.code);
 			Assert.Contains("without SOURCE.txt", r.error);
 			Assert.Equal(new[] { "keep.txt" }, Directory.GetFiles(dir).Select(Path.GetFileName).ToArray());
-		}
-
-		/// <summary>R11: no plugin-specific code, names or special cases in mac/. Tests, tools, spikes and fixtures are not the layer; the plan files and scan results name plugins as data.</summary>
-		[Fact]
-		public void The_program_code_names_no_single_plugin()
-		{
-			string[] names = { "Bedetheque", "AmazonScrapper", "ComicVineScraper", "FindImageResolution", "CRDataManager", "LibraryOrganizer", "FromDucks", "CVInfoWrite", "GrandComics" };
-			string mac = Tools.Path_("mac");
-			var offenders = Directory.EnumerateFiles(mac, "*.*", SearchOption.AllDirectories)
-				.Where(f => f.EndsWith(".cs") || f.EndsWith(".axaml") || f.EndsWith(".csproj") || f.EndsWith(".py") || f.EndsWith(".json"))
-				.Select(f => Path.GetRelativePath(mac, f).Replace('\\', '/'))
-				.Where(f => !f.Contains("/bin/") && !f.Contains("/obj/") && !f.StartsWith("fixtures/") && !f.StartsWith("artifacts/") && !f.StartsWith("tests/") && !f.StartsWith("spikes/")
-					&& !f.StartsWith("tools/") && !f.StartsWith("plans/") && !f.StartsWith("scripting/") && !f.StartsWith("reports/") && !f.StartsWith("upstream-proposals/"))
-				.Where(f => names.Any(n => File.ReadAllText(Path.Combine(mac, f)).Contains(n, StringComparison.OrdinalIgnoreCase)))
-				.ToList();
-			Assert.True(offenders.Count == 0, "plugin names in program code: " + string.Join(", ", offenders));
 		}
 	}
 }

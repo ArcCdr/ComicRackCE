@@ -34,24 +34,24 @@ A plugin has the highest tier of its units. A Tier C unit is not always somethin
 |---|:-:|---:|---:|---:|---:|---:|---:|
 | amazon-scrapper-v1.1 | B | 3 | 1 | 2 | 55 | 0 | 1 |
 | Autonumber | A | 1 | 1 | 0 | 15 | 0 | 0 |
-| bedetheque-scraper-2-v6.08 | A | 33 | 32 | 0 | 43 | 0 | 8 |
-| comic-vine-scraper | C | 39 | 37 | 2 | 56 | 14 | 3 |
+| bedetheque-scraper-2-v6.08 | A | 33 | 32 | 0 | 43 | 0 | 12 |
+| comic-vine-scraper | C | 39 | 37 | 2 | 56 | 14 | 12 |
 | CommitProposed | none | 1 | 1 | 0 | 0 | 0 | 0 |
 | copy-move-field | B | 1 | 1 | 0 | 20 | 0 | 0 |
-| cvinfowrite-v1.4 | none | 1 | 1 | 0 | 0 | 0 | 0 |
+| cvinfowrite-v1.4 | none | 1 | 1 | 0 | 0 | 0 | 1 |
 | data-manager-v2.07.06.830 | C | 9 | 8 | 1 | 167 | 10 | 1 |
 | duplicates-manager | A | 9 | 9 | 0 | 4 | 0 | 1 |
 | find-image-resolution-v1.0 | B | 2 | 1 | 1 | 45 | 0 | 0 |
 | from-ducks-3.0.1 | A | 3 | 3 | 0 | 20 | 0 | 0 |
 | get-comicrack-info | none | 1 | 1 | 0 | 0 | 0 | 1 |
 | grand-comics-db-scraper-v1.0.0 | C | 46 | 42 | 1 | 57 | 6 | 8 |
-| guided-rename-mod | B | 1 | 1 | 0 | 17 | 0 | 0 |
-| library-organizer-2.1.13 | C | 11 | 11 | 0 | 66 | 12 | 0 |
+| guided-rename-mod | B | 1 | 1 | 0 | 17 | 0 | 2 |
+| library-organizer-2.1.13 | C | 11 | 11 | 0 | 67 | 12 | 12 |
 | manga-update-scraper | none | 18 | 18 | 0 | 0 | 0 | 0 |
 | mcl-updater-py3 | ? | 1 | 1 | 0 | 0 | 0 | 1 |
 | mifs-v1.0.0 | C | 11 | 1 | 2 | 3 | 16 | 24 |
 | new-entry-via-barcode | C | 6 | 4 | 2 | 16 | 2 | 2 |
-| NewComics | A | 1 | 1 | 0 | 13 | 0 | 0 |
+| NewComics | A | 1 | 1 | 0 | 14 | 0 | 0 |
 | OtherScripts | A | 1 | 1 | 0 | 2 | 0 | 0 |
 | pescuma-plugins | B | 22 | 15 | 0 | 25 | 0 | 0 |
 | RefreshView | none | 1 | 1 | 0 | 0 | 0 | 1 |
@@ -59,7 +59,7 @@ A plugin has the highest tier of its units. A Tier C unit is not always somethin
 | scan-information-from-filename | A | 1 | 1 | 0 | 19 | 0 | 0 |
 | SearchAndReplace | A | 1 | 1 | 0 | 12 | 0 | 0 |
 | story-arc-from-titles | A | 4 | 4 | 0 | 14 | 0 | 0 |
-| webcomic-helper | A | 5 | 5 | 0 | 22 | 0 | 0 |
+| webcomic-helper | A | 5 | 5 | 0 | 23 | 0 | 0 |
 | weekly-comic-releases | C | 16 | 15 | 1 | 55 | 2 | 0 |
 
 ## 4. Types ranked by scripts
@@ -69,8 +69,8 @@ Tier S = supporting type (enum, struct, delegate, event arguments). Rows: every 
 | # | Type | Tier | Scripts | Plugins | Uses |
 |---:|---|:-:|---:|---:|---:|
 | 1 | DialogResult | S | 49 | 21 | 208 |
-| 2 | Size | S | 48 | 19 | 747 |
-| 3 | Point | S | 48 | 19 | 689 |
+| 2 | Size | S | 48 | 19 | 749 |
+| 3 | Point | S | 48 | 19 | 740 |
 | 4 | Button | A | 42 | 19 | 160 |
 | 5 | Label | A | 39 | 19 | 171 |
 | 6 | MessageBox | A | 33 | 15 | 110 |
@@ -82,23 +82,23 @@ Tier S = supporting type (enum, struct, delegate, event arguments). Rows: every 
 | 12 | MessageBoxIcon | S | 22 | 11 | 58 |
 | 13 | AutoScaleMode | S | 22 | 10 | 23 |
 | 14 | CheckBox | A | 19 | 14 | 103 |
-| 15 | ContentAlignment | S | 17 | 10 | 48 |
-| 16 | Bitmap | A | 17 | 8 | 24 |
+| 15 | Bitmap | A | 18 | 9 | 36 |
+| 16 | ContentAlignment | S | 17 | 10 | 48 |
 | 17 | ComboBoxStyle | S | 16 | 11 | 31 |
 | 18 | ComboBox | A | 16 | 11 | 30 |
 | 19 | ProgressBar | A | 15 | 13 | 15 |
 | 20 | Application | A | 15 | 8 | 36 |
 | 21 | Color | S | 13 | 10 | 43 |
-| 22 | AnchorStyles | S | 12 | 10 | 90 |
-| 23 | Image | A | 12 | 8 | 21 |
-| 24 | GraphicsUnit | S | 12 | 7 | 66 |
-| 25 | Graphics | A | 11 | 6 | 11 |
-| 26 | Icon | A | 10 | 8 | 22 |
+| 22 | Image | A | 13 | 9 | 22 |
+| 23 | AnchorStyles | S | 12 | 10 | 90 |
+| 24 | Icon | A | 12 | 8 | 25 |
+| 25 | GraphicsUnit | S | 12 | 7 | 66 |
+| 26 | Graphics | A | 11 | 6 | 11 |
 | 27 | ListBox | A | 10 | 8 | 14 |
 | 28 | Keys | S | 10 | 4 | 26 |
 | 29 | Rectangle | S | 10 | 4 | 20 |
-| 30 | Font | A | 9 | 7 | 61 |
-| 31 | FontStyle | S | 9 | 7 | 61 |
+| 30 | Font | A | 9 | 7 | 62 |
+| 31 | FontStyle | S | 9 | 7 | 62 |
 | 32 | DockStyle | S | 9 | 5 | 18 |
 | 33 | Panel | A | 9 | 4 | 19 |
 | 34 | SaveFileDialog | A | 8 | 7 | 8 |
@@ -124,15 +124,15 @@ Tier S = supporting type (enum, struct, delegate, event arguments). Rows: every 
 | 54 | FlatStyle | S | 5 | 5 | 36 |
 | 55 | Control | A | 5 | 5 | 15 |
 | 56 | BindingSource | B | 5 | 5 | 6 |
-| 57 | ToolStripMenuItem | A | 5 | 4 | 14 |
-| 58 | ToolStripItem | A | 5 | 4 | 8 |
-| 59 | InterpolationMode | S | 5 | 4 | 6 |
-| 60 | FlowLayoutPanel | A | 5 | 2 | 10 |
-| 61 | DataGridViewTextBoxColumn | B | 4 | 4 | 10 |
-| 62 | HorizontalAlignment | S | 4 | 4 | 10 |
-| 63 | BorderStyle | S | 4 | 4 | 7 |
-| 64 | SelectionMode | S | 4 | 4 | 5 |
-| 65 | SizeF | S | 4 | 4 | 4 |
+| 57 | SizeF | S | 5 | 5 | 5 |
+| 58 | ToolStripMenuItem | A | 5 | 4 | 14 |
+| 59 | ToolStripItem | A | 5 | 4 | 8 |
+| 60 | InterpolationMode | S | 5 | 4 | 6 |
+| 61 | FlowLayoutPanel | A | 5 | 2 | 10 |
+| 62 | DataGridViewTextBoxColumn | B | 4 | 4 | 10 |
+| 63 | HorizontalAlignment | S | 4 | 4 | 10 |
+| 64 | BorderStyle | S | 4 | 4 | 7 |
+| 65 | SelectionMode | S | 4 | 4 | 5 |
 | 66 | ButtonBase | A | 4 | 4 | 4 |
 | 67 | MouseButtons | S | 4 | 4 | 4 |
 | 68 | ProgressBarStyle | S | 4 | 4 | 4 |
@@ -285,8 +285,8 @@ Coverage: Tier A and B units (95) whose typed members are all among the first N 
 |---:|---:|---:|
 | 25 | 3 | 3.2% |
 | 50 | 6 | 6.3% |
-| 100 | 15 | 15.8% |
-| 150 | 24 | 25.3% |
+| 100 | 17 | 17.9% |
+| 150 | 23 | 24.2% |
 | 200 | 28 | 29.5% |
 | 300 | 42 | 44.2% |
 | 500 | 70 | 73.7% |
@@ -294,8 +294,8 @@ Coverage: Tier A and B units (95) whose typed members are all among the first N 
 
 | # | Type.member | Kind | Tier | Scripts | Plugins | Uses |
 |---:|---|---|:-:|---:|---:|---:|
-| 1 | Size..ctor | constructor | S | 48 | 19 | 747 |
-| 2 | Point..ctor | constructor | S | 48 | 19 | 688 |
+| 1 | Size..ctor | constructor | S | 48 | 19 | 749 |
+| 2 | Point..ctor | constructor | S | 48 | 19 | 739 |
 | 3 | Control.Size | property | A | 45 | 19 | 654 |
 | 4 | Control.Location | property | A | 45 | 19 | 653 |
 | 5 | Button..ctor | constructor | A | 42 | 19 | 160 |
@@ -360,70 +360,70 @@ Coverage: Tier A and B units (95) whose typed members are all among the first N 
 | 64 | ListBox..ctor | constructor | A | 10 | 8 | 14 |
 | 65 | ProgressBar.Maximum | property | A | 10 | 8 | 14 |
 | 66 | ComboBox.SelectedIndex | property | A | 10 | 7 | 27 |
-| 67 | Graphics.FromImage | method | A | 10 | 5 | 10 |
-| 68 | ListBox.Items | property | A | 9 | 8 | 44 |
-| 69 | AnchorStyles.Right | field | S | 9 | 8 | 25 |
-| 70 | AnchorStyles.Bottom | field | S | 9 | 8 | 22 |
-| 71 | AnchorStyles.Left | field | S | 9 | 8 | 20 |
-| 72 | AnchorStyles.Top | field | S | 9 | 8 | 20 |
-| 73 | Control.Font | property | A | 9 | 7 | 68 |
-| 74 | Font..ctor | constructor | A | 9 | 7 | 62 |
-| 75 | FileDialog.FileName | property | A | 9 | 7 | 18 |
-| 76 | CommonDialog.ShowDialog | method | A | 9 | 7 | 12 |
-| 77 | FileDialog.Filter | property | A | 9 | 7 | 10 |
-| 78 | Control.Tag | property | A | 9 | 6 | 151 |
-| 79 | Application.DoEvents | method | A | 9 | 5 | 27 |
-| 80 | Control.Width | property | A | 9 | 4 | 65 |
-| 81 | ComboBox.SelectedIndexChanged | event | A | 8 | 7 | 10 |
-| 82 | SaveFileDialog..ctor | constructor | A | 8 | 7 | 8 |
-| 83 | PictureBox.Image | property | A | 8 | 6 | 23 |
-| 84 | Icon..ctor | constructor | A | 8 | 6 | 20 |
+| 67 | Icon..ctor | constructor | A | 10 | 7 | 23 |
+| 68 | Graphics.FromImage | method | A | 10 | 5 | 10 |
+| 69 | ListBox.Items | property | A | 9 | 8 | 44 |
+| 70 | AnchorStyles.Right | field | S | 9 | 8 | 25 |
+| 71 | AnchorStyles.Bottom | field | S | 9 | 8 | 22 |
+| 72 | AnchorStyles.Left | field | S | 9 | 8 | 20 |
+| 73 | AnchorStyles.Top | field | S | 9 | 8 | 20 |
+| 74 | Control.Font | property | A | 9 | 7 | 68 |
+| 75 | Font..ctor | constructor | A | 9 | 7 | 63 |
+| 76 | FileDialog.FileName | property | A | 9 | 7 | 18 |
+| 77 | CommonDialog.ShowDialog | method | A | 9 | 7 | 12 |
+| 78 | FileDialog.Filter | property | A | 9 | 7 | 10 |
+| 79 | Control.Tag | property | A | 9 | 6 | 151 |
+| 80 | Application.DoEvents | method | A | 9 | 5 | 27 |
+| 81 | Control.Width | property | A | 9 | 4 | 65 |
+| 82 | ComboBox.SelectedIndexChanged | event | A | 8 | 7 | 10 |
+| 83 | SaveFileDialog..ctor | constructor | A | 8 | 7 | 8 |
+| 84 | PictureBox.Image | property | A | 8 | 6 | 23 |
 | 85 | GroupBox..ctor | constructor | A | 8 | 6 | 13 |
 | 86 | PictureBox.SizeMode | property | A | 8 | 6 | 9 |
-| 87 | Control.Dock | property | A | 8 | 5 | 15 |
-| 88 | Rectangle..ctor | constructor | S | 8 | 4 | 18 |
-| 89 | Keys.Control | field | S | 8 | 2 | 8 |
-| 90 | RadioButton.Checked | property | A | 7 | 7 | 45 |
-| 91 | NumericUpDown..ctor | constructor | A | 7 | 7 | 18 |
-| 92 | RadioButton..ctor | constructor | A | 7 | 7 | 17 |
-| 93 | ListBox.ObjectCollection.Add | method | A | 7 | 7 | 12 |
-| 94 | RadioButton.TabStop | property | A | 7 | 7 | 12 |
-| 95 | Form.Load | event | A | 7 | 7 | 9 |
-| 96 | ContainerControl.AutoScaleMode | property | A | 7 | 7 | 8 |
-| 97 | RadioButton.CheckedChanged | event | A | 7 | 7 | 8 |
-| 98 | Form.Dispose | method | A | 7 | 7 | 7 |
-| 99 | CheckBox.CheckedChanged | event | A | 7 | 6 | 35 |
-| 100 | ComboBox.ObjectCollection.Add | method | A | 7 | 6 | 14 |
-| 101 | Control.TextChanged | event | A | 7 | 6 | 12 |
-| 102 | Point.X | property | S | 7 | 5 | 21 |
-| 103 | GroupBox.TabStop | property | A | 7 | 5 | 12 |
-| 104 | DockStyle.Fill | field | S | 7 | 5 | 11 |
-| 105 | MessageBoxIcon.Error | field | S | 7 | 5 | 10 |
-| 106 | ListBox.Sorted | property | A | 7 | 5 | 9 |
-| 107 | Padding..ctor | constructor | S | 7 | 4 | 53 |
-| 108 | AutoSizeMode.GrowAndShrink | field | S | 7 | 3 | 18 |
-| 109 | CheckedListBox.Items | property | A | 6 | 6 | 62 |
-| 110 | TabPage..ctor | constructor | A | 6 | 6 | 27 |
-| 111 | NumericUpDown.Value | property | A | 6 | 6 | 24 |
-| 112 | ListBox.ObjectCollection.Count | property | A | 6 | 6 | 12 |
-| 113 | Form.Size | property | A | 6 | 6 | 9 |
-| 114 | TabControl..ctor | constructor | A | 6 | 6 | 8 |
-| 115 | CheckedListBox..ctor | constructor | A | 6 | 6 | 7 |
-| 116 | PictureBox..ctor | constructor | A | 6 | 6 | 7 |
-| 117 | Form.FormClosing | event | A | 6 | 6 | 6 |
-| 118 | LinkLabel..ctor | constructor | A | 6 | 5 | 7 |
-| 119 | RichTextBox..ctor | constructor | B | 6 | 5 | 6 |
-| 120 | DataGridViewAutoSizeColumnMode.AllCells | field | S | 6 | 4 | 21 |
-| 121 | DialogResult.None | field | S | 6 | 4 | 16 |
-| 122 | GroupBox.Text | property | A | 6 | 4 | 13 |
-| 123 | ContentAlignment.MiddleCenter | field | S | 6 | 4 | 9 |
-| 124 | ComboBox.ObjectCollection.Clear | method | A | 6 | 4 | 9 |
-| 125 | ProgressBar.Minimum | property | A | 6 | 4 | 8 |
-| 126 | ProgressBar.Step | property | A | 6 | 4 | 8 |
-| 127 | Point.Y | property | S | 6 | 4 | 6 |
-| 128 | Control.Margin | property | A | 6 | 3 | 41 |
-| 129 | Control.Height | property | A | 6 | 3 | 22 |
-| 130 | Image.FromFile | method | A | 6 | 3 | 13 |
+| 87 | Image.FromFile | method | A | 8 | 5 | 26 |
+| 88 | Control.Dock | property | A | 8 | 5 | 15 |
+| 89 | Rectangle..ctor | constructor | S | 8 | 4 | 18 |
+| 90 | Keys.Control | field | S | 8 | 2 | 8 |
+| 91 | RadioButton.Checked | property | A | 7 | 7 | 45 |
+| 92 | NumericUpDown..ctor | constructor | A | 7 | 7 | 18 |
+| 93 | RadioButton..ctor | constructor | A | 7 | 7 | 17 |
+| 94 | ListBox.ObjectCollection.Add | method | A | 7 | 7 | 12 |
+| 95 | RadioButton.TabStop | property | A | 7 | 7 | 12 |
+| 96 | Form.Load | event | A | 7 | 7 | 9 |
+| 97 | ContainerControl.AutoScaleMode | property | A | 7 | 7 | 8 |
+| 98 | RadioButton.CheckedChanged | event | A | 7 | 7 | 8 |
+| 99 | Form.Dispose | method | A | 7 | 7 | 7 |
+| 100 | CheckBox.CheckedChanged | event | A | 7 | 6 | 35 |
+| 101 | ComboBox.ObjectCollection.Add | method | A | 7 | 6 | 14 |
+| 102 | Control.TextChanged | event | A | 7 | 6 | 12 |
+| 103 | Point.X | property | S | 7 | 5 | 21 |
+| 104 | GroupBox.TabStop | property | A | 7 | 5 | 12 |
+| 105 | DockStyle.Fill | field | S | 7 | 5 | 11 |
+| 106 | MessageBoxIcon.Error | field | S | 7 | 5 | 10 |
+| 107 | ListBox.Sorted | property | A | 7 | 5 | 9 |
+| 108 | Padding..ctor | constructor | S | 7 | 4 | 53 |
+| 109 | AutoSizeMode.GrowAndShrink | field | S | 7 | 3 | 18 |
+| 110 | CheckedListBox.Items | property | A | 6 | 6 | 62 |
+| 111 | TabPage..ctor | constructor | A | 6 | 6 | 27 |
+| 112 | NumericUpDown.Value | property | A | 6 | 6 | 24 |
+| 113 | ListBox.ObjectCollection.Count | property | A | 6 | 6 | 12 |
+| 114 | Form.Size | property | A | 6 | 6 | 9 |
+| 115 | TabControl..ctor | constructor | A | 6 | 6 | 8 |
+| 116 | CheckedListBox..ctor | constructor | A | 6 | 6 | 7 |
+| 117 | PictureBox..ctor | constructor | A | 6 | 6 | 7 |
+| 118 | Form.FormClosing | event | A | 6 | 6 | 6 |
+| 119 | LinkLabel..ctor | constructor | A | 6 | 5 | 7 |
+| 120 | RichTextBox..ctor | constructor | B | 6 | 5 | 6 |
+| 121 | DataGridViewAutoSizeColumnMode.AllCells | field | S | 6 | 4 | 21 |
+| 122 | DialogResult.None | field | S | 6 | 4 | 16 |
+| 123 | GroupBox.Text | property | A | 6 | 4 | 13 |
+| 124 | ContentAlignment.MiddleCenter | field | S | 6 | 4 | 9 |
+| 125 | ComboBox.ObjectCollection.Clear | method | A | 6 | 4 | 9 |
+| 126 | ProgressBar.Minimum | property | A | 6 | 4 | 8 |
+| 127 | ProgressBar.Step | property | A | 6 | 4 | 8 |
+| 128 | Point.Y | property | S | 6 | 4 | 6 |
+| 129 | Control.Margin | property | A | 6 | 3 | 41 |
+| 130 | Control.Height | property | A | 6 | 3 | 22 |
 | 131 | Graphics.DrawImage | method | A | 6 | 3 | 6 |
 | 132 | GraphicsUnit.Pixel | field | S | 6 | 2 | 12 |
 | 133 | DialogResult.Ignore | field | S | 6 | 2 | 12 |
@@ -435,58 +435,58 @@ Coverage: Tier A and B units (95) whose typed members are all among the first N 
 | 139 | Control.BackColor | property | A | 5 | 5 | 10 |
 | 140 | Control.ForeColor | property | A | 5 | 5 | 8 |
 | 141 | ListBox.ObjectCollection.Clear | method | A | 5 | 5 | 8 |
-| 142 | Application.Run | method | A | 5 | 5 | 5 |
-| 143 | CheckedListBox.CheckOnClick | property | A | 5 | 5 | 5 |
-| 144 | ContainerControl.AutoScaleDimensions | property | A | 5 | 5 | 5 |
-| 145 | Form..ctor | constructor | A | 5 | 5 | 5 |
-| 146 | Form.ShowInTaskbar | property | A | 5 | 5 | 5 |
-| 147 | ToolStripItem.Text | property | A | 5 | 4 | 25 |
-| 148 | Size.Width | property | S | 5 | 4 | 24 |
-| 149 | FontStyle.Bold | field | S | 5 | 4 | 15 |
-| 150 | MessageBoxIcon.Question | field | S | 5 | 4 | 13 |
-| 151 | ListBox.ObjectCollection.AddRange | method | A | 5 | 4 | 9 |
-| 152 | Control.Text | property | A | 5 | 4 | 8 |
-| 153 | Image.Dispose | method | A | 5 | 4 | 7 |
-| 154 | LinkLabel.LinkClicked | event | A | 5 | 4 | 6 |
-| 155 | InterpolationMode.HighQualityBicubic | field | S | 5 | 4 | 5 |
-| 156 | Form.Shown | event | A | 5 | 4 | 5 |
-| 157 | TextBoxBase.ReadOnly | property | A | 5 | 4 | 5 |
-| 158 | DataGridViewAutoSizeColumnMode.Fill | field | S | 5 | 3 | 9 |
-| 159 | ComboBox.Sorted | property | A | 5 | 3 | 6 |
-| 160 | TextBoxBase.Copy | method | A | 5 | 3 | 6 |
-| 161 | TextBoxBase.Cut | method | A | 5 | 3 | 6 |
-| 162 | Rectangle.Height | property | S | 5 | 3 | 5 |
-| 163 | DataGridViewSelectionMode.FullRowSelect | field | S | 5 | 3 | 5 |
-| 164 | Keys.ControlKey | field | S | 5 | 2 | 10 |
-| 165 | Panel..ctor | constructor | A | 5 | 2 | 10 |
-| 166 | FlowLayoutPanel..ctor | constructor | A | 5 | 2 | 7 |
-| 167 | CheckState.Checked | field | S | 4 | 4 | 90 |
-| 168 | Control.Focus | method | A | 4 | 4 | 45 |
-| 169 | CheckedListBox.ObjectCollection.Add | method | A | 4 | 4 | 44 |
-| 170 | ButtonBase.FlatStyle | property | A | 4 | 4 | 33 |
-| 171 | FlatStyle.System | field | S | 4 | 4 | 30 |
-| 172 | TabPage.UseVisualStyleBackColor | property | A | 4 | 4 | 16 |
-| 173 | ButtonBase.BackColor | property | A | 4 | 4 | 15 |
-| 174 | Control.Refresh | method | A | 4 | 4 | 13 |
-| 175 | BindingSource.DataSource | property | B | 4 | 4 | 12 |
-| 176 | DataGridViewColumn.AutoSizeMode | property | B | 4 | 4 | 12 |
-| 177 | DataGridViewColumn.HeaderText | property | B | 4 | 4 | 12 |
-| 178 | ListBox.SelectedItem | property | A | 4 | 4 | 12 |
-| 179 | DataGridView.Columns | property | B | 4 | 4 | 11 |
-| 180 | CheckedListBox.SetItemChecked | method | A | 4 | 4 | 10 |
-| 181 | DataGridViewTextBoxColumn..ctor | constructor | B | 4 | 4 | 10 |
-| 182 | Form.Location | property | A | 4 | 4 | 9 |
-| 183 | Color.Red | property | S | 4 | 4 | 7 |
-| 184 | TextBoxBase.MaxLength | property | A | 4 | 4 | 7 |
-| 185 | TextBoxBase.SelectionStart | property | A | 4 | 4 | 7 |
-| 186 | NumericUpDown.Maximum | property | A | 4 | 4 | 6 |
-| 187 | Image.FromStream | method | A | 4 | 4 | 5 |
-| 188 | BindingSource..ctor | constructor | B | 4 | 4 | 5 |
-| 189 | ListBox.HorizontalScrollbar | property | A | 4 | 4 | 5 |
-| 190 | ListBox.MultiColumn | property | A | 4 | 4 | 5 |
-| 191 | MessageBoxIcon.Information | field | S | 4 | 4 | 5 |
-| 192 | Color.White | property | S | 4 | 4 | 4 |
-| 193 | SizeF..ctor | constructor | S | 4 | 4 | 4 |
+| 142 | SizeF..ctor | constructor | S | 5 | 5 | 5 |
+| 143 | Application.Run | method | A | 5 | 5 | 5 |
+| 144 | CheckedListBox.CheckOnClick | property | A | 5 | 5 | 5 |
+| 145 | ContainerControl.AutoScaleDimensions | property | A | 5 | 5 | 5 |
+| 146 | Form..ctor | constructor | A | 5 | 5 | 5 |
+| 147 | Form.ShowInTaskbar | property | A | 5 | 5 | 5 |
+| 148 | ToolStripItem.Text | property | A | 5 | 4 | 25 |
+| 149 | Size.Width | property | S | 5 | 4 | 24 |
+| 150 | FontStyle.Bold | field | S | 5 | 4 | 15 |
+| 151 | MessageBoxIcon.Question | field | S | 5 | 4 | 13 |
+| 152 | ListBox.ObjectCollection.AddRange | method | A | 5 | 4 | 9 |
+| 153 | Control.Text | property | A | 5 | 4 | 8 |
+| 154 | Image.Dispose | method | A | 5 | 4 | 7 |
+| 155 | LinkLabel.LinkClicked | event | A | 5 | 4 | 6 |
+| 156 | InterpolationMode.HighQualityBicubic | field | S | 5 | 4 | 5 |
+| 157 | Form.Shown | event | A | 5 | 4 | 5 |
+| 158 | TextBoxBase.ReadOnly | property | A | 5 | 4 | 5 |
+| 159 | DataGridViewAutoSizeColumnMode.Fill | field | S | 5 | 3 | 9 |
+| 160 | ComboBox.Sorted | property | A | 5 | 3 | 6 |
+| 161 | TextBoxBase.Copy | method | A | 5 | 3 | 6 |
+| 162 | TextBoxBase.Cut | method | A | 5 | 3 | 6 |
+| 163 | Rectangle.Height | property | S | 5 | 3 | 5 |
+| 164 | DataGridViewSelectionMode.FullRowSelect | field | S | 5 | 3 | 5 |
+| 165 | Keys.ControlKey | field | S | 5 | 2 | 10 |
+| 166 | Panel..ctor | constructor | A | 5 | 2 | 10 |
+| 167 | FlowLayoutPanel..ctor | constructor | A | 5 | 2 | 7 |
+| 168 | CheckState.Checked | field | S | 4 | 4 | 90 |
+| 169 | Control.Focus | method | A | 4 | 4 | 45 |
+| 170 | CheckedListBox.ObjectCollection.Add | method | A | 4 | 4 | 44 |
+| 171 | ButtonBase.FlatStyle | property | A | 4 | 4 | 33 |
+| 172 | FlatStyle.System | field | S | 4 | 4 | 30 |
+| 173 | TabPage.UseVisualStyleBackColor | property | A | 4 | 4 | 16 |
+| 174 | ButtonBase.BackColor | property | A | 4 | 4 | 15 |
+| 175 | Control.Refresh | method | A | 4 | 4 | 13 |
+| 176 | BindingSource.DataSource | property | B | 4 | 4 | 12 |
+| 177 | DataGridViewColumn.AutoSizeMode | property | B | 4 | 4 | 12 |
+| 178 | DataGridViewColumn.HeaderText | property | B | 4 | 4 | 12 |
+| 179 | ListBox.SelectedItem | property | A | 4 | 4 | 12 |
+| 180 | DataGridView.Columns | property | B | 4 | 4 | 11 |
+| 181 | CheckedListBox.SetItemChecked | method | A | 4 | 4 | 10 |
+| 182 | DataGridViewTextBoxColumn..ctor | constructor | B | 4 | 4 | 10 |
+| 183 | Form.Location | property | A | 4 | 4 | 9 |
+| 184 | Color.Red | property | S | 4 | 4 | 7 |
+| 185 | TextBoxBase.MaxLength | property | A | 4 | 4 | 7 |
+| 186 | TextBoxBase.SelectionStart | property | A | 4 | 4 | 7 |
+| 187 | NumericUpDown.Maximum | property | A | 4 | 4 | 6 |
+| 188 | Image.FromStream | method | A | 4 | 4 | 5 |
+| 189 | BindingSource..ctor | constructor | B | 4 | 4 | 5 |
+| 190 | ListBox.HorizontalScrollbar | property | A | 4 | 4 | 5 |
+| 191 | ListBox.MultiColumn | property | A | 4 | 4 | 5 |
+| 192 | MessageBoxIcon.Information | field | S | 4 | 4 | 5 |
+| 193 | Color.White | property | S | 4 | 4 | 4 |
 | 194 | DataGridView..ctor | constructor | B | 4 | 4 | 4 |
 | 195 | DataGridView.AllowUserToResizeRows | property | B | 4 | 4 | 4 |
 | 196 | DataGridView.RowHeadersVisible | property | B | 4 | 4 | 4 |
@@ -597,7 +597,7 @@ Coverage: Tier A and B units (95) whose typed members are all among the first N 
 
 ## 6. Member names the scan could not type
 
-The scan found 10871 accesses on values of unknown type (204 units). The table is the name only fallback ranking of those names that some type of the surface also has: 201 names, the first 100 shown. Implement a name from here when it also appears for a type in section 5, or when the owning type is obvious from the script.
+The scan found 10968 accesses on values of unknown type (203 units). The table is the name only fallback ranking of those names that some type of the surface also has: 203 names, the first 100 shown. Implement a name from here when it also appears for a type in section 5, or when the owning type is obvious from the script.
 
 | # | Member name | Scripts | Uses |
 |---:|---|---:|---:|
@@ -613,38 +613,38 @@ The scan found 10871 accesses on values of unknown type (204 units). The table i
 | 10 | Width | 14 | 41 |
 | 11 | Close | 14 | 26 |
 | 12 | Height | 13 | 33 |
-| 13 | Title | 10 | 51 |
-| 14 | Visible | 10 | 37 |
-| 15 | Format | 10 | 17 |
+| 13 | Format | 11 | 29 |
+| 14 | Title | 10 | 51 |
+| 15 | Visible | 10 | 37 |
 | 16 | Start | 10 | 15 |
 | 17 | Enabled | 9 | 13 |
 | 18 | Save | 9 | 11 |
-| 19 | Location | 8 | 120 |
-| 20 | Write | 8 | 16 |
-| 21 | Length | 8 | 15 |
-| 22 | Tag | 7 | 71 |
-| 23 | Rows | 7 | 51 |
-| 24 | Result | 7 | 24 |
-| 25 | Size | 7 | 15 |
-| 26 | Columns | 6 | 81 |
-| 27 | Cells | 6 | 34 |
-| 28 | Cancel | 6 | 17 |
-| 29 | KeyCode | 6 | 11 |
-| 30 | Remove | 6 | 10 |
-| 31 | Clear | 6 | 6 |
-| 32 | Checked | 5 | 27 |
-| 33 | DefaultCellStyle | 5 | 16 |
-| 34 | InnerText | 5 | 15 |
-| 35 | DrawImage | 5 | 11 |
-| 36 | FileName | 5 | 9 |
-| 37 | IsBusy | 5 | 9 |
-| 38 | Join | 5 | 9 |
-| 39 | Message | 5 | 9 |
-| 40 | SelectedItem | 5 | 8 |
-| 41 | Contains | 5 | 7 |
-| 42 | Handled | 5 | 7 |
-| 43 | InvokeRequired | 5 | 6 |
-| 44 | ProductVersion | 5 | 5 |
+| 19 | ProductVersion | 9 | 9 |
+| 20 | Location | 8 | 120 |
+| 21 | Write | 8 | 16 |
+| 22 | Length | 8 | 15 |
+| 23 | Tag | 7 | 71 |
+| 24 | Rows | 7 | 51 |
+| 25 | Result | 7 | 24 |
+| 26 | Size | 7 | 15 |
+| 27 | Columns | 6 | 81 |
+| 28 | Cells | 6 | 34 |
+| 29 | Cancel | 6 | 17 |
+| 30 | KeyCode | 6 | 11 |
+| 31 | Remove | 6 | 10 |
+| 32 | Clear | 6 | 6 |
+| 33 | Checked | 5 | 27 |
+| 34 | DefaultCellStyle | 5 | 16 |
+| 35 | InnerText | 5 | 15 |
+| 36 | DrawImage | 5 | 11 |
+| 37 | FileName | 5 | 9 |
+| 38 | IsBusy | 5 | 9 |
+| 39 | Join | 5 | 9 |
+| 40 | Message | 5 | 9 |
+| 41 | SelectedItem | 5 | 8 |
+| 42 | Contains | 5 | 7 |
+| 43 | Handled | 5 | 7 |
+| 44 | InvokeRequired | 5 | 6 |
 | 45 | Show | 5 | 5 |
 | 46 | Controls | 4 | 43 |
 | 47 | Groups | 4 | 28 |
@@ -653,9 +653,9 @@ The scan found 10871 accesses on values of unknown type (204 units). The table i
 | 50 | Invoke | 4 | 12 |
 | 51 | BeginInit | 4 | 10 |
 | 52 | Id | 4 | 10 |
-| 53 | Select | 4 | 7 |
-| 54 | Delete | 4 | 6 |
-| 55 | Insert | 4 | 6 |
+| 53 | Insert | 4 | 7 |
+| 54 | Select | 4 | 7 |
+| 55 | Delete | 4 | 6 |
 | 56 | Load | 4 | 6 |
 | 57 | PerformClick | 4 | 6 |
 | 58 | Replace | 4 | 6 |
@@ -700,7 +700,7 @@ The scan found 10871 accesses on values of unknown type (204 units). The table i
 | 97 | Caption | 2 | 8 |
 | 98 | SelectedIndex | 2 | 7 |
 | 99 | Elements | 2 | 5 |
-| 100 | No | 2 | 5 |
+| 100 | Bounds | 2 | 4 |
 
 ## 7. Findings: what cannot run, and what may misbehave
 
@@ -727,12 +727,12 @@ The scan found 10871 accesses on values of unknown type (204 units). The table i
 | new-entry-via-barcode | Google.GData.Client.dll | `Registry`, `RegistryKey` |
 | weekly-comic-releases | HtmlAgilityPack.dll | `Registry`, `RegistryKey` |
 
-**Warnings: 51 in 31 units of 11 plugins.** These may misbehave on macOS but do not stop the plugin.
+**Warnings: 79 in 35 units of 14 plugins.** These may misbehave on macOS but do not stop the plugin.
 
 | Kind | Findings | Units | Plugins |
 |---|---:|---:|---:|
-| windows-path | 12 | 9 | 6 |
-| framework-only-assembly | 6 | 6 | 5 |
+| windows-path | 41 | 13 | 9 |
+| framework-only-assembly | 5 | 5 | 4 |
 | native-binary | 12 | 12 | 3 |
 | p-invoke | 16 | 2 | 1 |
 | windows-module | 2 | 1 | 1 |
@@ -782,7 +782,7 @@ Names that `clr.AddReference*` calls and assembly references give, by number of 
 | MessageBoxManager.dll | other | 1 |
 | System.IO | framework | 1 |
 | System.Text.RegularExpressions | framework | 1 |
-| System.Web.Extensions | framework-only | 1 |
+| System.Web.Extensions | framework | 1 |
 | cYo.Common | core | 1 |
 | cYo.Common.Windows | core-missing | 1 |
 

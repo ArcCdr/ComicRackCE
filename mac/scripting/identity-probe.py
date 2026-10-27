@@ -74,3 +74,16 @@ def derived_class():
 		def ShowInfo(self, books):
 			pass
 	ok("identity: class UIControl(Control) is defined", True, UIControl.__bases__[0].__name__)
+
+#@Name  P4.17 System.Web.Extensions (JavaScriptSerializer) by the names of the Framework
+#@Hook  Startup
+def web_extensions():
+	clr.AddReference("System.Web.Extensions")
+	import System
+	text = System.Web.Script.Serialization.JavaScriptSerializer().Serialize({"url": "http://x/a"})
+	ok("identity: JavaScriptSerializer serializes a dictionary", text == '{"url":"http://x/a"}', text)
+	reply = System.Web.Script.Serialization.JavaScriptSerializer().Deserialize('{"html": "<b>"}', System.Collections.Generic.Dictionary[str, System.Object])
+	found, value = reply.TryGetValue("html")
+	ok("identity: JavaScriptSerializer deserializes into Dictionary[str, object]", found and value == "<b>", value)
+	a = clr.GetClrType(System.Web.Script.Serialization.JavaScriptSerializer).Assembly.GetName()
+	ok("identity: JavaScriptSerializer is in System.Web.Extensions 10.0.0.0", a.Name + " " + str(a.Version) == "System.Web.Extensions 10.0.0.0", a.Name + " " + str(a.Version))

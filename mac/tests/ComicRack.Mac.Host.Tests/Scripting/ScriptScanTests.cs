@@ -403,8 +403,8 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		[Fact]
 		public void An_assembly_of_the_dotnet_framework_that_dotnet_10_lacks_is_a_warning()
 		{
-			ScanUnit u = Python("import clr\nclr.AddReference('System.Web.Extensions')\nclr.AddReference('System.Xml')\nclr.AddReference('System.Core')\n");
-			Assert.Contains(u.References, r => r.Name == "System.Web.Extensions" && r.Kind == "framework-only");
+			ScanUnit u = Python("import clr\nclr.AddReference('System.Web.Services')\nclr.AddReference('System.Xml')\nclr.AddReference('System.Core')\n");
+			Assert.Contains(u.References, r => r.Name == "System.Web.Services" && r.Kind == "framework-only");
 			Assert.Contains(u.References, r => r.Name == "System.Xml" && r.Kind == "framework");
 			ScanFinding f = Assert.Single(u.Findings);
 			Assert.Equal("framework-only-assembly", f.Kind);

@@ -20,5 +20,7 @@
     <ProjectReference Include="..\ComicRack.Plugins.Core\ComicRack.Plugins.Core.csproj" />
     <!-- The assembly "cYo.Common.Windows" that scripts reference by name (FormUtility), P4.8 -->
     <ProjectReference Include="..\cYo.Common.Windows.Compat\cYo.Common.Windows.Compat.csproj" />
+    <!-- The assembly "System.Web.Extensions" (JavaScriptSerializer) that scripts reference by name, P4.17 -->
+    <ProjectReference Include="..\cYo.Compat.Web\cYo.Compat.Web.csproj" />
   </ItemGroup>
 </Project>

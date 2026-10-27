@@ -47,7 +47,7 @@ fi
 
 # P4.8: the assemblies carry the names scripts use (System.Windows.Forms and System.Drawing.Common are the facades, version 10.0.0.0; ComicRack.Engine, ComicRack.Plugins, cYo.Common and
 # cYo.Common.Windows are the Core), and no file of an older name is left. mac/tools/bundle-selftest.sh checks that a script reaches them.
-for asm in System.Windows.Forms System.Drawing.Common ComicRack.Engine ComicRack.Plugins cYo.Common cYo.Common.Windows; do
+for asm in System.Windows.Forms System.Drawing.Common System.Web.Extensions ComicRack.Engine ComicRack.Plugins cYo.Common cYo.Common.Windows; do
 	if [ ! -e "$APP/Contents/MacOS/$asm.dll" ]; then
 		echo "FAIL: the assembly $asm.dll is missing from the bundle." >&2
 		exit 1

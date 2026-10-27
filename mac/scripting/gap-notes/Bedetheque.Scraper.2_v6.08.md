@@ -1,0 +1,19 @@
+### How the plugin starts the helper and talks to it
+
+Read from `BedethequeScraper2.py` (lines 1482 to 1800 of the 6.08 script); the helper itself is `BedethequeFetcher.exe` in the package, a native Windows program (PyInstaller build, 13,298,941 bytes), not a .NET assembly. The package does not contain `BedethequeFetcher.py`.
+
+| Step | What the plugin does |
+|---|---|
+| Choose the helper | `get_args()`: `<script folder>BedethequeFetcher.exe` when `File.Exists`, else `<script folder>BedethequeFetcher.py` started as `python "<script>"` (the program name `python` is looked up on `PATH`), else it logs "not found" and gives up. The .exe is tried first. |
+| Is it running? | `is_daemon_running()`: `TcpClient.Connect("127.0.0.1", 56789)` (`DAEMON_PORT`); a connection means yes. |
+| Start it | `launch_process()`: `Process` with `ProcessStartInfo` (`UseShellExecute = False`, standard output and error redirected and read in the background, `CreateNoWindow`, UTF-8) and the arguments `--parent_pid <process id of the host>`. The helper watches that process and ends with it. |
+| Wait for it | `ensure_fetch_daemon()` polls the port every 250 ms for up to 20 s (`DAEMON_STARTWAIT_SECS`); when the port never answers it kills the process and logs "did not answer on 127.0.0.1:56789". |
+| Ask for a page | `fetch_daemon(url)`: one TCP connection per request, one line of JSON each way, UTF-8: request `{"url": "https://..."}` + CRLF; reply `{"url": "...", "html": "..."}` + CRLF, or `{"error": "..."}` + CRLF. Connect and write time-out 5 s, read time-out 120 s. The helper owns cookies and User-Agent because a direct request from the plugin is answered with 403 by the site. The plugin builds and reads the JSON with `System.Web.Script.Serialization.JavaScriptSerializer` (`MaxJsonLength = Int32.MaxValue`, `Serialize({"url": url})`, `Deserialize(line, Dictionary[str, Object])`, `TryGetValue`). |
+| Option `use_cloudscraper` (setting, default off) | `fetch_cloudscraper(url)`: the helper is started once per page with `--cloudscraper --url <url> --parent_pid <pid>` and the page is read from its standard output (time-out 45 s, non-zero exit code is an error). |
+
+What the macOS build does today (measured in the plugin host with this report's load probe and with a probe script that starts a dummy Windows program):
+
+- `JavaScriptSerializer` exists since this task (`mac/cYo.Compat.Web`, assembly `System.Web.Extensions`), so the top level of the script runs.
+- `Process.Start` of the `.exe` fails with "Exec format error" (`WindowsError: [Errno 22]` in Python); the plugin catches it, writes "Failed to start ..." to its log and `fetch_daemon` raises "BedethequeFetcher is not running on 127.0.0.1:56789 and could not be started". Because the .exe exists in the package the Python fallback is never reached, and `python` is not installed on a stock Mac (only `/usr/bin/python3`).
+- The helper is therefore the one thing that cannot run unmodified; owner decision (2026-10-27): a macOS build is made on the owner's fork in task P4.20, the plugin is accepted for its UI until then (P4.18). The layer needs no change for the protocol (loopback TCP, `Process`, `TcpClient`, threads and `Thread.Sleep` are .NET 10 and behave the same).
+- A second, independent blocker found by the load probe: the plugin joins file names with a backslash (`path + "\BDTranslations.Config"`, `path + "\App.Config"`). On macOS the backslash is part of the file name, `File.Exists` is false and `Translate()` ends the script with `sys.exit(0)` before any dialog opens (every hook of the plugin shows the `SystemExit`). That is task P4.17.5.

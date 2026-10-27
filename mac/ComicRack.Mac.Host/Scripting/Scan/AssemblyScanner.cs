@@ -114,6 +114,10 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 					}
 					unit.UseMember(declaring, member, signature);
 				}
+				else if (member != ".ctor" && member != ".cctor")
+				{
+					unit.UseForeign(typeName + "." + AccessorTarget(member));
+				}
 				ApiType declaringType = catalog.Type(declaring);
 				string reason = declaringType != null ? catalog.MemberReason(declaringType, member) : WindowsOnlyApi.MemberReason(declaring, member);
 				if (reason != null)
@@ -189,11 +193,28 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			return name;
 		}
 
+		/// <summary>The property or event a compiled accessor stands for (<c>get_Length</c> is <c>Length</c>), the name itself for everything else.</summary>
+		private static string AccessorTarget(string name)
+		{
+			foreach (string prefix in new[] { "get_", "set_", "add_", "remove_" })
+			{
+				if (name.Length > prefix.Length && name.StartsWith(prefix, StringComparison.Ordinal) && char.IsUpper(name[prefix.Length]))
+				{
+					return name.Substring(prefix.Length);
+				}
+			}
+			return name;
+		}
+
 		private void UseType(ScanUnit unit, string full)
 		{
 			if (ApiCatalog.InSurface(Namespace(full)))
 			{
 				unit.UseType(full);
+			}
+			else
+			{
+				unit.UseForeign(full);
 			}
 			string reason = WindowsOnlyApi.TypeReason(full);
 			ApiType type = catalog.Type(full);

@@ -94,6 +94,28 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		/// <summary>Member keys to the signatures seen (assemblies only).</summary>
 		public SortedDictionary<string, SortedSet<string>> Signatures { get; } = new SortedDictionary<string, SortedSet<string>>(StringComparer.Ordinal);
 
+		/// <summary>
+		/// Dotted names of .NET types and members outside the WinForms and GDI+ surface that the unit reaches (<c>System.IO.File.Exists</c>, <c>System.Diagnostics.Process</c>, <c>cYo.Projects.ComicRack.Engine.YesNo</c>),
+		/// with counts. Namespaces appear too (<c>System.IO</c>); the gap report (<see cref="PluginGap"/>) resolves each name against the assemblies. Not part of the JSON of a scan.
+		/// </summary>
+		public SortedDictionary<string, int> Foreign { get; } = new SortedDictionary<string, int>(StringComparer.Ordinal);
+
+		/// <summary>Python modules the unit imports (<c>os.path</c>, <c>urllib2</c>), with counts. Not part of the JSON of a scan.</summary>
+		public SortedDictionary<string, int> Modules { get; } = new SortedDictionary<string, int>(StringComparer.Ordinal);
+
+		/// <summary>Names the script defines itself (functions, classes, class attributes, attributes assigned on its own instances): an access to one of them is no platform call.</summary>
+		public SortedSet<string> Defined { get; } = new SortedSet<string>(StringComparer.Ordinal);
+
+		internal void UseForeign(string name)
+		{
+			Foreign[name] = (Foreign.TryGetValue(name, out int n) ? n : 0) + 1;
+		}
+
+		internal void UseModule(string name)
+		{
+			Modules[name] = (Modules.TryGetValue(name, out int n) ? n : 0) + 1;
+		}
+
 		/// <summary>Member accesses on values whose type the scan could not tell (Python is dynamic): they are not in <see cref="Members"/>.</summary>
 		public int Untyped { get; set; }
 

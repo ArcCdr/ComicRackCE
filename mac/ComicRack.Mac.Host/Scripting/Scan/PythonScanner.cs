@@ -159,6 +159,23 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
 		}
 
+		/// <summary>
+		/// Tells whether <c>(namespace, simple name)</c> is a .NET type outside the catalog (the gap report supplies the assemblies of the runtime and of the program). Only used to bind the names of star imports
+		/// (<c>from cYo.Projects.ComicRack.Engine import *</c>) so that their uses are recorded in <see cref="ScanUnit.Foreign"/>; without it a star imported name stays unknown, as before.
+		/// </summary>
+		public Func<string, string, bool> ForeignTypeLookup { get; set; }
+
+		private static bool IsDotNetRoot(string name) => name == "System" || name.StartsWith("System.", StringComparison.Ordinal) || name.StartsWith("Microsoft.", StringComparison.Ordinal)
+			|| name.StartsWith("cYo.", StringComparison.Ordinal) || name.StartsWith("ComicRack.", StringComparison.Ordinal);
+
+		private void Foreign(string full)
+		{
+			if (record && IsDotNetRoot(full))
+			{
+				unit.UseForeign(full);
+			}
+		}
+
 		/// <summary>Scans the source of a script into <paramref name="target"/> (path, package and kind are the caller's).</summary>
 		public void Scan(string source, ScanUnit target)
 		{
@@ -353,6 +370,15 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 					return v;
 				}
 			}
+			// a type of the catalog wins over the guesses of an earlier star import (after `from System.Windows.Forms import *` and `from System.Drawing import *`, Bitmap is the drawing type)
+			for (int i = starImports.Count - 1; i >= 0; i--)
+			{
+				ApiType t = catalog.Type(starImports[i], name);
+				if (t != null)
+				{
+					return TypeValue(t);
+				}
+			}
 			for (int i = starImports.Count - 1; i >= 0; i--)
 			{
 				Val v = FromNamespace(starImports[i], name, star: true);
@@ -392,8 +418,13 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			{
 				return new Val { Kind = Kind.Namespace, Name = full };
 			}
-			if (star && WindowsOnlyApi.MentionsNamespace(ns) && name.Length > 0 && char.IsUpper(name[0]))
+			if (star && WindowsOnlyApi.MentionsName(ns, name) && name.Length > 0 && char.IsUpper(name[0]))
 			{
+				return new Val { Kind = Kind.Namespace, Name = full };
+			}
+			if (star && ForeignTypeLookup != null && IsDotNetRoot(ns) && ForeignTypeLookup(ns, name))
+			{
+				Foreign(full);
 				return new Val { Kind = Kind.Namespace, Name = full };
 			}
 			if (ns == "ctypes" && (name == "windll" || name == "oledll" || name == "WinDLL" || name == "OleDLL" || name == "WINFUNCTYPE" || name == "WinError" || name == "GetLastError"
@@ -615,6 +646,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 				string full = string.Join(".", imp.Names[i].Names);
 				string alias = imp.AsNames != null && i < imp.AsNames.Count ? imp.AsNames[i] : null;
 				CheckModule(full);
+				ImportedName(full);
 				if (alias != null)
 				{
 					Bind(alias, Dotted(full));
@@ -631,6 +663,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		{
 			string root = string.Join(".", from.Root.Names);
 			CheckModule(root);
+			ImportedName(root);
 			Val rootVal = Dotted(root);
 			for (int i = 0; i < from.Names.Count; i++)
 			{
@@ -643,11 +676,39 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 				string alias = from.AsNames != null && i < from.AsNames.Count && from.AsNames[i] != null ? from.AsNames[i] : name;
 				CheckModule(root + "." + name, member: true);
 				Val v = rootVal.Kind == Kind.Namespace ? FromNamespace(root, name, star: false) : null;
+				if (v == null && rootVal.Kind == Kind.Namespace && IsDotNetRoot(root) && name.Length > 0 && char.IsUpper(name[0]))
+				{
+					v = new Val { Kind = Kind.Namespace, Name = root + "." + name };
+				}
+				if (v != null && v.Kind == Kind.Namespace)
+				{
+					Foreign(v.Name);
+				}
 				if (v == null && rootVal.Kind == Kind.Module)
 				{
 					v = new Val { Kind = Kind.Module, Name = root + "." + name };
 				}
 				Bind(alias, v);
+			}
+		}
+
+		/// <summary>A name after <c>import</c> or <c>from</c>: a .NET namespace or type outside the catalog, or a Python module.</summary>
+		private void ImportedName(string full)
+		{
+			if (!record)
+			{
+				return;
+			}
+			if (IsDotNetRoot(full))
+			{
+				if (catalog.Type(full) == null && !catalog.IsNamespace(full))
+				{
+					unit.UseForeign(full);
+				}
+			}
+			else if (full != "clr" && !full.StartsWith("clr.", StringComparison.Ordinal))
+			{
+				unit.UseModule(full);
 			}
 		}
 
@@ -699,6 +760,10 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			ClassInfo owner = outer.IsClass ? outer.Class : null;
 			if (!fd.IsLambda)
 			{
+				if (record)
+				{
+					unit.Defined.Add(fd.Name);
+				}
 				if (owner != null)
 				{
 					owner.Methods.Add(fd.Name);
@@ -773,6 +838,14 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 			Push(scope);
 			Stmt(cd.Body);
 			Pop();
+			if (record)
+			{
+				unit.Defined.Add(cd.Name);
+				foreach (string n in scope.Names.Keys)
+				{
+					unit.Defined.Add(n);
+				}
+			}
 			// Names defined in the class body (fields, methods) are attributes of its instances.
 			foreach (KeyValuePair<string, Val> n in scope.Names)
 			{
@@ -826,6 +899,10 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 				{
 					Member(target, m.Name, m.Start.Line);
 					return;
+				}
+				if (record)
+				{
+					unit.Defined.Add(m.Name);
 				}
 				if (value != null || !c.Attributes.ContainsKey(m.Name))
 				{
@@ -1046,6 +1123,10 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 				{
 					UseType(t);
 					return TypeValue(t);
+				}
+				if (!catalog.IsNamespace(full))
+				{
+					Foreign(full);
 				}
 				return new Val { Kind = Kind.Namespace, Name = full };
 			}

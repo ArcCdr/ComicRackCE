@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The assembly "System.Web.Extensions" for scripts and compiled plug-ins on macOS (P4.17). .NET 10 has no System.Web.Script.Serialization; scripts written for the .NET Framework
+       reach JavaScriptSerializer with clr.AddReference('System.Web.Extensions'). This project provides that namespace with the Framework's behaviour (not a plug-in's needs):
+       JavaScriptSerializer, JavaScriptConverter, JavaScriptTypeResolver, SimpleTypeResolver and ScriptIgnoreAttribute. net10/macOS only. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>System.Web.Script.Serialization</RootNamespace>
+    <AssemblyName>System.Web.Extensions</AssemblyName>
+    <AssemblyVersion>10.0.0.0</AssemblyVersion>
+    <FileVersion>10.0.0.0</FileVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

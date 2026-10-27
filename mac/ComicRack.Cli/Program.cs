@@ -47,6 +47,8 @@ namespace ComicRack.Cli
 					return ScriptCommands.Run(rest.ToArray(), output, error);
 				case "script-scan":
 					return ComicRack.Cli.Scripting.ScriptScanCommand.Run(rest.ToArray(), output, error);
+				case "plugin-gap":
+					return ComicRack.Cli.Scripting.PluginGapCommand.Run(rest.ToArray(), output, error);
 				default:
 					error.WriteLine("Unknown command: " + args[0]);
 					error.WriteLine(Usage);
@@ -100,6 +102,10 @@ namespace ComicRack.Cli
       .crplugin/.zip packages (in memory) and prints the ranked table type.member -> number of scripts for System.Windows.Forms and System.Drawing, the assemblies they reference,
       and what can never run on macOS (Tier C: native Windows libraries through ctypes or P/Invoke, window messages, WPF, COM). --json writes the whole report to a file.
       Nothing is run or loaded. --reference-pack is the folder with the reference System.Windows.Forms.dll (default: the NuGet cache of the Windows Desktop reference pack).
+  plugin-gap <package.crplugin>... [--rules F] [--notes-dir D] [--markdown out.md] [--json out.json] [--reference-pack <dir>] [--require-tasks]
+      What each plugin package reaches and what the macOS build has: installs the package into a temporary data folder through the plugin install path, loads its scripts in the plugin
+      host, scans it (nothing else of it runs) and classifies every WinForms/GDI+ member, .NET type and member, Core type, Python module, referenced assembly and by-name access as
+      real, stub, partial, missing, differs, plugin, python or dynamic. --rules gives the task that owns each gap (mac/scripting/gap-rules.txt). SOURCE.txt next to a package gives its URL, pin and licence.
   info show <book>
       The ComicInfo of a book file as the Core reads it (fields that are not empty or default).
   info write <book> --set Field=Value [--set Field=Value ...]

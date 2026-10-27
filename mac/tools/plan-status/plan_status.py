@@ -14,7 +14,7 @@ Reads the `Status:` line of every task block in section 7 of full-port.md (the s
                      before the orchestrator records it)
   --root DIR         repository root (default: two levels above this script's folder); --plan FILE and --log FILE override the files
 
-Task id forms: P<n>.<x> (phase tasks), RV<n>[a-z] (review fixes; commits made before the rename say R<n>[a-z]), U<yyyymmdd>.<n>.
+Task id forms: P<n>.<x> and P<n>.<x>.<m> (phase tasks and their follow-ups), RV<n>[a-z] (review fixes; commits made before the rename say R<n>[a-z]), U<yyyymmdd>.<n>.
 Exit codes: 0 ok, 1 differences (--check, --check-log), 2 bad arguments or an unreadable plan.
 """
 import os
@@ -22,7 +22,7 @@ import re
 import subprocess
 import sys
 
-TASK_ID = r"(?:P\d+\.[A-Za-z0-9]+|RV\d+[a-z]?|U\d{8}\.\d+)"
+TASK_ID = r"(?:P\d+\.[A-Za-z0-9]+(?:\.\d+)?|RV\d+[a-z]?|U\d{8}\.\d+)"
 PHASE_ROWS = ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7"]
 EXTRA_ROW = "RV"
 DEFAULT_EXTRA = "| RV Review fixes and upstream sync | 0 | 0 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |"
@@ -76,7 +76,7 @@ def parse_plan(text):
         for line in m6.group(0).splitlines():
             if line.startswith("- **Wave"):
                 body = line.split(":**", 1)[1] if ":**" in line else line
-                for tid in re.findall(r"\bP\d+\.[A-Za-z0-9]+\b", body):
+                for tid in re.findall(r"\bP\d+\.[A-Za-z0-9]+(?:\.\d+)?\b", body):
                     if tid in tasks and tid not in order:
                         order.append(tid)
     front = [t for t in seq if re.fullmatch(r"RV\d+[a-z]?|U\d{8}\.\d+", t)]
