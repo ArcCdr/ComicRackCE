@@ -64,3 +64,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-27 15:34 | P4.3 | done-with-caveat | b8c1774 |  | Headless plugin engine in the host (script host, environment and application over MacHost, IronPython patch build step, StdLib, crcli script run/expr, script... |
 | 2026-10-27 15:41 | P4.4 | done | 92581ef |  | .crplugin install and script management (PluginPackages over PackageManager with a full-path commit, crcli script install/list/remove, enable/disable per pac... |
 | 2026-10-27 16:26 | P4.5 | done | 03e9961 |  | Scripts menu, automation commands, script console (File > Automation, NewBooks items, context menu Automation, toolbar buttons, Info dialog script button; co... |
+| 2026-10-27 17:07 | P4.6a | done | b94f9f4 |  | Script compatibility scanner crcli script-scan (IronPython AST name resolution against the real WinForms/GDI+ surface, assembly member references, Tier C fin... |
