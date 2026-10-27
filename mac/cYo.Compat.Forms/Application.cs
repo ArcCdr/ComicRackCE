@@ -34,10 +34,41 @@ namespace System.Windows.Forms
 		/// <summary>Raised only by <see cref="RaiseIdle"/>; there is no message loop in this shim.</summary>
 		public static event EventHandler Idle;
 
-		/// <summary>Never raised; there is no message loop in this shim. The handler type is the framework's System.Threading one.</summary>
-#pragma warning disable CS0067
+		/// <summary>
+		/// Raised for an exception of a handler that the facade ran for a peer (an event of the toolkit: a click, a key, a timer) and that nobody caught: the script's exception
+		/// handler decides what happens, as in a WinForms message loop. Without a handler the exception is reported to <c>cYo.Compat.Forms.FormsRuntime.UnhandledException</c>.
+		/// The handler type is the framework's System.Threading one.
+		/// </summary>
 		public static event ThreadExceptionEventHandler ThreadException;
-#pragma warning restore CS0067
+
+		/// <summary>Raises <see cref="ThreadException"/>; false when nobody listens (or the handler threw).</summary>
+		internal static bool RaiseThreadException(Exception e)
+		{
+			ThreadExceptionEventHandler handler = ThreadException;
+			if (handler == null)
+			{
+				return false;
+			}
+			try
+			{
+				handler(null, new ThreadExceptionEventArgs(e));
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+		/// <summary>Visual styles are the platform's own on macOS: scripts call this at the top and it has nothing to do.</summary>
+		public static void EnableVisualStyles()
+		{
+		}
+
+		/// <summary>Text rendering is not selectable here: scripts call this at the top and it has nothing to do.</summary>
+		public static void SetCompatibleTextRenderingDefault(bool defaultValue)
+		{
+		}
 
 		public static void RaiseIdle(EventArgs e)
 		{

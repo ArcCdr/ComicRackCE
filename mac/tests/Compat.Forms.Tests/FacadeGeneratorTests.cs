@@ -83,6 +83,40 @@ namespace Compat.Forms.Tests
 		}
 
 		[Fact]
+		public void A_member_that_overrides_or_hides_an_implemented_member_of_a_base_class_calls_it()
+		{
+			var result = GenerateWith(("Control.cs", "namespace System.Windows.Forms { public partial class Control : System.ComponentModel.Component { "
+				+ "public virtual string Text { get; set; } protected virtual void OnClick(System.EventArgs e) { } public event KeyEventHandler KeyDown; public bool TabStop { get; set; } } }"));
+			Assert.Empty(result.Problems);
+			string label = result.FormsFiles["System.Windows.Forms/Label.g.cs"];
+			Assert.Contains("public override string Text\n\t\t{\n\t\t\tget => base.Text;\n\t\t\tset => base.Text = value;", label);
+			Assert.Contains("public bool TabStop\n\t\t{\n\t\t\tget => base.TabStop;\n\t\t\tset => base.TabStop = value;", label);
+			Assert.Contains("public event global::System.Windows.Forms.KeyEventHandler KeyDown\n\t\t{\n\t\t\tadd => base.KeyDown += value;\n\t\t\tremove => base.KeyDown -= value;", label);
+			Assert.Contains("A member that overrides or hides an implemented member of a base class calls it", label);
+			// a button derives from a derived class: the forward goes through ButtonBase to the hand-written Control
+			Assert.Contains("protected override void OnClick(global::System.EventArgs e) => base.OnClick(e);", result.FormsFiles["System.Windows.Forms/ButtonBase.g.cs"]);
+			Assert.Contains("protected override void OnClick(global::System.EventArgs e) => base.OnClick(e);", result.FormsFiles["System.Windows.Forms/Button.g.cs"]);
+			// what the base does not implement keeps throwing
+			Assert.Contains("throw global::FacadeStub.Member(\"System.Windows.Forms.Label.ImageIndex\")", label);
+			Assert.Contains("throw global::FacadeStub.Member(\"System.Windows.Forms.Label.OnPaint\")", label);
+			// the generated text of a type with nothing to forward is unchanged
+			Assert.DoesNotContain("A member that overrides or hides", result.FormsFiles["System.Windows.Forms/AnchorStyles.g.cs"]);
+			// the Drawing set never forwards
+			Assert.DoesNotContain(result.DrawingFiles.Values, text => text.Contains("A member that overrides or hides"));
+		}
+
+		[Fact]
+		public void An_abstract_base_member_is_not_called_by_a_generated_override()
+		{
+			var result = GenerateWith(("CommonDialog.cs", "namespace System.Windows.Forms { public abstract partial class CommonDialog : System.ComponentModel.Component { public abstract void Reset(); "
+				+ "protected abstract bool RunDialog(System.IntPtr hwndOwner); } }"));
+			Assert.Empty(result.Problems);
+			string text = result.FormsFiles["System.Windows.Forms/ColorDialog.g.cs"];
+			Assert.Contains("public override void Reset() => throw global::FacadeStub.Member(\"System.Windows.Forms.ColorDialog.Reset\");", text);
+			Assert.DoesNotContain("base.Reset()", text);
+		}
+
+		[Fact]
 		public void A_hand_written_enum_or_delegate_is_left_alone()
 		{
 			var result = GenerateWith(("Enums.cs", "namespace System.Windows.Forms { public enum DockStyle { None = 0, Top = 1 } public delegate void LayoutEventHandler(object sender, int x); }"));

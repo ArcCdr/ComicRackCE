@@ -11,40 +11,11 @@ namespace System.Windows.Forms
 		}
 	}
 
-	/// <summary>Types-only stand-in. There are no native windows, so Handle is not available.</summary>
-	public partial class Control : Component, IWin32Window
+	// Control, Form and the controls built on them are in Model/ (P4.9a). Control.Handle stays unavailable (P4.17.6 decides what a script may do with a window handle).
+	public partial class Control
 	{
-		private bool isDisposed;
-
+		/// <summary>There are no native windows: a script that asks for the Win32 handle gets this exception.</summary>
 		public IntPtr Handle => throw new NotSupportedException("System.Windows.Forms.Control.Handle is not yet supported on macOS");
-
-		public bool IsDisposed => isDisposed;
-
-		public bool Visible
-		{
-			get;
-			set;
-		} = true;
-
-		protected override void Dispose(bool disposing)
-		{
-			isDisposed = true;
-			base.Dispose(disposing);
-		}
-	}
-
-	public partial class Form : ContainerControl
-	{
-		public FormWindowState WindowState
-		{
-			get;
-			set;
-		}
-
-		public Form()
-		{
-			Visible = false;
-		}
 	}
 
 	public partial class TreeView : Control

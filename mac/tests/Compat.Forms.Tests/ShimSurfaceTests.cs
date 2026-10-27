@@ -65,12 +65,22 @@ namespace Compat.Forms.Tests
 			var extra = new List<string>();
 			foreach (Type t in typeof(System.Windows.Forms.Application).Assembly.GetExportedTypes())
 			{
-				if (!reference.Contains(t.FullName))
+				// The seam of the layer (namespace cYo.Compat.Forms) is the one place for public types that the reference does not have.
+				if (!reference.Contains(t.FullName) && t.Namespace != SeamNamespace)
 				{
 					extra.Add(t.FullName);
 				}
 			}
 			Assert.True(extra.Count == 0, Report(extra, "public types of the facade that the reference lacks"));
+		}
+
+		private const string SeamNamespace = "cYo.Compat.Forms";
+
+		[Fact]
+		public void The_seam_namespace_holds_exactly_the_backend_contract()
+		{
+			var names = typeof(System.Windows.Forms.Application).Assembly.GetExportedTypes().Where(t => t.Namespace == SeamNamespace).Select(t => t.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
+			Assert.Equal(new[] { "FormsRuntime", "IControlPeer", "IFormPeer", "IFormsBackend", "ModalLoop", "NullFormsBackend", "NullPeer" }, names);
 		}
 
 		[Fact]

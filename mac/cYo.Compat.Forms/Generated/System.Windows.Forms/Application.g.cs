@@ -114,7 +114,6 @@ namespace System.Windows.Forms
 
 		public static void AddMessageFilter(global::System.Windows.Forms.IMessageFilter value) => throw global::FacadeStub.Member("System.Windows.Forms.Application.AddMessageFilter");
 		public static void DoEvents() => throw global::FacadeStub.Member("System.Windows.Forms.Application.DoEvents");
-		public static void EnableVisualStyles() => throw global::FacadeStub.Member("System.Windows.Forms.Application.EnableVisualStyles");
 		public static void Exit() => throw global::FacadeStub.Member("System.Windows.Forms.Application.Exit");
 		public static void Exit(global::System.ComponentModel.CancelEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Exit");
 		public static void ExitThread() => throw global::FacadeStub.Member("System.Windows.Forms.Application.ExitThread");
@@ -128,7 +127,6 @@ namespace System.Windows.Forms
 		public static void Run(global::System.Windows.Forms.ApplicationContext context) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Run");
 		public static void Run(global::System.Windows.Forms.Form mainForm) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Run");
 		public static void SetColorMode(global::System.Windows.Forms.SystemColorMode systemColorMode) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetColorMode");
-		public static void SetCompatibleTextRenderingDefault(bool defaultValue) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetCompatibleTextRenderingDefault");
 		public static void SetDefaultFont(global::System.Drawing.Font font) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetDefaultFont");
 		public static bool SetHighDpiMode(global::System.Windows.Forms.HighDpiMode highDpiMode) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetHighDpiMode");
 		public static bool SetSuspendState(global::System.Windows.Forms.PowerState state, bool force, bool disableWakeEvent) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetSuspendState");

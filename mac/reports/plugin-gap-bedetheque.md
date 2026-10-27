@@ -15,8 +15,8 @@ name (plugin data or a dynamic attribute). Every row has exactly one status. Row
 
 | Plugin | Scripts | Assemblies | Native files | Tier | Rows | real | stub | partial | missing | differs | plugin | python | dynamic |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 194 | 110 | 12 | 0 | 1 | 7 | 73 | 131 |
-| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 216 | 251 | 21 | 0 | 1 | 113 | 34 | 4 |
+| Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 280 | 29 | 7 | 0 | 1 | 7 | 73 | 131 |
+| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 356 | 101 | 31 | 0 | 1 | 113 | 34 | 4 |
 
 ## Bedetheque Scraper 2 6.08
 
@@ -72,153 +72,73 @@ What the macOS build does today (measured in the plugin host with this report's 
 
 ### A. WinForms and GDI+ members (typed)
 
-Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 154 rows: 43 real, 108 stub, 3 partial.
+Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 154 rows: 123 real, 28 stub, 3 partial.
 
 | Member | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
 | `CheckState.Checked` | 80 | 1 | real | facade |  |  |
-| `Control.Name` | 72 | 1 | stub | facade | P4.9a |  |
+| `Control.Name` | 72 | 1 | real | facade |  |  |
 | `Size..ctor` | 71 | 1 | real | .NET 10 |  |  |
-| `Control.ControlCollection.Add` | 64 | 1 | stub | facade | P4.9a |  |
-| `Control.Controls` | 64 | 1 | stub | facade | P4.9a |  |
-| `Control.Size` | 64 | 1 | stub | facade | P4.9a |  |
+| `Control.ControlCollection.Add` | 64 | 1 | real | facade |  |  |
+| `Control.Controls` | 64 | 1 | real | facade |  |  |
+| `Control.Size` | 64 | 1 | real | facade |  |  |
 | `Point..ctor` | 64 | 1 | real | .NET 10 |  |  |
-| `Control.Location` | 61 | 1 | stub | facade | P4.9a |  |
-| `Control.TabIndex` | 52 | 1 | stub | facade | P4.9a |  |
+| `Control.Location` | 61 | 1 | real | facade |  |  |
+| `Control.TabIndex` | 52 | 1 | real | facade |  |  |
 | `Font..ctor` | 49 | 1 | partial | facade | P3.4 |  |
 | `GraphicsUnit.Point` | 49 | 1 | real | facade |  |  |
-| `Control.Font` | 47 | 1 | stub | facade | P4.9d |  |
+| `Control.Font` | 47 | 1 | real | facade |  |  |
 | `CheckState.Unchecked` | 40 | 1 | real | facade |  |  |
 | `FontStyle.Regular` | 37 | 1 | real | facade |  |  |
-| `CheckBox.CheckState` | 35 | 1 | stub | facade | P4.10b |  |
-| `ButtonBase.Text` | 31 | 1 | stub | facade | P4.10a |  |
-| `ButtonBase.UseVisualStyleBackColor` | 31 | 1 | stub | facade | P4.10a |  |
-| `TextBox.Text` | 28 | 1 | stub | facade | P4.10b |  |
-| `CheckBox..ctor` | 17 | 1 | stub | facade | P4.10b |  |
-| `Label.Text` | 13 | 1 | stub | facade | P4.10a |  |
+| `CheckBox.CheckState` | 35 | 1 | real | facade |  |  |
+| `ButtonBase.Text` | 31 | 1 | real | facade |  |  |
+| `ButtonBase.UseVisualStyleBackColor` | 31 | 1 | real | facade |  |  |
+| `TextBox.Text` | 28 | 1 | real | facade |  |  |
+| `CheckBox..ctor` | 17 | 1 | real | facade |  |  |
+| `Label.Text` | 13 | 1 | real | facade |  |  |
 | `MessageBox.Show` | 13 | 1 | stub | facade | P4.9f |  |
 | `MessageBoxDefaultButton.Button1` | 13 | 1 | real | facade |  |  |
-| `Label..ctor` | 12 | 1 | stub | facade | P4.10a |  |
-| `RadioButton.Checked` | 12 | 1 | stub | facade | P4.10b |  |
+| `Label..ctor` | 12 | 1 | real | facade |  |  |
+| `RadioButton.Checked` | 12 | 1 | real | facade |  |  |
 | `DialogResult.Cancel` | 11 | 1 | real | facade |  |  |
-| `TextBox..ctor` | 11 | 1 | stub | facade | P4.10b |  |
-| `Button..ctor` | 10 | 1 | stub | facade | P4.10a |  |
+| `TextBox..ctor` | 11 | 1 | real | facade |  |  |
+| `Button..ctor` | 10 | 1 | real | facade |  |  |
 | `ContentAlignment.MiddleLeft` | 10 | 1 | real | facade |  |  |
-| `Button.DialogResult` | 9 | 1 | stub | facade | P4.10a |  |
-| `ButtonBase.BackColor` | 9 | 1 | stub | facade | P4.10a |  |
-| `Control.Click` | 8 | 1 | stub | facade | P4.9a |  |
-| `Control.Tag` | 8 | 1 | stub | facade | P4.9a |  |
-| `Label.ImageAlign` | 8 | 1 | stub | facade | P4.10a |  |
+| `Button.DialogResult` | 9 | 1 | real | facade |  |  |
+| `ButtonBase.BackColor` | 9 | 1 | real | facade |  |  |
+| `Control.Click` | 8 | 1 | real | facade |  |  |
+| `Control.Tag` | 8 | 1 | real | facade |  |  |
+| `Label.ImageAlign` | 8 | 1 | real | facade |  |  |
 | `FontStyle.Bold` | 7 | 1 | real | facade |  |  |
 | `MessageBoxButtons.YesNo` | 7 | 1 | real | facade |  |  |
 | `Color.FromArgb` | 6 | 1 | real | .NET 10 |  |  |
-| `Control.ResumeLayout` | 6 | 1 | stub | facade | P4.9b |  |
+| `Control.ResumeLayout` | 6 | 1 | real | facade |  |  |
 | `DialogResult.Yes` | 6 | 1 | real | facade |  |  |
 | `Form.ShowDialog` | 6 | 1 | stub | facade | P4.9f |  |
 | `HorizontalAlignment.Center` | 6 | 1 | real | facade |  |  |
 | `MessageBoxButtons.OK` | 6 | 1 | real | facade |  |  |
 | `MessageBoxIcon.Warning` | 6 | 1 | real | facade |  |  |
-| `TextBox.TextAlign` | 6 | 1 | stub | facade | P4.10b |  |
+| `TextBox.TextAlign` | 6 | 1 | real | facade |  |  |
 | `Application.DoEvents` | 5 | 1 | stub | facade | P4.9e |  |
-| `Control.Anchor` | 5 | 1 | stub | facade | P4.9b |  |
-| `Control.Refresh` | 5 | 1 | stub | facade | P4.10e |  |
-| `Control.SuspendLayout` | 5 | 1 | stub | facade | P4.9b |  |
-| `FontStyle.Italic` | 5 | 1 | real | facade |  |  |
-| `Form.Text` | 5 | 1 | stub | facade | P4.9a |  |
-| `MessageBoxIcon.Question` | 5 | 1 | real | facade |  |  |
-| `AnchorStyles.Left` | 4 | 1 | real | facade |  |  |
-| `Control.Enabled` | 4 | 1 | stub | facade | P4.9a |  |
-| `Control.PerformLayout` | 4 | 1 | stub | facade | P4.9b |  |
-| `DialogResult.OK` | 4 | 1 | real | facade |  |  |
-| `Form.ClientSize` | 4 | 1 | stub | facade | P4.9a |  |
-| `Form.Close` | 4 | 1 | stub | facade | P4.9a |  |
-| `Form.StartPosition` | 4 | 1 | stub | facade | P4.9a |  |
-| `FormStartPosition.CenterScreen` | 4 | 1 | real | facade |  |  |
-| `Label.TextAlign` | 4 | 1 | stub | facade | P4.10a |  |
-| `RadioButton..ctor` | 4 | 1 | stub | facade | P4.10b |  |
-| `TextBoxBase.MaxLength` | 4 | 1 | stub | facade | P4.10b |  |
-| `AnchorStyles.Bottom` | 3 | 1 | real | facade |  |  |
-| `AnchorStyles.Right` | 3 | 1 | real | facade |  |  |
-| `AnchorStyles.Top` | 3 | 1 | real | facade |  |  |
 | `Bitmap..ctor` | 3 | 1 | partial | facade | P4.17.2 |  |
 | `CheckedListBox.Items` | 3 | 1 | stub | facade | P4.10b |  |
-| `Color.Black` | 3 | 1 | real | .NET 10 |  |  |
-| `Color.Red` | 3 | 1 | real | .NET 10 |  |  |
-| `Control.ForeColor` | 3 | 1 | stub | facade | P4.9a |  |
-| `Control.Hide` | 3 | 1 | stub | facade | P4.9a |  |
-| `Control.Padding` | 3 | 1 | stub | facade | P4.9b |  |
-| `Form.FormBorderStyle` | 3 | 1 | stub | facade | P4.9a |  |
-| `Form.Icon` | 3 | 1 | stub | facade | P4.9a |  |
-| `Form.KeyPreview` | 3 | 1 | stub | facade | P4.9a |  |
-| `Form.MaximizeBox` | 3 | 1 | stub | facade | P4.9a |  |
-| `Form.MinimizeBox` | 3 | 1 | stub | facade | P4.9a |  |
-| `Form.SizeGripStyle` | 3 | 1 | stub | facade | P4.9a |  |
-| `FormBorderStyle.FixedDialog` | 3 | 1 | real | facade |  |  |
 | `Icon..ctor` | 3 | 1 | partial | facade | P4.17.2 |  |
-| `Padding..ctor` | 3 | 1 | real | facade |  |  |
 | `ProgressBar.Minimum` | 3 | 1 | stub | facade | P4.10c |  |
-| `SizeGripStyle.Hide` | 3 | 1 | real | facade |  |  |
 | `TabPage..ctor` | 3 | 1 | stub | facade | P4.10d |  |
-| `TabPage.Location` | 3 | 1 | stub | facade | P4.10d |  |
-| `TabPage.TabIndex` | 3 | 1 | stub | facade | P4.10d |  |
-| `TabPage.Text` | 3 | 1 | stub | facade | P4.10d |  |
 | `TabPage.UseVisualStyleBackColor` | 3 | 1 | stub | facade | P4.10d |  |
 | `CheckedListBox.SetItemCheckState` | 2 | 1 | stub | facade | P4.10b |  |
-| `ContentAlignment.BottomCenter` | 2 | 1 | real | facade |  |  |
-| `Form.AcceptButton` | 2 | 1 | stub | facade | P4.9f |  |
-| `Form.CancelButton` | 2 | 1 | stub | facade | P4.9f |  |
-| `Form.ControlBox` | 2 | 1 | stub | facade | P4.9a |  |
-| `Form.HelpButton` | 2 | 1 | stub | facade | P4.9a |  |
-| `Form.Show` | 2 | 1 | stub | facade | P4.9a |  |
-| `Image.FromStream` | 2 | 1 | real | facade |  |  |
-| `ListBox.Font` | 2 | 1 | stub | facade | P4.10b |  |
-| `ListBox.Items` | 2 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.Count` | 2 | 1 | stub | facade | P4.10b |  |
-| `ListBox.SelectedIndex` | 2 | 1 | stub | facade | P4.10b |  |
-| `MessageBoxIcon.Exclamation` | 2 | 1 | real | facade |  |  |
 | `PictureBox..ctor` | 2 | 1 | stub | facade | P4.10c |  |
 | `PictureBox.Image` | 2 | 1 | stub | facade | P4.10c |  |
 | `PictureBox.SizeMode` | 2 | 1 | stub | facade | P4.10c |  |
-| `PictureBoxSizeMode.Zoom` | 2 | 1 | real | facade |  |  |
 | `ProgressBar.Maximum` | 2 | 1 | stub | facade | P4.10c |  |
 | `ProgressBar.Step` | 2 | 1 | stub | facade | P4.10c |  |
 | `ProgressBar.Value` | 2 | 1 | stub | facade | P4.10c |  |
-| `TextBoxBase.WordWrap` | 2 | 1 | stub | facade | P4.10b |  |
-| `AutoScaleMode.Dpi` | 1 | 1 | real | facade |  |  |
-| `ButtonBase.ImageAlign` | 1 | 1 | stub | facade | P4.10a |  |
 | `CheckedListBox..ctor` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.CheckOnClick` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.ItemCheck` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.ObjectCollection.Add` | 1 | 1 | stub | facade | P4.10b |  |
-| `Color.LightGreen` | 1 | 1 | real | .NET 10 |  |  |
-| `ContentAlignment.MiddleCenter` | 1 | 1 | real | facade |  |  |
-| `Control.BackColor` | 1 | 1 | stub | facade | P4.9a |  |
-| `Control.DoubleClick` | 1 | 1 | stub | facade | P4.9a |  |
-| `Control.Focus` | 1 | 1 | stub | facade | P4.9a |  |
-| `Control.Left` | 1 | 1 | stub | facade | P4.9b |  |
-| `Control.TextChanged` | 1 | 1 | stub | facade | P4.9a |  |
-| `DialogResult.No` | 1 | 1 | real | facade |  |  |
-| `Drawing2D.InterpolationMode.HighQualityBicubic` | 1 | 1 | real | facade |  |  |
-| `Drawing2D.InterpolationMode.NearestNeighbor` | 1 | 1 | real | facade |  |  |
-| `Form.Load` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.MinimumSize` | 1 | 1 | stub | facade | P4.9a |  |
-| `Graphics.FromImage` | 1 | 1 | real | facade |  |  |
-| `GroupBox..ctor` | 1 | 1 | stub | facade | P4.10a |  |
-| `GroupBox.Text` | 1 | 1 | stub | facade | P4.10a |  |
-| `Label.UseMnemonic` | 1 | 1 | stub | facade | P4.10a |  |
-| `ListBox..ctor` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ItemHeight` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.Add` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.Clear` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListBox.Sorted` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListControl.FormattingEnabled` | 1 | 1 | stub | facade | P4.10b |  |
-| `PictureBox.TabIndex` | 1 | 1 | stub | facade | P4.10c |  |
-| `PictureBox.TabStop` | 1 | 1 | stub | facade | P4.10c |  |
 | `ProgressBar..ctor` | 1 | 1 | stub | facade | P4.10c |  |
 | `ProgressBar.Increment` | 1 | 1 | stub | facade | P4.10c |  |
-| `ProgressBar.Text` | 1 | 1 | stub | facade | P4.10c |  |
-| `RadioButton.CheckedChanged` | 1 | 1 | stub | facade | P4.10b |  |
-| `RadioButton.TabStop` | 1 | 1 | stub | facade | P4.10b |  |
 | `TabControl..ctor` | 1 | 1 | stub | facade | P4.10d |  |
 | `TabControl.SelectedIndex` | 1 | 1 | stub | facade | P4.10d |  |
 | `Timer..ctor` | 1 | 1 | stub | facade | P4.9e |  |
@@ -228,11 +148,11 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `Timer.Stop` | 1 | 1 | stub | facade | P4.9e |  |
 | `Timer.Tick` | 1 | 1 | stub | facade | P4.9e |  |
 
-3 more rows with a status that needs no work are in the JSON (`A`).
+83 more rows with a status that needs no work are in the JSON (`A`).
 
 ### B. Member accesses on values of unknown type (by name)
 
-Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 313 rows: 91 real, 2 stub, 9 partial, 7 plugin, 73 python, 131 dynamic.
+Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 313 rows: 97 real, 1 stub, 4 partial, 7 plugin, 73 python, 131 dynamic.
 
 | Name | Uses | Files | Status | Source | Task | Candidates | Note |
 |---|---|---|---|---|---|---|---|
@@ -252,18 +172,12 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `items` | 24 | 10 | python | builtin |  |  |  |
 | `read` | 23 | 6 | python | builtin |  |  |  |
 | `Name` | 6 | 1 | partial | .NET 10 | P3.4 | used types: System.IO.FileInfo, System.Threading.Thread, System.Xml.XmlDocument, ... (6 types) |  |
-| `Format` | 5 | 1 | partial | .NET 10 | P4.10b | used types: System.Enum, ListControl |  |
 | `Start` | 5 | 1 | partial | .NET 10 | P4.9e | used types: System.Diagnostics.Process, System.Threading.Thread, Timer |  |
-| `Close` | 4 | 2 | partial | .NET 10 | P4.9a | used types: System.Diagnostics.Process, System.IO.StreamReader, System.IO.StringWriter, ... (6 types) |  |
-| `Checked` | 1 | 1 | partial | facade | P4.10b | used types: CheckBox, CheckState, RadioButton |  |
-| `Controls` | 1 | 1 | stub | facade | P4.9a | used types: Control |  |
 | `DpiX` | 1 | 1 | stub | facade | P3.5a | used types: Graphics |  |
 | `DrawImage` | 1 | 1 | partial | facade | P3.5a | used types: Graphics, Label |  |
 | `Height` | 1 | 1 | partial | facade | P3.4 | used types: Image, Font, Icon, ... (6 types) |  |
-| `ProductVersion` | 1 | 1 | partial | facade | P4.9a | used types: Application, Control |  |
-| `Width` | 1 | 1 | partial | facade | P4.9b | used types: Image, Icon, Rectangle, ... (5 types) |  |
 
-287 more rows with a status that needs no work are in the JSON (`B`).
+293 more rows with a status that needs no work are in the JSON (`B`).
 
 ### C. .NET 10 types and members
 
@@ -415,212 +329,103 @@ Read from the scripts of the package (`libraryorganizer.py`, `loworkerform.py`, 
 
 ### A. WinForms and GDI+ members (typed)
 
-Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 285 rows: 55 real, 227 stub, 3 partial.
+Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 285 rows: 189 real, 93 stub, 3 partial.
 
 | Member | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
-| `Control.Controls` | 249 | 4 | stub | facade | P4.9a |  |
+| `Control.Controls` | 249 | 4 | real | facade |  |  |
 | `Point..ctor` | 205 | 4 | real | .NET 10 |  |  |
-| `Control.ControlCollection.Add` | 195 | 4 | stub | facade | P4.9a |  |
+| `Control.ControlCollection.Add` | 195 | 4 | real | facade |  |  |
 | `Size..ctor` | 187 | 4 | real | .NET 10 |  |  |
-| `Control.Location` | 160 | 4 | stub | facade | P4.9a |  |
-| `Control.Size` | 155 | 4 | stub | facade | P4.9a |  |
-| `Control.TabIndex` | 121 | 4 | stub | facade | P4.9a |  |
-| `Control.Name` | 111 | 3 | stub | facade | P4.9a |  |
-| `TextBox.Text` | 70 | 3 | stub | facade | P4.10b |  |
-| `Label.Text` | 60 | 4 | stub | facade | P4.10a |  |
-| `ButtonBase.Text` | 58 | 4 | stub | facade | P4.10a |  |
-| `Control.SuspendLayout` | 55 | 4 | stub | facade | P4.9b |  |
-| `Control.ResumeLayout` | 54 | 4 | stub | facade | P4.9b |  |
-| `Control.Width` | 52 | 2 | stub | facade | P4.9b |  |
-| `Label..ctor` | 51 | 4 | stub | facade | P4.10a |  |
-| `CheckBox.Checked` | 47 | 3 | stub | facade | P4.10b |  |
+| `Control.Location` | 160 | 4 | real | facade |  |  |
+| `Control.Size` | 155 | 4 | real | facade |  |  |
+| `Control.TabIndex` | 121 | 4 | real | facade |  |  |
+| `Control.Name` | 111 | 3 | real | facade |  |  |
+| `TextBox.Text` | 70 | 3 | real | facade |  |  |
+| `Label.Text` | 60 | 4 | real | facade |  |  |
+| `ButtonBase.Text` | 58 | 4 | real | facade |  |  |
+| `Control.SuspendLayout` | 55 | 4 | real | facade |  |  |
+| `Control.ResumeLayout` | 54 | 4 | real | facade |  |  |
+| `Control.Width` | 52 | 2 | real | facade |  |  |
+| `Label..ctor` | 51 | 4 | real | facade |  |  |
+| `CheckBox.Checked` | 47 | 3 | real | facade |  |  |
 | `Padding..ctor` | 45 | 3 | real | facade |  |  |
-| `Control.Enabled` | 39 | 3 | stub | facade | P4.9a |  |
-| `ButtonBase.UseVisualStyleBackColor` | 38 | 3 | stub | facade | P4.10a |  |
-| `Button..ctor` | 37 | 4 | stub | facade | P4.10a |  |
-| `Control.Margin` | 37 | 3 | stub | facade | P4.9b |  |
-| `Label.AutoSize` | 36 | 3 | stub | facade | P4.10a |  |
-| `ComboBox.SelectedItem` | 35 | 3 | stub | facade | P4.10b |  |
-| `Layout.ArrangedElementCollection.Count` | 28 | 1 | stub | facade | P4.9c |  |
-| `Control.Click` | 27 | 4 | stub | facade | P4.9a |  |
-| `ComboBox.Items` | 24 | 3 | stub | facade | P4.10b |  |
+| `Control.Enabled` | 39 | 3 | real | facade |  |  |
+| `ButtonBase.UseVisualStyleBackColor` | 38 | 3 | real | facade |  |  |
+| `Button..ctor` | 37 | 4 | real | facade |  |  |
+| `Control.Margin` | 37 | 3 | real | facade |  |  |
+| `Label.AutoSize` | 36 | 3 | real | facade |  |  |
+| `ComboBox.SelectedItem` | 35 | 3 | real | facade |  |  |
+| `Layout.ArrangedElementCollection.Count` | 28 | 1 | real | facade |  |  |
+| `Control.Click` | 27 | 4 | real | facade |  |  |
+| `ComboBox.Items` | 24 | 3 | real | facade |  |  |
 | `MessageBox.Show` | 21 | 6 | stub | facade | P4.9f |  |
-| `ListBox.Items` | 20 | 2 | stub | facade | P4.10b |  |
-| `ButtonBase.AutoSize` | 19 | 3 | stub | facade | P4.10a |  |
+| `ListBox.Items` | 20 | 2 | real | facade |  |  |
+| `ButtonBase.AutoSize` | 19 | 3 | real | facade |  |  |
 | `Control.Visible` | 19 | 3 | real | facade |  |  |
-| `CheckBox..ctor` | 18 | 3 | stub | facade | P4.10b |  |
-| `Control.Height` | 18 | 2 | stub | facade | P4.9b |  |
-| `TextBox..ctor` | 18 | 3 | stub | facade | P4.10b |  |
+| `CheckBox..ctor` | 18 | 3 | real | facade |  |  |
+| `Control.Height` | 18 | 2 | real | facade |  |  |
+| `TextBox..ctor` | 18 | 3 | real | facade |  |  |
 | `Size.Width` | 17 | 2 | real | .NET 10 |  |  |
 | `ToolStripItem.Name` | 17 | 1 | stub | facade | P4.10g |  |
-| `ComboBox.ObjectCollection.AddRange` | 16 | 3 | stub | facade | P4.10b |  |
+| `ComboBox.ObjectCollection.AddRange` | 16 | 3 | real | facade |  |  |
 | `ComboBoxStyle.DropDownList` | 16 | 3 | real | facade |  |  |
-| `Control.PreferredSize` | 16 | 1 | stub | facade | P4.9a |  |
+| `Control.PreferredSize` | 16 | 1 | real | facade |  |  |
 | `ToolStripItem.Size` | 16 | 1 | stub | facade | P4.10g |  |
-| `ComboBox..ctor` | 15 | 3 | stub | facade | P4.10b |  |
-| `ComboBox.DropDownStyle` | 15 | 3 | stub | facade | P4.10b |  |
-| `ListBox.SelectedIndex` | 15 | 1 | stub | facade | P4.10b |  |
+| `ComboBox..ctor` | 15 | 3 | real | facade |  |  |
+| `ComboBox.DropDownStyle` | 15 | 3 | real | facade |  |  |
+| `ListBox.SelectedIndex` | 15 | 1 | real | facade |  |  |
 | `Point.X` | 15 | 1 | real | .NET 10 |  |  |
 | `ToolStripItem.Text` | 15 | 1 | stub | facade | P4.10g |  |
-| `Button.DialogResult` | 14 | 3 | stub | facade | P4.10a |  |
-| `ComboBox.SelectedIndex` | 14 | 3 | stub | facade | P4.10b |  |
-| `DialogResult.OK` | 13 | 5 | real | facade |  |  |
-| `DialogResult.Cancel` | 12 | 3 | real | facade |  |  |
-| `Form.DialogResult` | 12 | 3 | stub | facade | P4.9f |  |
 | `Image.FromFile` | 12 | 1 | partial | facade | P4.17.2 |  |
 | `ToolStripItem.Click` | 12 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.Image` | 12 | 1 | stub | facade | P4.10g |  |
-| `Control.ControlCollection.AddRange` | 11 | 1 | stub | facade | P4.9a |  |
-| `Control.Tag` | 11 | 3 | stub | facade | P4.9a |  |
-| `DialogResult.None` | 10 | 3 | real | facade |  |  |
-| `Form.Icon` | 10 | 3 | stub | facade | P4.9a |  |
-| `Form.Text` | 10 | 3 | stub | facade | P4.9a |  |
 | `Icon..ctor` | 10 | 3 | partial | facade | P4.17.2 |  |
-| `ListControl.FormattingEnabled` | 10 | 2 | stub | facade | P4.10b |  |
-| `NumericUpDown.Value` | 10 | 1 | stub | facade | P4.10b |  |
 | `TabPage..ctor` | 10 | 1 | stub | facade | P4.10d |  |
-| `TabPage.Location` | 10 | 1 | stub | facade | P4.10d |  |
-| `TabPage.TabIndex` | 10 | 1 | stub | facade | P4.10d |  |
-| `TabPage.Text` | 10 | 1 | stub | facade | P4.10d |  |
 | `TabPage.UseVisualStyleBackColor` | 10 | 1 | stub | facade | P4.10d |  |
-| `Control.ControlCollection.Clear` | 9 | 1 | stub | facade | P4.9a |  |
-| `Control.Padding` | 9 | 2 | stub | facade | P4.9b |  |
-| `Form.StartPosition` | 9 | 3 | stub | facade | P4.9a |  |
 | `ToolStripComboBox.SelectedItem` | 9 | 1 | stub | facade | P4.17.1 |  |
-| `AutoSizeMode.GrowAndShrink` | 8 | 3 | real | facade |  |  |
-| `Form.AcceptButton` | 8 | 3 | stub | facade | P4.9f |  |
-| `Panel..ctor` | 8 | 3 | stub | facade | P4.10a |  |
 | `ToolStripComboBox.Items` | 8 | 1 | stub | facade | P4.17.1 |  |
 | `ToolStripMenuItem..ctor` | 8 | 1 | stub | facade | P4.10g |  |
-| `Control.PerformLayout` | 7 | 3 | stub | facade | P4.9b |  |
-| `Form.ClientSize` | 7 | 3 | stub | facade | P4.9a |  |
-| `Form.FormBorderStyle` | 7 | 3 | stub | facade | P4.9a |  |
-| `FormBorderStyle.FixedDialog` | 7 | 3 | real | facade |  |  |
-| `FormStartPosition.CenterParent` | 7 | 3 | real | facade |  |  |
 | `ToolStripComboBox.ComboBox` | 7 | 1 | stub | facade | P4.17.1 |  |
-| `CheckBox.CheckedChanged` | 6 | 2 | stub | facade | P4.10b |  |
-| `CheckState.Checked` | 6 | 1 | real | facade |  |  |
-| `Color.Magenta` | 6 | 1 | real | .NET 10 |  |  |
-| `ComboBox.ObjectCollection.Add` | 6 | 1 | stub | facade | P4.10b |  |
-| `Form.MaximizeBox` | 6 | 3 | stub | facade | P4.9a |  |
-| `Form.MinimizeBox` | 6 | 3 | stub | facade | P4.9a |  |
-| `Label.TextAlign` | 6 | 3 | stub | facade | P4.10a |  |
-| `MessageBoxButtons.OK` | 6 | 3 | real | facade |  |  |
-| `Panel.AutoSize` | 6 | 2 | stub | facade | P4.10a |  |
-| `RadioButton.Checked` | 6 | 1 | stub | facade | P4.10b |  |
-| `ScrollableControl.AutoScroll` | 6 | 2 | stub | facade | P4.10d |  |
 | `ToolStripButton.Checked` | 6 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.ImageTransparentColor` | 6 | 1 | stub | facade | P4.10g |  |
-| `AnchorStyles.Bottom` | 5 | 2 | real | facade |  |  |
-| `AnchorStyles.Right` | 5 | 2 | real | facade |  |  |
-| `CheckBox.CheckState` | 5 | 1 | stub | facade | P4.10b |  |
-| `ComboBox.ObjectCollection.Clear` | 5 | 2 | stub | facade | P4.10b |  |
 | `CommonDialog.ShowDialog` | 5 | 2 | partial | facade | P4.10f |  |
-| `ContentAlignment.BottomCenter` | 5 | 1 | real | facade |  |  |
-| `Control.Anchor` | 5 | 2 | stub | facade | P4.9b |  |
 | `DataGridView.Columns` | 5 | 1 | stub | facade | P4.13b |  |
 | `DataGridViewColumn.AutoSizeMode` | 5 | 1 | stub | facade | P4.13b |  |
 | `DataGridViewColumn.HeaderText` | 5 | 1 | stub | facade | P4.13b |  |
 | `DataGridViewColumnCollection.Add` | 5 | 1 | stub | facade | P4.13b |  |
 | `DataGridViewTextBoxColumn..ctor` | 5 | 1 | stub | facade | P4.13b |  |
 | `ErrorProvider.SetError` | 5 | 1 | stub | facade | P4.17.1 |  |
-| `Form.CancelButton` | 5 | 3 | stub | facade | P4.9f |  |
-| `ListBox.ObjectCollection.AddRange` | 5 | 2 | stub | facade | P4.10b |  |
-| `MessageBoxIcon.Error` | 5 | 2 | real | facade |  |  |
-| `NumericUpDown..ctor` | 5 | 1 | stub | facade | P4.10b |  |
-| `TextImageRelation.ImageAboveText` | 5 | 1 | real | facade |  |  |
 | `ToolStripButton..ctor` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.AutoSize` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.ImageScaling` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.Tag` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.TextAlign` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.TextImageRelation` | 5 | 1 | stub | facade | P4.10g |  |
-| `ToolStripItemImageScaling.None` | 5 | 1 | real | facade |  |  |
-| `Button.AutoSizeMode` | 4 | 1 | stub | facade | P4.10a |  |
-| `ComboBox.SelectedIndexChanged` | 4 | 2 | stub | facade | P4.10b |  |
-| `ComboBox.Sorted` | 4 | 3 | stub | facade | P4.10b |  |
-| `Control.Dock` | 4 | 1 | stub | facade | P4.9b |  |
-| `Control.TextChanged` | 4 | 2 | stub | facade | P4.9a |  |
-| `FlowDirection.TopDown` | 4 | 3 | real | facade |  |  |
 | `FlowLayoutPanel..ctor` | 4 | 3 | stub | facade | P4.9c |  |
 | `FlowLayoutPanel.FlowDirection` | 4 | 3 | stub | facade | P4.9c |  |
 | `FlowLayoutPanel.WrapContents` | 4 | 3 | stub | facade | P4.9c |  |
-| `ListBox..ctor` | 4 | 2 | stub | facade | P4.10b |  |
-| `ListBox.SelectedItem` | 4 | 1 | stub | facade | P4.10b |  |
 | `ToolStripItem.Alignment` | 4 | 1 | stub | facade | P4.10g |  |
-| `ToolStripItemAlignment.Right` | 4 | 1 | real | facade |  |  |
-| `BorderStyle.FixedSingle` | 3 | 1 | real | facade |  |  |
-| `ComboBox.ObjectCollection.Remove` | 3 | 1 | stub | facade | P4.10b |  |
-| `ContentAlignment.MiddleLeft` | 3 | 1 | real | facade |  |  |
-| `Control.BackColor` | 3 | 1 | stub | facade | P4.9a |  |
-| `Control.ControlCollection.Remove` | 3 | 3 | stub | facade | P4.9a |  |
-| `Control.Leave` | 3 | 1 | stub | facade | P4.9a |  |
-| `Control.MinimumSize` | 3 | 1 | stub | facade | P4.9a |  |
-| `DataGridViewAutoSizeColumnMode.AllCells` | 3 | 1 | real | facade |  |  |
-| `DialogResult.Yes` | 3 | 2 | real | facade |  |  |
 | `FileDialog.FileName` | 3 | 2 | stub | facade | P4.10f |  |
 | `FileDialog.Filter` | 3 | 2 | stub | facade | P4.10f |  |
-| `Form.Size` | 3 | 1 | stub | facade | P4.9a |  |
-| `Imaging.ImageFormat.Png` | 3 | 2 | real | facade |  |  |
-| `ListBox.ObjectCollection.Count` | 3 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.Insert` | 3 | 1 | stub | facade | P4.10b |  |
-| `ListBox.Sorted` | 3 | 2 | stub | facade | P4.10b |  |
-| `NumericUpDown.Increment` | 3 | 1 | stub | facade | P4.10b |  |
-| `Panel.AutoSizeMode` | 3 | 2 | stub | facade | P4.10a |  |
-| `Panel.BorderStyle` | 3 | 1 | stub | facade | P4.10a |  |
-| `RadioButton..ctor` | 3 | 1 | stub | facade | P4.10b |  |
-| `SystemColors.ControlLightLight` | 3 | 1 | real | .NET 10 |  |  |
 | `TabControl..ctor` | 3 | 1 | stub | facade | P4.10d |  |
 | `TabControl.SelectedIndex` | 3 | 1 | stub | facade | P4.10d |  |
-| `TextBox.Multiline` | 3 | 2 | stub | facade | P4.10b |  |
 | `ToolStripItemCollection.AddRange` | 3 | 1 | stub | facade | P4.10g |  |
-| `AnchorStyles.Left` | 2 | 2 | real | facade |  |  |
-| `AnchorStyles.Top` | 2 | 2 | real | facade |  |  |
 | `CheckedListBox.Items` | 2 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.SetItemChecked` | 2 | 1 | stub | facade | P4.10b |  |
-| `Color.Red` | 2 | 1 | real | .NET 10 |  |  |
-| `ComboBox.IntegralHeight` | 2 | 2 | stub | facade | P4.10b |  |
-| `ComboBox.MaxDropDownItems` | 2 | 2 | stub | facade | P4.10b |  |
-| `ContainerControl.ActiveControl` | 2 | 1 | stub | facade | P4.9a |  |
-| `ContentAlignment.MiddleCenter` | 2 | 1 | real | facade |  |  |
-| `Control.DoubleClick` | 2 | 1 | stub | facade | P4.9a |  |
 | `DataGridView.Rows` | 2 | 1 | stub | facade | P4.13b |  |
-| `DataGridViewAutoSizeColumnMode.Fill` | 2 | 1 | real | facade |  |  |
 | `DataGridViewCellStyle.WrapMode` | 2 | 1 | stub | facade | P4.13b |  |
 | `DataGridViewColumn.DefaultCellStyle` | 2 | 1 | stub | facade | P4.13b |  |
-| `DataGridViewTriState.True` | 2 | 1 | real | facade |  |  |
-| `DockStyle.Top` | 2 | 1 | real | facade |  |  |
 | `FolderBrowserDialog.SelectedPath` | 2 | 1 | stub | facade | P4.10f |  |
-| `Form.AutoSize` | 2 | 2 | stub | facade | P4.9a |  |
-| `FormStartPosition.CenterScreen` | 2 | 1 | real | facade |  |  |
-| `Label.UseMnemonic` | 2 | 1 | stub | facade | P4.10a |  |
-| `ListBox.ObjectCollection.Clear` | 2 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.Remove` | 2 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.RemoveAt` | 2 | 1 | stub | facade | P4.10b |  |
-| `RichTextBox.Text` | 2 | 1 | stub | facade | P4.13c |  |
 | `SaveFileDialog..ctor` | 2 | 2 | stub | facade | P4.10f |  |
-| `ScrollableControl.ScrollControlIntoView` | 2 | 1 | stub | facade | P4.10d |  |
-| `TextBoxBase.HideSelection` | 2 | 1 | stub | facade | P4.10b |  |
-| `TextBoxBase.SelectionStart` | 2 | 1 | stub | facade | P4.10b |  |
 | `ToolStrip.Items` | 2 | 1 | stub | facade | P4.10g |  |
 | `ToolStripComboBox.SelectedIndex` | 2 | 1 | stub | facade | P4.17.1 |  |
 | `ToolStripDropDownItem.DropDownItems` | 2 | 1 | stub | facade | P4.10g |  |
-| `Appearance.Button` | 1 | 1 | real | facade |  |  |
 | `BindingSource..ctor` | 1 | 1 | stub | facade | P4.17.1 |  |
-| `ButtonBase.BackColor` | 1 | 1 | stub | facade | P4.10a |  |
-| `CheckBox.Appearance` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox..ctor` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.CheckOnClick` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.CheckedIndices` | 1 | 1 | stub | facade | P4.10b |  |
 | `CheckedListBox.CheckedItems` | 1 | 1 | stub | facade | P4.10b |  |
-| `Color.Transparent` | 1 | 1 | real | .NET 10 |  |  |
-| `ComboBox.DataSource` | 1 | 1 | stub | facade | P4.10b |  |
-| `ComboBox.SelectionChangeCommitted` | 1 | 1 | stub | facade | P4.10b |  |
-| `Control.ForeColor` | 1 | 1 | stub | facade | P4.9a |  |
-| `Control.KeyPress` | 1 | 1 | stub | facade | P4.9a |  |
-| `Control.MaximumSize` | 1 | 1 | stub | facade | P4.9a |  |
-| `Control.Text` | 1 | 1 | stub | facade | P4.9a |  |
 | `DataGridView..ctor` | 1 | 1 | stub | facade | P4.13b |  |
 | `DataGridView.AllowUserToResizeColumns` | 1 | 1 | stub | facade | P4.13b |  |
 | `DataGridView.AllowUserToResizeRows` | 1 | 1 | stub | facade | P4.13b |  |
@@ -634,28 +439,9 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `FileDialog.AddExtension` | 1 | 1 | stub | facade | P4.10f |  |
 | `FlowLayoutPanel.SetFlowBreak` | 1 | 1 | stub | facade | P4.9c |  |
 | `FolderBrowserDialog..ctor` | 1 | 1 | stub | facade | P4.10f |  |
-| `Form.AutoSizeMode` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.Close` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.FormClosing` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.MaximumSize` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.MinimumSize` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.ShowIcon` | 1 | 1 | stub | facade | P4.9a |  |
-| `Form.Shown` | 1 | 1 | stub | facade | P4.9a |  |
-| `GroupBox..ctor` | 1 | 1 | stub | facade | P4.10a |  |
-| `GroupBox.TabStop` | 1 | 1 | stub | facade | P4.10a |  |
-| `GroupBox.Text` | 1 | 1 | stub | facade | P4.10a |  |
-| `ListBox.HorizontalScrollbar` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.Add` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListBox.ObjectCollection.IndexOf` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListControl.DisplayMember` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListControl.SelectedValue` | 1 | 1 | stub | facade | P4.10b |  |
-| `ListControl.ValueMember` | 1 | 1 | stub | facade | P4.10b |  |
-| `NumericUpDown.Maximum` | 1 | 1 | stub | facade | P4.10b |  |
 | `OpenFileDialog..ctor` | 1 | 1 | stub | facade | P4.10f |  |
 | `ProgressBar..ctor` | 1 | 1 | stub | facade | P4.10c |  |
 | `ProgressBar.Value` | 1 | 1 | stub | facade | P4.10c |  |
-| `RadioButton.CheckedChanged` | 1 | 1 | stub | facade | P4.10b |  |
-| `RadioButton.TabStop` | 1 | 1 | stub | facade | P4.10b |  |
 | `RichTextBox..ctor` | 1 | 1 | stub | facade | P4.13c |  |
 | `ScrollBar.LargeChange` | 1 | 1 | stub | facade | P4.13c |  |
 | `ScrollBar.Maximum` | 1 | 1 | stub | facade | P4.13c |  |
@@ -667,12 +453,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `TabControl.Deselected` | 1 | 1 | stub | facade | P4.10d |  |
 | `TabControl.Selected` | 1 | 1 | stub | facade | P4.10d |  |
 | `TabControl.Selecting` | 1 | 1 | stub | facade | P4.10d |  |
-| `TextBoxBase.MaxLength` | 1 | 1 | stub | facade | P4.10b |  |
-| `TextBoxBase.ReadOnly` | 1 | 1 | stub | facade | P4.10b |  |
 | `ToolStrip..ctor` | 1 | 1 | stub | facade | P4.10g |  |
-| `ToolStrip.AutoSize` | 1 | 1 | stub | facade | P4.10g |  |
-| `ToolStrip.BackColor` | 1 | 1 | stub | facade | P4.10g |  |
-| `ToolStrip.Dock` | 1 | 1 | stub | facade | P4.10g |  |
 | `ToolStrip.GripStyle` | 1 | 1 | stub | facade | P4.10g |  |
 | `ToolStrip.RenderMode` | 1 | 1 | stub | facade | P4.10g |  |
 | `ToolStrip.ShowItemToolTips` | 1 | 1 | stub | facade | P4.10g |  |
@@ -687,20 +468,19 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ToolStripDropDownButton..ctor` | 1 | 1 | stub | facade | P4.10g |  |
 | `ToolStripLabel..ctor` | 1 | 1 | stub | facade | P4.10g |  |
 | `ToolStripSeparator..ctor` | 1 | 1 | stub | facade | P4.10g |  |
-| `UpDownBase.AutoSize` | 1 | 1 | stub | facade | P4.10b |  |
 | `VScrollBar..ctor` | 1 | 1 | stub | facade | P4.13c |  |
 
-15 more rows with a status that needs no work are in the JSON (`A`).
+149 more rows with a status that needs no work are in the JSON (`A`).
 
 ### B. Member accesses on values of unknown type (by name)
 
-Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 265 rows: 73 real, 23 stub, 18 partial, 113 plugin, 34 python, 4 dynamic.
+Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 265 rows: 79 real, 7 stub, 28 partial, 113 plugin, 34 python, 4 dynamic.
 
 | Name | Uses | Files | Status | Source | Task | Candidates | Note |
 |---|---|---|---|---|---|---|---|
-| `Location` | 101 | 1 | stub | facade | P4.9a | used types: Control, Form, TabPage |  |
+| `Location` | 101 | 1 | real | facade |  | used types: Control, Form, TabPage |  |
 | `Name` | 77 | 4 | plugin | package |  |  |  |
-| `Tag` | 65 | 3 | stub | facade | P4.9a | used types: Control, Image, CommonDialog, ... (6 types) |  |
+| `Tag` | 65 | 3 | partial | facade | P4.17.2 | used types: Control, Image, CommonDialog, ... (6 types) |  |
 | `FindName` | 58 | 1 | dynamic | none |  | no known type has a member of this name |  |
 | `FilePath` | 50 | 3 | real | program |  | Core: cYo.Projects.ComicRack.Engine.ComicBook |  |
 | `SetTemplate` | 50 | 1 | plugin | package |  |  |  |
@@ -708,54 +488,48 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `Content` | 38 | 1 | real | program |  | Core: cYo.Common.Windows.Forms.Theme.UIComponent |  |
 | `append` | 30 | 6 | python | builtin |  |  |  |
 | `Attributes` | 26 | 2 | real | .NET 10 |  | used types: System.Xml.XmlNode, System.IO.FileSystemInfo |  |
-| `TabIndex` | 26 | 1 | stub | facade | P4.9a | used types: Control, Form, TabPage |  |
-| `Value` | 26 | 4 | partial | .NET 10 | P4.10b | used types: System.Xml.XmlNode, System.Xml.XmlReader, NumericUpDown, ... (5 types) |  |
-| `Checked` | 23 | 2 | partial | facade | P4.10b | used types: CheckBox, CheckState, RadioButton, ... (5 types) |  |
+| `TabIndex` | 26 | 1 | real | facade |  | used types: Control, Form, TabPage |  |
+| `Value` | 26 | 4 | partial | .NET 10 | P4.13c | used types: System.Xml.XmlNode, System.Xml.XmlReader, NumericUpDown, ... (5 types) |  |
+| `Checked` | 23 | 2 | partial | facade | P4.10g | used types: CheckBox, CheckState, RadioButton, ... (5 types) |  |
 | `Mode` | 22 | 3 | plugin | package |  |  |  |
 | `SetLabels` | 20 | 1 | plugin | package |  |  |  |
 | `strip` | 17 | 4 | python | builtin |  |  |  |
 | `ReportProgress` | 16 | 1 | real | .NET 10 |  | used types: System.ComponentModel.BackgroundWorker |  |
 | `keys` | 16 | 4 | python | builtin |  |  |  |
-| `App` | 15 | 4 | real | program |  | Core: cYo.Projects.ComicRack.Plugins.IPluginEnvironment, cYo.Projects.ComicRack.Plugins.PluginEnvironment |  |
-| `ShadowSeries` | 14 | 3 | real | program |  | Core: cYo.Projects.ComicRack.Engine.ComicBook |  |
 | `ToString` | 13 | 2 | partial | .NET 10 | P4.17.6 | used types: System.Object, System.DateTime, System.String, ... (38 types) |  |
-| `Text` | 12 | 3 | stub | facade | P4.10a | used types: ButtonBase, ComboBox, Panel, ... (19 types) |  |
+| `Text` | 12 | 3 | partial | facade | P4.10g | used types: ButtonBase, ComboBox, Panel, ... (19 types) |  |
 | `ShowDialog` | 10 | 5 | partial | facade | P4.10f | used types: CommonDialog, Form |  |
 | `Invoke` | 8 | 1 | partial | .NET 10 | P4.9e | used types: System.Action, System.Func`1, Control |  |
 | `TabPage` | 7 | 1 | stub | facade | P4.19 | WinForms and GDI+ surface: TabControlCancelEventArgs, TabControlEventArgs |  |
 | `BeginInit` | 5 | 2 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage, System.ComponentModel.ISupportInitialize, NumericUpDown |  |
 | `EndInit` | 5 | 2 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage, System.ComponentModel.ISupportInitialize, NumericUpDown |  |
-| `Click` | 4 | 1 | stub | facade | P4.9a | used types: Control, TextBoxBase, CheckedListBox, ... (7 types) |  |
-| `Hide` | 4 | 1 | stub | facade | P4.9a | used types: Control |  |
+| `Click` | 4 | 1 | partial | facade | P4.10g | used types: Control, TextBoxBase, CheckedListBox, ... (7 types) |  |
 | `Width` | 4 | 1 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapSource, Size, Control, ... (7 types) |  |
-| `Enabled` | 3 | 1 | stub | facade | P4.9a | used types: Control, TabPage, ToolStripItem, ... (6 types) |  |
-| `SelectionStart` | 3 | 1 | stub | facade | P4.10b | used types: ComboBox, TextBoxBase, ToolStripComboBox |  |
+| `Enabled` | 3 | 1 | partial | facade | P4.10g | used types: Control, TabPage, ToolStripItem, ... (6 types) |  |
+| `SelectionStart` | 3 | 1 | partial | facade | P4.17.1 | used types: ComboBox, TextBoxBase, ToolStripComboBox |  |
 | `Contains` | 2 | 1 | partial | .NET 10 | P4.17.1 | used types: System.Collections.IList, System.Collections.Generic.ICollection`1, System.String, ... (5 types) |  |
 | `Create` | 2 | 1 | partial | .NET 10 | P4.17.6 | used types: System.String, System.IO.File, System.Xml.XmlWriter, ... (8 types) |  |
-| `DropDownWidth` | 2 | 1 | stub | facade | P4.10b | used types: ComboBox, ToolStripComboBox |  |
+| `DropDownWidth` | 2 | 1 | partial | facade | P4.17.1 | used types: ComboBox, ToolStripComboBox |  |
 | `InvokeRequired` | 2 | 1 | stub | facade | P4.9e | used types: Control |  |
 | `Load` | 2 | 1 | partial | .NET 10 | P4.17.6 | used types: System.Xml.XmlDocument, System.Windows.Markup.XamlReader, Form |  |
 | `Position` | 2 | 1 | partial | .NET 10 | P4.17.1 | used types: System.IO.FileStream, System.IO.MemoryStream, BindingSource |  |
-| `SelectionLength` | 2 | 1 | stub | facade | P4.10b | used types: ComboBox, TextBoxBase, ToolStripComboBox, ... (4 types) |  |
+| `SelectionLength` | 2 | 1 | partial | facade | P4.17.1 | used types: ComboBox, TextBoxBase, ToolStripComboBox, ... (4 types) |  |
 | `StreamSource` | 2 | 1 | stub | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage |  |
 | `UriSource` | 2 | 1 | stub | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage |  |
-| `Visible` | 2 | 1 | partial | facade | P4.10d | used types: System.Windows.Visibility, Control, TabPage, ... (6 types) |  |
+| `Visible` | 2 | 1 | partial | facade | P4.10g | used types: System.Windows.Visibility, Control, TabPage, ... (6 types) |  |
 | `CancelAsync` | 1 | 1 | partial | facade | P4.17.6 | used types: System.Windows.Markup.XamlReader, System.ComponentModel.BackgroundWorker |  |
 | `Cells` | 1 | 1 | stub | facade | P4.13b | WinForms and GDI+ surface: DataGridViewRow |  |
-| `Close` | 1 | 1 | partial | .NET 10 | P4.9a | used types: System.IO.StreamReader, System.IO.StreamWriter, System.Xml.XmlTextWriter, ... (8 types) |  |
-| `Closing` | 1 | 1 | stub | facade | P4.9a | used types: Form |  |
 | `CreateGraphics` | 1 | 1 | stub | facade | P4.10e | used types: Control |  |
 | `DefaultCellStyle` | 1 | 1 | stub | facade | P4.13b | used types: DataGridView, DataGridViewColumn |  |
-| `Font` | 1 | 1 | stub | facade | P4.9d | used types: Control, ListBox, ToolStrip, ... (10 types) |  |
-| `ForeColor` | 1 | 1 | stub | facade | P4.9a | used types: Control, ComboBox, UpDownBase, ... (12 types) |  |
-| `Icon` | 1 | 1 | partial | facade | P4.9a | used types: Form, Imaging.ImageFormat, ErrorProvider |  |
-| `KeyChar` | 1 | 1 | stub | facade | P4.9a | WinForms and GDI+ surface: KeyPressEventArgs |  |
-| `MaxDropDownItems` | 1 | 1 | stub | facade | P4.10b | used types: ComboBox, ToolStripComboBox |  |
+| `Font` | 1 | 1 | partial | facade | P4.10g | used types: Control, ListBox, ToolStrip, ... (10 types) |  |
+| `ForeColor` | 1 | 1 | partial | facade | P4.10g | used types: Control, ComboBox, UpDownBase, ... (12 types) |  |
+| `Icon` | 1 | 1 | partial | facade | P4.17.1 | used types: Form, Imaging.ImageFormat, ErrorProvider |  |
+| `MaxDropDownItems` | 1 | 1 | partial | facade | P4.17.1 | used types: ComboBox, ToolStripComboBox |  |
 | `MeasureString` | 1 | 1 | partial | facade | P3.4 | WinForms and GDI+ surface: Graphics |  |
-| `Owner` | 1 | 1 | stub | facade | P4.17.6 | used types: System.Windows.Interop.WindowInteropHelper, Form, ToolStripItem |  |
-| `Parent` | 1 | 1 | partial | .NET 10 | P4.9a | used types: System.IO.DirectoryInfo, Control, ToolStripItem |  |
+| `Owner` | 1 | 1 | partial | facade | P4.17.6 | used types: System.Windows.Interop.WindowInteropHelper, Form, ToolStripItem |  |
+| `Parent` | 1 | 1 | partial | .NET 10 | P4.10g | used types: System.IO.DirectoryInfo, Control, ToolStripItem |  |
 
-209 more rows with a status that needs no work are in the JSON (`B`).
+215 more rows with a status that needs no work are in the JSON (`B`).
 
 ### C. .NET 10 types and members
 

@@ -7,29 +7,8 @@
 
 namespace System.Windows.Forms
 {
-	public partial class PaintEventArgs : global::System.EventArgs, global::System.Drawing.IDeviceContext
+	public partial class PaintEventArgs : global::System.Drawing.IDeviceContext
 	{
-		public PaintEventArgs(global::System.Drawing.Graphics graphics, global::System.Drawing.Rectangle clipRect)
-		{
-			throw global::FacadeStub.Member("System.Windows.Forms.PaintEventArgs.ctor");
-		}
-
-		public global::System.Drawing.Rectangle ClipRectangle
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.PaintEventArgs.ClipRectangle");
-		}
-		public global::System.Drawing.Graphics Graphics
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.PaintEventArgs.Graphics");
-		}
-
-		public void Dispose()
-		{
-		}
-		protected virtual void Dispose(bool disposing)
-		{
-		}
-
 		global::System.IntPtr global::System.Drawing.IDeviceContext.GetHdc() => throw global::FacadeStub.Member("System.Windows.Forms.PaintEventArgs.IDeviceContext.GetHdc");
 		void global::System.Drawing.IDeviceContext.ReleaseHdc() => throw global::FacadeStub.Member("System.Windows.Forms.PaintEventArgs.IDeviceContext.ReleaseHdc");
 	}

@@ -45,10 +45,11 @@ def Surface(books):
 			print 'ctor', e.message
 	c = UIControl()
 	print 'subclass', c.GetType().BaseType.Name, c.Visible
+	print 'property', repr(c.Text)
 	try:
-		c.Text
+		c.AccessibilityObject
 	except Exception, e:
-		print 'property', e.message
+		print 'stub', e.message
 	try:
 		MessageBox.Show('hello')
 	except Exception, e:
@@ -68,12 +69,16 @@ def Surface(books):
 					const string suffix = " is not yet supported on macOS (ComicRack script compatibility layer)";
 					Assert.Contains("enums 5 5 OK Sizable 1", text);
 					Assert.Contains("types Button ListView DataGridView ToolStripMenuItem GraphicsPath PrintDocument Font", text);
-					Assert.Contains("ctor System.Windows.Forms.Label.ctor" + suffix, text);
+					Assert.Contains("created Label", text);
+					Assert.Contains("created Button", text);
+					Assert.Contains("created TextBox", text);
+					Assert.Contains("ctor System.Windows.Forms.ListView.ctor" + suffix, text);
 					Assert.Contains("ctor System.Windows.Forms.OpenFileDialog.ctor" + suffix, text);
 					Assert.Contains("ctor System.Drawing.Printing.PrintDocument.ctor" + suffix, text);
-					Assert.DoesNotContain("created", text);
+					Assert.DoesNotContain("created ListView", text);
 					Assert.Contains("subclass Control True", text);
-					Assert.Contains("property System.Windows.Forms.Control.Text" + suffix, text);
+					Assert.Contains("property ''", text);
+					Assert.Contains("stub System.Windows.Forms.Control.AccessibilityObject" + suffix, text);
 					Assert.Contains("static System.Windows.Forms.MessageBox.Show" + suffix, text);
 					Assert.Contains("disposed True", text);
 				}

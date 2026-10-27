@@ -7,49 +7,13 @@
 
 namespace System.Windows.Forms.Layout
 {
-	public partial class ArrangedElementCollection : global::System.Collections.IList
+	public partial class ArrangedElementCollection
 	{
 		internal ArrangedElementCollection()
 		{
 		}
 
-		public virtual int Count
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.Count");
-		}
-		public virtual bool IsReadOnly
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IsReadOnly");
-		}
-
-		public void CopyTo(global::System.Array array, int index) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.CopyTo");
 		public override bool Equals(object obj) => base.Equals(obj);
-		public virtual global::System.Collections.IEnumerator GetEnumerator() => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.GetEnumerator");
 		public override int GetHashCode() => base.GetHashCode();
-
-		bool global::System.Collections.ICollection.IsSynchronized
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.ICollection.IsSynchronized");
-		}
-		object global::System.Collections.ICollection.SyncRoot
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.ICollection.SyncRoot");
-		}
-		int global::System.Collections.IList.Add(object value) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Add");
-		void global::System.Collections.IList.Clear() => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Clear");
-		bool global::System.Collections.IList.Contains(object value) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Contains");
-		int global::System.Collections.IList.IndexOf(object value) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.IndexOf");
-		void global::System.Collections.IList.Insert(int index, object value) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Insert");
-		bool global::System.Collections.IList.IsFixedSize
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.IsFixedSize");
-		}
-		void global::System.Collections.IList.Remove(object value) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Remove");
-		void global::System.Collections.IList.RemoveAt(int index) => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.RemoveAt");
-		object global::System.Collections.IList.this[int index]
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Item");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.Layout.ArrangedElementCollection.IList.Item");
-		}
 	}
 }

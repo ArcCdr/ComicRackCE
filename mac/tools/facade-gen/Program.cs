@@ -143,7 +143,7 @@ namespace FacadeGen
 		private static void Run(ReferenceSurface surface, string projectDirectory, string[] assemblies, string label, Dictionary<string, string> files, GeneratorResult result)
 		{
 			HandWrittenIndex hand = Directory.Exists(projectDirectory) ? HandWrittenIndex.Scan(projectDirectory) : new HandWrittenIndex();
-			var emitter = new Emitter(surface, hand);
+			var emitter = new Emitter(surface, hand) { ForwardToImplementedBase = label == "Forms" };
 			List<Type> types = surface.TypesOf(assemblies);
 			foreach (Type t in types)
 			{
@@ -161,7 +161,8 @@ namespace FacadeGen
 			}
 			result.Problems.AddRange(emitter.Problems.Select(p => label + ": " + p));
 			result.Summary.Add($"{label}: {types.Count} reference types, {emitter.Stats.Types} generated declarations, {emitter.Stats.Members} members, "
-				+ $"{emitter.Stats.PartialMerges} partial hand-written types completed, {emitter.Stats.HandWrittenComplete} hand-written types left alone, {emitter.Omitted.Count} omitted");
+				+ $"{emitter.Stats.PartialMerges} partial hand-written types completed, {emitter.Stats.HandWrittenComplete} hand-written types left alone, {emitter.Omitted.Count} omitted"
+					+ (emitter.ForwardToImplementedBase ? $", {emitter.Stats.Forwards} forwarded to an implemented base member" : ""));
 		}
 
 		/// <summary>Writes the files into the output folder: only the files whose text changed, and removes the .g.cs files that are no longer generated.</summary>

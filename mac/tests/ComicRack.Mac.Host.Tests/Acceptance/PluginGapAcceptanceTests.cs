@@ -173,7 +173,8 @@ namespace ComicRack.Mac.Host.Tests.Acceptance
 					Assert.True(Regex.IsMatch(cells[5], @"^P\d+\.\d+(\.\d+)?[a-z]?$"), "no task in: " + line);
 				}
 			}
-			Assert.True(rows > 500, "rows: " + rows);
+			// The report lists every row that needs work and only the first rows of each table that do not: it shrinks as the facades are implemented (631 rows before P4.9a, 405 after).
+			Assert.True(rows > 150, "rows: " + rows);
 		}
 	}
 }

@@ -12,8 +12,8 @@ namespace Compat.Forms.Tests
 		[Fact]
 		public void A_generated_constructor_throws_the_standard_message()
 		{
-			var ex = Assert.Throws<NotSupportedException>(() => new Label());
-			Assert.Equal("System.Windows.Forms.Label.ctor" + Suffix, ex.Message);
+			var ex = Assert.Throws<NotSupportedException>(() => new ListView());
+			Assert.Equal("System.Windows.Forms.ListView.ctor" + Suffix, ex.Message);
 			ex = Assert.Throws<NotSupportedException>(() => new OpenFileDialog());
 			Assert.Equal("System.Windows.Forms.OpenFileDialog.ctor" + Suffix, ex.Message);
 		}
@@ -23,14 +23,15 @@ namespace Compat.Forms.Tests
 		{
 			var control = new Control();
 			Assert.True(control.Visible, "the hand-written part keeps working");
-			var ex = Assert.Throws<NotSupportedException>(() => _ = control.Text);
-			Assert.Equal("System.Windows.Forms.Control.Text" + Suffix, ex.Message);
-			ex = Assert.Throws<NotSupportedException>(() => control.Text = "x");
-			Assert.Equal("System.Windows.Forms.Control.Text" + Suffix, ex.Message);
-			ex = Assert.Throws<NotSupportedException>(() => control.Click += (s, e) => { });
-			Assert.Equal("System.Windows.Forms.Control.Click" + Suffix, ex.Message);
-			ex = Assert.Throws<NotSupportedException>(() => control.PerformLayout());
-			Assert.Equal("System.Windows.Forms.Control.PerformLayout" + Suffix, ex.Message);
+			Assert.Equal(string.Empty, control.Text);
+			var ex = Assert.Throws<NotSupportedException>(() => _ = control.AccessibilityObject);
+			Assert.Equal("System.Windows.Forms.Control.AccessibilityObject" + Suffix, ex.Message);
+			ex = Assert.Throws<NotSupportedException>(() => control.Scale(1.5f));
+			Assert.Equal("System.Windows.Forms.Control.Scale" + Suffix, ex.Message);
+			ex = Assert.Throws<NotSupportedException>(() => control.DoDragDrop(null, DragDropEffects.None));
+			Assert.Equal("System.Windows.Forms.Control.DoDragDrop" + Suffix, ex.Message);
+			ex = Assert.Throws<NotSupportedException>(() => control.CreateGraphics());
+			Assert.Equal("System.Windows.Forms.Control.CreateGraphics" + Suffix, ex.Message);
 		}
 
 		[Fact]
@@ -38,8 +39,8 @@ namespace Compat.Forms.Tests
 		{
 			var ex = Assert.Throws<NotSupportedException>(() => MessageBox.Show("x"));
 			Assert.Equal("System.Windows.Forms.MessageBox.Show" + Suffix, ex.Message);
-			ex = Assert.Throws<NotSupportedException>(() => _ = Control.MouseButtons);
-			Assert.Equal("System.Windows.Forms.Control.MouseButtons" + Suffix, ex.Message);
+			ex = Assert.Throws<NotSupportedException>(() => _ = Control.IsKeyLocked(Keys.CapsLock));
+			Assert.Equal("System.Windows.Forms.Control.IsKeyLocked" + Suffix, ex.Message);
 		}
 
 		[Fact]
@@ -71,7 +72,7 @@ namespace Compat.Forms.Tests
 			// A Component has a finalizer that calls the virtual Dispose(false). A generated Dispose that threw would end the process on the finalizer thread.
 			for (int i = 0; i < 200; i++)
 			{
-				Assert.Throws<NotSupportedException>(() => new Button());
+				Assert.Throws<NotSupportedException>(() => new OpenFileDialog());
 				Assert.Throws<NotSupportedException>(() => new ToolStripMenuItem());
 				Assert.Throws<NotSupportedException>(() => new Timer());
 			}
