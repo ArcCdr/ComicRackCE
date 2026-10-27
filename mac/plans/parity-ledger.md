@@ -453,7 +453,7 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 | FF.01 | Library `ComicDb.xml` (schema, lists, smart lists, view configs) | Core | P0.7a, P5.11b | todo | DD3 |
 | FF.02 | Settings (`Config.xml` portable parts: reader, library, lists, workspaces, layouts, external programs, keyboard) | `ComicRack/Config/Settings.cs` | P5.28b | todo | Mac file is its own XML (DD3) |
 | FF.03 | Reading lists `.cbl` | `ComicReadingListItem` | P5.16c | todo | |
-| FF.04 | Plugins `.crplugin` / script `.zip` | `PackageManager` | P4.4 | todo | |
+| FF.04 | Plugins `.crplugin` / script `.zip` | `PackageManager` | P4.4 | done 2026-10-27 | engine and `crcli script install/list/remove`; the Preferences list and the drop onto the window use `PluginPackages` in their own tasks |
 | FF.05 | Keyboard layout export `*.xml` | `PreferencesDialog.cs:741` | P5.22c | todo | |
 | FF.06 | Backups `*.zip` | `BackupManager` | P5.25 | todo | |
 | FF.07 | ComicInfo.xml inside archives | Core | P2.4b | done 2026-10-21 | read by the Core's providers; written into CBZ, CB7 and CBT through the bundled `7zz` (`crcli info write`); CBR, RAR and PDF are never written (the Core's own rule: no `EnableUpdate`) |

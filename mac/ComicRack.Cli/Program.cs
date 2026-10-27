@@ -89,6 +89,8 @@ namespace ComicRack.Cli
   script run <file.py> --hook <Hook> [--method M] [--db x.xml [--remap ""from=to""]] [--list ""name""] [--path P] [--hint H --text T --limit N] [--a A --b B] [--user-closing] [--width W --height H] [--scripts-dir D]
       Call the commands of one script file for a hook (Books, Library, NewBooks, Editor, ParseComicPath, CreateBookList, NetSearch, Startup, Shutdown, BookOpened, ReaderResized,
       ComicInfoHtml, QuickOpenHtml) with the arguments the Windows program passes, on the books of the database or of --list. Prints the script output and a line for the result. Exit 1 if a script failed.
+  script install <file.crplugin> [--stage] | script list | script remove <name> [--stage]
+      Plugin packages in <data-dir>/Scripts (the user script folder). install and remove take effect at once; --stage leaves them pending until the next start, as the Windows program does.
   script expr ""<python expression>"" [--db x.xml [--remap ""from=to""]] [--list ""name""] [--show N]
       The books a Python smart list expression such as ""{Series} == 'Batman' and {Year} > 2000"" matches (the Expression matcher of the smart list editor).
   info show <book>

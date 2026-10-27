@@ -136,5 +136,38 @@ namespace ComicRack.Cli.Tests
 			Assert.Equal(string.Empty, missing.Groups[2].Value.Trim());
 			Assert.True(int.Parse(next.Groups[1].Value) > 0, with.output);
 		}
+
+		[Fact]
+		public void Install_list_and_remove_manage_a_plugin_package_in_the_data_folder()
+		{
+			string data = Path.Combine(temp, "data");
+			string pkg = Path.Combine(temp, "demo.crplugin");
+			using (var zip = System.IO.Compression.ZipFile.Open(pkg, System.IO.Compression.ZipArchiveMode.Create))
+			{
+				using (var w = new StreamWriter(zip.CreateEntry("package.ini").Open()))
+				{
+					w.Write("Name=Demo Plugin\nVersion=3\nAuthor=T\nDescription=D\n");
+				}
+				using (var w = new StreamWriter(zip.CreateEntry("Demo.py").Open()))
+				{
+					w.Write("#@Name Demo\n#@Key Demo\n#@Hook Books\ndef Demo(books):\n\tpass\n");
+				}
+			}
+			var r = Crcli("script", "install", pkg, "--data-dir", data);
+			Assert.True(r.code == 0, r.output + r.error);
+			Assert.Contains("installed\tDemo Plugin", r.output);
+			r = Crcli("script", "list", "--data-dir", data);
+			Assert.Equal(0, r.code);
+			Assert.Matches(@"Demo Plugin\t3\tInstalled\t1\tT\tD", r.output);
+			r = Crcli("script", "install", pkg, "--data-dir", data);
+			Assert.Contains("replaces an existing package", r.output);
+			r = Crcli("script", "remove", "Demo Plugin", "--data-dir", data);
+			Assert.True(r.code == 0, r.output + r.error);
+			Assert.DoesNotContain("Demo Plugin", Crcli("script", "list", "--data-dir", data).output);
+			Assert.Equal(1, Crcli("script", "remove", "Demo Plugin", "--data-dir", data).code);
+			string junk = Path.Combine(temp, "junk.crplugin");
+			File.WriteAllText(junk, "x");
+			Assert.Equal(1, Crcli("script", "install", junk, "--data-dir", data).code);
+		}
 	}
 }

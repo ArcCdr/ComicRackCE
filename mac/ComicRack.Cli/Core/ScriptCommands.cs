@@ -17,10 +17,15 @@ namespace ComicRack.Cli.Core
 	internal static class ScriptCommands
 	{
 		private const string Usage = "script run <file.py> --hook <Hook> [--method M] [--db x.xml [--remap \"from=to\"]] [--list \"name\"] [--path P] [--hint H --text T --limit N] [--a A --b B] [--user-closing] [--width W --height H] [--scripts-dir D]\n"
-			+ "  script expr \"<python expression>\" [--db x.xml [--remap \"from=to\"]] [--list \"name\"] [--show N]";
+			+ "  script expr \"<python expression>\" [--db x.xml [--remap \"from=to\"]] [--list \"name\"] [--show N]\n"
+			+ "  script install <file.crplugin> [--stage] | script list | script remove <name> [--stage] [--data-dir D]";
 
 		public static int Run(string[] args, TextWriter output, TextWriter error)
 		{
+			if (args.Length > 0 && (args[0] == "install" || args[0] == "list" || args[0] == "remove"))
+			{
+				return Packages(args[0], Options.Parse(args.Skip(1).ToArray()), output, error);
+			}
 			if (args.Length == 0 || (args[0] != "run" && args[0] != "expr"))
 			{
 				throw new UsageException("script: expected `" + Usage + "`.");
@@ -97,6 +102,71 @@ namespace ComicRack.Cli.Core
 				}
 			}
 			return 0;
+		}
+
+		/// <summary>
+		/// `script install|list|remove` (P4.4): plugin packages in the user script folder of the data folder (`--data-dir`, `CRCLI_DATA_DIR`). Without `--stage`, install and remove are committed at once;
+		/// with it they stay pending (as in the WinForms program until the next start).
+		/// </summary>
+		private static int Packages(string verb, Options o, TextWriter output, TextWriter error)
+		{
+			using (CliSession session = CliSession.Create(o))
+			{
+				var folders = ScriptFolders.For(session.Paths);
+				using (MacHost host = MacHost.Open(new MacHostOptions { Paths = session.Paths, DatabaseReadOnly = true, Scripting = true, ScriptFolders = folders }))
+				{
+					var packages = new PluginPackages(folders, host.Scripts);
+					bool now = !o.Flag("stage");
+					switch (verb)
+					{
+					case "install":
+					{
+						string file = Path.GetFullPath(o.Positional(0, Usage));
+						if (!File.Exists(file))
+						{
+							throw new UsageException("Package not found: " + file);
+						}
+						string name = PluginPackages.NameOf(file);
+						if (name == null)
+						{
+							error.WriteLine("Not a plugin package: " + file);
+							return 1;
+						}
+						bool replaces = packages.Exists(file);
+						if (!(now ? packages.InstallNow(file) : packages.Install(file)))
+						{
+							error.WriteLine("Install failed: " + file);
+							return 1;
+						}
+						output.WriteLine((now ? "installed" : "pending") + "\t" + name + (replaces ? "\treplaces an existing package" : string.Empty));
+						return 0;
+					}
+					case "remove":
+					{
+						string name = o.Positional(0, Usage);
+						if (!packages.Uninstall(name))
+						{
+							error.WriteLine("No package named \"" + name + "\".");
+							return 1;
+						}
+						if (now)
+						{
+							packages.Commit();
+						}
+						output.WriteLine((now ? "removed" : "pending removal") + "\t" + name);
+						return 0;
+					}
+					default:
+						output.WriteLine("name\tversion\tstate\tcommands\tauthor\tdescription");
+						foreach (PluginPackageInfo p in packages.List())
+						{
+							int commands = packages.CommandsOf(p.Name).Count;
+							output.WriteLine(p.Name + "\t" + p.Version + "\t" + p.State + (p.Enabled == false ? " (disabled)" : string.Empty) + "\t" + commands + "\t" + p.Author + "\t" + p.Description);
+						}
+						return 0;
+					}
+				}
+			}
 		}
 	}
 }
