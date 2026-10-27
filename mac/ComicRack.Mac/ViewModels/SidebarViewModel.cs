@@ -17,7 +17,11 @@ namespace ComicRack.Mac.ViewModels
 	/// <summary>One row of the sidebar tree: a list, a folder of lists or the library.</summary>
 	public sealed partial class SidebarNode : ObservableObject
 	{
-		public const string ScriptsBadge = "Requires scripts (not in MVP)";
+		/// <summary>The badge of a list that needs scripts while scripting is switched off.</summary>
+		public const string ScriptsBadge = "Requires scripts";
+
+		/// <summary>The badge of a list whose scripts are on but not all there (the keys are those of the list's script matchers).</summary>
+		public static string MissingScriptsBadge(System.Collections.Generic.IEnumerable<string> keys) => "Script not found: " + string.Join(", ", keys);
 
 		public SidebarNode(ListNode node, IReadOnlyList<SidebarNode> children)
 		{
@@ -63,7 +67,7 @@ namespace ComicRack.Mac.ViewModels
 		}
 
 		/// <summary>The badge under the name of a list that needs scripts, or null.</summary>
-		public string Badge => Node.RequiresScripts ? ScriptsBadge : null;
+		public string Badge => !Node.RequiresScripts ? null : Node.MissingScripts.Count > 0 ? MissingScriptsBadge(Node.MissingScripts) : ScriptsBadge;
 
 		public bool HasBadge => Node.RequiresScripts;
 
@@ -286,13 +290,13 @@ namespace ComicRack.Mac.ViewModels
 			int mine = Interlocked.Increment(ref version);
 			countsCts.Cancel();
 			Guid keep = SelectedNode?.Id ?? Guid.Empty;
-			IReadOnlyList<ListNode> tree = await Task.Run(() => LibraryLists.BuildTree(newHost.DatabaseManager.Database)).ConfigureAwait(true);
+			IReadOnlyList<ListNode> tree = await Task.Run(() => LibraryLists.BuildTree(newHost.DatabaseManager.Database, newHost.Scripts)).ConfigureAwait(true);
 			if (mine != Volatile.Read(ref version))
 			{
 				return;
 			}
 			host = newHost;
-			evaluator = new ListEvaluator(); // a new library: lists are computed again
+			evaluator = new ListEvaluator(scripts: newHost.Scripts); // a new library: lists are computed again
 			SidebarNode[] roots = tree.Select(Wrap).ToArray();
 			replacing = true;
 			try
@@ -389,7 +393,7 @@ namespace ComicRack.Mac.ViewModels
 				ListResult result = loaderEvaluator.Evaluate(node.Node.Item);
 				if (result.RequiresScripts)
 				{
-					outcome(SidebarNode.ScriptsBadge + ". This list uses a script, so it shows no books.");
+					outcome(node.Badge + ". This list uses a script, so it shows no books.");
 					return BookCatalog.Empty;
 				}
 				if (result.Error != null)

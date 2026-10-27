@@ -6,11 +6,12 @@ using System.Linq;
 using ComicRack.Cli.Fixtures;
 using ComicRack.Mac.Host;
 using ComicRack.Mac.Host.Library;
+using ComicRack.Mac.Host.Scripting;
 
 namespace ComicRack.Cli.Core
 {
 	/// <summary>
-	/// `crcli smartlist &lt;ComicDb.xml&gt; (--list "name" | --all) [--remap "from=to"] [--cached]` (M2.2c): the book count of the database's
+	/// `crcli smartlist &lt;ComicDb.xml&gt; (--list "name" | --all) [--remap "from=to"] [--cached] [--no-scripts] [--scripts-dir D]` (M2.2c): the book count of the database's
 	/// lists, through <see cref="LibraryLists.Evaluate"/>, which is also what the sidebar of the app calls. The database is opened read
 	/// only. Output lines of the table start with `list`, fields are separated by tabs:
 	/// `list&lt;TAB&gt;name&lt;TAB&gt;kind&lt;TAB&gt;count&lt;TAB&gt;note` (the name is indented two spaces per level of nesting).
@@ -32,15 +33,23 @@ namespace ComicRack.Cli.Core
 				throw new UsageException("smartlist: give --list \"<name>\" or --all.");
 			}
 			bool cached = o.Flag("cached");
-			var evaluator = new ListEvaluator(useStoredCaches: cached);
 			PathRemap remap = PathRemap.Parse(o.Get("remap"));
+			string[] extra = (o.Get("scripts-dir") ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries);
 			using (CliSession session = CliSession.Create(o))
-			using (MacHost host = MacHost.Open(new MacHostOptions { Paths = session.Paths, DatabaseFile = db, DatabaseReadOnly = true }))
+			using (MacHost host = MacHost.Open(new MacHostOptions
+			{
+				Paths = session.Paths,
+				DatabaseFile = db,
+				DatabaseReadOnly = true,
+				Scripting = !o.Flag("no-scripts"),
+				ScriptFolders = ScriptFolders.For(session.Paths, extra),
+			}))
 			{
 				var database = host.DatabaseManager.Database;
 				remap?.Apply(database);
+				var evaluator = new ListEvaluator(useStoredCaches: cached, scripts: host.Scripts);
 				var rows = new List<(ListNode node, int depth)>();
-				foreach (ListNode root in LibraryLists.BuildTree(database))
+				foreach (ListNode root in LibraryLists.BuildTree(database, host.Scripts))
 				{
 					Collect(root, 0, rows);
 				}
@@ -49,7 +58,7 @@ namespace ComicRack.Cli.Core
 					rows = rows.Where(r => string.Equals(r.node.Name, name, StringComparison.OrdinalIgnoreCase)).ToList();
 					if (rows.Count == 0)
 					{
-						error.WriteLine("No list named \"" + name + "\". Lists: " + string.Join("; ", LibraryLists.BuildTree(database).SelectMany(r => r.Flatten()).Select(n => n.Name)));
+						error.WriteLine("No list named \"" + name + "\". Lists: " + string.Join("; ", LibraryLists.BuildTree(database, host.Scripts).SelectMany(r => r.Flatten()).Select(n => n.Name)));
 						return 1;
 					}
 				}
@@ -58,7 +67,7 @@ namespace ComicRack.Cli.Core
 				{
 					var sw = Stopwatch.StartNew();
 					ListResult r = evaluator.Evaluate(node.Item);
-					string note = r.RequiresScripts ? "requires scripts" : r.Error != null ? "error: " + r.Error : string.Empty;
+					string note = r.RequiresScripts ? (node.MissingScripts.Count > 0 ? "script not found: " + string.Join(", ", node.MissingScripts) : "requires scripts") : r.Error != null ? "error: " + r.Error : string.Empty;
 					output.WriteLine("list\t" + new string(' ', depth * 2) + node.Name + "\t" + node.Kind + "\t" + r.Count + "\t" + note + (sw.ElapsedMilliseconds >= 1000 ? " (" + sw.ElapsedMilliseconds + " ms)" : ""));
 				}
 			}

@@ -19,6 +19,8 @@
   <ItemGroup Condition="'$(CensusMerged)' != 'true'">
     <ProjectReference Include="..\ComicRack.Engine.Core\ComicRack.Engine.Core.csproj" />
     <ProjectReference Include="..\cYo.Common.Core\cYo.Common.Core.csproj" />
+    <!-- Not an assembly reference: only the build order. Every project that copies IronPython.dll patches it afterwards (mac/Directory.Build.targets, P4.3). -->
+    <ProjectReference Include="..\tools\patch-ironpython\patch-ironpython.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <Import Project="..\ComicRack.Engine.Core\Sources.props" Condition="'$(CensusMerged)' == 'true'" />
   <Import Project="..\cYo.Common.Core\Sources.props" Condition="'$(CensusMerged)' == 'true'" />

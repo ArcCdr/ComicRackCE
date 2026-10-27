@@ -15,13 +15,14 @@ using cYo.Projects.ComicRack.Engine.IO.Provider.Readers.Archive;
 using cYo.Projects.ComicRack.Engine.Sync;
 using ComicRack.Mac.Host.Library;
 using ComicRack.Mac.Host.Platform;
+using ComicRack.Mac.Host.Scripting;
 using cYo.Projects.ComicRack.Plugins;
 
 namespace ComicRack.Mac.Host
 {
 	/// <summary>
 	/// The composition root of the macOS build: what ComicRack/Program.cs StartNew builds for the WinForms app, reduced to the
-	/// DatabaseManager -> CacheManager -> QueueManager chain. Skipped on purpose: news, backup, plugins and scripts, single
+	/// DatabaseManager -> CacheManager -> QueueManager chain, plus the script engine (<see cref="Scripts"/>, P4.3). Skipped on purpose: news, backup, single
 	/// instance, device and network sync, splash, themes, WinForms renderers, icon packages, default lists.
 	///
 	/// The Core keeps process-wide static state (EngineConfiguration.Default, the virtual tag settings, the query cache mode), so
@@ -53,6 +54,9 @@ namespace ComicRack.Mac.Host
 		public QueueManager QueueManager { get; private set; }
 
 		public ImagePool ImagePool => CacheManager.ImagePool;
+
+		/// <summary>The script engine of this host (P4.3). It has read the script folders when <see cref="Open"/> returns, unless scripting is off; a run without windows keeps its headless user interface.</summary>
+		public ScriptHost Scripts { get; private set; }
 
 		/// <summary>The ComicDb.xml that was opened.</summary>
 		public string DatabaseFile { get; }
@@ -156,6 +160,10 @@ namespace ComicRack.Mac.Host
 			// Resources.ResourceManager itself) and Settings.Devices; the MVP has no devices.
 			CacheManager = new CacheManager(DatabaseManager, SystemPaths, Settings);
 			QueueManager = new QueueManager(DatabaseManager, CacheManager, Settings, new List<DeviceSyncSettings>());
+
+			// Program.cs:1000 (ScriptUtility.Initialize in MainForm.cs:783): the scripts are read after the services exist, because the commands get the application object.
+			Scripts = new ScriptHost(this, options.ScriptFolders ?? ScriptFolders.For(Paths), options.ScriptUi, options.Scripting ?? Settings.Preferences.Scripting);
+			Scripts.Start();
 			Log.Info("Host open.");
 		}
 
@@ -386,6 +394,7 @@ namespace ComicRack.Mac.Host
 			catch (Exception)
 			{
 			}
+			Step(errors, "Scripts", Scripts);
 			Step(errors, "QueueManager", QueueManager);
 			Step(errors, "ImagePool", CacheManager?.ImagePool);
 			// The queues (a running scan) have stopped, so this is the number of books the final save writes.

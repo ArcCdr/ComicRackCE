@@ -17,5 +17,10 @@
     <ProjectReference Include="..\..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
     <!-- WindowsTripwireTests generate their books with the code of `crcli fixtures make`. -->
     <ProjectReference Include="..\..\ComicRack.Cli\ComicRack.Cli.csproj" />
+    <!-- P4.3: the IronPython patch is called as a library by IronPythonPatchTests. -->
+    <ProjectReference Include="..\..\tools\patch-ironpython\patch-ironpython.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripting\TestScripts\**" Link="TestScripts\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

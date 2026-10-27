@@ -725,6 +725,38 @@ namespace ComicRack.Mac.Host
 			set { Set(ref lookForShared, value); }
 		}
 
+		// ---- Scripting (P4.3; Preferences > Scripts is P5.22a)
+
+		private bool scripting = true; // Settings.cs:210
+
+		/// <summary>Scripting on or off (Settings.cs:1062): off, no script is loaded, the script commands and hooks are absent and script lists show "Requires scripts".</summary>
+		[DefaultValue(true)]
+		public bool Scripting
+		{
+			get { return scripting; }
+			set { Set(ref scripting, value); }
+		}
+
+		private string scriptingLibraries = string.Empty; // Settings.cs:212
+
+		/// <summary>Folders (separated by semicolons) that scripts may import Python modules from (Settings.cs:1081; <c>MainForm.LibraryPaths</c> removes the line breaks).</summary>
+		[DefaultValue("")]
+		public string ScriptingLibraries
+		{
+			get { return scriptingLibraries; }
+			set { Set(ref scriptingLibraries, value); }
+		}
+
+		/// <summary>Which commands are switched on or off, as the <c>PluginEngine.CommandStates</c> string (Settings.cs:527; automatic property).</summary>
+		private string pluginsStates;
+
+		[DefaultValue(null)]
+		public string PluginsStates
+		{
+			get { return pluginsStates; }
+			set { Set(ref pluginsStates, value); }
+		}
+
 		private string cultureName; // Settings.cs:2336
 
 		[DefaultValue(null)]

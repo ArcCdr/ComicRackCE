@@ -19,6 +19,10 @@
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <InternalsVisibleTo Include="ComicRack.Cli.Tests" />
   </ItemGroup>
+  <!-- P4.3: the scripts that come with the program, next to crcli (as in the app, P2.6), for `smartlist` and `script`. -->
+  <ItemGroup>
+    <None Include="..\..\ComicRack\Output\Scripts\**" Link="Scripts\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicRack.Mac.Host\ComicRack.Mac.Host.csproj" />
   </ItemGroup>

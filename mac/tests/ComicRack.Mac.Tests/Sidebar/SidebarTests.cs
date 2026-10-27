@@ -43,11 +43,15 @@ namespace ComicRack.Mac.Tests.Sidebar
 			return list;
 		}
 
+		private const string MissingKey = "no-such-script";
+
 		private static ComicSmartListItem ScriptList(string name)
 		{
 			var list = new ComicSmartListItem(name);
 			list.Matchers.Clear();
 			list.Matchers.Add(typeof(ComicBookPluginMatcher), 1, string.Empty, string.Empty);
+			// The key of a script that does not exist (the operator index alone leaves the key empty, and a matcher without a key needs no script).
+			((ComicBookPluginMatcher)list.Matchers[0]).PluginKey = MissingKey;
 			return list;
 		}
 
@@ -68,6 +72,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 			viaBase.Matchers.Clear();
 			var group = new ComicBookGroupMatcher();
 			group.Matchers.Add(typeof(ComicBookPluginMatcher), 1, string.Empty, string.Empty);
+			((ComicBookPluginMatcher)group.Matchers[0]).PluginKey = MissingKey;
 			var viaGroup = new ComicSmartListItem("Via group");
 			viaGroup.Matchers.Clear();
 			viaGroup.Matchers.Add(group);
@@ -169,8 +174,19 @@ namespace ComicRack.Mac.Tests.Sidebar
 					Assert.Null(r.Error);
 				}
 
-				// Why the Core is not asked: without a plugin engine the matcher keeps every book it is given.
-				Assert.Null(ComicBookPluginMatcher.PluginEngine);
+				// With the script engine of the host the same lists are flagged as missing a script, not as disabled.
+				ScriptHost scripts = launch.Service.Host.Scripts;
+				Assert.True(LibraryLists.RequiresScripts(f.script, scripts));
+				Assert.Equal(new[] { MissingKey }, LibraryLists.MissingScripts(f.viaBase, scripts));
+				var withScripts = new ListEvaluator(scripts: scripts);
+				Assert.True(withScripts.Evaluate(f.script).RequiresScripts);
+				ListNode node = LibraryLists.BuildTree(f.db, scripts).Single(n => n.Name == "Mine").Children.Single(c => c.Name == "Script list");
+				Assert.True(node.RequiresScripts);
+				Assert.False(node.ScriptsDisabled);
+				Assert.Equal(new[] { MissingKey }, node.MissingScripts);
+
+				// Why the Core is not asked: a matcher whose script is not there keeps every book it is given.
+				Assert.False(scripts.HasListCommand(MissingKey));
 				Assert.Equal(6, f.script.Match(f.db.Books.ToArray()).Count());
 			}
 		}
@@ -209,7 +225,7 @@ namespace ComicRack.Mac.Tests.Sidebar
 						Assert.Equal(2, Find("Betas").Count);
 						Assert.Equal(1, Find("Gammas").Count);
 						Assert.Equal(0, Find("Script list").Count);
-						Assert.Equal(SidebarNode.ScriptsBadge, Find("Script list").Badge);
+						Assert.Equal(SidebarNode.MissingScriptsBadge(new[] { MissingKey }), Find("Script list").Badge);
 						Assert.True(Find("Via base list").HasBadge);
 						Assert.False(Find("Alphas").HasBadge);
 						Assert.Equal("Library", vm.Sidebar.SelectedNode.Name);

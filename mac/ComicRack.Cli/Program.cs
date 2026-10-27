@@ -43,6 +43,8 @@ namespace ComicRack.Cli
 					return InfoCommands.Run(rest.ToArray(), output, error);
 				case "smartlist":
 					return SmartListCommand.Run(rest.ToArray(), output, error);
+				case "script":
+					return ScriptCommands.Run(rest.ToArray(), output, error);
 				default:
 					error.WriteLine("Unknown command: " + args[0]);
 					error.WriteLine(Usage);
@@ -82,7 +84,13 @@ namespace ComicRack.Cli
   smartlist <ComicDb.xml> (--list ""<name>"" | --all) [--remap ""from=to""] [--cached]
       Evaluate a list of the database with the Core (the same code the app's sidebar uses) and print its book count.
       --all prints every list as a tab separated table. By default each list is computed from its matchers; --cached trusts the query cache stored in the file. Lists with a script
-      matcher are reported as ""requires scripts"" with count 0. The database is opened read only.
+      matcher are reported as ""requires scripts"" (scripting off) or ""script not found: key"" with count 0; a list whose scripts are on (bundled Scripts/ next to crcli, --scripts-dir) is computed.
+      --no-scripts switches scripting off, --scripts-dir <dir[;dir]> adds script folders. The database is opened read only.
+  script run <file.py> --hook <Hook> [--method M] [--db x.xml [--remap ""from=to""]] [--list ""name""] [--path P] [--hint H --text T --limit N] [--a A --b B] [--user-closing] [--width W --height H] [--scripts-dir D]
+      Call the commands of one script file for a hook (Books, Library, NewBooks, Editor, ParseComicPath, CreateBookList, NetSearch, Startup, Shutdown, BookOpened, ReaderResized,
+      ComicInfoHtml, QuickOpenHtml) with the arguments the Windows program passes, on the books of the database or of --list. Prints the script output and a line for the result. Exit 1 if a script failed.
+  script expr ""<python expression>"" [--db x.xml [--remap ""from=to""]] [--list ""name""] [--show N]
+      The books a Python smart list expression such as ""{Series} == 'Batman' and {Year} > 2000"" matches (the Expression matcher of the smart list editor).
   info show <book>
       The ComicInfo of a book file as the Core reads it (fields that are not empty or default).
   info write <book> --set Field=Value [--set Field=Value ...]

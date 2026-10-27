@@ -11,6 +11,10 @@
     <InternalsVisibleTo Include="ComicRack.Mac.Host.Tests" />
   </ItemGroup>
   <ItemGroup>
+    <!-- The Python 2.7 standard library (Lib/ next to the host assembly; Contents/MacOS/Lib in the bundle), same version as IronPython (P4.3). -->
+    <PackageReference Include="IronPython.StdLib" Version="2.7.12" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\cYo.Common.Core\cYo.Common.Core.csproj" />
     <ProjectReference Include="..\ComicRack.Engine.Core\ComicRack.Engine.Core.csproj" />
     <ProjectReference Include="..\ComicRack.Plugins.Core\ComicRack.Plugins.Core.csproj" />

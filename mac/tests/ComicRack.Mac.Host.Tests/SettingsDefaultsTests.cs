@@ -48,7 +48,7 @@ namespace ComicRack.Mac.Host.Tests
 		private static string Resolve(string expression, Dictionary<string, string> consts)
 		{
 			expression = expression.Trim();
-			return consts.TryGetValue(expression, out string value) ? value : expression;
+			return consts.TryGetValue(expression, out string value) ? value : expression == "string.Empty" ? "\"\"" : expression;
 		}
 
 		private static string Format(object value)

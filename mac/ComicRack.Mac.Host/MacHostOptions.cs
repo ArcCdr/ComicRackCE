@@ -1,3 +1,5 @@
+using ComicRack.Mac.Host.Scripting;
+
 namespace ComicRack.Mac.Host
 {
 	public sealed class MacHostOptions
@@ -21,6 +23,15 @@ namespace ComicRack.Mac.Host
 		/// does not check it: only that timer and the WinForms MainForm call it, so callers must not.
 		/// </summary>
 		public bool DatabaseReadOnly { get; set; }
+
+		/// <summary>Scripting on or off for this host. Default (null): the "Scripting" preference, which is on unless the user switched it off.</summary>
+		public bool? Scripting { get; set; }
+
+		/// <summary>Where the scripts are. Default: <c>Scripts/</c> next to the executable and <c>&lt;data&gt;/Scripts</c> (<see cref="ScriptFolders.For"/>).</summary>
+		public ScriptFolders ScriptFolders { get; set; }
+
+		/// <summary>The user interface of the scripts. Default: a <see cref="HeadlessScriptUi"/>; the app sets <see cref="ScriptHost.Ui"/> when its windows exist.</summary>
+		public IScriptUi ScriptUi { get; set; }
 
 		/// <summary>Seconds between background saves, 0 for none. Default 600 (ExtendedSettings.DatabaseBackgroundSaving).</summary>
 		public int DatabaseBackgroundSaveSeconds { get; set; } = 600;
