@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; wave S, next task: P4.17.3)
+Run state: RUNNING (2026-10-28, orchestrator; wave S, next task: P4.17.4)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -13,12 +13,12 @@ Run state: RUNNING (2026-10-28, orchestrator; wave S, next task: P4.17.3)
 | P1 Core runtime gaps | 3 | 3 | - | zero-edit fixes through pass B replacements |
 | P2 Platform pieces | 9 | 4 | P2.2 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
-| P4 Scripting and Script UI layer | 46 | 10 | P4.17.3 | S4 and S6 spikes first, go/no-go recorded |
+| P4 Scripting and Script UI layer | 46 | 11 | P4.17.4 | S4 and S6 spikes first, go/no-go recorded |
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
 | RV Review fixes and upstream sync | 13 | 13 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **182** | **65** | | estimate in §10 |
+| **Total** | **182** | **66** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -779,6 +779,7 @@ A checkpoint is a block in `mac/plans/OWNER-ACTIONS.md` (template in `RUNBOOK.md
 
 The orchestrator takes the first task in this list whose status is `todo` and whose dependencies are `done` or `done-with-caveat`. Waves are not barriers; they set priority. The full gate and a review run at each wave end.
 
+- **Extra acceptance plugins (owner, 2026-10-28), in P4.19 and P4.18 as additional end-to-end targets (same untrusted-download rules: own folder under `mac/fixtures/plugins/` if not already in the corpus, SHA-256, size, licence recorded; never run outside the app plugin host; no plugin names in program code, R11):** Data Manager 2.07.06.830 (`https://github.com/maforget/CRDataManager/releases/download/2.07.06.830/Data.Manager_v2.07.06.830.crplugin`), Amazon Scrapper 1.1 (`https://github.com/maforget/ComicRack_AmazonScrapper/releases/download/v1.1/AmazonScrapper.crplugin`; compiled C#, tests binding by member signature), DrawCheckedThumbnails.py (`https://gist.githubusercontent.com/maforget/5167a4fa73a07cdace8334bb97c28e6b/raw/03bd69b2981ad95d7fedf8833a98aec055b8d969/DrawCheckedThumbnails.py`; thumbnail overlay drawing, GDI+ path), Copy/Move Field 1.5 (`https://github.com/maforget/comicrack-copy-move-field/releases/download/1.5/CopyMoveField1.5.crplugin`).
 - **Wave A, safety net and tooling:** P0.2, P0.3, P0.4, P0.6a, P0.6b, P0.8, P1.2, P1.1, P1.3, P0.5a, P0.5b, P0.5c, P0.7a, P0.7b, P4.1 (S4), P4.2 (S6).
 - **Wave S (scripting with UI first; owner decision 2026-10-23, R11):** finish P5.9, then P4.3, P4.4, P4.5, P4.6a, P4.6b, P4.7, P4.8, P4.17, P4.17.3, P4.17.4, P4.17.5, P4.9a, P4.9b, P4.9c, P4.9d, P4.9e, P4.9f, P4.9g, P4.10a, P4.10b, P4.10c, P4.10d, P4.10e, P4.10f, P4.10g, P4.17.1, P4.17.2, P4.17.6, P5.29, P4.11a, P4.11b, P4.11c, P4.11d, P4.11e, P4.12a, P4.12b, P4.13a, P4.13b, P4.13c, P4.14, P4.18, P4.20, P4.19, P4.15 → **C4** (plugins; raise it here, then continue). A task of wave S that depends on a screen not yet built pulls that screen forward (as P5.29 above). Waves B, C, D, E below keep their content, but every P4.* task already listed in wave S is skipped there.
 - **Wave B, chrome foundation, then daily use of the main window:** P5.0, P2.6, P5.T1, P5.T2, P5.T3, P5.T4, P5.R1, P5.R2, P5.R3, P5.1, P5.2, P5.3, P5.4, P2.1, P5.32a, P5.5, P5.6a, P5.6b, P2.4a, P2.4b, P5.7a, P5.7b, P5.7c, P5.8, P5.9, P5.10a, P5.10b, P4.3, P3.9, P5.T5 (optional). → **C2** (with the C2 contact sheet).

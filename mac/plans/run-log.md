@@ -70,3 +70,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-27 18:36 | P4.8 | done | 76d6823 |  | Assembly identity mapping in the script host (facades built as System.Windows.Forms and System.Drawing.Common 10.0.0.0, Core as ComicRack.Engine/ComicRack.Pl... |
 | 2026-10-27 18:36 | P4.20 | todo | f22fb48 |  | scope (owner fork merge, multiplatform), pause after P4.8 |
 | 2026-10-27 21:52 | P4.17 | done | a778734 |  | Plugin gap scan of the Bedetheque Scraper 2 and the Library Organizer (crcli plugin-gap and mac/reports/plugin-gap-bedetheque.md classify every API both plug... |
+| 2026-10-27 22:33 | P4.17.3 | done | 80c210c |  | WPF assemblies by name (System.Xaml, PresentationCore with the WindowsBase types and PresentationFramework as generated throwing facades, 10.0.0.0; the engin... |
