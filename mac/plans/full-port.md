@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-27, orchestrator; wave S, P4.3 resumed; next task: P4.8)
+Run state: PAUSED (owner request 2026-10-28 after P4.8; next task: P4.17)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -13,12 +13,12 @@ Run state: RUNNING (2026-10-27, orchestrator; wave S, P4.3 resumed; next task: P
 | P1 Core runtime gaps | 3 | 3 | - | zero-edit fixes through pass B replacements |
 | P2 Platform pieces | 9 | 4 | P2.2 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
-| P4 Scripting and Script UI layer | 40 | 8 | P4.8 | S4 and S6 spikes first, go/no-go recorded |
+| P4 Scripting and Script UI layer | 40 | 9 | P4.17 | S4 and S6 spikes first, go/no-go recorded |
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
 | RV Review fixes and upstream sync | 13 | 13 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **176** | **63** | | estimate in §10 |
+| **Total** | **176** | **64** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -1307,11 +1307,12 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Goal: first the Library Organizer 2.1.13, installed unmodified, runs on the Mac: its dialogs open, its controls work and its organize/rename run on dummy books in a temp library (ui-drive, screenshots to `mac/artifacts/plugins/library-organizer/`, assert files moved/renamed as the plugin's own preview says). Then the Bedetheque plugin installed unmodified runs on the Mac: UI always; the live scrape of bedetheque.com only once P4.20 provides the Mac helper (until then record SKIPPED(helper) and keep the UI checks). Build dummy books with `crcli fixtures` (extend it: `fixtures plugin-books --series "Yoko Tsuno" --count N`) whose file names, Series/Number/Title/Year metadata match real albums of https://www.bedetheque.com/serie-149-BD-Yoko-Tsuno.html (fetch the series page once to take real titles and numbers; do not commit scraped site content beyond a few titles needed in test names). Then, in the real app (ui-drive): select the books, invoke the plugin from its menu or hook, drive its dialogs (search, match, progress, confirmation) and check the result: the books' metadata (writer, publisher, summary, year, cover/page info, whichever the plugin fills) is filled and saved into the library and, for CBZ, written to ComicInfo.xml. Screenshots of every plugin dialog go to `mac/artifacts/plugins/bedetheque/` for the owner (C4). A fake-HTTP replay mode (recorded responses) makes a deterministic CI variant; the live-site run is the real acceptance and may be flaky by nature (record skipped on network failure).
 - Accept: `mac/tools/e2e.sh plugin-bedetheque` PASS live (or SKIPPED(network) with the replay variant PASS); screenshots exist; metadata assertions pass; no plugin-specific code (test from P4.17); `mac/tools/verify.sh`.
 
-#### P4.20 Mac build of the Bedetheque helper on a fork (owner-requested, 2026-10-27)
-- Depends: P4.18 (UI part), owner go-ahead · Effort: high · Unattended: partial (creating a fork and pushing need the owner) · Status: todo
-- Goal: make `BedethequeFetcher` run on macOS arm64 so the unmodified plugin's live scrape works. Work in a LOCAL clone of `https://github.com/maforget/Bedetheque-Scrapper-2` under `mac/fixtures/plugins/src/` (git-ignored; untrusted source): read how the helper is built (PyInstaller) and how the plugin starts it and talks to it, build a macOS arm64 binary (PyInstaller or equivalent), test it standalone and through the plugin, and prepare the change as a branch/patch (build script, spec file, any portability fixes, README note). The plugin's own file names for the helper per platform must work without modifying the plugin: if the plugin looks for `BedethequeFetcher.exe` only, record exactly what is needed and propose the minimal upstream change instead of patching the plugin here.
-- STOP before anything leaves the machine: creating the GitHub fork, pushing and opening a pull request need the owner's explicit go-ahead; write an OWNER-ACTIONS block with the exact commands (`gh repo fork ...`, push, PR text) and what to expect.
-- Accept: the helper runs standalone on this Mac; the P4.18 live Bedetheque scrape passes with it (or SKIPPED(network)); the patch exists locally; the owner block exists.
+#### P4.20 Mac build of the Bedetheque helper, multiplatform plugin question (owner-requested, 2026-10-27/28)
+- Depends: P4.18 (UI part), owner go-ahead for anything that leaves the machine · Effort: high · Unattended: partial (pushing needs the owner) · Status: todo
+- Owner facts: the owner already has a fork, `https://github.com/ArcCdr/Bedetheque-Scrapper-2`, containing the owner's own changes. It must FIRST be brought up to date with all commits of the original (`https://github.com/maforget/Bedetheque-Scrapper-2`) merged with the owner's own updates.
+- Goal: (1) Local clone of the owner's fork under `mac/fixtures/plugins/src/` (git-ignored, untrusted source). Add the original as remote `upstream`, `git fetch upstream`, merge `upstream/<default branch>` into a LOCAL integration branch (never rewrite the owner's branches); report conflicts and how each was resolved (keep both intents; list anything ambiguous for the owner). (2) Investigate multiplatform: how the plugin finds and starts `BedethequeFetcher` (file name, path, arguments, protocol, per-platform logic), how the helper is built (PyInstaller spec), and whether ONE `.crplugin` can carry a Windows and a Mac helper and pick the right one at run time (for example by `sys.platform`/`os` check in the plugin's Python, helper file names per platform, build script producing both), or whether a separate release per platform is needed. Write `mac/reports/bedetheque-multiplatform.md` with the verdict, the exact minimal change, and the effect on the release pipeline. (3) Build the helper for macOS arm64 (PyInstaller or equivalent) in the clone, test it standalone and through the unmodified-by-the-app plugin host. (4) Prepare the plugin-side change as a local branch/patch (a change to the plugin on the owner's fork, not to the app; the app stays plugin-agnostic, R11).
+- STOP before anything leaves the machine: pushing to the fork, opening a pull request, creating a release need the owner's explicit go-ahead; write an OWNER-ACTIONS block with the exact commands, what to expect, and the resume prompt.
+- Accept: merge result and conflict report exist; the report exists with a verdict; the Mac helper runs standalone; the P4.18 live Bedetheque scrape passes with it (or SKIPPED(network)); patch/branch exist locally; owner block exists.
 
 #### P4.19 Facade completeness audit (generic, the 100% question)
 - Depends: P4.12b, P4.13c · Effort: high · Unattended: yes · Status: todo

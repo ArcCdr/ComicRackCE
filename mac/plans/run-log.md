@@ -67,3 +67,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-27 17:07 | P4.6a | done | b94f9f4 |  | Script compatibility scanner crcli script-scan (IronPython AST name resolution against the real WinForms/GDI+ surface, assembly member references, Tier C fin... |
 | 2026-10-27 17:23 | P4.6b | done | 2919897 |  | Corpus collection and usage ranking (23 pinned public plugins fetched untrusted into mac/fixtures/plugins, scan-corpus.sh, crcli script-scan --exclude-file -... |
 | 2026-10-27 18:09 | P4.7 | done | e90441b |  | Facade surface generator (mac/tools/facade-gen writes every visible type of System.Windows.Forms and System.Drawing.Common as throwing C# stubs into the Gene... |
+| 2026-10-27 18:36 | P4.8 | done | 76d6823 |  | Assembly identity mapping in the script host (facades built as System.Windows.Forms and System.Drawing.Common 10.0.0.0, Core as ComicRack.Engine/ComicRack.Pl... |
