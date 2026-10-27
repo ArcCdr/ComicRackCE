@@ -4,7 +4,7 @@ using System;
 
 namespace System.Drawing.Imaging
 {
-	public sealed class ImageCodecInfo
+	public sealed partial class ImageCodecInfo
 	{
 		internal ImageCodecInfo()
 		{

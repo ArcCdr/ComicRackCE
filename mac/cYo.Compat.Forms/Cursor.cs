@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace System.Windows.Forms
 {
-	public sealed class Cursor : IDisposable
+	public sealed partial class Cursor : IDisposable
 	{
 		private readonly IntPtr handle;
 
@@ -52,7 +52,7 @@ namespace System.Windows.Forms
 		}
 	}
 
-	public class Screen
+	public partial class Screen
 	{
 		internal Screen()
 		{

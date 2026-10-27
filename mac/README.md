@@ -50,29 +50,40 @@ dotnet run --project mac/tools/api-inventory     # writes mac/reports/api-invent
 
 ## Compat shims and tests (M1.1)
 
-`mac/cYo.Compat.Forms` is the types-only stand-in for the `System.Windows.Forms` slice that the Core uses. The shadow projects reference it in pass B only. It is part of the solution together with its tests:
+`mac/cYo.Compat.Forms` is the stand-in for `System.Windows.Forms`: the hand-written slice that the Core uses (`Keys`, `Padding`, `DataObject`, `Control`/`Form` skeletons ...) plus, since P4.7, the whole generated surface (below). The shadow projects reference it in pass B only. It is part of the solution together with its tests:
 
 ```bash
 dotnet build mac/ComicRack.Mac.slnx
 dotnet test mac/tests/Compat.Forms.Tests
 ```
 
-The tests compare every enum (names, values, `[Flags]`) and every other type's kind and member signatures with the `System.Windows.Forms` reference assembly of the `Microsoft.WindowsDesktop.App.Ref` pack. That pack is downloaded by a pass A build, so run one first on a fresh machine.
+The tests compare every enum (names, values, `[Flags]`) and every other type's kind, base type, interfaces and member signatures with the `System.Windows.Forms` reference assemblies of the `Microsoft.WindowsDesktop.App.Ref` pack, in both directions (nothing missing, nothing extra). That pack is downloaded by a pass A build, so run one first on a fresh machine.
 
 ## Drawing stand-in (M1.2a)
 
-`mac/cYo.Compat.Drawing` declares the `System.Drawing.Common` types and members the Core uses (namespaces `System.Drawing`, `.Drawing2D`, `.Imaging`, `.Text`), one file per type in `Types/`. Images and pixels work since M1.2b: `Image`/`Bitmap` are backed by one `SKBitmap`, with `LockBits`/`UnlockBits`, decoding through Skia, `Save` as JPEG or PNG, and `cYo.Compat.Drawing.SkiaInterop.GetSKBitmap(Bitmap)` for the UI. Since M1.2c a `Graphics` subset works as well (`FromImage`, `Clear`, `FillRectangle`, `DrawImage` with the interpolation modes, transforms, `ImageAttributes.SetColorMatrix`, `Bitmap(Image, int, int)`). Text, clipping, paths and the rest (`Font`, `DrawString`, `SetClip`, `GraphicsPath`, ...) still throw `NotSupportedException`. The shadow projects reference it in pass B only. The SkiaSharp version for the whole tree is `SkiaSharpVersion` in `mac/Directory.Build.props`. To test it and to check the coverage against the API inventory (both need a pass A build first, for the reference pack):
+`mac/cYo.Compat.Drawing` implements the `System.Drawing.Common` types and members the Core uses (namespaces `System.Drawing`, `.Drawing2D`, `.Imaging`, `.Text`), one file per type in `Types/`; every other member of the reference is a generated stub (below). Images and pixels work since M1.2b: `Image`/`Bitmap` are backed by one `SKBitmap`, with `LockBits`/`UnlockBits`, decoding through Skia, `Save` as JPEG or PNG, and `cYo.Compat.Drawing.SkiaInterop.GetSKBitmap(Bitmap)` for the UI. Since M1.2c a `Graphics` subset works as well (`FromImage`, `Clear`, `FillRectangle`, `DrawImage` with the interpolation modes, transforms, `ImageAttributes.SetColorMatrix`, `Bitmap(Image, int, int)`). Text, clipping, paths and the rest (`Font`, `DrawString`, `SetClip`, `GraphicsPath`, ...) still throw `NotSupportedException`. The shadow projects reference it in pass B only. The SkiaSharp version for the whole tree is `SkiaSharpVersion` in `mac/Directory.Build.props`. To test it and to check the coverage against the API inventory (both need a pass A build first, for the reference pack):
 
 ```bash
 dotnet test mac/tests/Compat.Drawing.Tests
 dotnet run --project mac/tools/drawing-coverage
 ```
 
-The tests include a drift guard, like the one for the Forms shim: every public type must keep the kind and the member signatures of the `System.Drawing.Common` reference assembly.
+The tests include the same drift guard as for the Forms shim: every public type must keep the kind, base type, interfaces and member signatures of the `System.Drawing.Common` reference assembly, in both directions.
+
+## Generated surface of the Forms and Drawing facades (P4.7)
+
+Scripts see the whole public surface of `System.Windows.Forms` and `System.Drawing.Common`, not the slice the Core uses: `mac/tools/facade-gen` reads the reference assemblies of the Windows Desktop pack (`System.Windows.Forms`, `System.Windows.Forms.Primitives`, `System.Drawing.Common`; the pack is downloaded by a pass A build) and writes every visible type, nested types included, as C# into `mac/cYo.Compat.Forms/Generated/<namespace>/<Type>.g.cs` and `mac/cYo.Compat.Drawing/Generated/...`. Signatures, `virtual`/`override`/`abstract`/`protected`, parameter names and defaults, events, enums with their values and `[Flags]` follow the reference; every body throws `NotSupportedException("System.Windows.Forms.X.Y is not yet supported on macOS (ComicRack script compatibility layer)")`. `Dispose`, `ToString`, `GetHashCode`, `Equals(object)` and `==`/`!=` are the exceptions: they do nothing, call the base or compare, because the runtime calls them (a throwing `Dispose` would kill the finalizer thread after any failed construction). `Generated/omitted.txt` lists what is left out on purpose (a Win32 interop struct, interfaces that are not part of the facade).
+
+```bash
+dotnet run --project mac/tools/facade-gen            # regenerate (writes only what changed, removes stale files)
+dotnet run --project mac/tools/facade-gen -- --check # exit 1 when the committed folders differ from what the generator produces now
+```
+
+To implement a member by hand, declare it in the shim's own file of that type, which is `partial`, with the signature, accessibility and parameter names of the reference, and run the generator again: the generated declaration disappears (the compiler reports CS0111 until you do). A hand-written type must be `partial` and derive from the reference base class (the generator reports both as findings, exit 4); enums, delegates and complete types may stay as they are. The tests `ShimSurfaceTests` (both Compat test projects), `FacadeGeneratorTests` and `FacadeCatalogTests` are the drift guards: the facade equals the reference, and the committed `Generated` folders are what the generator writes. A new .NET SDK with a newer pack can change the output: run the generator and commit the result.
 
 ## Shadow projects in the solution (M1.3)
 
-`dotnet build mac/ComicRack.Mac.slnx` builds the three shadow projects in pass B (`net10.0`, the real target) together with the shims, the tests and the three tools (`api-inventory`, `census`, `drawing-coverage`). Pass B differs from pass A only by `Replacements/PassB/` files (`KnownColorTableEx`, `UserCredentialsDialog`, `Resources`, `PdfStorageProvider`) and by the shim references. Pass A (`-p:CensusPass=A`) stays the basis of `api-inventory`; do not run a pass A and a pass B build at the same time (they share `obj/`).
+`dotnet build mac/ComicRack.Mac.slnx` builds the three shadow projects in pass B (`net10.0`, the real target) together with the shims, the tests and the tools (`api-inventory`, `census`, `drawing-coverage`, `facade-gen`). Pass B differs from pass A only by `Replacements/PassB/` files (`KnownColorTableEx`, `UserCredentialsDialog`, `Resources`, `PdfStorageProvider`) and by the shim references. Pass A (`-p:CensusPass=A`) stays the basis of `api-inventory`; do not run a pass A and a pass B build at the same time (they share `obj/`).
 
 ## The app (M2.0a)
 

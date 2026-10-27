@@ -114,7 +114,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void The_jagged_array_constructor_refuses_anything_but_5_by_5()
 		{
-			Assert.Throws<ArgumentNullException>(() => new ColorMatrix(null));
+			Assert.Throws<ArgumentNullException>(() => new ColorMatrix((float[][])null));
 			Assert.Throws<ArgumentException>(() => new ColorMatrix(new float[4][]));
 			float[][] ragged = new float[5][];
 			for (int r = 0; r < 5; r++) ragged[r] = new float[5];

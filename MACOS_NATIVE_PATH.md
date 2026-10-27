@@ -503,6 +503,7 @@ On .NET 10 macOS there is no `System.Windows.Forms` assembly, and `System.Drawin
 3. **Same API shape, generated, not hand-typed.**
    - The facade's public surface is **generated from the WinForms/System.Drawing reference assemblies** using an API-surface generator (GenAPI from dotnet/arcade, or a small Roslyn tool). It produces every public type and member signature, including `virtual`/`protected` modifiers, so Python subclasses that override `OnPaint`, `OnResize`, `ProcessCmdKey` etc. bind correctly.
    - Members not implemented yet throw `NotSupportedException("System.Windows.Forms.X.Y is not yet supported on macOS (ComicRack script compatibility layer)")`. Script authors and users then see a clear message instead of an `AttributeError`.
+   - Implemented as `mac/tools/facade-gen` (P4.7): it writes every visible type of the three reference assemblies (about 1,280 types and 24,000 members) into the `Generated` folders of `mac/cYo.Compat.Forms` and `mac/cYo.Compat.Drawing`, and leaves out what a hand-written `partial` part of the type already declares; drift tests keep the facade equal to the reference.
    - Implementation is then **prioritized by real usage** (§5.9.9).
 
 #### 5.9.3 Architecture: facade object model plus native peers

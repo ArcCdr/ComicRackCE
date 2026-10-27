@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public static class SystemPens
+	public static partial class SystemPens
 	{
 
 	}

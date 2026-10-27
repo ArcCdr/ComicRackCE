@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing.Imaging
 {
-	public sealed class EncoderParameter : IDisposable
+	public sealed partial class EncoderParameter : IDisposable
 	{
 		public EncoderParameter(Encoder encoder, long value)
 		{

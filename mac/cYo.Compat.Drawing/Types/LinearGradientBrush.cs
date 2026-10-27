@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing.Drawing2D
 {
-	public sealed class LinearGradientBrush : System.Drawing.Brush
+	public sealed partial class LinearGradientBrush : System.Drawing.Brush
 	{
 		public LinearGradientBrush(System.Drawing.Rectangle rect, System.Drawing.Color color1, System.Drawing.Color color2, float angle)
 		{

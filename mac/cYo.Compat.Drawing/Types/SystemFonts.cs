@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public static class SystemFonts
+	public static partial class SystemFonts
 	{
 		public static Font DefaultFont
 		{

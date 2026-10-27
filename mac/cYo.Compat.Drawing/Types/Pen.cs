@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public sealed class Pen : MarshalByRefObject, ICloneable, IDisposable
+	public sealed partial class Pen : MarshalByRefObject, ICloneable, IDisposable
 	{
 		private Color color;
 		private float width;

@@ -78,7 +78,7 @@ namespace Compat.Drawing.Tests
 		[Fact]
 		public void EncoderParameter_keeps_encoder_and_value()
 		{
-			using (EncoderParameter parameter = new EncoderParameter(Encoder.Quality, 85))
+			using (EncoderParameter parameter = new EncoderParameter(Encoder.Quality, 85L))
 			{
 				Assert.Same(Encoder.Quality, parameter.Encoder);
 				Assert.Equal(1, parameter.NumberOfValues);
@@ -92,7 +92,7 @@ namespace Compat.Drawing.Tests
 			{
 				Assert.Equal(2, parameters.Param.Length);
 				Assert.All(parameters.Param, Assert.Null);
-				parameters.Param[1] = new EncoderParameter(Encoder.ColorDepth, 24);
+				parameters.Param[1] = new EncoderParameter(Encoder.ColorDepth, 24L);
 				Assert.Same(Encoder.ColorDepth, parameters.Param[1].Encoder);
 			}
 			EncoderParameters again = new EncoderParameters(1);

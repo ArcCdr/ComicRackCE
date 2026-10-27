@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public sealed class FontFamily : MarshalByRefObject, IDisposable
+	public sealed partial class FontFamily : MarshalByRefObject, IDisposable
 	{
 		internal FontFamily()
 		{

@@ -17,4 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
   </ItemGroup>
+  <!-- The drift guard of the generated facades (P4.7), shared by both test projects. -->
+  <ItemGroup>
+    <Compile Include="..\Shared\SurfaceComparison.cs" Link="Shared\SurfaceComparison.cs" />
+  </ItemGroup>
 </Project>

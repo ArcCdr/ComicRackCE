@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing.Drawing2D
 {
-	public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
+	public sealed partial class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
 	{
 		public GraphicsPath()
 		{

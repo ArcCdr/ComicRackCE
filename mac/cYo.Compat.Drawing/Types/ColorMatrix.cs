@@ -4,7 +4,7 @@ using System;
 
 namespace System.Drawing.Imaging
 {
-	public sealed class ColorMatrix
+	public sealed partial class ColorMatrix
 	{
 		private readonly float[] values = new float[25];
 

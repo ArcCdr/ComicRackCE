@@ -8,7 +8,7 @@ namespace System.Windows.Forms
 	/// In-memory format table; there is no OS clipboard behind it. Like the real class it implements the COM
 	/// IDataObject, because cYo.Common.Win32.DataObjectEx declares that interface again; the COM members throw.
 	/// </summary>
-	public class DataObject : IDataObject
+	public partial class DataObject : System.Runtime.InteropServices.ComTypes.IDataObject
 	{
 		private readonly Dictionary<string, object> data = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
@@ -35,53 +35,53 @@ namespace System.Windows.Forms
 			return new NotSupportedException("System.Windows.Forms.DataObject." + member + " (COM IDataObject) is not yet supported on macOS");
 		}
 
-		int IDataObject.DAdvise(ref FORMATETC pFormatetc, ADVF advf, IAdviseSink adviseSink, out int connection)
+		int System.Runtime.InteropServices.ComTypes.IDataObject.DAdvise(ref FORMATETC pFormatetc, ADVF advf, IAdviseSink adviseSink, out int connection)
 		{
 			throw Com("DAdvise");
 		}
 
-		void IDataObject.DUnadvise(int connection)
+		void System.Runtime.InteropServices.ComTypes.IDataObject.DUnadvise(int connection)
 		{
 			throw Com("DUnadvise");
 		}
 
-		int IDataObject.EnumDAdvise(out IEnumSTATDATA enumAdvise)
+		int System.Runtime.InteropServices.ComTypes.IDataObject.EnumDAdvise(out IEnumSTATDATA enumAdvise)
 		{
 			throw Com("EnumDAdvise");
 		}
 
-		IEnumFORMATETC IDataObject.EnumFormatEtc(DATADIR direction)
+		IEnumFORMATETC System.Runtime.InteropServices.ComTypes.IDataObject.EnumFormatEtc(DATADIR direction)
 		{
 			throw Com("EnumFormatEtc");
 		}
 
-		int IDataObject.GetCanonicalFormatEtc(ref FORMATETC formatIn, out FORMATETC formatOut)
+		int System.Runtime.InteropServices.ComTypes.IDataObject.GetCanonicalFormatEtc(ref FORMATETC formatIn, out FORMATETC formatOut)
 		{
 			throw Com("GetCanonicalFormatEtc");
 		}
 
-		void IDataObject.GetData(ref FORMATETC format, out STGMEDIUM medium)
+		void System.Runtime.InteropServices.ComTypes.IDataObject.GetData(ref FORMATETC format, out STGMEDIUM medium)
 		{
 			throw Com("GetData");
 		}
 
-		void IDataObject.GetDataHere(ref FORMATETC format, ref STGMEDIUM medium)
+		void System.Runtime.InteropServices.ComTypes.IDataObject.GetDataHere(ref FORMATETC format, ref STGMEDIUM medium)
 		{
 			throw Com("GetDataHere");
 		}
 
-		int IDataObject.QueryGetData(ref FORMATETC format)
+		int System.Runtime.InteropServices.ComTypes.IDataObject.QueryGetData(ref FORMATETC format)
 		{
 			throw Com("QueryGetData");
 		}
 
-		void IDataObject.SetData(ref FORMATETC formatIn, ref STGMEDIUM medium, bool release)
+		void System.Runtime.InteropServices.ComTypes.IDataObject.SetData(ref FORMATETC formatIn, ref STGMEDIUM medium, bool release)
 		{
 			throw Com("SetData");
 		}
 	}
 
-	public static class DataFormats
+	public static partial class DataFormats
 	{
 		public class Format
 		{
@@ -95,7 +95,7 @@ namespace System.Windows.Forms
 				get;
 			}
 
-			internal Format(string name, int id)
+			public Format(string name, int id)
 			{
 				Name = name;
 				Id = id;
@@ -123,7 +123,7 @@ namespace System.Windows.Forms
 		}
 	}
 
-	public static class Clipboard
+	public static partial class Clipboard
 	{
 		public static void SetDataObject(object data)
 		{

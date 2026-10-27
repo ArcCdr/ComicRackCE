@@ -13,7 +13,7 @@ using SkiaSharp;
 
 namespace System.Drawing
 {
-	public sealed class Bitmap : Image
+	public sealed partial class Bitmap : Image
 	{
 		private readonly object lockSync = new object();
 		private readonly List<BitmapData> locks = new List<BitmapData>();

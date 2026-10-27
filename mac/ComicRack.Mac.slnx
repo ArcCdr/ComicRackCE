@@ -28,6 +28,7 @@
     <Project Path="tools/api-inventory/ApiInventory.csproj" />
     <Project Path="tools/census/Census.csproj" />
     <Project Path="tools/drawing-coverage/DrawingCoverage.csproj" />
+    <Project Path="tools/facade-gen/FacadeGen.csproj" />
     <Project Path="tools/patch-ironpython/patch-ironpython.csproj" />
     <Project Path="tools/upstream-scan/UpstreamScan.csproj" />
   </Folder>

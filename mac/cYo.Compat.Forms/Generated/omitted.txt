@@ -1,0 +1,3 @@
+# Types, interfaces and members of the reference assemblies that this facade does not declare (written by mac/tools/facade-gen).
+interface Accessibility.IAccessible of System.Windows.Forms.AccessibleObject: not part of the facade
+interface System.Collections.Generic.IComparer of System.Windows.Forms.ComboBox.ObjectCollection: not part of the facade

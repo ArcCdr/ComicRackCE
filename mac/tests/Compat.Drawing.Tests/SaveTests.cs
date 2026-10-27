@@ -221,7 +221,7 @@ namespace Compat.Drawing.Tests
 			using (EncoderParameters parameters = new EncoderParameters(1))
 			using (MemoryStream stream = new MemoryStream())
 			{
-				parameters.Param[0] = new EncoderParameter(Encoder.Quality, 10);
+				parameters.Param[0] = new EncoderParameter(Encoder.Quality, 10L);
 				ImageCodecInfo png = ImageCodecInfo.GetImageEncoders().First(ici => ici.FormatID == ImageFormat.Png.Guid);
 				b.Save(stream, png, parameters);
 				Assert.Equal(Save(b, ImageFormat.Png), stream.ToArray());

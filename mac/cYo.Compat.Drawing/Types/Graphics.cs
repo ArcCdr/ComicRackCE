@@ -12,7 +12,7 @@ using SkiaSharp;
 
 namespace System.Drawing
 {
-	public sealed class Graphics : MarshalByRefObject, IDisposable, IDeviceContext
+	public sealed partial class Graphics : MarshalByRefObject, IDisposable, IDeviceContext
 	{
 		private Image image;
 		private SKCanvas canvas;
@@ -439,6 +439,7 @@ namespace System.Drawing
 
 		public Region Clip
 		{
+			get => throw new NotSupportedException("System.Drawing.Graphics.Clip is not yet supported on macOS");
 			set => throw new NotSupportedException("System.Drawing.Graphics.Clip is not yet supported on macOS");
 		}
 
@@ -458,6 +459,7 @@ namespace System.Drawing
 
 		public GraphicsUnit PageUnit
 		{
+			get => throw new NotSupportedException("System.Drawing.Graphics.PageUnit is not yet supported on macOS");
 			set => throw new NotSupportedException("System.Drawing.Graphics.PageUnit is not yet supported on macOS");
 		}
 

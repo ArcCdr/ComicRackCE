@@ -1,0 +1,4 @@
+# Types, interfaces and members of the reference assemblies that this facade does not declare (written by mac/tools/facade-gen).
+member System.Drawing.Font.FromLogFont: uses the omitted type System.Drawing.Interop.LOGFONT
+member System.Drawing.Font.ToLogFont: uses the omitted type System.Drawing.Interop.LOGFONT
+type System.Drawing.Interop.LOGFONT: declares a compiler-generated fixed buffer, a Win32 interop type

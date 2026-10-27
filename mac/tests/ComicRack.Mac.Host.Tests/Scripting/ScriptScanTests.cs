@@ -59,13 +59,17 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		}
 
 		[Fact]
-		public void Without_a_reference_pack_the_catalog_falls_back_to_the_facade_assemblies_and_says_it_is_incomplete()
+		public void Without_a_reference_pack_the_catalog_falls_back_to_the_facade_assemblies_which_declare_the_whole_surface()
 		{
 			ApiCatalog facade = ApiCatalog.FromFacade(AppContext.BaseDirectory);
-			Assert.False(facade.IsComplete);
+			Assert.True(facade.IsComplete);
 			Assert.NotNull(facade.Type("System.Windows.Forms", "Form"));
+			Assert.NotNull(facade.Type("System.Windows.Forms", "DataGridView"));
+			Assert.NotNull(facade.Type("System.Drawing", "Point"));
 			Assert.Contains("facade", facade.Source);
-			Assert.True(facade.TypeCount < SharedCatalog.Value.TypeCount);
+			// every top-level type of the reference is there but the Win32 interop struct that Generated/omitted.txt lists
+			string[] missing = SharedCatalog.Value.Types.Where(t => !t.FullName.Contains('+')).Select(t => t.FullName).Except(facade.Types.Select(t => t.FullName)).OrderBy(n => n, StringComparer.Ordinal).ToArray();
+			Assert.Equal(new[] { "System.Drawing.Interop.LOGFONT" }, missing);
 			Assert.Equal(SharedCatalog.Value.Source, ReferenceSurface.Load().Source);
 		}
 

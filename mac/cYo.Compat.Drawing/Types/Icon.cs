@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public sealed class Icon : MarshalByRefObject, ICloneable, IDisposable
+	public sealed partial class Icon : MarshalByRefObject, ICloneable, IDisposable
 	{
 		public Icon(System.IO.Stream stream, int width, int height)
 		{

@@ -23,7 +23,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 
 		private static readonly HashSet<string> TierB = new HashSet<string>(StringComparer.Ordinal)
 		{
-			"ListView", "ListViewItem", "ListViewSubItem", "ListViewGroup", "ColumnHeader", "TreeView", "TreeNode", "MenuStrip", "StatusStrip", "ToolStrip", "ToolStripButton", "ToolStripLabel",
+			"ListView", "ListViewItem", "ListViewGroup", "ColumnHeader", "TreeView", "TreeNode", "MenuStrip", "StatusStrip", "ToolStrip", "ToolStripButton", "ToolStripLabel",
 			"ToolStripComboBox", "ToolStripTextBox", "ToolStripStatusLabel", "ToolStripProgressBar", "ToolStripSplitButton", "ToolStripDropDownButton", "DataGridView", "DataGridViewRow",
 			"DataGridViewColumn", "DataGridViewCell", "DataGridViewTextBoxColumn", "DataGridViewCheckBoxColumn", "DataGridViewButtonColumn", "DataGridViewComboBoxColumn", "RichTextBox",
 			"ColorDialog", "FontDialog", "WebBrowser", "HScrollBar", "VScrollBar", "ScrollBar", "MaskedTextBox", "PropertyGrid", "ImageList", "BindingSource", "NotifyIcon", "Splitter",
@@ -33,8 +33,25 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		private static readonly HashSet<string> TierC = new HashSet<string>(StringComparer.Ordinal)
 		{
 			"NativeWindow", "Message", "IMessageFilter", "HtmlDocument", "HtmlElement", "HtmlElementCollection", "HtmlWindow", "HtmlWindowCollection", "HtmlHistory", "HtmlElementEventArgs",
-			"HtmlElementErrorEventArgs", "HtmlDocument.HtmlElementEventHandler", "WebBrowserSiteBase",
+			"HtmlElementErrorEventArgs", "HtmlElementEventHandler", "WebBrowserSiteBase",
 		};
+
+		/// <summary>The type names that the tables list, with their tier (A, B or C); a test checks that each one is a type of the surface, so that a misspelled name cannot go unnoticed.</summary>
+		public static IEnumerable<(string Tier, string Name)> Listed()
+		{
+			foreach (string name in TierA)
+			{
+				yield return ("A", name);
+			}
+			foreach (string name in TierB)
+			{
+				yield return ("B", name);
+			}
+			foreach (string name in TierC)
+			{
+				yield return ("C", name);
+			}
+		}
 
 		/// <summary>The tier of a type: A, B, C, S or U.</summary>
 		public static string Of(ApiCatalog catalog, ApiType type)

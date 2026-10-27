@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing.Drawing2D
 {
-	public sealed class PathGradientBrush : System.Drawing.Brush
+	public sealed partial class PathGradientBrush : System.Drawing.Brush
 	{
 		public PathGradientBrush(GraphicsPath path)
 		{
@@ -12,11 +12,13 @@ namespace System.Drawing.Drawing2D
 
 		public System.Drawing.Color CenterColor
 		{
+			get => throw new NotSupportedException("System.Drawing.Drawing2D.PathGradientBrush.CenterColor is not yet supported on macOS");
 			set => throw new NotSupportedException("System.Drawing.Drawing2D.PathGradientBrush.CenterColor is not yet supported on macOS");
 		}
 
 		public System.Drawing.Color[] SurroundColors
 		{
+			get => throw new NotSupportedException("System.Drawing.Drawing2D.PathGradientBrush.SurroundColors is not yet supported on macOS");
 			set => throw new NotSupportedException("System.Drawing.Drawing2D.PathGradientBrush.SurroundColors is not yet supported on macOS");
 		}
 

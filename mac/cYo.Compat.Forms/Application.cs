@@ -9,7 +9,7 @@ namespace System.Windows.Forms
 	/// (ComicRack/Properties/AssemblyInfo.cs: AssemblyCompany, AssemblyProduct, AssemblyInformationalVersion),
 	/// because IniFile search paths and backup archive paths derive from them.
 	/// </summary>
-	public sealed class Application
+	public sealed partial class Application
 	{
 		private Application()
 		{

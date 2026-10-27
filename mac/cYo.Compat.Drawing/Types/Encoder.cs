@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing.Imaging
 {
-	public sealed class Encoder
+	public sealed partial class Encoder
 	{
 		private readonly Guid guid;
 

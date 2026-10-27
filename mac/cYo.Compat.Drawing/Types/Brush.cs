@@ -3,9 +3,9 @@ using System;
 
 namespace System.Drawing
 {
-	public abstract class Brush : MarshalByRefObject, ICloneable, IDisposable
+	public abstract partial class Brush : MarshalByRefObject, ICloneable, IDisposable
 	{
-		internal Brush()
+		protected Brush()
 		{
 		}
 

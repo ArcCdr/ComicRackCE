@@ -4,7 +4,7 @@ using System;
 
 namespace System.Drawing.Imaging
 {
-	public sealed class ImageAttributes : ICloneable, IDisposable
+	public sealed partial class ImageAttributes : ICloneable, IDisposable
 	{
 		private ColorMatrix colorMatrix;
 		private bool disposed;

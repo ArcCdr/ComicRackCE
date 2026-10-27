@@ -12,7 +12,7 @@ namespace System.Windows.Forms
 	}
 
 	/// <summary>Types-only stand-in. There are no native windows, so Handle is not available.</summary>
-	public class Control : Component, IWin32Window
+	public partial class Control : Component, IWin32Window
 	{
 		private bool isDisposed;
 
@@ -33,7 +33,7 @@ namespace System.Windows.Forms
 		}
 	}
 
-	public class Form : Control
+	public partial class Form : ContainerControl
 	{
 		public FormWindowState WindowState
 		{
@@ -47,13 +47,13 @@ namespace System.Windows.Forms
 		}
 	}
 
-	public class TreeView : Control
+	public partial class TreeView : Control
 	{
 	}
 
 	/// <summary>Real type: sealed-in-practice node of a TreeView. Only the members that VariableHeightTreeNode uses.</summary>
 	[Serializable]
-	public class TreeNode
+	public partial class TreeNode
 	{
 		public IntPtr Handle => throw new NotSupportedException("System.Windows.Forms.TreeNode.Handle is not yet supported on macOS");
 

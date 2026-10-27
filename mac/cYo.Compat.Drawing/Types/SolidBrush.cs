@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public sealed class SolidBrush : Brush
+	public sealed partial class SolidBrush : Brush
 	{
 		private Color color;
 		private readonly bool immutable;

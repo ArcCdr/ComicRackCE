@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public sealed class StringFormat : MarshalByRefObject, ICloneable, IDisposable
+	public sealed partial class StringFormat : MarshalByRefObject, ICloneable, IDisposable
 	{
 		public StringFormat()
 		{
@@ -37,6 +37,7 @@ namespace System.Drawing
 
 		public StringTrimming Trimming
 		{
+			get => throw new NotSupportedException("System.Drawing.StringFormat.Trimming is not yet supported on macOS");
 			set => throw new NotSupportedException("System.Drawing.StringFormat.Trimming is not yet supported on macOS");
 		}
 

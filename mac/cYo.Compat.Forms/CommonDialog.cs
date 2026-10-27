@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace System.Windows.Forms
 {
-	public abstract class CommonDialog : Component
+	public abstract partial class CommonDialog : Component
 	{
 		protected abstract bool RunDialog(IntPtr hwndOwner);
 

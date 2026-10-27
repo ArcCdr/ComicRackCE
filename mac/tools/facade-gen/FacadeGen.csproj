@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- P4.7: generates the public surface of System.Windows.Forms and System.Drawing.Common (every exported type of the reference assemblies of the
+       Windows Desktop pack) as throwing C# stubs into mac/cYo.Compat.Forms/Generated and mac/cYo.Compat.Drawing/Generated.
+       The shims are never referenced: the reference assemblies are read with a MetadataLoadContext, the hand-written shim sources with Roslyn (syntax only). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>facade-gen</AssemblyName>
+    <RootNamespace>FacadeGen</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);NU1510;RS1034</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+    <InternalsVisibleTo Include="Compat.Forms.Tests" />
+  </ItemGroup>
+</Project>

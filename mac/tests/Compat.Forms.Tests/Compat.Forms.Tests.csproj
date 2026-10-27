@@ -16,6 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\cYo.Compat.Forms\cYo.Compat.Forms.csproj" />
+    <!-- The generator is run from the tests (the committed Generated folders must be what it produces now). -->
+    <ProjectReference Include="..\..\tools\facade-gen\FacadeGen.csproj" />
   </ItemGroup>
   <!-- The real view-config types, compiled as the Core compiles them (they replace the M0.3b stub). IColumn is the
        reduced stubs of ComicRack.Engine.Core/Replacements, declared again in ColumnStub.cs. -->
@@ -25,5 +27,9 @@
     <Compile Include="..\..\..\cYo.Common.Windows\Forms\ItemViewMode.cs" Link="Linked\ItemViewMode.cs" />
     <Compile Include="..\..\..\cYo.Common.Windows\Forms\ItemViewGroupsStatus.cs" Link="Linked\ItemViewGroupsStatus.cs" />
     <Compile Include="..\..\..\cYo.Common.Windows\Forms\GroupHeaderInformation.cs" Link="Linked\GroupHeaderInformation.cs" />
+  </ItemGroup>
+  <!-- The drift guard of the generated facades (P4.7), shared by both test projects. -->
+  <ItemGroup>
+    <Compile Include="..\Shared\SurfaceComparison.cs" Link="Shared\SurfaceComparison.cs" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace System.Drawing
 {
-	public abstract class Image : MarshalByRefObject, IDisposable, ICloneable
+	public abstract partial class Image : MarshalByRefObject, IDisposable, ICloneable
 	{
 		// The storage. The pixel pointer and the geometry are cached because the Core reads Width/Height in hot loops
 		// and the SKBitmap properties are P/Invoke calls. The pixel memory never moves for the life of the SKBitmap.

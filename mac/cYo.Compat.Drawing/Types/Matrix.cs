@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing.Drawing2D
 {
-	public sealed class Matrix : MarshalByRefObject, IDisposable
+	public sealed partial class Matrix : MarshalByRefObject, IDisposable
 	{
 		public Matrix()
 		{

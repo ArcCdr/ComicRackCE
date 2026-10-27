@@ -3,7 +3,7 @@ using System;
 
 namespace System.Drawing
 {
-	public sealed class Region : MarshalByRefObject, IDisposable
+	public sealed partial class Region : MarshalByRefObject, IDisposable
 	{
 		public Region(System.Drawing.Drawing2D.GraphicsPath path)
 		{
