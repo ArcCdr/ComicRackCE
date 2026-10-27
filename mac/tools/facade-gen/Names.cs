@@ -10,6 +10,9 @@ namespace FacadeGen
 	/// <summary>C# spellings: identifiers, fully qualified type names and constants.</summary>
 	internal static class Names
 	{
+		/// <summary>How many pointer types were rendered so far (the emitter marks a file whose types use one as unsafe).</summary>
+		public static int PointersRendered { get; private set; }
+
 		private static readonly HashSet<string> ReservedWords = new HashSet<string>(StringComparer.Ordinal)
 		{
 			"abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double",
@@ -58,6 +61,7 @@ namespace FacadeGen
 			}
 			if (t.IsPointer)
 			{
+				PointersRendered++;
 				return Render(t.GetElementType()) + "*";
 			}
 			if (t.IsArray)

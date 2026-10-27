@@ -309,7 +309,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 
 		private static string SourceOf(IndexedType t) => t == null ? "none" : t.Origin == "program" ? (IsFacade(t.Assembly) ? "facade" : "program") : ".NET 10";
 
-		private static bool IsFacade(string assembly) => assembly == "System.Windows.Forms" || assembly == "System.Drawing.Common" || assembly == "System.Web.Extensions" || assembly == "cYo.Common.Windows";
+		private static bool IsFacade(string assembly) => assembly == "System.Windows.Forms" || assembly == "System.Drawing.Common" || assembly == "System.Web.Extensions" || assembly == "System.Xaml" || assembly == "PresentationCore" || assembly == "PresentationFramework" || assembly == "cYo.Common.Windows";
 
 		// ------------------------------------------------------------------ .NET types and members outside the surface
 

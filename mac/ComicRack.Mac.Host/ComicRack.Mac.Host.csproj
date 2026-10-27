@@ -22,5 +22,10 @@
     <ProjectReference Include="..\cYo.Common.Windows.Compat\cYo.Common.Windows.Compat.csproj" />
     <!-- The assembly "System.Web.Extensions" (JavaScriptSerializer) that scripts reference by name, P4.17 -->
     <ProjectReference Include="..\cYo.Compat.Web\cYo.Compat.Web.csproj" />
+    <!-- The four WPF assemblies that scripts name at the top level (clr.AddReference('PresentationFramework')): throwing facades, P4.17.3. Directory.Build.targets keeps them out of
+         the compile references of every project that uses this one (their namespaces clash with Avalonia's: System.Windows.Input.Key); they flow to the output folders and the bundle. -->
+    <ProjectReference Include="..\cYo.Compat.Xaml\cYo.Compat.Xaml.csproj" />
+    <ProjectReference Include="..\cYo.Compat.PresentationCore\cYo.Compat.PresentationCore.csproj" />
+    <ProjectReference Include="..\cYo.Compat.PresentationFramework\cYo.Compat.PresentationFramework.csproj" />
   </ItemGroup>
 </Project>

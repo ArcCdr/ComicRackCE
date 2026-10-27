@@ -1,0 +1,5 @@
+# Types, interfaces and members of the reference assemblies that this facade does not declare (written by mac/tools/facade-gen).
+member System.Xaml.XamlObjectWriterSettings.AccessLevel: uses the omitted type System.Xaml.Permissions.XamlAccessLevel
+# Type forwards that lead to assemblies outside the runtime and the facades
+forward System.Xaml.Permissions.XamlAccessLevel (System.Windows.Extensions)
+forward System.Xaml.Permissions.XamlLoadPermission (System.Security.Permissions)

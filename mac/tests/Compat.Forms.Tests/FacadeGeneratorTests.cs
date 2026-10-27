@@ -47,7 +47,8 @@ namespace Compat.Forms.Tests
 			var result = Generator.Generate(new GeneratorOptions { Root = Path.GetDirectoryName(MacRoot.Find()), ReferenceDirectory = ReferenceDirectory });
 			Assert.True(result.Problems.Count == 0, string.Join("\n", result.Problems));
 			var differences = Generator.Compare(result.FormsOutput, result.FormsFiles).Select(d => "Forms: " + d)
-				.Concat(Generator.Compare(result.DrawingOutput, result.DrawingFiles).Select(d => "Drawing: " + d)).ToList();
+				.Concat(Generator.Compare(result.DrawingOutput, result.DrawingFiles).Select(d => "Drawing: " + d))
+				.Concat(result.Wpf.SelectMany(w => Generator.Compare(w.Output, w.Files).Select(d => w.Assembly + ": " + d))).ToList();
 			Assert.True(differences.Count == 0, "run: dotnet run --project mac/tools/facade-gen\n" + string.Join("\n", differences.Take(20)));
 		}
 
@@ -59,6 +60,9 @@ namespace Compat.Forms.Tests
 			Assert.Equal(a.FormsFiles.Keys.OrderBy(k => k, StringComparer.Ordinal), b.FormsFiles.Keys.OrderBy(k => k, StringComparer.Ordinal));
 			Assert.All(a.FormsFiles, pair => Assert.True(pair.Value == b.FormsFiles[pair.Key], pair.Key + " differs between two runs"));
 			Assert.True(a.FormsFiles.Count > 800 && a.DrawingFiles.Count > 100, a.FormsFiles.Count + " + " + a.DrawingFiles.Count + " files");
+			Assert.Equal(new[] { "System.Xaml", "PresentationCore", "PresentationFramework" }, a.Wpf.Select(w => w.Assembly));
+			Assert.All(a.Wpf.Zip(b.Wpf), pair => Assert.Equal(pair.First.Files.OrderBy(p => p.Key, StringComparer.Ordinal), pair.Second.Files.OrderBy(p => p.Key, StringComparer.Ordinal)));
+			Assert.True(a.Wpf.Sum(w => w.Files.Count) > 1500, "WPF files: " + a.Wpf.Sum(w => w.Files.Count));
 		}
 
 		[Fact]

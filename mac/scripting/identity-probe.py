@@ -87,3 +87,43 @@ def web_extensions():
 	ok("identity: JavaScriptSerializer deserializes into Dictionary[str, object]", found and value == "<b>", value)
 	a = clr.GetClrType(System.Web.Script.Serialization.JavaScriptSerializer).Assembly.GetName()
 	ok("identity: JavaScriptSerializer is in System.Web.Extensions 10.0.0.0", a.Name + " " + str(a.Version) == "System.Web.Extensions 10.0.0.0", a.Name + " " + str(a.Version))
+
+#@Name  P4.17.3 The WPF assemblies by the names scripts use at the top level
+#@Hook  Startup
+def wpf_assemblies():
+	# the top-level lines of a plug-in that builds a WPF dialog: the names of the Framework assemblies, then the namespaces
+	clr.AddReference("PresentationFramework")
+	clr.AddReference("PresentationCore")
+	clr.AddReference("WindowsBase")
+	clr.AddReference("System.Xaml")
+	import System
+	from System.Windows.Markup import XamlReader
+	from System.Windows.Media.Imaging import BitmapImage
+	from System.Windows import Visibility, Window
+	from System.Windows.Interop import WindowInteropHelper
+	is_asm("XamlReader", XamlReader, "PresentationFramework 10.0.0.0")
+	is_asm("BitmapImage", BitmapImage, "PresentationCore 10.0.0.0")
+	is_asm("Window", Window, "PresentationFramework 10.0.0.0")
+	is_asm("WindowInteropHelper", WindowInteropHelper, "PresentationFramework 10.0.0.0")
+	# the types of WindowsBase are declared in the PresentationCore facade (the runtime's own WindowsBase.dll wins over an app-local file of that name)
+	is_asm("Visibility", Visibility, "PresentationCore 10.0.0.0")
+	is_asm("DependencyObject", System.Windows.DependencyObject, "PresentationCore 10.0.0.0")
+	ok("identity: WindowsBase by name is the runtime's file (type forwards only)", System.Reflection.Assembly.Load("WindowsBase").GetName().Version.Major == 4)
+	ok("identity: Visibility has the members of the enumeration", int(Visibility.Visible) == 0 and int(Visibility.Hidden) == 1 and int(Visibility.Collapsed) == 2, Visibility.Collapsed)
+	try:
+		BitmapImage()
+		ok("identity: a WPF type throws until it is provided", False)
+	except Exception as e:
+		ok("identity: a WPF type throws the standard message", "not yet supported on macOS" in e.message, e.message)
+	# the strong names of the Framework assemblies bind to the facades
+	clr.AddReference("PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+	clr.AddReference("WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+	ok("identity: the strong names of the WPF assemblies are accepted", True)
+
+#@Name  P4.17.3 The names of System.dll are there without a reference line
+#@Hook  Startup
+def default_references():
+	# IronPython on the .NET Framework starts with System.dll loaded; the plug-ins write "from System import Uri" without clr.AddReference("System")
+	from System import Uri, UriKind
+	u = Uri("http://example.com/a/b?c=1", UriKind.Absolute)
+	ok("identity: System.Uri is importable at the top of a script", u.Host == "example.com", u.Host)

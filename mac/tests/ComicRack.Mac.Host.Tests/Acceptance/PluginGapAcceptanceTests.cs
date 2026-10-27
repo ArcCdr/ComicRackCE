@@ -97,13 +97,13 @@ namespace ComicRack.Mac.Host.Tests.Acceptance
 		}
 
 		[PluginFact(AcceptancePlugins.Bedetheque, AcceptancePlugins.Organizer)]
-		public void The_scripts_load_in_the_plugin_host_or_fail_for_a_reason_the_report_gives_a_task()
+		public void The_scripts_of_both_plugins_load_in_the_plugin_host()
 		{
 			GapLoadCheck bd = Assert.Single(Gap("Bedetheque").Facts.LoadChecks);
 			Assert.True(bd.Ok, bd.Message);
 			GapLoadCheck lo = Assert.Single(Gap("Library.Organizer").Facts.LoadChecks);
-			// until P4.17.3 provides the WPF assemblies by name the Library Organizer stops at its first reference to one of them
-			Assert.True(lo.Ok || lo.Message.Contains("Presentation"), lo.Message);
+			// P4.17.3: the WPF assemblies are there by name (throwing facades) and System.dll is loaded as on the Framework, so the top level of every script runs
+			Assert.True(lo.Ok, lo.Message);
 		}
 
 		[PluginFact(AcceptancePlugins.Bedetheque, AcceptancePlugins.Organizer)]
@@ -140,7 +140,7 @@ namespace ComicRack.Mac.Host.Tests.Acceptance
 
 			PluginGap lo = Gap("Library.Organizer");
 			Assert.Equal("C", lo.Tier);
-			Assert.Contains(lo.References, r => r.Name == "PresentationFramework" && r.Status == "missing");
+			Assert.Contains(lo.References, r => r.Name == "PresentationFramework" && r.Status == "real");
 			Assert.Contains(lo.Framework, r => r.Name == "Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile" && r.Status == "differs");
 			Assert.Contains(lo.Framework, r => r.Name == "System.ComponentModel.BackgroundWorker");
 			Assert.Contains(lo.Findings, f => f.Kind == "windows-path" && f.Symbol.Contains("\\home_32.png"));

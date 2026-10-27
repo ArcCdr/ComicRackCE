@@ -59,7 +59,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 
 	/// <summary>
 	/// An index of the public types of a set of managed assemblies, read from metadata without loading anything (P4.17): the assemblies of the .NET runtime, the facades of the layer (System.Windows.Forms,
-	/// System.Drawing.Common, System.Web.Extensions, cYo.Common.Windows) and the Core assemblies (ComicRack.Engine, ComicRack.Plugins, cYo.Common). It answers the question of the gap report: is this type or member
+	/// System.Drawing.Common, System.Web.Extensions, System.Xaml, PresentationCore, PresentationFramework, cYo.Common.Windows) and the Core assemblies (ComicRack.Engine, ComicRack.Plugins, cYo.Common). It answers the question of the gap report: is this type or member
 	/// there, and is it real or a stub. A member of a facade is a <b>stub</b> when its body is the generated one: it ends in <c>call FacadeStub.Member(string); throw</c> (mac/tools/facade-gen); a static read-only field
 	/// of a type without static constructor in a facade (a generated type) keeps its default value and counts as a stub too.
 	/// </summary>
@@ -102,7 +102,7 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		}
 
 		/// <summary>The assemblies of the program that play a role in the gap report: facades, Core, and the files of IronPython (whose names scripts use).</summary>
-		private static bool IsProgramAssembly(string name) => name.StartsWith("System.", StringComparison.Ordinal) || name.StartsWith("ComicRack.Engine", StringComparison.Ordinal)
+		private static bool IsProgramAssembly(string name) => name.StartsWith("System.", StringComparison.Ordinal) || name.StartsWith("Presentation", StringComparison.Ordinal) || name.StartsWith("ComicRack.Engine", StringComparison.Ordinal)
 			|| name.StartsWith("ComicRack.Plugins", StringComparison.Ordinal) || name.StartsWith("cYo.Common", StringComparison.Ordinal) || name.StartsWith("IronPython", StringComparison.Ordinal)
 			|| name.StartsWith("Microsoft.Scripting", StringComparison.Ordinal) || name.StartsWith("Microsoft.Dynamic", StringComparison.Ordinal);
 

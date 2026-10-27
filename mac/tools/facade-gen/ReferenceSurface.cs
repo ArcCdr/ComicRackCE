@@ -18,6 +18,20 @@ namespace FacadeGen
 
 		public static readonly string[] DrawingAssemblies = { "System.Drawing.Common" };
 
+		/// <summary>
+		/// The Windows Presentation Foundation facades (P4.17.3): the name of the facade assembly and the reference assemblies it declares, in dependency order (a later one references the earlier ones).
+		/// The types of WindowsBase are declared in the PresentationCore facade: the runtime ships its own WindowsBase.dll (4.0.0.0, type forwards only), and on a framework-dependent start
+		/// the host prefers that file to an app-local file of the same name (measured with COREHOST_TRACE: the deps entry of a project reference carries no version).
+		/// </summary>
+		public static readonly (string Facade, string[] References)[] WpfFacades =
+		{
+			("System.Xaml", new[] { "System.Xaml" }),
+			("PresentationCore", new[] { "WindowsBase", "PresentationCore" }),
+			("PresentationFramework", new[] { "PresentationFramework" }),
+		};
+
+		public static IEnumerable<string> WpfAssemblies => WpfFacades.SelectMany(f => f.References);
+
 		private readonly HashSet<string> runtimeNames;
 
 		private readonly HashSet<string> generatedNames;
@@ -30,10 +44,12 @@ namespace FacadeGen
 		{
 			ReferenceDirectory = referenceDirectory;
 			string runtime = RuntimeEnvironment.GetRuntimeDirectory();
-			runtimeNames = new HashSet<string>(Directory.GetFiles(runtime, "*.dll").Select(Path.GetFileNameWithoutExtension), StringComparer.OrdinalIgnoreCase);
-			generatedNames = new HashSet<string>(FormsAssemblies.Concat(DrawingAssemblies), StringComparer.OrdinalIgnoreCase);
-			var paths = Directory.GetFiles(runtime, "*.dll")
-				.Concat(Directory.GetFiles(referenceDirectory, "*.dll").Where(f => !File.Exists(Path.Combine(runtime, Path.GetFileName(f)))));
+			generatedNames = new HashSet<string>(FormsAssemblies.Concat(DrawingAssemblies).Concat(WpfAssemblies), StringComparer.OrdinalIgnoreCase);
+			// The runtime has its own WindowsBase.dll (type forwards only); the pack's reference assembly of that name is the one to read.
+			var runtimeFiles = Directory.GetFiles(runtime, "*.dll").Where(f => !generatedNames.Contains(Path.GetFileNameWithoutExtension(f))).ToList();
+			runtimeNames = new HashSet<string>(runtimeFiles.Select(Path.GetFileNameWithoutExtension), StringComparer.OrdinalIgnoreCase);
+			var paths = runtimeFiles
+				.Concat(Directory.GetFiles(referenceDirectory, "*.dll").Where(f => !runtimeNames.Contains(Path.GetFileNameWithoutExtension(f))));
 			Context = new MetadataLoadContext(new PathAssemblyResolver(paths), "System.Private.CoreLib");
 		}
 
@@ -64,6 +80,39 @@ namespace FacadeGen
 				.OrderByDescending(x => x.version)
 				.Select(x => Path.Combine(x.dir, "ref", "net10.0"))
 				.FirstOrDefault(d => File.Exists(Path.Combine(d, "System.Windows.Forms.dll")));
+		}
+
+		/// <summary>
+		/// The type forwards of a reference assembly whose target a script can reach: a type of the runtime or of another generated facade (full name, generic arity, target assembly).
+		/// Forwards to assemblies that are not part of the runtime or the facades (System.Windows.Extensions, System.Security.Permissions) are returned in <paramref name="skipped"/>.
+		/// </summary>
+		public List<(string Namespace, string Name, string Assembly)> ForwardsOf(string assemblyName, List<string> skipped)
+		{
+			var result = new List<(string, string, string)>();
+			using var stream = File.OpenRead(Path.Combine(ReferenceDirectory, assemblyName + ".dll"));
+			using var pe = new System.Reflection.PortableExecutable.PEReader(stream);
+			var reader = System.Reflection.Metadata.PEReaderExtensions.GetMetadataReader(pe);
+			foreach (var handle in reader.ExportedTypes)
+			{
+				var exported = reader.GetExportedType(handle);
+				if (!exported.IsForwarder || exported.Implementation.Kind != System.Reflection.Metadata.HandleKind.AssemblyReference)
+				{
+					continue;
+				}
+				string target = reader.GetString(reader.GetAssemblyReference((System.Reflection.Metadata.AssemblyReferenceHandle)exported.Implementation).Name);
+				string ns = reader.GetString(exported.Namespace);
+				string name = reader.GetString(exported.Name);
+				if (runtimeNames.Contains(target) || generatedNames.Contains(target))
+				{
+					result.Add((ns, name, target));
+				}
+				else
+				{
+					skipped.Add(ns + "." + name + " (" + target + ")");
+				}
+			}
+			result.Sort((a, b) => string.CompareOrdinal(a.Item1 + "." + a.Item2, b.Item1 + "." + b.Item2));
+			return result;
 		}
 
 		/// <summary>True for a type a script can see: public, or protected nested in a visible type.</summary>

@@ -1,0 +1,79 @@
+# Types, interfaces and members of the reference assemblies that this facade does not declare (written by mac/tools/facade-gen).
+interface System.Windows.Automation.Provider.IExpandCollapseProvider of System.Windows.Automation.Peers.ComboBoxAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IExpandCollapseProvider of System.Windows.Automation.Peers.DatePickerAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IExpandCollapseProvider of System.Windows.Automation.Peers.ExpanderAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IExpandCollapseProvider of System.Windows.Automation.Peers.MenuItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IExpandCollapseProvider of System.Windows.Automation.Peers.TreeViewDataItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IExpandCollapseProvider of System.Windows.Automation.Peers.TreeViewItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridItemProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridItemProvider of System.Windows.Automation.Peers.DateTimeAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridItemProvider of System.Windows.Automation.Peers.GridViewCellAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridItemProvider of System.Windows.Automation.Peers.TableCellAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridProvider of System.Windows.Automation.Peers.CalendarAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridProvider of System.Windows.Automation.Peers.DataGridAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridProvider of System.Windows.Automation.Peers.GridViewAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IGridProvider of System.Windows.Automation.Peers.TableAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.ButtonAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.DataGridColumnHeaderItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.DataGridItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.DateTimeAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.GridViewColumnHeaderAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.HyperlinkAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.MenuItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IInvokeProvider of System.Windows.Automation.Peers.RepeatButtonAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IItemContainerProvider of System.Windows.Automation.Peers.CalendarAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IItemContainerProvider of System.Windows.Automation.Peers.DataGridItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IItemContainerProvider of System.Windows.Automation.Peers.ItemsControlAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IMultipleViewProvider of System.Windows.Automation.Peers.CalendarAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IMultipleViewProvider of System.Windows.Automation.Peers.FlowDocumentReaderAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IRangeValueProvider of System.Windows.Automation.Peers.RangeBaseAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollItemProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollItemProvider of System.Windows.Automation.Peers.DataGridColumnHeaderItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollItemProvider of System.Windows.Automation.Peers.DataGridItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollItemProvider of System.Windows.Automation.Peers.ListBoxItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollItemProvider of System.Windows.Automation.Peers.TreeViewDataItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollItemProvider of System.Windows.Automation.Peers.TreeViewItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IScrollProvider of System.Windows.Automation.Peers.ScrollViewerAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.DataGridItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.DateTimeAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.RadioButtonAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.SelectorItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.TreeViewDataItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionItemProvider of System.Windows.Automation.Peers.TreeViewItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionProvider of System.Windows.Automation.Peers.CalendarAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionProvider of System.Windows.Automation.Peers.DataGridAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionProvider of System.Windows.Automation.Peers.DataGridItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionProvider of System.Windows.Automation.Peers.SelectorAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ISelectionProvider of System.Windows.Automation.Peers.TreeViewAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITableItemProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITableItemProvider of System.Windows.Automation.Peers.DateTimeAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITableItemProvider of System.Windows.Automation.Peers.GridViewCellAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITableProvider of System.Windows.Automation.Peers.CalendarAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITableProvider of System.Windows.Automation.Peers.DataGridAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITableProvider of System.Windows.Automation.Peers.GridViewAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IToggleProvider of System.Windows.Automation.Peers.MenuItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IToggleProvider of System.Windows.Automation.Peers.ToggleButtonAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITransformProvider of System.Windows.Automation.Peers.DataGridColumnHeaderItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITransformProvider of System.Windows.Automation.Peers.GridSplitterAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.ITransformProvider of System.Windows.Automation.Peers.GridViewColumnHeaderAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IValueProvider of System.Windows.Automation.Peers.ComboBoxAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IValueProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IValueProvider of System.Windows.Automation.Peers.DatePickerAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IValueProvider of System.Windows.Automation.Peers.PasswordBoxAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IValueProvider of System.Windows.Automation.Peers.TextBoxAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IVirtualizedItemProvider of System.Windows.Automation.Peers.DataGridCellItemAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IVirtualizedItemProvider of System.Windows.Automation.Peers.DateTimeAutomationPeer: not part of the facade
+interface System.Windows.Automation.Provider.IVirtualizedItemProvider of System.Windows.Automation.Peers.ItemAutomationPeer: not part of the facade
+member System.Windows.Controls.PrintDialog.PrintQueue: uses the omitted type System.Printing.PrintQueue
+member System.Windows.Controls.PrintDialog.PrintTicket: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.SerializerWriter.CreateVisualsCollator: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.SerializerWriter.Write: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.SerializerWriter.WriteAsync: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.SerializerWriterCollator.Write: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.SerializerWriterCollator.WriteAsync: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.WritingPrintTicketRequiredEventArgs.CurrentPrintTicket: uses the omitted type System.Printing.PrintTicket
+member System.Windows.Documents.Serialization.WritingPrintTicketRequiredEventArgs.CurrentPrintTicketLevel: uses the omitted type System.Windows.Xps.Serialization.PrintTicketLevel
+member System.Windows.Documents.Serialization.WritingPrintTicketRequiredEventArgs.ctor: uses the omitted type System.Windows.Xps.Serialization.PrintTicketLevel
+# Type forwards that lead to assemblies outside the runtime and the facades

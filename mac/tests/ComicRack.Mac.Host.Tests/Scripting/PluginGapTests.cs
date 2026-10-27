@@ -93,7 +93,12 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 			Assert.True(index.IsNamespaceOrPrefix("System.Web"));
 			Assert.True(index.IsNamespaceOrPrefix("System.Web.Script.Serialization"));
 			Assert.False(index.IsNamespaceOrPrefix("System.NoSuchNamespace"));
-			Assert.Null(index.Find("System.Windows.Markup.XamlReader"));
+			// the WPF assemblies are facades since P4.17.3: the type is there and every member only throws
+			IndexedType xaml = index.Find("System.Windows.Markup.XamlReader");
+			Assert.Equal("PresentationFramework", xaml.Assembly);
+			Assert.Equal("stub", xaml.Members["Load"].Status);
+			Assert.Equal("program", index.Assemblies["PresentationFramework"]);
+			Assert.Null(index.Find("System.Windows.NoSuchType"));
 			Assert.Equal("program", index.Assemblies["System.Windows.Forms"]);
 			Assert.Equal("runtime", index.Assemblies["System.Private.CoreLib"]);
 		}

@@ -51,6 +51,10 @@ namespace FacadeGen
 		public static HandWrittenIndex Scan(string projectDirectory)
 		{
 			var index = new HandWrittenIndex();
+			if (projectDirectory == null || !Directory.Exists(projectDirectory))
+			{
+				return index;
+			}
 			var options = new CSharpParseOptions(LanguageVersion.Latest);
 			var files = Directory.GetFiles(projectDirectory, "*.cs", SearchOption.AllDirectories)
 				.Where(f => !IsExcluded(projectDirectory, f))

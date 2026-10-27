@@ -16,6 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\cYo.Compat.Forms\cYo.Compat.Forms.csproj" />
+    <!-- The WPF facades (P4.17.3): only their files are used (Directory.Build.targets keeps them out of the compile references), read with a MetadataLoadContext. -->
+    <ProjectReference Include="..\..\cYo.Compat.Xaml\cYo.Compat.Xaml.csproj" />
+    <ProjectReference Include="..\..\cYo.Compat.PresentationCore\cYo.Compat.PresentationCore.csproj" />
+    <ProjectReference Include="..\..\cYo.Compat.PresentationFramework\cYo.Compat.PresentationFramework.csproj" />
     <!-- The generator is run from the tests (the committed Generated folders must be what it produces now). -->
     <ProjectReference Include="..\..\tools\facade-gen\FacadeGen.csproj" />
   </ItemGroup>

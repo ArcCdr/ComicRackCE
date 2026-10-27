@@ -114,17 +114,12 @@ owner System.Drawing.Bitmap P4.17.2
 owner System.Drawing.Icon P4.17.2
 owner System.Drawing.* P4.19
 
-# ---- Windows Presentation Foundation: the assemblies and types exist as throwing stubs (P4.17.3, enough to import a script that names them); a XAML loader for a subset is P4.17.6
-owner PresentationCore P4.17.3
-owner PresentationFramework P4.17.3
-owner WindowsBase P4.17.3
-owner System.Xaml P4.17.3
-owner System.Windows.Interop* P4.17.3
-owner System.Windows.Markup* P4.17.3
-owner System.Windows.Media* P4.17.3
-owner System.Windows.Controls* P4.17.3
-owner System.Windows.Visibility* P4.17.3
-owner System.Windows.Window* P4.17.3
+# ---- Windows Presentation Foundation: the assemblies and types exist as throwing stubs (P4.17.3, enough to import a script that names them); the subset the plugins use becomes real in P4.17.6
+owner PresentationCore P4.17.6
+owner PresentationFramework P4.17.6
+owner WindowsBase P4.17.6
+owner System.Xaml P4.17.6
+owner System.Windows.* P4.17.6
 
 # ---- .NET 10 members that exist and behave differently on macOS
 owner Microsoft.VisualBasic.FileIO.FileSystem P4.17.4

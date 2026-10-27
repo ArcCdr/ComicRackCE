@@ -127,6 +127,64 @@ def Identity(books):
 			Assert.Contains("loaded", text);
 		}
 
+		private const string WpfProbe = @"
+import clr
+clr.AddReference('PresentationFramework')
+clr.AddReference('PresentationCore')
+clr.AddReference('WindowsBase')
+clr.AddReference('System.Xaml')
+import System.IO
+from System.IO import Path, FileStream, FileMode
+from System import Uri, UriKind
+from System.Windows.Markup import XamlReader
+from System.Windows.Media.Imaging import BitmapImage
+from System.Windows import Visibility, Window
+from System.Windows.Interop import WindowInteropHelper
+
+def asm(t):
+	a = clr.GetClrType(t).Assembly.GetName()
+	return a.Name + ' ' + str(a.Version)
+
+#@Name Wpf
+#@Hook Books
+def Wpf(books):
+	print 'XamlReader', asm(XamlReader)
+	print 'BitmapImage', asm(BitmapImage)
+	print 'Window', asm(Window)
+	print 'WindowInteropHelper', asm(WindowInteropHelper)
+	print 'Visibility', asm(Visibility), int(Visibility.Collapsed)
+	print 'Uri', Uri('http://example.com/x', UriKind.Absolute).Host
+	try:
+		XamlReader.Parse('<a/>')
+	except Exception as e:
+		print 'Parse', e.message
+";
+
+		[Fact]
+		public void The_WPF_assemblies_of_the_framework_are_found_by_name_and_throw_the_standard_message()
+		{
+			string text = RunProbe(WpfProbe);
+			Assert.Contains("XamlReader PresentationFramework 10.0.0.0", text);
+			Assert.Contains("BitmapImage PresentationCore 10.0.0.0", text);
+			Assert.Contains("Window PresentationFramework 10.0.0.0", text);
+			Assert.Contains("WindowInteropHelper PresentationFramework 10.0.0.0", text);
+			// the types of WindowsBase are declared in the PresentationCore facade (the runtime's own WindowsBase.dll wins over a file of that name)
+			Assert.Contains("Visibility PresentationCore 10.0.0.0 2", text);
+			Assert.Contains("Uri example.com", text);
+			Assert.Contains("Parse System.Windows.Markup.XamlReader.Parse is not yet supported on macOS", text);
+		}
+
+		[Fact]
+		public void The_WPF_facades_are_in_the_output_folder_and_not_visible_to_the_compiler_of_this_project()
+		{
+			foreach (string name in new[] { "System.Xaml", "PresentationCore", "PresentationFramework" })
+			{
+				string file = Path.Combine(AppContext.BaseDirectory, name + ".dll");
+				Assert.True(File.Exists(file), file);
+				Assert.Equal(new Version(10, 0, 0, 0), System.Reflection.AssemblyName.GetAssemblyName(file).Version);
+			}
+		}
+
 		[Fact]
 		public void Every_unmodified_bundled_script_loads_without_a_reference_error()
 		{

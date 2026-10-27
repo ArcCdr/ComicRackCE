@@ -16,6 +16,9 @@
     <Project Path="cYo.Compat.Forms/cYo.Compat.Forms.csproj" />
     <Project Path="cYo.Common.Windows.Compat/cYo.Common.Windows.Compat.csproj" />
     <Project Path="cYo.Compat.Web/cYo.Compat.Web.csproj" />
+    <Project Path="cYo.Compat.Xaml/cYo.Compat.Xaml.csproj" />
+    <Project Path="cYo.Compat.PresentationCore/cYo.Compat.PresentationCore.csproj" />
+    <Project Path="cYo.Compat.PresentationFramework/cYo.Compat.PresentationFramework.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Compat.Drawing.Tests/Compat.Drawing.Tests.csproj" />

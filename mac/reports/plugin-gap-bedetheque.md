@@ -16,7 +16,7 @@ name (plugin data or a dynamic attribute). Every row has exactly one status. Row
 | Plugin | Scripts | Assemblies | Native files | Tier | Rows | real | stub | partial | missing | differs | plugin | python | dynamic |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 194 | 110 | 12 | 0 | 1 | 7 | 73 | 131 |
-| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 642 | 211 | 248 | 18 | 11 | 1 | 113 | 34 | 6 |
+| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 216 | 251 | 21 | 0 | 1 | 113 | 34 | 4 |
 
 ## Bedetheque Scraper 2 6.08
 
@@ -400,13 +400,13 @@ Installed through the `.crplugin` install path (`PluginPackages.InstallNow`); th
 
 | Script | Commands | Top level |
 |---|---|---|
-| `libraryorganizer.py` | 6 | fails: IOException: Could not add reference to assembly PresentationFramework |
+| `libraryorganizer.py` | 6 | runs |
 
 ### What decides whether the plugin loads and runs
 
 Read from the scripts of the package (`libraryorganizer.py`, `loworkerform.py`, `loduplicate.py`, `lobookmover.py`, `configureform.py`, `configformcontrols.py`).
 
-- **Windows Presentation Foundation is imported at the top level.** `loduplicate.py` (imported by `loworkerform.py`, imported by `libraryorganizer.py`) runs `clr.AddReference("PresentationFramework")`, `clr.AddReference("PresentationCore")` and imports `XamlReader`, `BitmapImage`, `Visibility`; `loworkerform.py` imports `WindowInteropHelper`. Without the three WPF assemblies the whole plugin fails to load (the load table above): "Could not add reference to assembly PresentationFramework". The facades must therefore provide the assemblies and the types by name (P4.17.3).
+- **Windows Presentation Foundation is imported at the top level.** `loduplicate.py` (imported by `loworkerform.py`, imported by `libraryorganizer.py`) runs `clr.AddReference("PresentationFramework")`, `clr.AddReference("PresentationCore")` and imports `XamlReader`, `BitmapImage`, `Visibility`; `loworkerform.py` imports `WindowInteropHelper`. Without the WPF assemblies the whole plugin failed to load ("Could not add reference to assembly PresentationFramework"). P4.17.3 provides `System.Xaml`, `PresentationCore` (with the types of `WindowsBase`) and `PresentationFramework` as throwing facades, and the engine starts with `System.dll` loaded (`from System import Uri` at the top of the same script), so the load table above says `runs`.
 - WPF is only *used* for the duplicate dialog: `DuplicateForm(mode)` loads `DuplicateForm.xaml` with `XamlReader.Load(XmlReader.Create(stream))` (Window, Grid, StackPanel, Label, TextBlock, Button, CheckBox, Image, Border, a Style with a ControlTemplate and triggers, gradient brushes), sets `BitmapImage` sources, finds elements with `FindName`, subscribes to `Click` and `Closing`, and sets `WindowInteropHelper(win).Owner = <WorkerForm>.Handle`. It is created lazily, the first time a move finds a book at the target path, so an organize run without duplicates never needs it (P4.17.6 provides a XAML loader for that subset and the window handle mapping).
 - **Backslash file names.** `Bitmap.FromFile(SCRIPTDIRECTORY + "\\home_32.png")` and the other toolbar images of the configuration dialog (12 files) use a backslash as separator: on macOS the file is not found and the dialog fails to open (P4.17.5). The folder templates the plugin builds are split on `\` by the plugin itself and joined with `Path.Combine`, which works.
 - **Recycle Bin.** Deleting the book that a move replaces uses `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin)`; on macOS .NET throws "UI not available for copy or move" (measured), so the plugin reports the delete as failed and does not move the file (P4.17.4).
@@ -694,7 +694,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 
 ### B. Member accesses on values of unknown type (by name)
 
-Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 265 rows: 76 real, 21 stub, 15 partial, 113 plugin, 34 python, 6 dynamic.
+Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 265 rows: 73 real, 23 stub, 18 partial, 113 plugin, 34 python, 4 dynamic.
 
 | Name | Uses | Files | Status | Source | Task | Candidates | Note |
 |---|---|---|---|---|---|---|---|
@@ -718,24 +718,29 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `keys` | 16 | 4 | python | builtin |  |  |  |
 | `App` | 15 | 4 | real | program |  | Core: cYo.Projects.ComicRack.Plugins.IPluginEnvironment, cYo.Projects.ComicRack.Plugins.PluginEnvironment |  |
 | `ShadowSeries` | 14 | 3 | real | program |  | Core: cYo.Projects.ComicRack.Engine.ComicBook |  |
+| `ToString` | 13 | 2 | partial | .NET 10 | P4.17.6 | used types: System.Object, System.DateTime, System.String, ... (38 types) |  |
 | `Text` | 12 | 3 | stub | facade | P4.10a | used types: ButtonBase, ComboBox, Panel, ... (19 types) |  |
 | `ShowDialog` | 10 | 5 | partial | facade | P4.10f | used types: CommonDialog, Form |  |
 | `Invoke` | 8 | 1 | partial | .NET 10 | P4.9e | used types: System.Action, System.Func`1, Control |  |
 | `TabPage` | 7 | 1 | stub | facade | P4.19 | WinForms and GDI+ surface: TabControlCancelEventArgs, TabControlEventArgs |  |
-| `BeginInit` | 5 | 2 | partial | .NET 10 | P4.10b | used types: System.ComponentModel.ISupportInitialize, NumericUpDown |  |
-| `EndInit` | 5 | 2 | partial | .NET 10 | P4.10b | used types: System.ComponentModel.ISupportInitialize, NumericUpDown |  |
+| `BeginInit` | 5 | 2 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage, System.ComponentModel.ISupportInitialize, NumericUpDown |  |
+| `EndInit` | 5 | 2 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage, System.ComponentModel.ISupportInitialize, NumericUpDown |  |
 | `Click` | 4 | 1 | stub | facade | P4.9a | used types: Control, TextBoxBase, CheckedListBox, ... (7 types) |  |
 | `Hide` | 4 | 1 | stub | facade | P4.9a | used types: Control |  |
-| `Width` | 4 | 1 | partial | .NET 10 | P4.9b | used types: Size, Control, Image, ... (6 types) |  |
+| `Width` | 4 | 1 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapSource, Size, Control, ... (7 types) |  |
 | `Enabled` | 3 | 1 | stub | facade | P4.9a | used types: Control, TabPage, ToolStripItem, ... (6 types) |  |
 | `SelectionStart` | 3 | 1 | stub | facade | P4.10b | used types: ComboBox, TextBoxBase, ToolStripComboBox |  |
 | `Contains` | 2 | 1 | partial | .NET 10 | P4.17.1 | used types: System.Collections.IList, System.Collections.Generic.ICollection`1, System.String, ... (5 types) |  |
+| `Create` | 2 | 1 | partial | .NET 10 | P4.17.6 | used types: System.String, System.IO.File, System.Xml.XmlWriter, ... (8 types) |  |
 | `DropDownWidth` | 2 | 1 | stub | facade | P4.10b | used types: ComboBox, ToolStripComboBox |  |
 | `InvokeRequired` | 2 | 1 | stub | facade | P4.9e | used types: Control |  |
-| `Load` | 2 | 1 | partial | .NET 10 | P4.9a | used types: System.Xml.XmlDocument, Form |  |
+| `Load` | 2 | 1 | partial | .NET 10 | P4.17.6 | used types: System.Xml.XmlDocument, System.Windows.Markup.XamlReader, Form |  |
 | `Position` | 2 | 1 | partial | .NET 10 | P4.17.1 | used types: System.IO.FileStream, System.IO.MemoryStream, BindingSource |  |
 | `SelectionLength` | 2 | 1 | stub | facade | P4.10b | used types: ComboBox, TextBoxBase, ToolStripComboBox, ... (4 types) |  |
-| `Visible` | 2 | 1 | partial | facade | P4.10d | used types: Control, TabPage, ToolStripItem, ... (5 types) |  |
+| `StreamSource` | 2 | 1 | stub | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage |  |
+| `UriSource` | 2 | 1 | stub | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage |  |
+| `Visible` | 2 | 1 | partial | facade | P4.10d | used types: System.Windows.Visibility, Control, TabPage, ... (6 types) |  |
+| `CancelAsync` | 1 | 1 | partial | facade | P4.17.6 | used types: System.Windows.Markup.XamlReader, System.ComponentModel.BackgroundWorker |  |
 | `Cells` | 1 | 1 | stub | facade | P4.13b | WinForms and GDI+ surface: DataGridViewRow |  |
 | `Close` | 1 | 1 | partial | .NET 10 | P4.9a | used types: System.IO.StreamReader, System.IO.StreamWriter, System.Xml.XmlTextWriter, ... (8 types) |  |
 | `Closing` | 1 | 1 | stub | facade | P4.9a | used types: Form |  |
@@ -747,14 +752,14 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `KeyChar` | 1 | 1 | stub | facade | P4.9a | WinForms and GDI+ surface: KeyPressEventArgs |  |
 | `MaxDropDownItems` | 1 | 1 | stub | facade | P4.10b | used types: ComboBox, ToolStripComboBox |  |
 | `MeasureString` | 1 | 1 | partial | facade | P3.4 | WinForms and GDI+ surface: Graphics |  |
-| `Owner` | 1 | 1 | stub | facade | P4.9f | used types: Form, ToolStripItem |  |
+| `Owner` | 1 | 1 | stub | facade | P4.17.6 | used types: System.Windows.Interop.WindowInteropHelper, Form, ToolStripItem |  |
 | `Parent` | 1 | 1 | partial | .NET 10 | P4.9a | used types: System.IO.DirectoryInfo, Control, ToolStripItem |  |
 
-214 more rows with a status that needs no work are in the JSON (`B`).
+209 more rows with a status that needs no work are in the JSON (`B`).
 
 ### C. .NET 10 types and members
 
-System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows). 67 rows: 57 real, 9 missing, 1 differs.
+System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows). 65 rows: 63 real, 1 stub, 1 differs.
 
 | API | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -799,17 +804,9 @@ System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows
 | `System.IO.Directory.Exists` | 1 | 1 | real | .NET 10 |  |  |
 | `System.IO.DirectoryInfo` | 1 | 1 | real | .NET 10 |  |  |
 | `System.IO.DirectoryNotFoundException` | 1 | 1 | real | .NET 10 |  |  |
-| `System.Windows.Interop` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Interop.WindowInteropHelper` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Markup.XamlReader` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Markup.XamlReader.Load` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Media.Imaging` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Media.Imaging.BitmapImage` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Visibility` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Visibility.Hidden` | 1 | 1 | missing | none | P4.17.3 |  |
-| `System.Windows.Visibility.Visible` | 1 | 1 | missing | none | P4.17.3 |  |
+| `System.Windows.Markup.XamlReader.Load` | 1 | 1 | stub | facade | P4.17.6 |  |
 
-17 more rows with a status that needs no work are in the JSON (`C`).
+23 more rows with a status that needs no work are in the JSON (`C`).
 
 ### D. Core types and members
 
@@ -845,7 +842,7 @@ Top-level names of imported modules: a file of the plugin, a built-in module of 
 
 ### F. Referenced assemblies
 
-`clr.AddReference` lines and assembly references. 7 rows: 5 real, 2 missing.
+`clr.AddReference` lines and assembly references. 7 rows: 7 real.
 
 | Assembly | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -853,8 +850,8 @@ Top-level names of imported modules: a file of the plugin, a built-in module of 
 | `System.Drawing` | 5 | 5 | real | .NET 10 |  |  |
 | `System.Xml` | 3 | 3 | real | .NET 10 |  |  |
 | `ComicRack.Engine` | 2 | 2 | real | program |  |  |
-| `PresentationCore` | 2 | 2 | missing | none | P4.17.3 | Windows Presentation Foundation |
-| `PresentationFramework` | 2 | 2 | missing | none | P4.17.3 | Windows Presentation Foundation |
+| `PresentationCore` | 2 | 2 | real | facade |  |  |
+| `PresentationFramework` | 2 | 2 | real | facade |  |  |
 | `Microsoft.VisualBasic` | 1 | 1 | real | .NET 10 |  |  |
 
 ### G. Findings of the scanner

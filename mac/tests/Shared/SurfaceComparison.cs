@@ -15,7 +15,12 @@ namespace Compat.Shared
 	/// </summary>
 	internal sealed class SurfaceFixture : IDisposable
 	{
-		private static readonly string[] PackAssemblies = { "System.Windows.Forms", "System.Windows.Forms.Primitives", "System.Drawing.Common" };
+		private static readonly string[] DefaultPackAssemblies = { "System.Windows.Forms", "System.Windows.Forms.Primitives", "System.Drawing.Common" };
+
+		private readonly string[] PackAssemblies;
+
+		/// <summary>The WPF facades leave out every member that names a type outside the facades and the runtime (System.Printing, UIAutomationProvider ...): such a type counts as omitted.</summary>
+		private readonly bool omitUnexposed;
 
 		private readonly HashSet<string> runtimeNames;
 
@@ -32,15 +37,18 @@ namespace Compat.Shared
 		/// <summary>The visible types (nested ones included) of the reference assemblies of this facade, without the omitted ones.</summary>
 		public List<Type> ReferenceTypes { get; } = new List<Type>();
 
-		public SurfaceFixture(string referenceDirectory, string[] referenceAssemblies, string[] facadePaths, string omittedFile)
+		/// <param name="packAssemblies">The reference assemblies of the pack that the facades stand for (default: the WinForms and GDI+ ones). The runtime's own file of such a name is not used (WindowsBase).</param>
+		public SurfaceFixture(string referenceDirectory, string[] referenceAssemblies, string[] facadePaths, string omittedFile, string[] packAssemblies = null)
 		{
+			PackAssemblies = packAssemblies ?? DefaultPackAssemblies;
+			omitUnexposed = packAssemblies != null;
 			string runtime = RuntimeEnvironment.GetRuntimeDirectory();
-			runtimeNames = new HashSet<string>(Directory.GetFiles(runtime, "*.dll").Select(Path.GetFileNameWithoutExtension), StringComparer.OrdinalIgnoreCase);
+			runtimeNames = new HashSet<string>(Directory.GetFiles(runtime, "*.dll").Select(Path.GetFileNameWithoutExtension).Where(n => !PackAssemblies.Contains(n)), StringComparer.OrdinalIgnoreCase);
 			// Since P4.8 the facades carry the identity of the assemblies they stand for (System.Windows.Forms and System.Drawing.Common, version 10.0.0.0, as the pack's
 			// reference assemblies): one load context cannot hold both, so the reference and the facade each get their own. The comparison works on names, not on type identity.
-			var referencePaths = Directory.GetFiles(runtime, "*.dll")
-				.Concat(Directory.GetFiles(referenceDirectory, "*.dll").Where(f => !File.Exists(Path.Combine(runtime, Path.GetFileName(f)))));
-			var facadeResolvable = Directory.GetFiles(runtime, "*.dll").Concat(facadePaths);
+			var referencePaths = Directory.GetFiles(runtime, "*.dll").Where(f => !PackAssemblies.Contains(Path.GetFileNameWithoutExtension(f)))
+				.Concat(Directory.GetFiles(referenceDirectory, "*.dll").Where(f => PackAssemblies.Contains(Path.GetFileNameWithoutExtension(f)) || !File.Exists(Path.Combine(runtime, Path.GetFileName(f)))));
+			var facadeResolvable = Directory.GetFiles(runtime, "*.dll").Where(f => !PackAssemblies.Contains(Path.GetFileNameWithoutExtension(f))).Concat(facadePaths);
 			foreach (string facade in facadePaths)
 			{
 				string directory = Path.GetDirectoryName(facade);
@@ -152,7 +160,7 @@ namespace Compat.Shared
 			{
 				return Omitted(t.GetGenericTypeDefinition()) || t.GenericTypeArguments.Any(Omitted);
 			}
-			return !t.IsGenericParameter && (omittedTypes.Contains(t.FullName) || t.IsNested && Omitted(t.DeclaringType));
+			return !t.IsGenericParameter && (omittedTypes.Contains(t.FullName) || t.IsNested && Omitted(t.DeclaringType) || omitUnexposed && !Exposed(t));
 		}
 
 		// ---- the comparison ----

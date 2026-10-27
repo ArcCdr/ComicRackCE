@@ -9,7 +9,13 @@
              Exclude="..\..\ComicRack.Plugins\Controls\**;..\..\ComicRack.Plugins\Theme\ThemePlugin.cs;..\..\ComicRack.Plugins\obj\**;..\..\ComicRack.Plugins\bin\**"
              LinkBase="Plugins" />
     <!-- Declarations that stand in for excluded or missing types (see mac/reports/census.md) -->
-    <Compile Include="Replacements\**\*.cs" />
+    <Compile Include="Replacements\**\*.cs" Exclude="Replacements\PassB\**" />
+    <Compile Include="Compat\**\*.cs" />
+  </ItemGroup>
+  <!-- Pass B only: CreateEngine of the copy calls ScriptEngineDefaults.Prepare (System.dll is loaded as on the .NET Framework, P4.17.3). -->
+  <ItemGroup Condition="'$(CensusPass)' == 'B'">
+    <Compile Remove="..\..\ComicRack.Plugins\PythonCommand.cs" />
+    <Compile Include="Replacements\PassB\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- Same as ComicRack.Plugins.csproj, with IronPython 2.7.12 instead of 2.7.4 -->

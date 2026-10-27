@@ -13,4 +13,13 @@
     <Error Condition="!Exists('$(PatchIronPythonTool)')" Text="IronPython.dll cannot be patched: $(PatchIronPythonTool) is missing (build mac/tools/patch-ironpython first)." />
     <Exec Command="&quot;$(PatchIronPythonHost)&quot; &quot;$(PatchIronPythonTool)&quot; &quot;$(OutDir)IronPython.dll&quot;" StandardOutputImportance="low" />
   </Target>
+  <!-- P4.17.3: the WPF facades (System.Xaml, PresentationCore with the types of WindowsBase, PresentationFramework) are runtime files only. A project that merely uses ComicRack.Mac.Host would otherwise
+       see System.Windows.Input.Key and KeyBinding next to Avalonia's. Only the facade projects themselves (they reference each other) and a project that sets WpfFacadesVisible=true compile against them. -->
+  <Target Name="HideWpfFacadesFromCompile" BeforeTargets="CoreCompile"
+          Condition="'$(WpfFacadesVisible)' != 'true' And !$(MSBuildProjectName.StartsWith('cYo.Compat.'))">
+    <ItemGroup>
+      <_WpfFacadeReference Include="@(ReferencePathWithRefAssemblies)" Condition="$([System.String]::Copy('%(FullPath)').Contains('cYo.Compat.')) And ('%(Filename)' == 'System.Xaml' Or '%(Filename)' == 'PresentationCore' Or '%(Filename)' == 'PresentationFramework')" />
+      <ReferencePathWithRefAssemblies Remove="@(_WpfFacadeReference)" />
+    </ItemGroup>
+  </Target>
 </Project>

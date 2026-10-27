@@ -1,0 +1,45 @@
+# Types, interfaces and members of the reference assemblies that this facade does not declare (written by mac/tools/facade-gen).
+member System.IO.Packaging.EncryptedPackageEnvelope.GetPackage: uses the omitted type System.IO.Packaging.Package
+member System.IO.Packaging.EncryptedPackageEnvelope.PackageProperties: uses the omitted type System.IO.Packaging.PackageProperties
+member System.IO.Packaging.PackageDigitalSignature.Signature: uses the omitted type System.Security.Cryptography.Xml.Signature
+member System.IO.Packaging.PackageDigitalSignature.SignaturePart: uses the omitted type System.IO.Packaging.PackagePart
+member System.IO.Packaging.PackageDigitalSignature.SignedRelationshipSelectors: uses the omitted type System.Collections.ObjectModel.ReadOnlyCollection`1[[System.IO.Packaging.PackageRelationshipSelector, System.IO.Packaging, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]
+member System.IO.Packaging.PackageDigitalSignatureManager.Sign: uses the omitted type System.Collections.Generic.IEnumerable`1[[System.IO.Packaging.PackageRelationshipSelector, System.IO.Packaging, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]
+member System.IO.Packaging.PackageDigitalSignatureManager.ctor: uses the omitted type System.IO.Packaging.Package
+member System.IO.Packaging.PackageStore.AddPackage: uses the omitted type System.IO.Packaging.Package
+member System.IO.Packaging.PackageStore.GetPackage: uses the omitted type System.IO.Packaging.Package
+member System.IO.Packaging.StorageInfo.CreateStream: uses the omitted type System.IO.Packaging.CompressionOption
+member System.IO.Packaging.StreamInfo.CompressionOption: uses the omitted type System.IO.Packaging.CompressionOption
+member System.IO.Packaging.StreamInfo.EncryptionOption: uses the omitted type System.IO.Packaging.EncryptionOption
+member System.Windows.Automation.Peers.AutomationPeer.PeerFromProvider: uses the omitted type System.Windows.Automation.Provider.IRawElementProviderSimple
+member System.Windows.Automation.Peers.AutomationPeer.ProviderFromPeer: uses the omitted type System.Windows.Automation.Provider.IRawElementProviderSimple
+member System.Windows.Automation.Peers.AutomationPeer.RaiseAsyncContentLoadedEvent: uses the omitted type System.Windows.Automation.AsyncContentLoadedEventArgs
+member System.Windows.Automation.Peers.AutomationPeer.RaiseNotificationEvent: uses the omitted type System.Windows.Automation.AutomationNotificationKind
+member System.Windows.Automation.Peers.AutomationPeer.RaisePropertyChangedEvent: uses the omitted type System.Windows.Automation.AutomationProperty
+member System.Windows.Input.Manipulation.SetManipulationParameter: uses the omitted type System.Windows.Input.Manipulations.ManipulationParameters2D
+member System.Windows.Input.ManipulationInertiaStartingEventArgs.SetInertiaParameter: uses the omitted type System.Windows.Input.Manipulations.InertiaParameters2D
+member System.Windows.Input.ManipulationStartingEventArgs.SetManipulationParameter: uses the omitted type System.Windows.Input.Manipulations.ManipulationParameters2D
+# Type forwards that lead to assemblies outside the runtime and the facades
+forward System.IO.FileFormatException (System.IO.Packaging)
+forward System.IO.Packaging.CompressionOption (System.IO.Packaging)
+forward System.IO.Packaging.EncryptionOption (System.IO.Packaging)
+forward System.IO.Packaging.PackUriHelper (System.IO.Packaging)
+forward System.IO.Packaging.Package (System.IO.Packaging)
+forward System.IO.Packaging.PackagePart (System.IO.Packaging)
+forward System.IO.Packaging.PackagePartCollection (System.IO.Packaging)
+forward System.IO.Packaging.PackageProperties (System.IO.Packaging)
+forward System.IO.Packaging.PackageRelationship (System.IO.Packaging)
+forward System.IO.Packaging.PackageRelationshipCollection (System.IO.Packaging)
+forward System.IO.Packaging.PackageRelationshipSelector (System.IO.Packaging)
+forward System.IO.Packaging.PackageRelationshipSelectorType (System.IO.Packaging)
+forward System.IO.Packaging.TargetMode (System.IO.Packaging)
+forward System.IO.Packaging.ZipPackage (System.IO.Packaging)
+forward System.IO.Packaging.ZipPackagePart (System.IO.Packaging)
+forward System.Security.Permissions.MediaPermission (System.Security.Permissions)
+forward System.Security.Permissions.MediaPermissionAttribute (System.Security.Permissions)
+forward System.Security.Permissions.MediaPermissionAudio (System.Security.Permissions)
+forward System.Security.Permissions.MediaPermissionImage (System.Security.Permissions)
+forward System.Security.Permissions.MediaPermissionVideo (System.Security.Permissions)
+forward System.Security.Permissions.WebBrowserPermission (System.Security.Permissions)
+forward System.Security.Permissions.WebBrowserPermissionAttribute (System.Security.Permissions)
+forward System.Security.Permissions.WebBrowserPermissionLevel (System.Security.Permissions)
