@@ -126,11 +126,11 @@ namespace ComicRack.Mac.Host
 		{
 			return new[]
 			{
-				typeof(cYo.Projects.ComicRack.Engine.EngineConfiguration).Assembly, // ComicRack.Engine.Core
-				typeof(cYo.Common.Threading.ThreadUtility).Assembly, // cYo.Common.Core
-				typeof(cYo.Projects.ComicRack.Plugins.ComicBookPluginMatcher).Assembly, // ComicRack.Plugins.Core
-				typeof(System.Windows.Forms.Keys).Assembly, // cYo.Compat.Forms
-				typeof(System.Drawing.Bitmap).Assembly, // cYo.Compat.Drawing
+				typeof(cYo.Projects.ComicRack.Engine.EngineConfiguration).Assembly, // ComicRack.Engine
+				typeof(cYo.Common.Threading.ThreadUtility).Assembly, // cYo.Common
+				typeof(cYo.Projects.ComicRack.Plugins.ComicBookPluginMatcher).Assembly, // ComicRack.Plugins
+				typeof(System.Windows.Forms.Keys).Assembly, // System.Windows.Forms (the facade)
+				typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.Common (the facade)
 			}.Distinct().ToArray();
 		}
 

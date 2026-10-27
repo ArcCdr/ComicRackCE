@@ -10,9 +10,8 @@ using Xunit;
 namespace ComicRack.Mac.Host.Tests.Scripting
 {
 	/// <summary>
-	/// P4.3 (wave B scope): the headless hooks of the scripts that ship with the program (<c>ComicRack/Output/Scripts</c>), run from a temporary copy whose
-	/// <c>clr.AddReference*</c> lines for System.Windows.Forms and System.Drawing name the stand-in assemblies, as the S4 self test did. The UI hooks are not run here
-	/// (P4.10); the unmodified files are accepted by P4.8 (assembly identity).
+	/// P4.3 and P4.8: the headless hooks of the scripts that ship with the program (<c>ComicRack/Output/Scripts</c>), run from an exact copy of the unmodified files
+	/// (their <c>clr.AddReference*</c> lines resolve through the assembly identity of the facades, P4.8). The UI hooks are not run here (P4.10).
 	/// </summary>
 	public class BundledSampleTests
 	{
@@ -29,7 +28,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		{
 			using (var temp = new TempFolder())
 			{
-				string dir = ScriptTestSupport.RewrittenCopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
+				string dir = ScriptTestSupport.CopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
 				using (MacHost host = ScriptTestSupport.Open(temp, scriptFolders: dir))
 				{
 					Dictionary<string, Command> all = host.Scripts.Engine.GetAllCommands().ToDictionary(c => c.Key, c => c);
@@ -61,7 +60,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		{
 			using (var temp = new TempFolder())
 			{
-				string dir = ScriptTestSupport.RewrittenCopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
+				string dir = ScriptTestSupport.CopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
 				using (MacHost host = ScriptTestSupport.Open(temp, scriptFolders: dir))
 				{
 					Dictionary<string, Command> sample = Sample(host, dir);
@@ -105,7 +104,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		{
 			using (var temp = new TempFolder())
 			{
-				string dir = ScriptTestSupport.RewrittenCopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
+				string dir = ScriptTestSupport.CopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
 				using (MacHost host = ScriptTestSupport.Open(temp, scriptFolders: dir))
 				{
 					ScriptTestSupport.Add(host, ScriptTestSupport.Book("Alpha", "1"), ScriptTestSupport.Book("Beta", "2"), ScriptTestSupport.Book("Alpine", "3"));
@@ -132,7 +131,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		{
 			using (var temp = new TempFolder())
 			{
-				string dir = ScriptTestSupport.RewrittenCopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
+				string dir = ScriptTestSupport.CopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
 				var ui = new HeadlessScriptUi { QuestionAnswer = 0 };
 				using (MacHost host = ScriptTestSupport.Open(temp, ui: ui, scriptFolders: dir))
 				{
@@ -157,7 +156,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		{
 			using (var temp = new TempFolder())
 			{
-				string dir = ScriptTestSupport.RewrittenCopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
+				string dir = ScriptTestSupport.CopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
 				using (MacHost host = ScriptTestSupport.Open(temp, scriptFolders: dir))
 				{
 					ComicBook book = ScriptTestSupport.Book("Alpha", "1");
@@ -177,7 +176,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		{
 			using (var temp = new TempFolder())
 			{
-				string dir = ScriptTestSupport.RewrittenCopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
+				string dir = ScriptTestSupport.CopyOfBundledScripts(Path.Combine(temp.Path, "Scripts"));
 				using (MacHost host = ScriptTestSupport.Open(temp, scriptFolders: dir))
 				{
 					string sample = Path.Combine(dir, "Sample.py");

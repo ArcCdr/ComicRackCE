@@ -188,12 +188,12 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 		public static ApiCatalog FromFacade(string directory)
 		{
 			var paths = new List<string>();
-			// The assemblies are named cYo.Compat.* until P4.8 gives them the names of the framework assemblies. Until then the output folder of a program that hosts IronPython also
-			// holds the real System.Drawing.Common 4.7.0 (a transitive package of IronPython), which is not the facade: the pair with the facade name wins.
-			foreach (string[] pair in new[] { new[] { "cYo.Compat.Forms.dll", "System.Windows.Forms.dll" }, new[] { "cYo.Compat.Drawing.dll", "System.Drawing.Common.dll" } })
+			// Since P4.8 the facades carry the names of the framework assemblies (System.Windows.Forms, System.Drawing.Common); the real System.Drawing.Common 4.7.0 that IronPython
+			// depends on is replaced by the facade project in the output folder, so a file with that name is the facade.
+			foreach (string name in new[] { "System.Windows.Forms.dll", "System.Drawing.Common.dll" })
 			{
-				string p = pair.Select(n => Path.Combine(directory, n)).FirstOrDefault(File.Exists);
-				if (p != null)
+				string p = Path.Combine(directory, name);
+				if (File.Exists(p))
 				{
 					paths.Add(p);
 				}

@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using ComicRack.Mac.Host.Scripting;
 using cYo.Projects.ComicRack.Engine;
 
@@ -31,26 +30,15 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		public static string TestScripts => Path.Combine(AppContext.BaseDirectory, "TestScripts");
 
 		/// <summary>
-		/// A copy of the bundled scripts in <paramref name="target"/> whose <c>clr.AddReference[ByPartialName]</c> lines for <c>System.Windows.Forms</c> and
-		/// <c>System.Drawing</c> name the stand-in assemblies. The real names resolve only after P4.8 (assembly identity), where the unmodified files are accepted.
+		/// An exact copy of the scripts the program ships, byte for byte. Since P4.8 (assembly identity) the unmodified files load: their
+		/// <c>clr.AddReference[ByPartialName]</c> lines for System.Windows.Forms, System.Drawing and the Core assemblies resolve by the names of the originals.
 		/// </summary>
-		public static string RewrittenCopyOfBundledScripts(string target)
+		public static string CopyOfBundledScripts(string target)
 		{
 			Directory.CreateDirectory(target);
 			foreach (string source in Directory.GetFiles(BundledScripts))
 			{
-				string file = Path.Combine(target, Path.GetFileName(source));
-				if (source.EndsWith(".py", StringComparison.OrdinalIgnoreCase))
-				{
-					string text = File.ReadAllText(source);
-					text = Regex.Replace(text, @"clr\.AddReference(ByPartialName)?\(\s*[""']System\.Windows\.Forms[""']\s*\)", "clr.AddReference(\"cYo.Compat.Forms\")");
-					text = Regex.Replace(text, @"clr\.AddReference(ByPartialName)?\(\s*[""']System\.Drawing[""']\s*\)", "clr.AddReference(\"cYo.Compat.Drawing\")");
-					File.WriteAllText(file, text);
-				}
-				else
-				{
-					File.Copy(source, file);
-				}
+				File.Copy(source, Path.Combine(target, Path.GetFileName(source)));
 			}
 			return target;
 		}

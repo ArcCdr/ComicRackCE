@@ -45,6 +45,21 @@ if [ -e "$APP/Contents/MacOS/Resources/x64" ] || [ -e "$APP/Contents/MacOS/Resou
 	exit 1
 fi
 
+# P4.8: the assemblies carry the names scripts use (System.Windows.Forms and System.Drawing.Common are the facades, version 10.0.0.0; ComicRack.Engine, ComicRack.Plugins, cYo.Common and
+# cYo.Common.Windows are the Core), and no file of an older name is left. mac/tools/bundle-selftest.sh checks that a script reaches them.
+for asm in System.Windows.Forms System.Drawing.Common ComicRack.Engine ComicRack.Plugins cYo.Common cYo.Common.Windows; do
+	if [ ! -e "$APP/Contents/MacOS/$asm.dll" ]; then
+		echo "FAIL: the assembly $asm.dll is missing from the bundle." >&2
+		exit 1
+	fi
+done
+for old in cYo.Compat.Forms cYo.Compat.Drawing ComicRack.Engine.Core ComicRack.Plugins.Core cYo.Common.Core; do
+	if [ -e "$APP/Contents/MacOS/$old.dll" ]; then
+		echo "FAIL: $old.dll (a name from before the assembly identity mapping) is in the bundle." >&2
+		exit 1
+	fi
+done
+
 # P4.3: IronPython 2.7.12 cannot create a Python class on .NET 9 and later. The tool patches the copy in the bundle (idempotent), the Python standard
 # library sits in Contents/MacOS/Lib (package IronPython.StdLib, found next to IronPython.dll), and the Apache-2.0 licence text goes to Contents/Resources.
 dotnet build "$ROOT/mac/tools/patch-ironpython" -c Release -v q --nologo >/dev/null

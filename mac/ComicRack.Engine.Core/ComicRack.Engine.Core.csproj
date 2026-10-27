@@ -2,7 +2,7 @@
   <Import Project="..\Shadow.props" />
   <PropertyGroup>
     <RootNamespace>cYo.Projects.ComicRack.Engine</RootNamespace>
-    <AssemblyName>ComicRack.Engine.Core</AssemblyName>
+    <AssemblyName>ComicRack.Engine</AssemblyName>
   </PropertyGroup>
   <Import Project="Sources.props" />
   <ItemGroup>

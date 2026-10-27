@@ -56,21 +56,21 @@ namespace ApiInventory
 
 		private static string Normalize(string name) => name.Replace('+', '.');
 
-		/// <summary>The newest cYo.Compat.Drawing.dll and cYo.Compat.Forms.dll below mac/ (a build of the shim projects must exist).</summary>
+		/// <summary>The newest System.Drawing.Common.dll and System.Windows.Forms.dll (the shim assemblies, named like the framework assemblies since P4.8) below mac/ (a build of the shim projects must exist).</summary>
 		public static (string Drawing, string Forms) Locate(string macDir)
 		{
-			return (Newest(macDir, "cYo.Compat.Drawing"), Newest(macDir, "cYo.Compat.Forms"));
+			return (Newest(macDir, "cYo.Compat.Drawing", "System.Drawing.Common"), Newest(macDir, "cYo.Compat.Forms", "System.Windows.Forms"));
 		}
 
-		private static string Newest(string macDir, string project)
+		private static string Newest(string macDir, string project, string assembly)
 		{
 			string bin = Path.Combine(macDir, project, "bin");
 			string dll = Directory.Exists(bin)
-				? Directory.GetFiles(bin, project + ".dll", SearchOption.AllDirectories)
+				? Directory.GetFiles(bin, assembly + ".dll", SearchOption.AllDirectories)
 					.Where(f => f.Contains(Path.DirectorySeparatorChar + "net10.0" + Path.DirectorySeparatorChar))
 					.OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault()
 				: null;
-			return dll ?? throw new FileNotFoundException($"{project}.dll not found below {bin}. Build it first: dotnet build mac/cYo.Compat.Forms/cYo.Compat.Forms.csproj");
+			return dll ?? throw new FileNotFoundException($"{assembly}.dll not found below {bin}. Build it first: dotnet build mac/cYo.Compat.Forms/cYo.Compat.Forms.csproj");
 		}
 
 		// SkiaSharp types only occur in signatures of the Drawing shim; a missing assembly makes those parameters unresolvable, not the whole check.

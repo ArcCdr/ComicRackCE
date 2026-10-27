@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using cYo.Projects.ComicRack.Engine;
@@ -47,6 +48,12 @@ namespace ComicRack.Mac.Host.Scripting
 
 		/// <summary><c>IOpenBooksManager.IsOpen</c>.</summary>
 		bool IsOpen(ComicBook book);
+
+		/// <summary>
+		/// <c>FormUtility.FindActiveService&lt;T&gt;()</c> for scripts (<c>cYo.Common.Windows.Forms.FormUtility</c>): the object of the active window that implements
+		/// <paramref name="service"/> (the Windows program finds it in the control tree of the active form: <c>IRefreshDisplay</c> is the browser or the reader), or null.
+		/// </summary>
+		object FindActiveService(Type service);
 	}
 
 	/// <summary>
@@ -126,5 +133,17 @@ namespace ComicRack.Mac.Host.Scripting
 		}
 
 		public bool IsOpen(ComicBook book) => false;
+
+		/// <summary>The services this window offers to <c>FormUtility.FindActiveService</c> by the type a script asks for (a test fills it; none by default).</summary>
+		public Dictionary<Type, object> Services { get; } = new Dictionary<Type, object>();
+
+		public object FindActiveService(Type service)
+		{
+			Note("FindActiveService: " + service?.Name);
+			lock (Services)
+			{
+				return service != null && Services.TryGetValue(service, out object found) ? found : null;
+			}
+		}
 	}
 }

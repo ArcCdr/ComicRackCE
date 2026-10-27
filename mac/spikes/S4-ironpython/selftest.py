@@ -141,40 +141,12 @@ def drawing_common():
 	exec "from System.Drawing import *" in ns
 	make("Bitmap(10, 10)", "Bitmap(10, 10)", ns)
 
-#@Name  S4 stand-ins first, then System.Drawing.Common
-#@Hook  Startup
-def drawing_both_reversed():
-	add_ref("AddReference", "cYo.Compat.Drawing")
-	add_ref("AddReference", "System.Drawing.Common")
-	for n in ["Bitmap", "Graphics"]:
-		where("System.Drawing", n)
-
-#@Name  S4 Compat assemblies by their own names
-#@Hook  Startup
-def compat_names():
-	add_ref("AddReference", "cYo.Compat.Drawing")
-	add_ref("AddReference", "cYo.Compat.Forms")
-	for n in DRAWING_NAMES:
-		where("System.Drawing", n)
-	for n in FORMS_NAMES:
-		where("System.Windows.Forms", n)
-
-#@Name  S4 System.Drawing.Common and cYo.Compat.Drawing together
-#@Hook  Startup
-def drawing_both():
-	add_ref("AddReference", "System.Drawing.Common")
-	add_ref("AddReference", "cYo.Compat.Drawing")
-	for n in ["Point", "Bitmap", "Graphics"]:
-		where("System.Drawing", n)
-	ns = {}
-	exec "from System.Drawing import *" in ns
-	make("Bitmap(10, 10)", "Bitmap(10, 10)", ns)
-
 #@Name  S4 Control subclass as in Sample.py
 #@Hook  Startup
 def control_subclass():
-	add_ref("AddReference", "cYo.Compat.Forms")
-	add_ref("AddReference", "cYo.Compat.Drawing")
+	# since P4.8 the stand-ins carry the names of the originals
+	add_ref("AddReference", "System.Windows.Forms")
+	add_ref("AddReference", "System.Drawing")
 	ns = {}
 	exec "from System.Windows.Forms import *\nfrom System.Drawing import *" in ns
 	try:
@@ -194,7 +166,7 @@ def control_subclass():
 #@Hook  Startup
 def core_names():
 	# RefreshView.py: clr.AddReferenceByPartialName('ComicRack.Engine') and 'cYo.Common.Windows'.
-	for n in ["ComicRack.Engine", "ComicRack.Engine.Core", "ComicRack.Plugins", "ComicRack.Plugins.Core", "cYo.Common", "cYo.Common.Core", "cYo.Common.Windows"]:
+	for n in ["ComicRack.Engine", "ComicRack.Plugins", "cYo.Common", "cYo.Common.Windows"]:
 		add_ref("AddReferenceByPartialName", n)
 	for ns, n in [("cYo.Projects.ComicRack.Engine", "ComicBook"), ("cYo.Projects.ComicRack.Engine", "IRefreshDisplay"), ("cYo.Common.Windows.Forms", "FormUtility"),
 			("cYo.Common.Reflection", "DuckTyping"), ("cYo.Common.Text", "StringUtility")]:
@@ -204,7 +176,7 @@ def core_names():
 #@Hook  Startup
 def duck_typing():
 	import System
-	add_ref("AddReference", "cYo.Common.Core")
+	add_ref("AddReference", "cYo.Common")
 	try:
 		from cYo.Common.Reflection import DuckTyping
 		obs("DuckTyping is reachable", True)

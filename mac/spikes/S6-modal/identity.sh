@@ -3,6 +3,8 @@
 #   identity.sh forms   the facade with the literal name System.Windows.Forms (S6 app, --identity): versions, public key tokens, a compiled plug-in
 #   identity.sh core    the real Core with the stand-ins and the shadow assemblies renamed (S4 console, unmodified bundled scripts)
 #   identity.sh all
+# Historical since P4.8: `core` renames the old assembly names (cYo.Compat.Forms, ComicRack.Engine.Core ...) in a build output; the projects now build under the final names, so it has
+# nothing to rename (use mac/scripting/identity-probe.py and mac/tools/bundle-selftest.sh for the check that stays). `forms` is unaffected.
 # Output: mac/artifacts/s6/identity/<variant>.txt and a summary on stdout. Exit 0 when the run itself worked (the variants record PASS/FAIL lines).
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"

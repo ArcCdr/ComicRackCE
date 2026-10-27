@@ -21,12 +21,14 @@ namespace ComicRack.Mac.Scripting
 		private readonly MainViewModel vm;
 		private readonly ILibraryDialogs dialogs;
 		private readonly ReaderComicDisplay display;
+		private readonly IRefreshDisplay refresh;
 
 		public AppScriptUi(MainViewModel vm, ILibraryDialogs dialogs)
 		{
 			this.vm = vm ?? throw new ArgumentNullException(nameof(vm));
 			this.dialogs = dialogs ?? throw new ArgumentNullException(nameof(dialogs));
 			display = new ReaderComicDisplay(() => vm.Reader);
+			refresh = new WindowRefresh(vm);
 		}
 
 		/// <summary>No WinForms window exists to hand a script; dialogs that a script makes are owned by the active window (the script UI layer, P4.9 and later, provides the form classes).</summary>
@@ -124,5 +126,39 @@ namespace ComicRack.Mac.Scripting
 		}
 
 		public bool IsOpen(ComicBook book) => UiCall.Invoke(() => vm.Tabs != null && vm.Tabs.IsOpen(book));
+
+		/// <summary>
+		/// <c>FormUtility.FindActiveService&lt;T&gt;()</c>: the window offers <see cref="IRefreshDisplay"/> (View > Refresh of the original: the reader shows its page again, the browser
+		/// redraws its covers); the other services of the Windows main form (the library browser commands) have no equivalent object here.
+		/// </summary>
+		public object FindActiveService(Type service)
+		{
+			return service != null && service.IsInstanceOfType(refresh) ? refresh : null;
+		}
+
+		private sealed class WindowRefresh : IRefreshDisplay
+		{
+			private readonly MainViewModel vm;
+
+			public WindowRefresh(MainViewModel vm)
+			{
+				this.vm = vm;
+			}
+
+			public void RefreshDisplay()
+			{
+				UiCall.Invoke(() =>
+				{
+					if (vm.Reader != null)
+					{
+						vm.Reader.Refresh();
+					}
+					else
+					{
+						vm.Browser.RefreshCovers();
+					}
+				});
+			}
+		}
 	}
 }

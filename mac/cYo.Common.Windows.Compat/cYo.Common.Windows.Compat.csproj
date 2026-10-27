@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The assembly "cYo.Common.Windows" for scripts and compiled plug-ins on macOS (P4.8): the original is the WinForms helper library of the Windows program and is not linked;
+       plug-ins reference it by name (clr.AddReferenceByPartialName('cYo.Common.Windows')) to reach FormUtility. This project declares the members of FormUtility that make sense
+       without WinForms handles (the service lookup of the active window, the DPI scale) over the facades in System.Windows.Forms. net10/macOS only. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>cYo.Common.Windows</RootNamespace>
+    <AssemblyName>cYo.Common.Windows</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cYo.Compat.Forms\cYo.Compat.Forms.csproj" />
+    <ProjectReference Include="..\cYo.Compat.Drawing\cYo.Compat.Drawing.csproj" />
+  </ItemGroup>
+</Project>

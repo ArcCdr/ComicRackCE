@@ -17,7 +17,7 @@ namespace ApiInventory
 	/// </summary>
 	internal static class Program
 	{
-		private static readonly string[] Assemblies = { "cYo.Common.Core", "ComicRack.Engine.Core", "ComicRack.Plugins.Core" };
+		private static readonly string[] Assemblies = { "cYo.Common", "ComicRack.Engine", "ComicRack.Plugins" };
 
 		private const string BaselineRelative = "reports/api-baseline.json";
 

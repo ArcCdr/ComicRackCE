@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using cYo.Common.Net.Search;
+using cYo.Common.Windows.Forms;
 using cYo.Projects.ComicRack.Engine;
 using cYo.Projects.ComicRack.Engine.Database;
 using cYo.Projects.ComicRack.Plugins;
@@ -31,6 +32,7 @@ namespace ComicRack.Mac.Host.Scripting
 		private readonly List<(Command command, EventHandler<ComicBook.ParseFilePathEventArgs> handler)> parseHooks = new List<(Command, EventHandler<ComicBook.ParseFilePathEventArgs>)>();
 		private readonly List<ScriptSearch> searchEngines = new List<ScriptSearch>();
 		private IScriptUi ui;
+		private Func<Type, object> activeServices;
 		private bool started;
 		private bool disposed;
 
@@ -101,6 +103,9 @@ namespace ComicRack.Mac.Host.Scripting
 			{
 				return false;
 			}
+			// FormUtility.FindActiveService<T>() of the assembly cYo.Common.Windows (RefreshView.py and others): the window the script sees is the program's.
+			activeServices = type => Ui.FindActiveService(type);
+			ActiveServices.Resolver = activeServices;
 			foreach (string folder in Folders.Existing)
 			{
 				try
@@ -250,6 +255,10 @@ namespace ComicRack.Mac.Host.Scripting
 			if (ReferenceEquals(ComicBookPluginMatcher.PluginEngine, Engine))
 			{
 				ComicBookPluginMatcher.PluginEngine = null;
+			}
+			if (activeServices != null && ReferenceEquals(ActiveServices.Resolver, activeServices))
+			{
+				ActiveServices.Resolver = null;
 			}
 			PythonCommand.Output = null;
 			PythonCommand.EnableLog = false;

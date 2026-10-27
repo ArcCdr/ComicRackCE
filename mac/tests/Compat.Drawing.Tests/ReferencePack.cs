@@ -28,20 +28,5 @@ namespace Compat.Drawing.Tests
 				.FirstOrDefault(File.Exists);
 			return best ?? throw new FileNotFoundException("System.Drawing.Common.dll not found under " + root);
 		}
-
-		/// <summary>A load context that sees the reference assembly, the shim and the runtime (for System.Runtime and System.Drawing.Primitives).</summary>
-		public static MetadataLoadContext CreateContext(string shimPath, out Assembly reference, out Assembly shim)
-		{
-			string drawingRef = Find();
-			string runtime = RuntimeEnvironment.GetRuntimeDirectory();
-			var paths = Directory.GetFiles(runtime, "*.dll")
-				.Concat(Directory.GetFiles(Path.GetDirectoryName(drawingRef), "*.dll").Where(f => !File.Exists(Path.Combine(runtime, Path.GetFileName(f)))))
-				.Append(shimPath)
-				.Concat(Directory.GetFiles(Path.GetDirectoryName(shimPath), "SkiaSharp.dll"));
-			var context = new MetadataLoadContext(new PathAssemblyResolver(paths), "System.Private.CoreLib");
-			reference = context.LoadFromAssemblyPath(drawingRef);
-			shim = context.LoadFromAssemblyPath(shimPath);
-			return context;
-		}
 	}
 }

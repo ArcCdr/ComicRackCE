@@ -80,15 +80,6 @@ namespace ComicRack.Mac
 			return false;
 		}
 
-		/// <summary>
-		/// Set to 1 to run a copy of Sample.py (and Sample.xml) whose two clr.AddReferenceByPartialName lines name the stand-in assemblies
-		/// (cYo.Compat.Forms, cYo.Compat.Drawing). It simulates the best case of the identity question: the names that scripts use resolve.
-		/// </summary>
-		public const string RewriteRefsVariable = "COMICRACK_SELFTEST_REWRITE_REFS";
-
-		/// <summary>Set to 1 to install the experimental assembly identity hook (see <see cref="InstallResolver"/>) before the scripts run.</summary>
-		public const string ResolverVariable = "COMICRACK_SELFTEST_RESOLVER";
-
 		private sealed class Report
 		{
 			private readonly TextWriter output;
@@ -148,10 +139,6 @@ namespace ComicRack.Mac
 				report.Fail("scripts folder", "refused: " + scriptsDir + " is where ComicRack keeps the user's scripts and data; copy the scripts to a temporary folder first");
 				return 1;
 			}
-			if (Environment.GetEnvironmentVariable(ResolverVariable) == "1")
-			{
-				InstallResolver(report);
-			}
 			PluginEnvironment env = new PluginEnvironment(null, null, null, null, new Config(Path.Combine(scriptsDir, "Lib")), null, new ThemeStub());
 			Guarded(report, "probe script", () => RunProbeScript(report, env, full));
 			string sample = Path.Combine(scriptsDir, "Sample.py");
@@ -165,27 +152,6 @@ namespace ComicRack.Mac
 			}
 			report.Info("result", report.Failures == 0 ? "all checks passed" : report.Failures + " failed");
 			return report.Failures == 0 ? 0 : 1;
-		}
-
-		/// <summary>
-		/// Experiment for the identity question (S6 decides): answer a failed load of the simple names System.Windows.Forms and
-		/// System.Drawing.Common with the stand-in assemblies, so that clr.AddReference('System.Windows.Forms') works for scripts.
-		/// </summary>
-		private static void InstallResolver(Report report)
-		{
-			System.Runtime.Loader.AssemblyLoadContext.Default.Resolving += (context, name) =>
-			{
-				switch (name.Name)
-				{
-					case "System.Windows.Forms":
-						return typeof(System.Windows.Forms.Control).Assembly;
-					case "System.Drawing.Common":
-						return typeof(System.Drawing.Bitmap).Assembly;
-					default:
-						return null;
-				}
-			};
-			report.Info("resolver", "AssemblyLoadContext.Default.Resolving maps System.Windows.Forms and System.Drawing.Common to the stand-ins");
 		}
 
 		private static void Guarded(Report report, string name, Action body)
@@ -308,50 +274,6 @@ namespace ComicRack.Mac
 		}
 
 		private static void SampleChecks(Report report, PluginEnvironment env, string sample)
-		{
-			string temp = null;
-			try
-			{
-				if (Environment.GetEnvironmentVariable(RewriteRefsVariable) == "1")
-				{
-					temp = Path.Combine(Path.GetTempPath(), "comicrack-s4-" + Guid.NewGuid().ToString("N"));
-					Directory.CreateDirectory(temp);
-					foreach (string source in Directory.GetFiles(Path.GetDirectoryName(sample)))
-					{
-						string target = Path.Combine(temp, Path.GetFileName(source));
-						if (source.EndsWith(".py", StringComparison.OrdinalIgnoreCase))
-						{
-							File.WriteAllText(target, File.ReadAllText(source)
-								.Replace("AddReferenceByPartialName(\"System.Windows.Forms\")", "AddReference(\"cYo.Compat.Forms\")")
-								.Replace("AddReferenceByPartialName(\"System.Drawing\")", "AddReferenceByPartialName(\"System.Drawing\"); clr.AddReference(\"cYo.Compat.Drawing\")"));
-						}
-						else if (!source.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-						{
-							File.Copy(source, target);
-						}
-					}
-					report.Info("Sample.py", "run from a copy of the scripts folder with the two AddReferenceByPartialName lines rewritten to the stand-in names");
-					sample = Path.Combine(temp, "Sample.py");
-				}
-				SampleChecksIn(report, env, sample);
-			}
-			finally
-			{
-				if (temp != null)
-				{
-					try
-					{
-						Directory.Delete(temp, true);
-					}
-					catch (Exception e)
-					{
-						report.Info("Sample.py", "the temporary copy " + temp + " could not be deleted: " + e.Message);
-					}
-				}
-			}
-		}
-
-		private static void SampleChecksIn(Report report, PluginEnvironment env, string sample)
 		{
 			Command[] commands = new PythonPluginInitializer().GetCommands(sample).ToArray();
 			report.Check("Sample.py commands found", commands.Length >= 10, commands.Length + " commands: " + string.Join(", ", commands.Select(c => ((PythonCommand)c).Method)));

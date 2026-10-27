@@ -23,7 +23,11 @@ namespace Compat.Shared
 
 		private readonly HashSet<string> omittedTypes = new HashSet<string>(StringComparer.Ordinal);
 
+		/// <summary>The load context of the reference assemblies.</summary>
 		public MetadataLoadContext Context { get; }
+
+		/// <summary>The load context of the facade assemblies.</summary>
+		public MetadataLoadContext FacadeContext { get; }
 
 		/// <summary>The visible types (nested ones included) of the reference assemblies of this facade, without the omitted ones.</summary>
 		public List<Type> ReferenceTypes { get; } = new List<Type>();
@@ -32,15 +36,18 @@ namespace Compat.Shared
 		{
 			string runtime = RuntimeEnvironment.GetRuntimeDirectory();
 			runtimeNames = new HashSet<string>(Directory.GetFiles(runtime, "*.dll").Select(Path.GetFileNameWithoutExtension), StringComparer.OrdinalIgnoreCase);
-			var paths = Directory.GetFiles(runtime, "*.dll")
-				.Concat(Directory.GetFiles(referenceDirectory, "*.dll").Where(f => !File.Exists(Path.Combine(runtime, Path.GetFileName(f)))))
-				.Concat(facadePaths);
+			// Since P4.8 the facades carry the identity of the assemblies they stand for (System.Windows.Forms and System.Drawing.Common, version 10.0.0.0, as the pack's
+			// reference assemblies): one load context cannot hold both, so the reference and the facade each get their own. The comparison works on names, not on type identity.
+			var referencePaths = Directory.GetFiles(runtime, "*.dll")
+				.Concat(Directory.GetFiles(referenceDirectory, "*.dll").Where(f => !File.Exists(Path.Combine(runtime, Path.GetFileName(f)))));
+			var facadeResolvable = Directory.GetFiles(runtime, "*.dll").Concat(facadePaths);
 			foreach (string facade in facadePaths)
 			{
 				string directory = Path.GetDirectoryName(facade);
-				paths = paths.Concat(new[] { "SkiaSharp.dll", "cYo.Compat.Drawing.dll" }.Select(n => Path.Combine(directory, n)).Where(File.Exists).Where(f => !facadePaths.Contains(f)));
+				facadeResolvable = facadeResolvable.Concat(new[] { "SkiaSharp.dll" }.Select(n => Path.Combine(directory, n)).Where(File.Exists));
 			}
-			Context = new MetadataLoadContext(new PathAssemblyResolver(paths.Distinct()), "System.Private.CoreLib");
+			Context = new MetadataLoadContext(new PathAssemblyResolver(referencePaths.Distinct()), "System.Private.CoreLib");
+			FacadeContext = new MetadataLoadContext(new PathAssemblyResolver(facadeResolvable.Distinct()), "System.Private.CoreLib");
 			foreach (string line in File.ReadAllLines(omittedFile))
 			{
 				if (line.StartsWith("type ", StringComparison.Ordinal))
@@ -50,7 +57,7 @@ namespace Compat.Shared
 			}
 			foreach (string facade in facadePaths)
 			{
-				foreach (Type t in VisibleTypes(Context.LoadFromAssemblyPath(facade)))
+				foreach (Type t in VisibleTypes(FacadeContext.LoadFromAssemblyPath(facade)))
 				{
 					facadeTypes[t.FullName] = t;
 				}
@@ -68,7 +75,11 @@ namespace Compat.Shared
 			ReferenceTypes.Sort((a, b) => string.CompareOrdinal(a.FullName, b.FullName));
 		}
 
-		public void Dispose() => Context.Dispose();
+		public void Dispose()
+		{
+			Context.Dispose();
+			FacadeContext.Dispose();
+		}
 
 		public Type Facade(string fullName) => facadeTypes.TryGetValue(fullName, out Type t) ? t : null;
 

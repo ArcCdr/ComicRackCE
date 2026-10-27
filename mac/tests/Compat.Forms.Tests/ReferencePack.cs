@@ -28,20 +28,5 @@ namespace Compat.Forms.Tests
 				.FirstOrDefault(File.Exists);
 			return best ?? throw new FileNotFoundException("System.Windows.Forms.dll not found under " + root);
 		}
-
-		/// <summary>A load context that sees the reference assembly, the shim and the runtime (for System.Runtime and System.Drawing.Primitives).</summary>
-		public static MetadataLoadContext CreateContext(string shimPath, out Assembly reference, out Assembly shim)
-		{
-			string formsRef = Find();
-			string refDir = Path.GetDirectoryName(formsRef);
-			var paths = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll")
-				.Concat(Directory.GetFiles(refDir, "*.dll").Where(f => !File.Exists(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), Path.GetFileName(f)))))
-				.Append(shimPath)
-				.Concat(Directory.GetFiles(Path.GetDirectoryName(shimPath), "cYo.Compat.Drawing.dll")); // Cursor.Draw(Graphics, Rectangle) names the Drawing stand-in
-			var context = new MetadataLoadContext(new PathAssemblyResolver(paths), "System.Private.CoreLib");
-			reference = context.LoadFromAssemblyPath(formsRef);
-			shim = context.LoadFromAssemblyPath(shimPath);
-			return context;
-		}
 	}
 }

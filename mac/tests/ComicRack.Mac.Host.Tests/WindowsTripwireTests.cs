@@ -48,7 +48,7 @@ namespace ComicRack.Mac.Host.Tests
 		public void The_resolver_is_installed_on_every_Core_assembly()
 		{
 			string[] names = NativeLibraryResolver.CoreAssemblies().Select(a => a.GetName().Name).OrderBy(n => n).ToArray();
-			Assert.Equal(new[] { "ComicRack.Engine.Core", "ComicRack.Plugins.Core", "cYo.Common.Core", "cYo.Compat.Drawing", "cYo.Compat.Forms" }.OrderBy(n => n).ToArray(), names);
+			Assert.Equal(new[] { "ComicRack.Engine", "ComicRack.Plugins", "cYo.Common", "System.Drawing.Common", "System.Windows.Forms" }.OrderBy(n => n).ToArray(), names);
 		}
 
 		[Fact]

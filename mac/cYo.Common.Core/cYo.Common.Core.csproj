@@ -2,7 +2,7 @@
   <Import Project="..\Shadow.props" />
   <PropertyGroup>
     <RootNamespace>cYo.Common</RootNamespace>
-    <AssemblyName>cYo.Common.Core</AssemblyName>
+    <AssemblyName>cYo.Common</AssemblyName>
   </PropertyGroup>
   <Import Project="Sources.props" />
   <ItemGroup>

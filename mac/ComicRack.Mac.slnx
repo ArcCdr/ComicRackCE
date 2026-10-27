@@ -14,6 +14,7 @@
   <Folder Name="/shims/">
     <Project Path="cYo.Compat.Drawing/cYo.Compat.Drawing.csproj" />
     <Project Path="cYo.Compat.Forms/cYo.Compat.Forms.csproj" />
+    <Project Path="cYo.Common.Windows.Compat/cYo.Common.Windows.Compat.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Compat.Drawing.Tests/Compat.Drawing.Tests.csproj" />

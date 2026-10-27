@@ -153,30 +153,45 @@ namespace ComicRack.Mac.Tests.Scripting
 			}
 		}
 
-		[Fact]
-		public void The_temporary_copy_of_the_scripts_is_deleted_after_the_run()
+		private static string RepoRoot()
 		{
-			string temp = Path.GetTempPath();
-			string[] before = Directory.GetDirectories(temp, "comicrack-s4-*");
-			string dir = Path.Combine(temp, "crmac-selftest-" + Guid.NewGuid().ToString("N"));
-			Directory.CreateDirectory(dir);
-			string old = Environment.GetEnvironmentVariable(ScriptSelfTest.RewriteRefsVariable);
+			string dir = AppContext.BaseDirectory;
+			while (dir != null && !File.Exists(Path.Combine(dir, "ComicRack", "Config", "Settings.cs")))
+			{
+				dir = Path.GetDirectoryName(dir);
+			}
+			return dir ?? throw new InvalidOperationException("The repository root was not found above " + AppContext.BaseDirectory);
+		}
+
+		/// <summary>The probe of P4.8: the names of the originals resolve to the facades, in this process (the bundle runs the same file with <c>--script-selftest</c>).</summary>
+		public static string IdentityProbe => Path.Combine(RepoRoot(), "mac", "scripting", "identity-probe.py");
+
+		[Fact]
+		public void The_identity_probe_and_the_unmodified_Sample_py_pass_with_the_names_of_the_originals()
+		{
+			string old = Environment.GetEnvironmentVariable(ScriptSelfTest.ScriptsDirVariable);
 			try
 			{
-				File.WriteAllText(Path.Combine(dir, "probe.py"), "#@Name  Probe\n#@Hook  Startup\ndef selftest():\n\tprint 'PASS hello'\n");
-				File.WriteAllText(Path.Combine(dir, "Sample.py"), "#@Name  Sample\n#@Hook  Startup\ndef nothing():\n\tpass\n");
-				File.WriteAllText(Path.Combine(dir, "Sample.xml"), "<x/>");
-				Environment.SetEnvironmentVariable(ScriptSelfTest.RewriteRefsVariable, "1");
+				Environment.SetEnvironmentVariable(ScriptSelfTest.ScriptsDirVariable, Path.Combine(RepoRoot(), "ComicRack", "Output", "Scripts"));
 				StringWriter output = new StringWriter();
-				ScriptSelfTest.Run(Path.Combine(dir, "probe.py"), output); // the Sample checks fail (too few commands); only the cleanup matters here
-				Assert.Contains("run from a copy of the scripts folder", output.ToString());
-				string[] after = Directory.GetDirectories(temp, "comicrack-s4-*");
-				Assert.Empty(after.Except(before));
+				int code = ScriptSelfTest.Run(IdentityProbe, output);
+				string text = output.ToString();
+				Assert.True(code == 0, text);
+				Assert.DoesNotContain("FAIL", text);
+				// Sample.py is read from the program's own folder, with its reference lines as they are
+				Assert.Contains("PASS Sample.py compiles", text);
+				Assert.Contains("PASS hook ParseComicPath", text);
+				Assert.Contains("PASS derived_class: identity: class UIControl(Control) is defined", text);
+				Assert.Contains("PASS hook GetBooksWith", text);
+				Assert.Contains("PASS partial_names: identity: Form is System.Windows.Forms 10.0.0.0", text);
+				Assert.Contains("PASS partial_names: identity: Bitmap is System.Drawing.Common 10.0.0.0", text);
+				Assert.Contains("PASS exact_names: identity: Bitmap (AddReference) is System.Drawing.Common 10.0.0.0", text);
+				Assert.Contains("PASS core_names: identity: ComicBook is ComicRack.Engine", text);
+				Assert.Contains("PASS core_names: identity: FormUtility is cYo.Common.Windows", text);
 			}
 			finally
 			{
-				Environment.SetEnvironmentVariable(ScriptSelfTest.RewriteRefsVariable, old);
-				Directory.Delete(dir, true);
+				Environment.SetEnvironmentVariable(ScriptSelfTest.ScriptsDirVariable, old);
 			}
 		}
 	}

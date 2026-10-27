@@ -2,7 +2,7 @@
   <Import Project="..\Shadow.props" />
   <PropertyGroup>
     <RootNamespace>cYo.Projects.ComicRack.Plugins</RootNamespace>
-    <AssemblyName>ComicRack.Plugins.Core</AssemblyName>
+    <AssemblyName>ComicRack.Plugins</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\ComicRack.Plugins\**\*.cs"

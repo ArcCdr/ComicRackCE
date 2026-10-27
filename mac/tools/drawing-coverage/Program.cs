@@ -12,7 +12,7 @@ using System.Text.Json;
 string invPath = args.Length > 0 ? args[0] : "mac/artifacts/api-inventory/inventory.json";
 string outPath = args.Length > 1 ? args[1] : "mac/artifacts/s2/drawing-coverage.json";
 
-var gx = typeof(System.Drawing.Imaging.ImageFormat).Assembly; // cYo.Compat.Drawing
+var gx = typeof(System.Drawing.Imaging.ImageFormat).Assembly; // the Drawing facade (assembly System.Drawing.Common since P4.8)
 var prim = typeof(System.Drawing.Color).Assembly; // System.Drawing.Primitives (framework)
 var gxTypes = gx.GetExportedTypes().ToDictionary(t => t.FullName.Replace('+', '.'));
 foreach (var t in prim.GetExportedTypes()) gxTypes.TryAdd(t.FullName.Replace('+', '.'), t);
