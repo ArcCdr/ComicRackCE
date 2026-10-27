@@ -367,7 +367,7 @@ namespace ComicRack.Cli.Fixtures
 		private readonly HashSet<string> flags = new HashSet<string>();
 
 		/// <summary>Options that take no value (`--app-folders`, `--all`, `--cached`, `--require-nonblank`); every other `--name` takes the next argument.</summary>
-		private static readonly HashSet<string> FlagNames = new HashSet<string> { "app-folders", "all", "cached", "require-nonblank", "no-scripts", "user-closing" };
+		private static readonly HashSet<string> FlagNames = new HashSet<string> { "app-folders", "all", "cached", "require-nonblank", "no-scripts", "user-closing", "fail-on-error" };
 
 		public bool Flag(string name) => flags.Contains(name);
 

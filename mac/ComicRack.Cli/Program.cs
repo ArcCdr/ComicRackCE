@@ -45,6 +45,8 @@ namespace ComicRack.Cli
 					return SmartListCommand.Run(rest.ToArray(), output, error);
 				case "script":
 					return ScriptCommands.Run(rest.ToArray(), output, error);
+				case "script-scan":
+					return ComicRack.Cli.Scripting.ScriptScanCommand.Run(rest.ToArray(), output, error);
 				default:
 					error.WriteLine("Unknown command: " + args[0]);
 					error.WriteLine(Usage);
@@ -93,6 +95,11 @@ namespace ComicRack.Cli
       Plugin packages in <data-dir>/Scripts (the user script folder). install and remove take effect at once; --stage leaves them pending until the next start, as the Windows program does.
   script expr ""<python expression>"" [--db x.xml [--remap ""from=to""]] [--list ""name""] [--show N]
       The books a Python smart list expression such as ""{Series} == 'Batman' and {Year} > 2000"" matches (the Expression matcher of the smart list editor).
+  script-scan <file-or-folder>... [--json out.json] [--top N] [--reference-pack <dir>] [--fail-on-error]
+      The script compatibility scanner: reads scripts (.py, parsed with the IronPython parser), .NET assemblies (.dll/.exe, member references of the metadata), .html files and
+      .crplugin/.zip packages (in memory) and prints the ranked table type.member -> number of scripts for System.Windows.Forms and System.Drawing, the assemblies they reference,
+      and what can never run on macOS (Tier C: native Windows libraries through ctypes or P/Invoke, window messages, WPF, COM). --json writes the whole report to a file.
+      Nothing is run or loaded. --reference-pack is the folder with the reference System.Windows.Forms.dll (default: the NuGet cache of the Windows Desktop reference pack).
   info show <book>
       The ComicInfo of a book file as the Core reads it (fields that are not empty or default).
   info write <book> --set Field=Value [--set Field=Value ...]
