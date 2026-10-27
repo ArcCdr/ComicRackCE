@@ -29,6 +29,20 @@ namespace ComicRack.Mac.Services
 		event EventHandler OpenBooksChanged;
 	}
 
+	/// <summary>The size of the reading area after a change.</summary>
+	public sealed class ReaderSizeEventArgs : EventArgs
+	{
+		public ReaderSizeEventArgs(int width, int height)
+		{
+			Width = width;
+			Height = height;
+		}
+
+		public int Width { get; }
+
+		public int Height { get; }
+	}
+
 	/// <summary>How a book is opened (<c>OpenComicOptions</c> of the original).</summary>
 	[Flags]
 	public enum OpenBookOptions
@@ -181,6 +195,15 @@ namespace ComicRack.Mac.Services
 		/// </summary>
 		public event EventHandler<ComicBook> BookClosed;
 
+		/// <summary>
+		/// A book was opened (<c>NavigatorManager.BookOpened</c>, which <c>MainForm.OnBookOpened</c> passes to the <c>BookOpened</c> script hook): raised for a book that opens in a tab
+		/// and also when an open book is shown again, not for an empty tab.
+		/// </summary>
+		public event EventHandler<ComicBook> BookOpened;
+
+		/// <summary>The reading area of the current tab changed its size (<c>pageDisplay.Resize</c>, which the <c>ReaderResized</c> script hook gets). The size is in device independent pixels.</summary>
+		public event EventHandler<ReaderSizeEventArgs> ReaderResized;
+
 		/// <summary>The reader asked for the browser panel to open or close (Esc, <c>ShowBrowser</c>).</summary>
 		public event EventHandler ToggleBrowserRequested;
 
@@ -209,6 +232,7 @@ namespace ComicRack.Mac.Services
 			if (existing >= 0)
 			{
 				Select(existing);
+				RaiseBookOpened(book);
 				return slots[existing];
 			}
 			MacHost host = hostService.Host;
@@ -219,6 +243,7 @@ namespace ComicRack.Mac.Services
 			}
 			ReaderSlot slot = CreateSlot(book, host, options);
 			Place(slot, options);
+			RaiseBookOpened(book);
 			_ = OpenAsync(slot.Model);
 			return slot;
 		}
@@ -239,6 +264,7 @@ namespace ComicRack.Mac.Services
 			}
 			ReaderSlot slot = new ReaderSlot(book, model, null) { Cleanup = HookModel(model, book) };
 			Place(slot, options);
+			RaiseBookOpened(book);
 			return slot;
 		}
 
@@ -333,6 +359,18 @@ namespace ComicRack.Mac.Services
 			return new ReaderSlot(book, model, thumbnails) { Cleanup = HookModel(model, book) };
 		}
 
+		private void RaiseBookOpened(ComicBook book)
+		{
+			try
+			{
+				BookOpened?.Invoke(this, book);
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("A handler of BookOpened failed.", ex);
+			}
+		}
+
 		// The requests of a reader go to the manager; the caption of the tab follows the book as it is edited. Returns what undoes it.
 		private Action HookModel(ReaderViewModel model, ComicBook book)
 		{
@@ -341,6 +379,17 @@ namespace ComicRack.Mac.Services
 				if (e.PropertyName == nameof(ReaderViewModel.Title))
 				{
 					Raise(CaptionsChanged);
+				}
+				else if (e.PropertyName == nameof(ReaderViewModel.ViewportSize) && ReferenceEquals(model, CurrentModel))
+				{
+					try
+					{
+						ReaderResized?.Invoke(this, new ReaderSizeEventArgs((int)Math.Round(model.ViewportSize.Width), (int)Math.Round(model.ViewportSize.Height)));
+					}
+					catch (Exception ex)
+					{
+						AppLog.Error("A handler of ReaderResized failed.", ex);
+					}
 				}
 			};
 			model.CloseRequested += (sender, e) => Close(slots.FindIndex(s => ReferenceEquals(s.Model, model)));

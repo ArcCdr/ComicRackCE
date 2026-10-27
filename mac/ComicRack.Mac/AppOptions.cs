@@ -89,6 +89,12 @@ namespace ComicRack.Mac
 		/// </summary>
 		public bool TestInfoPage { get; private set; }
 
+		/// <summary>
+		/// <c>--show-script-console</c> (or COMICRACK_MAC_SCRIPT_CONSOLE=1): shows the script output window at start, as <c>-ssc</c> (<c>ExtendedSettings.ShowScriptConsole</c>) does in the
+		/// original. Without it the window opens from Window &gt; Script Output; the text of the scripts is collected either way.
+		/// </summary>
+		public bool ShowScriptConsole { get; private set; }
+
 		/// <summary>Root of a private data folder, or null for the real folders (~/Library/.../ComicRack CE (MVP)).</summary>
 		public string DataDirectory { get; private set; }
 
@@ -105,6 +111,7 @@ namespace ComicRack.Mac
 			options.Language = Environment.GetEnvironmentVariable(LanguageVariable);
 			string theme = Environment.GetEnvironmentVariable(ThemeVariable);
 			string chrome = Environment.GetEnvironmentVariable(Themes.ChromeVariants.Variable);
+			options.ShowScriptConsole = Environment.GetEnvironmentVariable("COMICRACK_MAC_SCRIPT_CONSOLE") == "1";
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg = args[i];
@@ -173,6 +180,10 @@ namespace ComicRack.Mac
 				else if (arg.StartsWith("--chrome=", StringComparison.Ordinal))
 				{
 					chrome = arg.Substring("--chrome=".Length);
+				}
+				else if (arg == "--show-script-console")
+				{
+					options.ShowScriptConsole = true;
 				}
 				else if (arg == "--list-views")
 				{

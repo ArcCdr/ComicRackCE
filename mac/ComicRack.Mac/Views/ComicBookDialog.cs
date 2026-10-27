@@ -13,6 +13,7 @@ using Avalonia.Platform.Storage;
 using ComicRack.Mac.Browser;
 using ComicRack.Mac.Controls;
 using ComicRack.Mac.Editor;
+using ComicRack.Mac.Scripting;
 using ComicRack.Mac.Services;
 using ComicRack.Mac.Thumbnails;
 using cYo.Common.Localize;
@@ -39,6 +40,9 @@ namespace ComicRack.Mac.Views
 
 		private static int lastActiveTextPage = -1;
 
+		// the script the button runs (ComicBookDialog.currentScript): the last one chosen, kept for the next dialog
+		private static int currentScript;
+
 		private readonly BookInfoRequest request;
 		private readonly BookEditorModel model;
 		private readonly TabControl tabs = new TabControl();
@@ -52,6 +56,7 @@ namespace ComicRack.Mac.Views
 		private readonly InfoDetailsPage details = new InfoDetailsPage();
 		private readonly Button previousButton = new Button();
 		private readonly Button nextButton = new Button();
+		private SplitButton scriptButton;
 		private CancellationTokenSource coverRequest;
 		private CoverImage coverImage;
 		private ComicBook watched;
@@ -102,6 +107,7 @@ namespace ComicRack.Mac.Views
 				button.HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Center;
 				navigation.Children.Add(button);
 			}
+			InitializeScriptButton(navigation);
 			Footer = navigation;
 
 			details.Initialize(model);
@@ -134,6 +140,9 @@ namespace ComicRack.Mac.Views
 
 		public Button NextButton => nextButton;
 
+		/// <summary>The script button (<c>btScript</c>, a split button): its text is the editor command it runs, its list the other editor commands. Null when no script has an <c>Editor</c> command.</summary>
+		public SplitButton ScriptButton => scriptButton;
+
 		/// <summary>The tab pages in the original's order (Summary, Details, Plot &amp; Notes, Catalog, Custom, Pages, Colors).</summary>
 		public IReadOnlyList<TabItem> TabPages => new[] { tabSummary, tabDetails, tabPlot, tabCatalog, tabCustom, tabPages, tabColors };
 
@@ -148,6 +157,51 @@ namespace ComicRack.Mac.Views
 		public InfoPagesPage PagesPage => pagesPage;
 
 		public InfoColorsPage ColorsPage => colorsPage;
+
+		// InitializeScriptButton: visible only when scripts have Editor commands; the button runs the command it shows, the arrow lists all of them and a choice runs it and becomes the button's command
+		private void InitializeScriptButton(Panel navigation)
+		{
+			IReadOnlyList<ScriptCommandItem> items = request.EditorScripts;
+			if (items == null || items.Count == 0 || request.RunEditorScript == null)
+			{
+				return;
+			}
+			currentScript = Math.Clamp(currentScript, 0, items.Count - 1);
+			var flyout = new MenuFlyout();
+			scriptButton = new SplitButton { Width = 135, Height = 23, Content = items[currentScript].Name, Flyout = flyout, Margin = new Thickness(12, 0, 0, 0) };
+			for (int i = 0; i < items.Count; i++)
+			{
+				int index = i;
+				var entry = new MenuItem { Header = items[i].Name };
+				entry.Click += (sender, e) =>
+				{
+					currentScript = index;
+					scriptButton.Content = items[index].Name;
+					_ = ExecuteScriptAsync(items[index]);
+				};
+				flyout.Items.Add(entry);
+			}
+			scriptButton.Click += (sender, e) => _ = ExecuteScriptAsync(items[currentScript]);
+			navigation.Children.Add(scriptButton);
+		}
+
+		/// <summary>ExecuteScript: runs an editor command on the dialog's copy of the book (on a worker thread) and shows what it made of it; a failed command is reported and changes nothing.</summary>
+		public async Task ExecuteScriptAsync(ScriptCommandItem item)
+		{
+			try
+			{
+				scriptButton?.SetValue(IsEnabledProperty, false);
+				await model.RunScriptAsync(copy => request.RunEditorScript(item, copy));
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error("The editor script " + item.Key + " failed.", ex);
+			}
+			finally
+			{
+				scriptButton?.SetValue(IsEnabledProperty, true);
+			}
+		}
 
 		/// <summary>Shows the tab with this key ("tabPlot", "tabCatalog", ...) if it is there (the contact sheet and the tests choose the tab this way).</summary>
 		public bool ShowTab(string key)

@@ -5,9 +5,12 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Input;
 using ComicRack.Mac.Diagnostics;
+using ComicRack.Mac.Scripting;
+using ComicRack.Mac.Themes;
 using ComicRack.Mac.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using cYo.Projects.ComicRack.Engine.Display;
+using cYo.Projects.ComicRack.Plugins;
 
 namespace ComicRack.Mac
 {
@@ -86,10 +89,9 @@ namespace ComicRack.Mac
 		/// <summary>The menu bar: File, Edit, Browse, Read, Display, Window, Help. The Read and Display items work on the book of the current tab.</summary>
 		public static NativeMenu BuildMenuBar(MainViewModel vm, PerfOverlayController perf = null)
 		{
-			return new NativeMenu
+			NativeMenuItem importItem = Item(UiText.Get("MacOnly", "ImportWindowsLibrary", "Import Windows Library…"), vm.ImportWindowsLibraryCommand);
+			NativeMenu fileMenu = new NativeMenu
 			{
-				Submenu(Text("fileMenu", "&File"), new NativeMenu
-				{
 					// MF.02, MF.03: Close is Ctrl+X in the original (Cmd+X is Cut on macOS: Option+Cmd+X, alias Cmd+W through Aliases)
 					Item(Text("miCloseComic", "&Close"), vm.CloseBookCommand, Key.X, KeyModifiers.Meta | KeyModifiers.Alt),
 					Item(Text("miCloseAllComics", "Close A&ll"), vm.CloseAllBooksCommand, Key.X, KeyModifiers.Meta | KeyModifiers.Shift),
@@ -101,12 +103,19 @@ namespace ComicRack.Mac
 					Item(Text("miAddFolderToLibrary", "&Add Folder to Library..."), vm.OpenFolderCommand, Key.A, KeyModifiers.Meta | KeyModifiers.Shift),
 					// MF.07: Ctrl+Shift+U of the original; hidden while the book files are updated automatically (fileMenu_DropDownOpening)
 					UpdateAllItem(vm),
+					// MF.12: the commands of the Library hooks (Tasks and then Automation in the original); the item shows only when scripts add some
+					AutomationItem(vm),
 					// Import from a Windows installation has no counterpart in the original: a Mac-only addition (ledger MA.04).
-					Item(UiText.Get("MacOnly", "ImportWindowsLibrary", "Import Windows Library…"), vm.ImportWindowsLibraryCommand),
+					importItem,
 					new NativeMenuItemSeparator(),
 					// MF.15: the open books, Ctrl+Alt+F1 to F12 of the original on the first twelve
 					OpenBooksItem(vm),
-				}),
+			};
+			// SC.02: the commands of the NewBooks hooks follow the book entry commands of the file menu (here: behind the import item, with a line before them)
+			BindNewBookCommands(vm, fileMenu, importItem);
+			return new NativeMenu
+			{
+				Submenu(Text("fileMenu", "&File"), fileMenu),
 				Submenu(Text("editMenu", "&Edit"), new NativeMenu
 				{
 					// ME.01: the Info dialog of the book of the current tab, or of the selected books of the browser
@@ -181,6 +190,8 @@ namespace ComicRack.Mac
 					Item(UiText.Get("MacOnly", "Minimize", "Minimize"), vm.MinimizeCommand, Key.M),
 					Item(UiText.Get("MacOnly", "Zoom", "Zoom"), vm.ZoomCommand),
 					new NativeMenuItemSeparator(),
+					// DL.27: the script output window, which the original shows only when ComicRack is started with -ssc (ledger MA.05)
+					Item(UiText.Get("MacOnly", "ShowScriptOutput", "Script Output"), new RelayCommand(vm.Scripts.ShowConsole)),
 					PerfItem(perf),
 				}),
 				Submenu(Text("helpMenu", "&Help"), new NativeMenu
@@ -189,6 +200,66 @@ namespace ComicRack.Mac
 					Item(Text("miWebHelp", "ComicRack Documentation..."), vm.ShowHelpCommand, Key.F1, KeyModifiers.None),
 				}),
 			};
+		}
+
+		// File > Automation (miFileAutomation, MF.12): one item per Library command, visible only when there is one (ScriptUtility.CreateToolItems; the items run the command on all books).
+		private static NativeMenuItem AutomationItem(MainViewModel vm)
+		{
+			var item = new NativeMenuItem(Text("miFileAutomation", "A&utomation")) { IsVisible = false };
+			void Fill()
+			{
+				var menu = new NativeMenu();
+				foreach (ScriptCommandItem command in vm.Scripts.Library)
+				{
+					menu.Items.Add(ScriptMenuItem(vm, command, PluginEngine.ScriptTypeLibrary));
+				}
+				item.Menu = menu.Items.Count == 0 ? null : menu;
+				item.IsVisible = menu.Items.Count != 0;
+			}
+			Fill();
+			vm.Scripts.Changed += (sender, e) => Fill();
+			return item;
+		}
+
+		// An item that runs a script command (ScriptUtility.CreateToolItem): the name and the picture of the command; the tool tip is its description.
+		private static NativeMenuItem ScriptMenuItem(MainViewModel vm, ScriptCommandItem command, string hook)
+		{
+			var item = new NativeMenuItem(command.Name) { Command = vm.Scripts.CommandFor(command, hook), ToolTip = command.Description };
+			if (command.Gesture != null)
+			{
+				item.Gesture = command.Gesture;
+			}
+			if (command.IconName != null)
+			{
+				item.Icon = Icons.TryGet(command.IconName);
+			}
+			return item;
+		}
+
+		// The commands of the NewBooks hooks as items of the file menu, after the anchor item; the list follows the scripts.
+		private static void BindNewBookCommands(MainViewModel vm, NativeMenu menu, NativeMenuItem anchor)
+		{
+			var added = new List<NativeMenuItemBase>();
+			void Fill()
+			{
+				foreach (NativeMenuItemBase old in added)
+				{
+					menu.Items.Remove(old);
+				}
+				added.Clear();
+				int at = menu.Items.IndexOf(anchor) + 1;
+				if (vm.Scripts.NewBooks.Count != 0)
+				{
+					added.Add(new NativeMenuItemSeparator());
+					added.AddRange(vm.Scripts.NewBooks.Select(command => (NativeMenuItemBase)ScriptMenuItem(vm, command, PluginEngine.ScriptTypeNewBooks)));
+				}
+				foreach (NativeMenuItemBase entry in added)
+				{
+					menu.Items.Insert(at++, entry);
+				}
+			}
+			Fill();
+			vm.Scripts.Changed += (sender, e) => Fill();
 		}
 
 		// File > Update all Book Files (miUpdateAllComicFiles, Cmd+Shift+U, MF.07): every book is written now; the item is not shown while "Book files are updated

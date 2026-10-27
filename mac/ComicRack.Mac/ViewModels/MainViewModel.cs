@@ -56,6 +56,7 @@ namespace ComicRack.Mac.ViewModels
 				StopWatching();
 				StopUndoTracking();
 				StopFileUpdates();
+				Scripts?.OnHostClosing();
 			};
 			if (readers != null)
 			{
@@ -73,6 +74,7 @@ namespace ComicRack.Mac.ViewModels
 			WireInfo();
 			WireBookInfo();
 			WireFileUpdates();
+			WireScripts();
 		}
 
 		// ---- live refresh (P5.2)
@@ -476,6 +478,8 @@ namespace ComicRack.Mac.ViewModels
 				ReloadBrowser();
 				return;
 			}
+			// first: the script output is attached and the scripts know this window before the first list that needs one is evaluated
+			OpenScripts(host);
 			HostText = host.IsNewDatabase ? "New empty library" : "Library opened";
 			SetBookCount(host.DatabaseManager.Database.Books.Count);
 			Browser.Thumbnails = hostService.Thumbnails;

@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
 using ComicRack.Mac.Controls;
+using ComicRack.Mac.Scripting;
 using ComicRack.Mac.ViewModels;
 using cYo.Projects.ComicRack.Engine;
 
@@ -51,6 +52,28 @@ namespace ComicRack.Mac.Views
 				Update();
 			};
 			Flyout.Closed += (sender, e) => ApplyStars();
+			// miAutomation: the commands of the Books hooks (SC.01), listed when scripts are read and whenever they change
+			FillAutomation();
+			vm.Scripts.Changed += (sender, e) => FillAutomation();
+		}
+
+		// ComicBrowserControl: miAutomation.DropDownItems = one item per Books command (CreateToolItems), the item is visible when there is one
+		private void FillAutomation()
+		{
+			MenuItem automation = MenuItemOf("miAutomation");
+			automation.Items.Clear();
+			foreach (ScriptCommandItem command in vm.Scripts.Books)
+			{
+				var item = new MenuItem { Header = command.Name, Command = vm.Scripts.CommandFor(command, cYo.Projects.ComicRack.Plugins.PluginEngine.ScriptTypeBooks) };
+				ToolTip.SetTip(item, command.Description);
+				item.InputGesture = command.Gesture;
+				if (command.IconName != null)
+				{
+					item.Icon = new CrIcon { IconName = command.IconName };
+				}
+				automation.Items.Add(item);
+			}
+			automation.IsVisible = automation.Items.Count != 0;
 		}
 
 		/// <summary>The flyout to put on the grid (<c>ContextFlyout</c>).</summary>
@@ -166,7 +189,7 @@ namespace ComicRack.Mac.Views
 			export.Items.Add(Later("miExportComicsAs", "Export Books...", "Save", Key.E, KeyModifiers.Meta | KeyModifiers.Shift));
 			export.Items.Add(Later("miExportComicsWithPrevious", "Export with Previous", null, Key.E, KeyModifiers.Meta | KeyModifiers.Alt));
 			Add(export);
-			Add(Later("miAutomation", "Automation"));
+			Add(Make("miAutomation", "Automation"));
 			Add(Make("miUpdateComicFiles", "Update Book Files", "UpdateSmall", click: () => browser.Run(BookCommand.UpdateFiles)));
 			// the platform name replaces Explorer (ledger BC.17, as for the tab menu)
 			MenuItem reveal = Make("miRevealBrowser", "Reveal Book in &Explorer", "RevealExplorer", Key.G, click: () => browser.Run(BookCommand.Reveal));
@@ -231,6 +254,8 @@ namespace ComicRack.Mac.Views
 			MenuItemOf("miUpdateComicFiles").IsEnabled = browser.CanRun(BookCommand.UpdateFiles);
 			MenuItemOf("miUpdateComicFiles").IsVisible = browser.SelectedBooks.Any(book => book.ComicInfoIsDirty || book.ComicBookIsDirty);
 			MenuItemOf("miRemove").IsEnabled = any;
+			MenuItemOf("miAutomation").IsVisible = vm.Scripts.Books.Count != 0;
+			MenuItemOf("miAutomation").IsEnabled = any;
 			// the items of the original that show only for a book with a Web field, in the Details view, or on a stack
 			MenuItemOf("miShowWeb").IsVisible = HasWeb(browser.SelectedItem?.Book);
 			MenuItemOf("miEdit").IsVisible = false;

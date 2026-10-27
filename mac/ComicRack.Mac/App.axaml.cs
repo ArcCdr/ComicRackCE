@@ -122,8 +122,19 @@ namespace ComicRack.Mac
 				}
 				NativeMenu.SetMenu(window, MainMenu.BuildMenuBar(viewModel, perf));
 				hostService.Opened += (sender, e) => viewModel.OnHostOpened();
+				// scripts: the Startup hook when the window is up (MainForm.OnLoad), the script output window with --show-script-console (-ssc), the dark images with the dark appearance
+				window.Opened += (sender, e) =>
+				{
+					viewModel.Scripts.WindowShown();
+					if (options.ShowScriptConsole)
+					{
+						viewModel.Scripts.ShowConsole();
+					}
+				};
+				viewModel.Scripts.SetDark(ActualThemeVariant == ThemeVariant.Dark);
+				ActualThemeVariantChanged += (sender, e) => viewModel.Scripts.SetDark(ActualThemeVariant == ThemeVariant.Dark);
 				desktop.MainWindow = window;
-				desktop.ShutdownRequested += (sender, e) => AppLog.Info("Shutdown requested (Cmd+Q or the last window closed).");
+				desktop.ShutdownRequested += OnShutdownRequested;
 				desktop.Exit += OnExit;
 
 				hostService.Start();
@@ -265,8 +276,37 @@ namespace ComicRack.Mac
 			e.Handled = true;
 		}
 
+		private bool shutdownScriptsRun;
+
+		/// <summary>
+		/// Program.cs: the <c>Shutdown</c> hook runs when the main window closes. Each script gets whether the user closed it and may refuse a close the user asked for (Cmd+Q, the last window closed
+		/// by the user); the commands after the one that refused do not run. It runs once.
+		/// </summary>
+		private void OnShutdownRequested(object sender, ShutdownRequestedEventArgs e)
+		{
+			AppLog.Info("Shutdown requested (Cmd+Q or the last window closed).");
+			if (shutdownScriptsRun || viewModel == null)
+			{
+				return;
+			}
+			if (!viewModel.Scripts.RunShutdown(userClosing: true))
+			{
+				AppLog.Info("A script refused the shutdown.");
+				e.Cancel = true;
+				return;
+			}
+			shutdownScriptsRun = true;
+		}
+
 		private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
 		{
+			if (!shutdownScriptsRun && viewModel != null)
+			{
+				shutdownScriptsRun = true;
+				viewModel.Scripts.RunShutdown(userClosing: false);
+			}
+			// the on and off switches of the commands go into the settings that are written below
+			viewModel?.Scripts.StoreCommandStates();
 			perf?.Hide();
 			AppLog.Info("Exit requested, code " + e.ApplicationExitCode + ".");
 			// The open books are remembered for the next start (Reopen Books from last session); then the readers go: each records its page in the library, which is saved when the host closes.

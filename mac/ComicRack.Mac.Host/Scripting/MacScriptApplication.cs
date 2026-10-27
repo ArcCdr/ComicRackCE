@@ -41,7 +41,11 @@ namespace ComicRack.Mac.Host.Scripting
 		/// <summary>The original's <c>MainForm</c> throws here; the books of <c>ComicRack.ReadDatabaseBooks</c> are the ones this returns.</summary>
 		public IEnumerable<ComicBook> ReadDatabaseBooks(string file) => ComicDatabase.LoadXml(file).Books;
 
-		public IEnumerable<ComicBook> GetLibraryBooks() => host.DatabaseManager.Database.Books.ToArray(); // MainForm.cs:4299
+		public IEnumerable<ComicBook> GetLibraryBooks() // MainForm.cs:4299
+		{
+			ScriptRunContext.ThrowIfCancelled();
+			return host.DatabaseManager.Database.Books.ToArray();
+		}
 
 		public ComicBook AddNewBook(bool showDialog) // MainForm.cs:1879
 		{
@@ -66,10 +70,15 @@ namespace ComicRack.Mac.Host.Scripting
 			return true;
 		}
 
-		public ComicBook GetBook(string file) => host.DatabaseManager.BookFactory.Create(file, CreateBookOption.AddToTemporary); // MainForm.cs:4319
+		public ComicBook GetBook(string file) // MainForm.cs:4319
+		{
+			ScriptRunContext.ThrowIfCancelled();
+			return host.DatabaseManager.BookFactory.Create(file, CreateBookOption.AddToTemporary);
+		}
 
 		public Bitmap GetComicPage(ComicBook cb, int page) // MainForm.cs:4229
 		{
+			ScriptRunContext.ThrowIfCancelled();
 			try
 			{
 				using (IItemLock<PageImage> itemLock = host.ImagePool.GetPage(cb.GetPageKey(page, BitmapAdjustment.Empty), cb))
@@ -89,6 +98,7 @@ namespace ComicRack.Mac.Host.Scripting
 
 		public Bitmap GetComicThumbnail(ComicBook cb, int page) // MainForm.cs:4248
 		{
+			ScriptRunContext.ThrowIfCancelled();
 			try
 			{
 				using (IItemLock<ThumbnailImage> itemLock = host.ImagePool.GetThumbnail(cb.GetThumbnailKey(page), cb))
@@ -127,7 +137,11 @@ namespace ComicRack.Mac.Host.Scripting
 
 		public string ReadInternet(string url) => HttpAccess.ReadText(url); // MainForm.cs:4294
 
-		public int AskQuestion(string question, string buttonText, string optionText) => ui().AskQuestion(question, buttonText, optionText); // MainForm.cs:4216
+		public int AskQuestion(string question, string buttonText, string optionText) // MainForm.cs:4216
+		{
+			ScriptRunContext.ThrowIfCancelled();
+			return ui().AskQuestion(question, buttonText, optionText);
+		}
 
 		public void ShowComicInfo(IEnumerable<ComicBook> books) // MainForm.cs:4344
 		{

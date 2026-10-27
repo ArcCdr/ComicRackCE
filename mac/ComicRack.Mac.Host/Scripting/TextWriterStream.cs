@@ -36,6 +36,8 @@ namespace ComicRack.Mac.Host.Scripting
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
+			// a script that prints after its run was cancelled ends here (ScriptRunContext)
+			ScriptRunContext.ThrowIfCancelled();
 			lock (gate)
 			{
 				char[] chars = new char[decoder.GetCharCount(buffer, offset, count)];

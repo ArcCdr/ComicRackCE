@@ -1041,6 +1041,27 @@ namespace ComicRack.Mac.Editor
 			var copy = new ComicBook(current);
 			ApplyTo(copy);
 			script(copy);
+			ShowScriptResult(copy);
+		}
+
+		/// <summary>
+		/// <see cref="RunScript"/> with a script that runs on a worker thread: <paramref name="script"/> gets the copy and answers whether it ended normally; the editor shows the result only
+		/// then (a failed script leaves the editor as it was, as in the original where the exception skips <c>SetDataToEditor</c>). The copy is made and loaded on the calling (UI) thread.
+		/// </summary>
+		public async System.Threading.Tasks.Task<bool> RunScriptAsync(Func<ComicBook, System.Threading.Tasks.Task<bool>> script)
+		{
+			var copy = new ComicBook(current);
+			ApplyTo(copy);
+			if (!await script(copy))
+			{
+				return false;
+			}
+			ShowScriptResult(copy);
+			return true;
+		}
+
+		private void ShowScriptResult(ComicBook copy)
+		{
 			loading = true;
 			try
 			{

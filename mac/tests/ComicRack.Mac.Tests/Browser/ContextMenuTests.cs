@@ -204,10 +204,13 @@ namespace ComicRack.Mac.Tests.Browser
 					{
 						Assert.True(menu.MenuItemOf(name).IsEnabled, name + " is enabled for a selection of books with files");
 					}
-					foreach (string name in new[] { "miOpenWith", "miEditList", "miAddList", "miAddLibrary", "miShowOnly", "miShowInList", "miExportComics", "miAutomation", "miCopyData", "miPasteData", "miClearData", "miRefreshInformation", "miSetListBackground" })
+					foreach (string name in new[] { "miOpenWith", "miEditList", "miAddList", "miAddLibrary", "miShowOnly", "miShowInList", "miExportComics", "miCopyData", "miPasteData", "miClearData", "miRefreshInformation", "miSetListBackground" })
 					{
 						Assert.True(menu.MenuItemOf(name) != null && !menu.MenuItemOf(name).IsEnabled, name + " waits for its task");
 					}
+					// Automation (P4.5) lists the Books commands of the scripts: shown when there is one, and then it works for a selection
+					Assert.Equal(vm.Scripts.Books.Count != 0, menu.MenuItemOf("miAutomation").IsVisible);
+					Assert.True(menu.MenuItemOf("miAutomation").IsEnabled);
 					// Update Book Files (P5.9) works with a file and shows only for a book with changes that are not in its file
 					Assert.True(menu.MenuItemOf("miUpdateComicFiles").IsEnabled);
 					Assert.False(menu.MenuItemOf("miUpdateComicFiles").IsVisible);

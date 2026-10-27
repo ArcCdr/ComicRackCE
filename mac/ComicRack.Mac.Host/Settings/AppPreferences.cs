@@ -800,6 +800,7 @@ namespace ComicRack.Mac.Host
 
 		private WindowFrame libraryWindow;
 		private WindowFrame readerWindow;
+		private WindowFrame scriptOutputWindow;
 		private double sidebarWidth = DefaultSidebarWidth;
 		private bool sidebarVisible = true;
 		private double thumbnailSize = DefaultThumbnailSize;
@@ -906,6 +907,14 @@ namespace ComicRack.Mac.Host
 		{
 			get { return readerWindow; }
 			set { Set(ref readerWindow, value); }
+		}
+
+		/// <summary>Where the script output window was (<c>DisplayWorkspace.ScriptOutputBounds</c> of the original), or null: the system places it.</summary>
+		[MacOnly]
+		public WindowFrame ScriptOutputWindow
+		{
+			get { return scriptOutputWindow; }
+			set { Set(ref scriptOutputWindow, value); }
 		}
 
 		[MacOnly]

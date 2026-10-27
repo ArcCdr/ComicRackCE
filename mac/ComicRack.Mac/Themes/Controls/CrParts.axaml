@@ -28,6 +28,12 @@
     <Setter Property="BorderThickness" Value="1" />
   </Style>
 
+  <!-- The script output window's text (ScriptOutputForm.Log: Lucida Console 8.25 pt, a fixed width face; C-FONT-2) -->
+  <Style Selector="TextBox.cr-console">
+    <Setter Property="FontFamily" Value="Menlo, Monaco, Courier New, monospace" />
+    <Setter Property="FontSize" Value="{DynamicResource Cr.FontSize.Control}" />
+  </Style>
+
   <!-- Text roles -->
   <Style Selector="TextBlock.cr-display">
     <Setter Property="FontSize" Value="28" />

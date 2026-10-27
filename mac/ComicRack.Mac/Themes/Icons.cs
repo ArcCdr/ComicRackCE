@@ -37,6 +37,7 @@ namespace ComicRack.Mac.Themes
 
 		private static readonly Lazy<IconMap> map = new Lazy<IconMap>(LoadMap);
 		private static readonly ConcurrentDictionary<string, Bitmap> cache = new ConcurrentDictionary<string, Bitmap>();
+		private static readonly ConcurrentDictionary<string, Bitmap> pictures = new ConcurrentDictionary<string, Bitmap>(StringComparer.Ordinal);
 
 		/// <summary>The projects in lookup order (the main app first).</summary>
 		public static IReadOnlyList<string> ProjectOrder => map.Value.Order;
@@ -67,9 +68,42 @@ namespace ComicRack.Mac.Themes
 			return bitmap;
 		}
 
+		/// <summary>
+		/// Gives a picture that is not a resource of the original (the image of a script command, P4.5) a name that <see cref="TryGet"/>, <c>CrIcon</c> and <c>CrToolButton.IconName</c>
+		/// accept, so that views name pictures and never load them. The file is decoded as the original's toolbar images are (GIF and BMP get magenta keyed out). A name is
+		/// replaced by a second registration; the name must not be a name of the original. Returns false (and registers nothing) when the file cannot be decoded.
+		/// </summary>
+		public static bool RegisterFile(string name, string file)
+		{
+			if (string.IsNullOrEmpty(name) || map.Value.Find(name) != null)
+			{
+				throw new ArgumentException("The name is empty or a resource of the original: " + name, nameof(name));
+			}
+			try
+			{
+				string extension = Path.GetExtension(file) ?? string.Empty;
+				using (FileStream stream = File.OpenRead(file))
+				{
+					pictures[name] = Decode(stream, extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) || extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase));
+				}
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+		/// <summary>Takes a picture registered by <see cref="RegisterFile"/> out again.</summary>
+		public static void Unregister(string name) => pictures.TryRemove(name ?? string.Empty, out _);
+
 		/// <summary>Like <see cref="Get"/>, null for a name that is not a resource of the original.</summary>
 		public static Bitmap TryGet(string name, ThemeVariant variant = null)
 		{
+			if (name != null && pictures.TryGetValue(name, out Bitmap registered))
+			{
+				return registered;
+			}
 			IconEntry entry = map.Value.Find(name);
 			if (entry == null)
 			{

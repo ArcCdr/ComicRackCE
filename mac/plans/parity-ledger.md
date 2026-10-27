@@ -26,7 +26,7 @@
 | MF.09 | Generate Cover Thumbnails | File `miCacheThumbnails` | — | P5.19b | todo | |
 | MF.10 | Synchronize Devices | File `miSynchronizeDevices` | — | — | deferred (D4) | device sync |
 | MF.11 | Tasks... | File `miTasks` | Ctrl+Shift+T → Cmd+Shift+T | P5.26 | todo | |
-| MF.12 | Automation (script commands) | File `miFileAutomation` (visible when scripts add items) | — | P4.5 | todo | |
+| MF.12 | Automation (script commands) | File `miFileAutomation` (visible when scripts add items) | — | P4.5 | done 2026-10-27 | one item per enabled `Library` command (name, picture, description as tool tip, Cmd+Shift+F1 to F12 for the first twelve enabled commands as the engine assigns Ctrl+Shift+F1 to F12), the item shows only when there is one; a command runs on all books on a worker thread with the progress panel and Cancel; the `NewBooks` commands (SC.02) follow the import item until P5.20 adds miNewComic |
 | MF.13 | New fileless Book Entry... | File `miNewComic` | Ctrl+Shift+N → Cmd+Shift+N | P5.20 | todo | original shares Ctrl+Shift+N with Next Bookmark (ME.11); keep both as the original does |
 | MF.14 | Open Remote Library... | File `miOpenRemoteLibrary` | Ctrl+Shift+R | — | deferred (D4) | library sharing |
 | MF.15 | Open Books (list of open books) | File `miOpenNow` | — | P5.32a | done 2026-10-21 | one item per open book with the caption of its tab, the current one marked; the shortcuts of the first twelve are Ctrl+Cmd+F1 to F12 (the original has Ctrl+Alt+F1 to F12: Option+Cmd+F3 is Show in Browser, so the group moves to Ctrl+Cmd, DD20); the tab tool tips show them |
@@ -122,6 +122,7 @@
 | MA.03 | Text editing commands in text fields (Cut, Copy, Paste, Select All, Undo) | macOS | Cmd+X/C/V/A/Z | P5.R1 | mac-only | C-TEXT-1; done 2026-10-20: the text boxes (quick search) handle the Command keys themselves, the Edit menu holds no text items so that Cmd+Z stays free for the original's Undo (ME.02) |
 | MA.04 | File > Import Windows Library… (copy a ComicDb.xml with path mappings) | none in the original | — | P5.R1 | mac-only | Mac-only addition from the MVP (M2.1) |
 | MA.05 | Window > Show Performance Overlay | none in the original | Ctrl+Option+Cmd+P | P5.R1 | mac-only | developer aid of the MVP; moved from Option+Cmd+P, which is Previous Book (MR.05) |
+| MA.06 | Window > Script Output | none (the original opens the window only with `-ssc`) | — | P4.5 | mac-only | opens the script output window (DL.27); the output of scripts is otherwise invisible |
 
 ## Reader toolbar, tools menu, tabs, page context menu, tray (`MainForm.Designer.cs`)
 
@@ -214,7 +215,7 @@
 | BC.12 | Context: Browse Books (show only) | `miShowOnly` | — | P5.20 | todo | |
 | BC.13 | Context: Show in List (lists containing the book) | `miShowInList`, `dummyEntryToolStripMenuItem1` | — | P5.20 | todo | |
 | BC.14 | Context: Export Books (Export Books..., Export with Previous) | `miExportComics`, `contextExport`, `miExportComicsAs`, `miExportComicsWithPrevious` | Ctrl+Shift+E, Ctrl+Alt+E → Cmd+Shift+E, Option+Cmd+E | P5.24a | todo | |
-| BC.15 | Context: Automation (script commands) | `miAutomation` | — | P4.5 | todo | |
+| BC.15 | Context: Automation (script commands) | `miAutomation` | — | P4.5 | done 2026-10-27 | the `Books` commands of the scripts (also as toolbar buttons behind Undo and Redo when the command has a picture, a split button with Configure... when it has a configuration command); visible when there is a command, enabled with a selection; the commands run on the selected books |
 | BC.16 | Context: Update Book Files | `miUpdateComicFiles` | — | P5.9 | done 2026-10-23 | enabled when a selected book has a file (`AnySelectedLinked`), shown only when a selected book has changes that are not in its file (`ComicInfoIsDirty` or `ComicBookIsDirty`); writes the selected books with a file at once |
 | BC.17 | Context: Reveal Book in Explorer | `miRevealBrowser` | Ctrl+G → Cmd+G | P5.5 | deviation | native: label "Reveal in Finder"; works since P5.5 (Cmd+G in the grid too, enabled when every selected book has a file) |
 | BC.18 | Context: Copy Data / Paste Data... / Clear Data | `miCopyData`, `miPasteData`, `miClearData` | Ctrl+C/V → Cmd+C/V | P5.20 | todo | |
@@ -330,7 +331,7 @@ Single keys and their mouse or gesture alternatives stay exactly as in the origi
 | DL.24 | Tasks (Background Tasks; Server Statistics tab) | `TasksDialog`, `dummyToolStripMenuItem` | P5.26 | todo | Server Statistics tab deferred (D4) |
 | DL.25 | Match Value | `ValueEditorDialog` | P5.17c | todo | |
 | DL.26 | Custom Zoom | `ZoomDialog` | P5.23e | todo | |
-| DL.27 | Script Output | `ScriptOutputForm` | P4.5 | todo | |
+| DL.27 | Script Output | `ScriptOutputForm` | P4.5 | done 2026-10-27 | `ScriptConsoleWindow` 606 x 471, text box with the output and the log of the scripts; shown at start with `--show-script-console` (the original's `-ssc`), else from Window > Script Output (MA.06); size and position kept; spec `mac/specs/views/ScriptOutputForm.md`, C-FONT-2 |
 | DL.28 | Reader in own window | `ReaderForm` | P5.32a | done 2026-10-21 | `ReaderWindow` around the reader area (title = the caption of the book) |
 | DL.29 | Browser in own window (Open in New Window) | `ComicBrowserForm` | P5.16a | todo | |
 | DL.30 | Question dialogs with "do not show again" (`HiddenMessageBoxes`) | `QuestionDialog` | P5.5 | done 2026-10-21 | `MainViewModel.AskQuestionAsync` with `HiddenMessageBoxes` (saved) and the system alert's suppression box; the reset is PR.27 |
@@ -427,14 +428,14 @@ Defaults must equal the original's (a test in P5.1 compares them). "Mac task" = 
 
 | ID | Hook | Description (original) | Mac task | Status | Deviation / note |
 |---|---|---|---|---|---|
-| SC.01 | `Books` | Edit/Update Books Commands | P4.3, P4.5 | todo | |
-| SC.02 | `NewBooks` | Create New Books Commands | P4.3, P4.5 | todo | |
-| SC.03 | `Library` | Library commands | P4.3, P4.5 | todo | |
-| SC.04 | `Editor` | Editor commands (Info dialog) | P4.5 | todo | added to P4.5 by R9 |
+| SC.01 | `Books` | Edit/Update Books Commands | P4.3, P4.5 | done 2026-10-27 | context menu Automation, toolbar buttons, undo marker "Automation '<name>'", worker thread, progress and Cancel (a script stops at its next print or call of ComicRack.App), errors with the title "Execution of the script failed!" and the message of the script |
+| SC.02 | `NewBooks` | Create New Books Commands | P4.3, P4.5 | done 2026-10-27 | items of the File menu behind a line after the import item (the original puts them behind New fileless Book Entry, MF.13, P5.20 moves them); they run on all books like the `Library` commands |
+| SC.03 | `Library` | Library commands | P4.3, P4.5 | done 2026-10-27 | File > Automation (MF.12) |
+| SC.04 | `Editor` | Editor commands (Info dialog) | P4.5 | done 2026-10-27 | the split button `btScript` of the Info dialog (135 x 23 behind Next): the button runs the last chosen command, its list holds the others; the command gets the dialog's copy of the book on a worker thread and the dialog shows the result; the engine has no delegate type for a command that says only `#@Hook Editor`, so a script writes `#@Hook Books, Editor` as the original's scripts do |
 | SC.05 | `ParseComicPath` | Book Path Parsers | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
 | SC.06 | `CreateBookList` | Script lists | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
-| SC.07 | `BookOpened` | Actions when Books are opened | P4.5 | todo | added to P4.5 by R9 |
-| SC.08 | `ReaderResized` | Actions when Reader is resized | P4.5 | todo | added to P4.5 by R9 |
+| SC.07 | `BookOpened` | Actions when Books are opened | P4.5 | done 2026-10-27 | `ReaderManager.BookOpened` (also for a book that is shown again) calls every command with the book, one after the other on a worker thread |
+| SC.08 | `ReaderResized` | Actions when Reader is resized | P4.5 | done 2026-10-27 | the size of the reading area of the current tab in whole units; a size that waits for an earlier hook to end is replaced by the newer one; `ComicRack.ComicDisplay` is the reader of the current tab (layout, fit, zoom, reading direction act on it; the display settings the reader does not have keep the value) |
 | SC.09 | `NetSearch` | Additional Search Providers | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
 | SC.10 | `Startup` | Actions when ComicRack starts | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |
 | SC.11 | `Shutdown` | Actions when ComicRack shuts down | P4.3 | done 2026-10-27 | headless; hook wired into the Core and run by crcli script run |

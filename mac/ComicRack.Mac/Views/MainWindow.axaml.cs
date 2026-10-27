@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -8,6 +9,7 @@ using Avalonia.Threading;
 using ComicRack.Mac.Controls;
 using ComicRack.Mac.Diagnostics;
 using ComicRack.Mac.Host;
+using ComicRack.Mac.Scripting;
 using ComicRack.Mac.Services;
 using ComicRack.Mac.ViewModels;
 
@@ -138,6 +140,10 @@ namespace ComicRack.Mac.Views
 				// the context menu of the book grid (BC.*) and the rating target of the Edit menu
 				contextMenu = new BrowserContextMenu(model);
 				BookGrid.ContextFlyout = contextMenu.Flyout;
+				// the buttons of the Books commands that have a picture (ComicBrowserControl: toolStrip.Items.AddRange) and the script output window
+				model.Scripts.Changed += OnScriptsChanged;
+				model.Scripts.ShowConsoleRequested += OnShowConsoleRequested;
+				BuildScriptButtons();
 				model.BrowserHasFocus = () => BookGrid.IsKeyboardFocusWithin;
 				BrowserDock.KeepGripVisible = model.KeepBrowserGrip;
 				if (model.Tabs != null)
@@ -150,6 +156,100 @@ namespace ComicRack.Mac.Views
 					SyncReaderHost();
 				}
 			}
+		}
+
+		// ---- scripts (P4.5)
+
+		private readonly List<Control> scriptButtons = new List<Control>();
+		private ScriptConsoleWindow consoleWindow;
+		private WindowFrameTracker consoleFrame;
+
+		private void OnScriptsChanged(object sender, EventArgs e) => BuildScriptButtons();
+
+		/// <summary>The buttons of the toolbar that run a Books command (<see cref="CrToolBar"/> items added after the Undo and Redo buttons, behind a separator).</summary>
+		public IReadOnlyList<Control> ScriptButtons => scriptButtons;
+
+		// ComicBrowserControl.cs: a command with a picture and no configuration is a button, one with a configuration a split button whose list holds "Configure..." (a right click opens the list)
+		private void BuildScriptButtons()
+		{
+			CrToolBar bar = this.FindControl<CrToolBar>("BrowserToolBar");
+			CrSearchBox search = this.FindControl<CrSearchBox>("SearchBox");
+			foreach (Control old in scriptButtons)
+			{
+				bar.Children.Remove(old);
+			}
+			scriptButtons.Clear();
+			if (model == null)
+			{
+				return;
+			}
+			var commands = model.Scripts.Books.Where(c => c.IconName != null).ToList();
+			var buttons = commands.Where(c => !c.HasConfigure).Concat(commands.Where(c => c.HasConfigure)).Select(c => ScriptButton(c)).ToList();
+			if (buttons.Count == 0)
+			{
+				return;
+			}
+			scriptButtons.Add(new CrToolSeparator());
+			scriptButtons.AddRange(buttons);
+			int at = Math.Max(0, bar.Children.IndexOf(search));
+			foreach (Control button in scriptButtons)
+			{
+				bar.Children.Insert(at++, button);
+			}
+		}
+
+		private Control ScriptButton(ScriptCommandItem item)
+		{
+			if (!item.HasConfigure)
+			{
+				var button = new CrToolButton { IconName = item.IconName, Command = model.Scripts.CommandFor(item, cYo.Projects.ComicRack.Plugins.PluginEngine.ScriptTypeBooks) };
+				ToolTip.SetTip(button, item.Description);
+				return button;
+			}
+			var configure = new MenuItem { Header = UiText.Default("Configure", "Configure") + "..." };
+			configure.Click += (sender, e) => _ = model.Scripts.ConfigureAsync(item);
+			var split = new CrSplitButton { IconName = item.IconName, Command = model.Scripts.CommandFor(item, cYo.Projects.ComicRack.Plugins.PluginEngine.ScriptTypeBooks) };
+			split.DropDown = new MenuFlyout { Items = { configure } };
+			split.PointerPressed += (sender, e) =>
+			{
+				if (e.GetCurrentPoint(split).Properties.IsRightButtonPressed)
+				{
+					e.Handled = true;
+					split.ShowDropDown();
+				}
+			};
+			ToolTip.SetTip(split, item.Description);
+			return split;
+		}
+
+		/// <summary>The script output window, or null while it is closed.</summary>
+		public ScriptConsoleWindow ScriptConsole => consoleWindow;
+
+		/// <summary>Window &gt; Script Output (and <c>-ssc</c> of the original at start): shows the window with the text of the scripts, or brings it forward.</summary>
+		private void OnShowConsoleRequested(object sender, EventArgs e)
+		{
+			if (consoleWindow != null)
+			{
+				consoleWindow.Activate();
+				return;
+			}
+			var window = new ScriptConsoleWindow(model.Scripts.Console);
+			// like the reader window, it shows the menu bar of the program while it has the focus
+			NativeMenu.SetMenu(window, MainMenu.BuildMenuBar(model, perf));
+			AppPreferences preferences = model.Preferences;
+			if (preferences != null)
+			{
+				WindowFrame placed = WindowFrameTracker.Restore(window, preferences.ScriptOutputWindow);
+				consoleFrame = WindowFrameTracker.Attach(window, frame => preferences.ScriptOutputWindow = frame, placed);
+			}
+			window.Closed += (s, args) =>
+			{
+				consoleFrame?.Dispose();
+				consoleFrame = null;
+				consoleWindow = null;
+			};
+			consoleWindow = window;
+			window.Show();
 		}
 
 		// Display > Full Screen is checked while the window is full screen, however it got there (the green button, the menu, the key).

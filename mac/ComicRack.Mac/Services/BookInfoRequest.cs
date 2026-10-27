@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ComicRack.Mac.Editor;
 using ComicRack.Mac.Host;
+using ComicRack.Mac.Scripting;
 using ComicRack.Mac.Thumbnails;
 using cYo.Projects.ComicRack.Engine;
 
@@ -30,5 +31,11 @@ namespace ComicRack.Mac.Services
 
 		/// <summary>Opens a web address in the browser (the link under the Summary tab).</summary>
 		public Action<string> OpenUrl { get; set; }
+
+		/// <summary>The commands of the <c>Editor</c> hook (<c>InitializeScriptButton</c>): the script button of the dialog lists them. Null or empty: no button.</summary>
+		public System.Collections.Generic.IReadOnlyList<ScriptCommandItem> EditorScripts { get; set; }
+
+		/// <summary>Runs an editor command on the dialog's copy of the book on a worker thread; true when it ended normally (<c>ExecuteScript</c>).</summary>
+		public Func<ScriptCommandItem, ComicBook, Task<bool>> RunEditorScript { get; set; }
 	}
 }

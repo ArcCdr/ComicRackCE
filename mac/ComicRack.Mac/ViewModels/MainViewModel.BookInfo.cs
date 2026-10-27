@@ -170,6 +170,8 @@ namespace ComicRack.Mac.ViewModels
 				AddCustomThumbnail = host.AddCustomThumbnail,
 				FindBook = file => database.Books[file],
 				OpenUrl = url => MacShell.OpenUrl(url),
+				EditorScripts = Scripts.Editor,
+				RunEditorScript = Scripts.RunEditorAsync,
 			};
 		}
 

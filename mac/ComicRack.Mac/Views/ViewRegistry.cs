@@ -34,6 +34,7 @@ namespace ComicRack.Mac.Views
 			Register("Reader", OpenFirstBook);
 			Register("ComicBookDialog", InfoOfFirstBook);
 			Register("MultipleComicBooksDialog", MultiEditOfFirstBooks);
+			Register("ScriptOutputForm", () => new Scripting.ScriptConsoleWindow(Library?.Scripts.Console ?? new Host.Scripting.ScriptConsoleLog()));
 		}
 
 		/// <summary>
