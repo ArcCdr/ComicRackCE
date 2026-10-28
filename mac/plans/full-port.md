@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; next task: P4.17.5)
+Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9b)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -13,12 +13,12 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: P4.17.5)
 | P1 Core runtime gaps | 3 | 3 | - | zero-edit fixes through pass B replacements |
 | P2 Platform pieces | 9 | 4 | P2.2 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
-| P4 Scripting and Script UI layer | 46 | 13 | P4.17.5 | S4 and S6 spikes first, go/no-go recorded |
+| P4 Scripting and Script UI layer | 46 | 14 | P4.9b | S4 and S6 spikes first, go/no-go recorded |
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
 | RV Review fixes and upstream sync | 13 | 13 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **182** | **68** | | estimate in §10 |
+| **Total** | **182** | **69** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -1366,7 +1366,7 @@ Spikes first; their verdicts decide whether wave E runs. Headless scripting (P4.
 - Result (2026-10-27): three facade assemblies, not four: `System.Xaml`, `PresentationCore` (with all types of `WindowsBase`) and `PresentationFramework`, all 10.0.0.0, no strong name, about 2.9 MB in total (the whole surface: 1,912 generated files, so the 6 MB rule was not needed). The runtime ships its own `WindowsBase.dll` (4.0.0.0, type forwards) and a framework-dependent start prefers it to an app-local file of that name (measured with `COREHOST_TRACE`), so there is no `WindowsBase` facade of our own; `clr.AddReference("WindowsBase")` lands on the runtime's file and `System.Windows.Visibility` is found in `PresentationCore`. The Library Organizer's scripts now load (`runs`). Facts: "Facts from P4.17.3".
 
 #### P4.17.4 `Microsoft.VisualBasic.FileIO.FileSystem` with UIOption and RecycleOption (gap report, Library Organizer)
-- Depends: P4.4 · Effort: medium · Unattended: yes · Status: done-with-caveat 2026-10-28 (the stamp in the publish deps file and the signed bundle self-test were not run; mac/tools/make-app.sh and mac/tools/bundle-selftest.sh check them)
+- Depends: P4.4 · Effort: medium · Unattended: yes · Status: done 2026-10-28 (bundle self-test run by the orchestrator after P4.17.5: 53 PASS, 0 FAIL)
 - Goal: `FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin)` throws "UI not available for copy or move" on .NET for macOS (measured in the plugin host), and `DeleteDirectory`, `CopyFile`, `MoveFile`, `CopyDirectory`, `MoveDirectory` with `UIOption` do the same: a plugin that deletes the replaced book this way cannot finish. Make these calls work as on Windows: `SendToRecycleBin` moves to the Trash (`NSFileManager trashItem`, through an injectable `ITrash` service so that tests never touch the real Trash), `DontMoveToRecycleBin` deletes, `UIOption.AllDialogs` and `OnlyErrorDialogs` show errors through the script UI, progress dialogs are not shown. Mechanism: decide and record first (the binder, `mac/reports/vb-filesystem.md`): an app-local `Microsoft.VisualBasic` assembly generated from the reference with a higher assembly version so that it wins over the shared framework's (measure that `clr.AddReference('Microsoft.VisualBasic')` and an import by a compiled plugin land on it), real behaviour in `FileSystem`, everything else forwarded to the framework's `Microsoft.VisualBasic.Core`. A Windows path on the Trash route is never deleted for good when the script asked for the Recycle Bin: if the Trash move fails the call throws.
 - Accept: tests with temporary files and a fake `ITrash`; a probe script through the plugin host reaches the new assembly; the gap report row `FileSystem.DeleteFile` becomes `real`; `mac/tools/verify.sh`.
 - Result (2026-10-28): `mac/cYo.Compat.VisualBasic` is the assembly `Microsoft.VisualBasic` 10.0.1.0: it declares `FileSystem`, forwards the other 74 types and the UI-free members to the framework's `Microsoft.VisualBasic.Core`. The UI overloads copy and move without overwrite, delete for good, or send to the Trash through `ITrash` (`MacShell.MoveToTrash` in the program, a fake in the tests; a failing Trash throws and deletes nothing), and show a failure through `IScriptUi.ShowError` before throwing it. The binder does not take an app-local file over the framework's by version alone (the deps entry of a project reference has no version): `mac/Directory.Build.targets` writes it. Decision record, tries and behaviour table: `mac/reports/vb-filesystem.md`. Facts: "Facts from P4.17.4". No parity-ledger row (no user-visible screen); no chrome.

@@ -72,4 +72,5 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-27 21:52 | P4.17 | done | a778734 |  | Plugin gap scan of the Bedetheque Scraper 2 and the Library Organizer (crcli plugin-gap and mac/reports/plugin-gap-bedetheque.md classify every API both plug... |
 | 2026-10-27 22:33 | P4.17.3 | done | 80c210c |  | WPF assemblies by name (System.Xaml, PresentationCore with the WindowsBase types and PresentationFramework as generated throwing facades, 10.0.0.0; the engin... |
 | 2026-10-27 23:24 | P4.9a | done | b629d07 |  | Facade object model and events (state, hierarchy and events of Control, Form, the container and input controls in the order of WinForms; IFormsBackend seam w... |
-| 2026-10-28 21:39 | P4.17.4 | done-with-caveat | 3185c85 |  | Microsoft.VisualBasic FileSystem with UIOption and RecycleOption (app-local assembly 10.0.1.0 wins by a stamped deps version; Trash through ITrash, errors th... |
+| 2026-10-28 21:39 | P4.17.4 | done | 3185c85 |  | Microsoft.VisualBasic FileSystem with UIOption and RecycleOption (app-local assembly 10.0.1.0 wins by a stamped deps version; Trash through ITrash, errors th... |
+| 2026-10-28 22:26 | P4.17.5 | done | 4808693 |  | Windows path separators in file names (links with the backslash spelling next to the files of a plugin, made on install, update and start; files a plugin cre... |
