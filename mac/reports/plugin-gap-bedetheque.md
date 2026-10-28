@@ -16,7 +16,7 @@ name (plugin data or a dynamic attribute). Every row has exactly one status. Row
 | Plugin | Scripts | Assemblies | Native files | Tier | Rows | real | stub | partial | missing | differs | plugin | python | dynamic |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 280 | 29 | 7 | 0 | 1 | 7 | 73 | 131 |
-| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 357 | 101 | 31 | 0 | 0 | 113 | 34 | 4 |
+| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 361 | 97 | 31 | 0 | 0 | 113 | 34 | 4 |
 
 ## Bedetheque Scraper 2 6.08
 
@@ -329,7 +329,7 @@ Read from the scripts of the package (`libraryorganizer.py`, `loworkerform.py`, 
 
 ### A. WinForms and GDI+ members (typed)
 
-Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 285 rows: 189 real, 93 stub, 3 partial.
+Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 285 rows: 193 real, 89 stub, 3 partial.
 
 | Member | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -402,9 +402,6 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ToolStripItem.Tag` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.TextAlign` | 5 | 1 | stub | facade | P4.10g |  |
 | `ToolStripItem.TextImageRelation` | 5 | 1 | stub | facade | P4.10g |  |
-| `FlowLayoutPanel..ctor` | 4 | 3 | stub | facade | P4.9c |  |
-| `FlowLayoutPanel.FlowDirection` | 4 | 3 | stub | facade | P4.9c |  |
-| `FlowLayoutPanel.WrapContents` | 4 | 3 | stub | facade | P4.9c |  |
 | `ToolStripItem.Alignment` | 4 | 1 | stub | facade | P4.10g |  |
 | `FileDialog.FileName` | 3 | 2 | stub | facade | P4.10f |  |
 | `FileDialog.Filter` | 3 | 2 | stub | facade | P4.10f |  |
@@ -437,7 +434,6 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ErrorProvider..ctor` | 1 | 1 | stub | facade | P4.17.1 |  |
 | `ErrorProvider.ContainerControl` | 1 | 1 | stub | facade | P4.17.1 |  |
 | `FileDialog.AddExtension` | 1 | 1 | stub | facade | P4.10f |  |
-| `FlowLayoutPanel.SetFlowBreak` | 1 | 1 | stub | facade | P4.9c |  |
 | `FolderBrowserDialog..ctor` | 1 | 1 | stub | facade | P4.10f |  |
 | `OpenFileDialog..ctor` | 1 | 1 | stub | facade | P4.10f |  |
 | `ProgressBar..ctor` | 1 | 1 | stub | facade | P4.10c |  |
@@ -470,7 +466,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ToolStripSeparator..ctor` | 1 | 1 | stub | facade | P4.10g |  |
 | `VScrollBar..ctor` | 1 | 1 | stub | facade | P4.13c |  |
 
-149 more rows with a status that needs no work are in the JSON (`A`).
+153 more rows with a status that needs no work are in the JSON (`A`).
 
 ### B. Member accesses on values of unknown type (by name)
 

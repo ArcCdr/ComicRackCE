@@ -218,6 +218,58 @@ def Model(books):
 		}
 
 		[Fact]
+		public void A_script_lays_out_a_dialog_with_a_FlowLayoutPanel_and_a_TableLayoutPanel()
+		{
+			string text = Run(@"
+#@Name Model
+#@Hook Books
+def Model(books):
+	flow = FlowLayoutPanel()
+	flow.Size = Size(200, 100)
+	buttons = []
+	for i in range(3):
+		b = Button()
+		flow.Controls.Add(b)
+		buttons.append(b)
+	flow.SetFlowBreak(buttons[0], True)
+	print 'flow', buttons[0].Bounds, buttons[1].Bounds, buttons[2].Bounds, flow.GetFlowBreak(buttons[0]), flow.WrapContents, flow.FlowDirection
+	flow.FlowDirection = FlowDirection.TopDown
+	print 'topdown', buttons[1].Bounds
+	table = TableLayoutPanel()
+	table.Size = Size(300, 100)
+	table.ColumnCount = 2
+	table.ColumnStyles.Add(ColumnStyle(SizeType.Absolute, 100))
+	table.ColumnStyles.Add(ColumnStyle(SizeType.Percent, 100))
+	table.RowStyles.Add(RowStyle(SizeType.Absolute, 40))
+	label = Label()
+	label.Text = 'Name'
+	label.Anchor = AnchorStyles.Left
+	name = TextBox()
+	name.Dock = DockStyle.Fill
+	ok = Button()
+	ok.Anchor = AnchorStyles.Right
+	table.Controls.Add(label)
+	table.Controls.Add(name, 1, 0)
+	table.Controls.Add(ok, 1, 1)
+	print 'table', label.Bounds, name.Bounds, ok.Bounds
+	print 'sizes', list(table.GetColumnWidths()), list(table.GetRowHeights()), table.RowCount, table.GetRow(ok), table.GetCellPosition(label).Column
+	table.Width = 400
+	print 'wider', name.Bounds, ok.Bounds
+	table.SetColumnSpan(name, 1)
+	table.ColumnStyles[0].Width = 50
+	print 'styled', label.Bounds, name.Bounds
+	print 'type', table.Controls.GetType().Name, table.LayoutSettings.ColumnCount
+");
+			Assert.True(text.Contains("flow {X=3,Y=3,Width=75,Height=23} {X=3,Y=32,Width=75,Height=23} {X=84,Y=32,Width=75,Height=23} True True LeftToRight"), text);
+			Assert.True(text.Contains("topdown {X=84,Y=3,Width=75,Height=23}"), text);
+			Assert.True(text.Contains("table {X=3,Y=8,Width=94,Height=23} {X=103,Y=3,Width=194,Height=34} {X=222,Y=43,Width=75,Height=23}"), text);
+			Assert.True(text.Contains("sizes [100, 200] [40, 29] 2 1 -1"), text);
+			Assert.True(text.Contains("wider {X=103,Y=3,Width=294,Height=34} {X=322,Y=43,Width=75,Height=23}"), text);
+			Assert.True(text.Contains("styled {X=3,Y=8,Width=44,Height=23} {X=53,Y=3,Width=344,Height=34}"), text);
+			Assert.True(text.Contains("type TableLayoutControlCollection 2"), text);
+		}
+
+		[Fact]
 		public void Members_that_are_not_implemented_yet_report_themselves_while_the_rest_of_a_control_keeps_working()
 		{
 			string text = Run(@"

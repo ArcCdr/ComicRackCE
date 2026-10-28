@@ -765,7 +765,14 @@ namespace System.Windows.Forms
 
 		public virtual Size GetPreferredSize(Size proposedSize)
 		{
+			// A container asks its layout engine (FlowLayoutPanel, TableLayoutPanel); the frame and the padding come on top of what the children need.
 			Size result = Size.Empty;
+			Size around = Padding.Size + NonClientSize;
+			var inner = new Size(proposedSize.Width > 0 ? Math.Max(1, proposedSize.Width - around.Width) : 0, proposedSize.Height > 0 ? Math.Max(1, proposedSize.Height - around.Height) : 0);
+			if (LayoutEngine.TryGetPreferredSize(this, inner, out Size content))
+			{
+				result = content + around;
+			}
 			ApplySizeConstraints(ref result);
 			return result;
 		}
@@ -1631,6 +1638,18 @@ namespace System.Windows.Forms
 				}
 			}
 			return true;
+		}
+
+		/// <summary>The size the script asked for (the layout engines of the flow and the table panel size a control that does not measure itself by it, so that their own stretching does not feed back).</summary>
+		internal Size SpecifiedSize
+		{
+			get
+			{
+				lock (sync)
+				{
+					return specifiedBounds.Size;
+				}
+			}
 		}
 
 		internal bool VisibleFlag

@@ -12,7 +12,7 @@ using System.Drawing;
 
 namespace System.Windows.Forms.Layout
 {
-	/// <summary>The layout engine of every container that does not name its own (FlowLayoutPanel and TableLayoutPanel do, P4.9c).</summary>
+	/// <summary>The layout engine of every container that does not name its own (FlowLayoutPanel and TableLayoutPanel do: FlowLayout.cs and TableLayout.cs).</summary>
 	public abstract partial class LayoutEngine
 	{
 		protected LayoutEngine()
@@ -24,6 +24,13 @@ namespace System.Windows.Forms.Layout
 		}
 
 		public virtual bool Layout(object container, LayoutEventArgs layoutEventArgs) => false;
+
+		/// <summary>The size a container needs for its children within <paramref name="proposed"/> (zero is no limit on that side), without padding and frame; false is "no opinion" (Dock and Anchor: P4.9d).</summary>
+		internal virtual bool TryGetPreferredSize(Control container, Size proposed, out Size size)
+		{
+			size = Size.Empty;
+			return false;
+		}
 	}
 
 	/// <summary>Dock and Anchor (the engine behind <see cref="Control.LayoutEngine"/> of a plain container).</summary>

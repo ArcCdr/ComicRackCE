@@ -8,87 +8,17 @@
 
 namespace System.Windows.Forms
 {
-	public partial class TableLayoutPanel : global::System.Windows.Forms.Panel, global::System.ComponentModel.IExtenderProvider
+	public partial class TableLayoutPanel
 	{
-		public TableLayoutPanel()
-		{
-			throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.ctor");
-		}
-
 		public global::System.Windows.Forms.BorderStyle BorderStyle
 		{
 			get => base.BorderStyle;
 			set => base.BorderStyle = value;
 		}
-		public global::System.Windows.Forms.TableLayoutPanelCellBorderStyle CellBorderStyle
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.CellBorderStyle");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.CellBorderStyle");
-		}
-		public int ColumnCount
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.ColumnCount");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.ColumnCount");
-		}
-		public global::System.Windows.Forms.TableLayoutColumnStyleCollection ColumnStyles
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.ColumnStyles");
-		}
-		public global::System.Windows.Forms.TableLayoutControlCollection Controls
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.Controls");
-		}
-		public global::System.Windows.Forms.TableLayoutPanelGrowStyle GrowStyle
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GrowStyle");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GrowStyle");
-		}
-		public override global::System.Windows.Forms.Layout.LayoutEngine LayoutEngine
-		{
-			get => base.LayoutEngine;
-		}
-		public global::System.Windows.Forms.TableLayoutSettings LayoutSettings
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.LayoutSettings");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.LayoutSettings");
-		}
-		public int RowCount
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.RowCount");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.RowCount");
-		}
-		public global::System.Windows.Forms.TableLayoutRowStyleCollection RowStyles
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.RowStyles");
-		}
 
-		public event global::System.Windows.Forms.TableLayoutCellPaintEventHandler CellPaint
-		{
-			add => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.CellPaint");
-			remove => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.CellPaint");
-		}
-
-		protected override global::System.Windows.Forms.Control.ControlCollection CreateControlsInstance() => base.CreateControlsInstance();
-		public global::System.Windows.Forms.TableLayoutPanelCellPosition GetCellPosition(global::System.Windows.Forms.Control control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetCellPosition");
-		public int GetColumn(global::System.Windows.Forms.Control control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetColumn");
-		public int GetColumnSpan(global::System.Windows.Forms.Control control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetColumnSpan");
-		public int[] GetColumnWidths() => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetColumnWidths");
-		public global::System.Windows.Forms.Control GetControlFromPosition(int column, int row) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetControlFromPosition");
-		public global::System.Windows.Forms.TableLayoutPanelCellPosition GetPositionFromControl(global::System.Windows.Forms.Control control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetPositionFromControl");
-		public int GetRow(global::System.Windows.Forms.Control control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetRow");
-		public int[] GetRowHeights() => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetRowHeights");
-		public int GetRowSpan(global::System.Windows.Forms.Control control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.GetRowSpan");
-		protected virtual void OnCellPaint(global::System.Windows.Forms.TableLayoutCellPaintEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.OnCellPaint");
 		protected override void OnLayout(global::System.Windows.Forms.LayoutEventArgs levent) => base.OnLayout(levent);
 		protected override void OnPaintBackground(global::System.Windows.Forms.PaintEventArgs e) => base.OnPaintBackground(e);
 		protected override void ScaleControl(global::System.Drawing.SizeF factor, global::System.Windows.Forms.BoundsSpecified specified) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.ScaleControl");
 		protected override void ScaleCore(float dx, float dy) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.ScaleCore");
-		public void SetCellPosition(global::System.Windows.Forms.Control control, global::System.Windows.Forms.TableLayoutPanelCellPosition position) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.SetCellPosition");
-		public void SetColumn(global::System.Windows.Forms.Control control, int column) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.SetColumn");
-		public void SetColumnSpan(global::System.Windows.Forms.Control control, int value) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.SetColumnSpan");
-		public void SetRow(global::System.Windows.Forms.Control control, int row) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.SetRow");
-		public void SetRowSpan(global::System.Windows.Forms.Control control, int value) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.SetRowSpan");
-
-		bool global::System.ComponentModel.IExtenderProvider.CanExtend(object extendee) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutPanel.IExtenderProvider.CanExtend");
 	}
 }

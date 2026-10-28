@@ -7,51 +7,8 @@
 
 namespace System.Windows.Forms
 {
-	public sealed partial class TableLayoutSettings : global::System.Windows.Forms.LayoutSettings, global::System.Runtime.Serialization.ISerializable
+	public partial class TableLayoutSettings : global::System.Runtime.Serialization.ISerializable
 	{
-		internal TableLayoutSettings()
-		{
-		}
-
-		public int ColumnCount
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.ColumnCount");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.ColumnCount");
-		}
-		public global::System.Windows.Forms.TableLayoutColumnStyleCollection ColumnStyles
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.ColumnStyles");
-		}
-		public global::System.Windows.Forms.TableLayoutPanelGrowStyle GrowStyle
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GrowStyle");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GrowStyle");
-		}
-		public override global::System.Windows.Forms.Layout.LayoutEngine LayoutEngine
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.LayoutEngine");
-		}
-		public int RowCount
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.RowCount");
-			set => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.RowCount");
-		}
-		public global::System.Windows.Forms.TableLayoutRowStyleCollection RowStyles
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.RowStyles");
-		}
-
-		public global::System.Windows.Forms.TableLayoutPanelCellPosition GetCellPosition(object control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GetCellPosition");
-		public int GetColumn(object control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GetColumn");
-		public int GetColumnSpan(object control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GetColumnSpan");
-		public int GetRow(object control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GetRow");
-		public int GetRowSpan(object control) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.GetRowSpan");
-		public void SetCellPosition(object control, global::System.Windows.Forms.TableLayoutPanelCellPosition cellPosition) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.SetCellPosition");
-		public void SetColumn(object control, int column) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.SetColumn");
-		public void SetColumnSpan(object control, int value) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.SetColumnSpan");
-		public void SetRow(object control, int row) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.SetRow");
-		public void SetRowSpan(object control, int value) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.SetRowSpan");
-
 		void global::System.Runtime.Serialization.ISerializable.GetObjectData(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) => throw global::FacadeStub.Member("System.Windows.Forms.TableLayoutSettings.ISerializable.GetObjectData");
 	}
 }
