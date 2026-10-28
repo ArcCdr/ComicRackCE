@@ -126,7 +126,7 @@ owner System.Diagnostics.Process P4.20
 note System.Diagnostics.Process::Start differs starting a Windows executable fails with "Exec format error" (WindowsError 22 in Python; measured in the plugin host); native macOS programs and scripts with a shebang start normally
 
 # ---- findings of the scanner (not rows): the task that handles the kind
-owner finding:windows-path P4.17.5
+# windows-path: a backslash before a file name is handled by P4.17.5 (info); the warnings that are left are drive paths and Windows programs, which have no owner (see section 9 of the plan)
 owner finding:native-binary P4.20
 owner finding:wpf P4.17.3
 owner finding:windows-member P4.17.6

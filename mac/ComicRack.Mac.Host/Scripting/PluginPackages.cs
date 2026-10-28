@@ -107,13 +107,23 @@ namespace ComicRack.Mac.Host.Scripting
 		public void Commit()
 		{
 			var packages = manager.GetPackages();
+			bool changed = false;
 			foreach (var package in packages.Where(p => p.PackageType == PackageManager.PackageType.PendingRemove))
 			{
+				// files the plugin made under a Windows spelling go into the folder (and with it), the links to the folder's files go (P4.17.5)
+				PathAliases.Adopt(package.PackagePath);
+				PathAliases.RemoveSiblingLinks(package.PackagePath);
 				DeleteFolder(package.PackagePath);
+				changed = true;
 			}
 			foreach (var package in packages.Where(p => p.PackageType == PackageManager.PackageType.PendingInstall))
 			{
 				CommitInstall(package);
+				changed = true;
+			}
+			if (changed)
+			{
+				PathAliases.Sync(PackagesFolder);
 			}
 		}
 
@@ -189,6 +199,9 @@ namespace ComicRack.Mac.Host.Scripting
 			try
 			{
 				Directory.CreateDirectory(target);
+				// a settings file that the plugin created as "\\App.Config" is the kept "App.Config" (P4.17.5)
+				PathAliases.Adopt(target);
+				PathAliases.RemoveSiblingLinks(target);
 				if (package.KeepFiles != null && package.KeepFiles.Length > 0)
 				{
 					List<Regex> keep = package.KeepFiles

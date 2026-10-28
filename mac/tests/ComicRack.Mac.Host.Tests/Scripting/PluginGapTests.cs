@@ -218,8 +218,9 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 			ScanUnit u = Scanner().ScanPython("import clr\nclr.AddReference('System.Web.Extensions')\nclr.AddReference('System.Web.Services')\npath = r'x'\nf = path + '\\App.Config'\ng = path + '\\\\home_32.png'\nh = 'plain.txt'\n");
 			Assert.Contains(u.References, r => r.Name == "System.Web.Extensions" && r.Kind == "framework");
 			Assert.Contains(u.References, r => r.Name == "System.Web.Services" && r.Kind == "framework-only");
-			Assert.Contains(u.Findings, f => f.Kind == "windows-path" && f.Symbol == "Windows path separator \"\\App.Config\"");
-			Assert.Contains(u.Findings, f => f.Kind == "windows-path" && f.Symbol == "Windows path separator \"\\home_32.png\"");
+			// P4.17.5: a link with this name is made next to the file, so the finding is information
+			Assert.Contains(u.Findings, f => f.Kind == "windows-path" && f.Severity == "info" && f.Symbol == "Windows path separator \"\\App.Config\"");
+			Assert.Contains(u.Findings, f => f.Kind == "windows-path" && f.Severity == "info" && f.Symbol == "Windows path separator \"\\home_32.png\"");
 			Assert.DoesNotContain(u.Findings, f => f.Symbol.Contains("plain.txt"));
 		}
 

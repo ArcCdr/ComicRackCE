@@ -1076,7 +1076,12 @@ namespace ComicRack.Mac.Host.Scripting.Scan
 				return;
 			}
 			string warning = WindowsOnlyApi.StringWarning(text);
-			if (warning != null)
+			if (warning != null && PathAliases.HasAlias(text))
+			{
+				// P4.17.5: the install path and the script host make a link with this name next to the file
+				Finding("info", "windows-path", warning, "Contains a " + warning + "; a link with this name is made next to the file when the plugin is installed or loaded, so it works on macOS.");
+			}
+			else if (warning != null)
 			{
 				Finding("warning", "windows-path", warning, "Contains a " + warning + "; it does not exist on macOS.");
 			}

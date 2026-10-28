@@ -116,6 +116,15 @@ namespace ComicRack.Mac.Host.Scripting
 			// FormUtility.FindActiveService<T>() of the assembly cYo.Common.Windows (RefreshView.py and others): the window the script sees is the program's.
 			activeServices = type => Ui.FindActiveService(type);
 			ActiveServices.Resolver = activeServices;
+			foreach (string folder in Folders.Existing.Where(f => !string.Equals(f, Folders.Bundled, StringComparison.Ordinal)))
+			{
+				// Windows path separators in file names (P4.17.5): the names a script joins with a backslash exist as links
+				PathAliasReport aliases = PathAliases.Sync(folder);
+				if (aliases.Changed || aliases.Errors.Count > 0)
+				{
+					host.Log?.Info("Path aliases in " + folder + ": " + aliases + (aliases.Errors.Count > 0 ? " (" + aliases.Errors[0] + ")" : ""));
+				}
+			}
 			foreach (string folder in Folders.Existing)
 			{
 				try

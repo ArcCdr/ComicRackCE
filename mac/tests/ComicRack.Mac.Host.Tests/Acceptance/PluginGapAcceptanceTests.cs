@@ -131,7 +131,7 @@ namespace ComicRack.Mac.Host.Tests.Acceptance
 			Assert.Equal("A", bd.Tier);
 			Assert.Equal(1, bd.NativeFiles);
 			Assert.Contains(bd.Findings, f => f.Kind == "native-binary" && f.Symbol == "BedethequeFetcher.exe");
-			Assert.Contains(bd.Findings, f => f.Kind == "windows-path" && f.Symbol.Contains("\\App.Config"));
+			Assert.Contains(bd.Findings, f => f.Kind == "windows-path" && f.Severity == "info" && f.Task == null && f.Symbol.Contains("\\App.Config"));
 			Assert.Equal("real", Assert.Single(bd.Framework, r => r.Name == "System.Web.Script.Serialization.JavaScriptSerializer").Status);
 			Assert.Contains(bd.Framework, r => r.Name == "System.Net.Sockets.TcpClient" && r.Status == "real");
 			Assert.Contains(bd.Framework, r => r.Name == "System.Diagnostics.Process.Start" && r.Status == "differs");
@@ -144,7 +144,7 @@ namespace ComicRack.Mac.Host.Tests.Acceptance
 			// P4.17.4: the Recycle Bin overloads work, the row is real
 			Assert.Contains(lo.Framework, r => r.Name == "Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile" && r.Status == "real");
 			Assert.Contains(lo.Framework, r => r.Name == "System.ComponentModel.BackgroundWorker");
-			Assert.Contains(lo.Findings, f => f.Kind == "windows-path" && f.Symbol.Contains("\\home_32.png"));
+			Assert.Contains(lo.Findings, f => f.Kind == "windows-path" && f.Severity == "info" && f.Task == null && f.Symbol.Contains("\\home_32.png"));
 			Assert.Contains(lo.Findings, f => f.Kind == "windows-member" && f.Symbol == "Control.Handle");
 		}
 
