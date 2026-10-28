@@ -20,14 +20,6 @@ namespace System.Windows.Forms
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.CreateParams");
 		}
-		public override global::System.Drawing.Rectangle DisplayRectangle
-		{
-			get => base.DisplayRectangle;
-		}
-		public global::System.Windows.Forms.ScrollableControl.DockPaddingEdges DockPadding
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPadding");
-		}
 		protected bool HScroll
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.HScroll");
@@ -64,36 +56,6 @@ namespace System.Windows.Forms
 
 		public partial class DockPaddingEdges : global::System.ICloneable
 		{
-			internal DockPaddingEdges()
-			{
-			}
-
-			public int All
-			{
-				get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.All");
-				set => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.All");
-			}
-			public int Bottom
-			{
-				get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Bottom");
-				set => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Bottom");
-			}
-			public int Left
-			{
-				get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Left");
-				set => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Left");
-			}
-			public int Right
-			{
-				get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Right");
-				set => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Right");
-			}
-			public int Top
-			{
-				get => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Top");
-				set => throw global::FacadeStub.Member("System.Windows.Forms.ScrollableControl.DockPaddingEdges.Top");
-			}
-
 			public override bool Equals(object other) => base.Equals(other);
 			public override int GetHashCode() => base.GetHashCode();
 			public override string ToString() => base.ToString();

@@ -25,7 +25,7 @@ namespace System.Windows.Forms
 		}
 		public override global::System.Windows.Forms.Layout.LayoutEngine LayoutEngine
 		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripOverflow.LayoutEngine");
+			get => base.LayoutEngine;
 		}
 
 		protected override global::System.Windows.Forms.AccessibleObject CreateAccessibilityInstance() => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripOverflow.CreateAccessibilityInstance");

@@ -46,7 +46,7 @@ namespace System.Windows.Forms
 		}
 		public global::System.Windows.Forms.ScrollableControl.DockPaddingEdges DockPadding
 		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.SplitterPanel.DockPadding");
+			get => base.DockPadding;
 		}
 		public int Height
 		{

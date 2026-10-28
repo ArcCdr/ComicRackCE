@@ -55,7 +55,7 @@ namespace System.Windows.Forms
 		}
 		public override global::System.Windows.Forms.Layout.LayoutEngine LayoutEngine
 		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripPanel.LayoutEngine");
+			get => base.LayoutEngine;
 		}
 		public bool Locked
 		{

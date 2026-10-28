@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows.Forms.Layout;
 using cYo.Compat.Forms;
 
 // The object model of System.Windows.Forms.Control (P4.9a): all state of a control lives here, any thread may set and get it, and the events are raised from this state in the
@@ -36,7 +37,7 @@ namespace System.Windows.Forms
 		private AnchorStyles anchor = AnchorStyles.Top | AnchorStyles.Left;
 		private DockStyle dock;
 		private bool autoSize;
-		private AutoSizeMode autoSizeMode;
+		private AutoSizeMode autoSizeMode = AutoSizeMode.GrowOnly;
 		private int tabIndex = -1;
 		private bool tabStop = true;
 		private bool visibleFlag = true;
@@ -73,6 +74,8 @@ namespace System.Windows.Forms
 		private int layoutSuspended;
 		private bool layoutPending;
 		private LayoutEventArgs layoutPendingArgs;
+		private Rectangle specifiedBounds;
+		private AnchorInfo anchorInfo;
 
 		public Control()
 			: this(null, string.Empty)
@@ -93,6 +96,7 @@ namespace System.Windows.Forms
 		{
 			Size defaultSize = DefaultSize;
 			bounds = new Rectangle(0, 0, defaultSize.Width, defaultSize.Height);
+			specifiedBounds = bounds;
 			margin = DefaultMargin;
 			padding = DefaultPadding;
 			minimumSize = DefaultMinimumSize;
@@ -554,6 +558,7 @@ namespace System.Windows.Forms
 				{
 					Size = current;
 				}
+				parent?.PerformLayout(this, "MinimumSize");
 			}
 		}
 
@@ -582,6 +587,7 @@ namespace System.Windows.Forms
 				{
 					Size = current;
 				}
+				parent?.PerformLayout(this, "MaximumSize");
 			}
 		}
 
@@ -611,7 +617,6 @@ namespace System.Windows.Forms
 			if (now.X != x || now.Y != y || now.Width != width || now.Height != height)
 			{
 				SetBoundsCore(x, y, width, height, BoundsSpecified.All);
-				parent?.PerformLayout(this, "Bounds");
 			}
 		}
 
@@ -637,23 +642,48 @@ namespace System.Windows.Forms
 			if (now.X != x || now.Y != y || now.Width != width || now.Height != height)
 			{
 				SetBoundsCore(x, y, width, height, specified);
-				parent?.PerformLayout(this, "Bounds");
 			}
 		}
 
 		protected virtual void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
 		{
-			if ((specified & BoundsSpecified.Size) != BoundsSpecified.None)
+			// The parent must not lay out before the layout engine knows the new bounds (InitLayout), so its layout waits until the end (as the original does).
+			Control container = parent;
+			container?.SuspendLayout();
+			try
 			{
-				var size = new Size(width, height);
-				ApplySizeConstraints(ref size);
-				width = size.Width;
-				height = size.Height;
+				Rectangle now = Bounds;
+				if (now.X != x || now.Y != y || now.Width != width || now.Height != height)
+				{
+					UpdateSpecifiedBounds(x, y, width, height, specified);
+					var size = new Size(Math.Max(0, width), Math.Max(0, height));
+					ApplySizeConstraints(ref size);
+					UpdateBoundsCore(x, y, size.Width, size.Height);
+					container?.LayoutEngine.InitLayout(this, specified);
+				}
 			}
-			width = Math.Max(0, width);
-			height = Math.Max(0, height);
-			UpdateBoundsCore(x, y, width, height);
+			finally
+			{
+				container?.ResumeLayout(true);
+			}
 		}
+
+		/// <summary>The bounds the script asked for: a part is taken over only when it was specified (the layout engine restores them when Dock goes back to None).</summary>
+		private void UpdateSpecifiedBounds(int x, int y, int width, int height, BoundsSpecified specified)
+		{
+			lock (sync)
+			{
+				Rectangle s = specifiedBounds;
+				specifiedBounds = new Rectangle(
+					(specified & BoundsSpecified.X) != BoundsSpecified.None ? x : s.X,
+					(specified & BoundsSpecified.Y) != BoundsSpecified.None ? y : s.Y,
+					(specified & BoundsSpecified.Width) != BoundsSpecified.None ? width : s.Width,
+					(specified & BoundsSpecified.Height) != BoundsSpecified.None ? height : s.Height);
+			}
+		}
+
+		/// <summary>How the layout engine places a control: nothing counts as specified by the script.</summary>
+		internal void SetBoundsByLayout(Rectangle r) => SetBoundsCore(r.X, r.Y, r.Width, r.Height, BoundsSpecified.None);
 
 		protected virtual void SetClientSizeCore(int x, int y)
 		{
@@ -706,6 +736,7 @@ namespace System.Windows.Forms
 				OnSizeChanged(EventArgs.Empty);
 				OnClientSizeChanged(EventArgs.Empty);
 			}
+			parent?.PerformLayout(this, "Bounds");
 		}
 
 		protected virtual void OnLocationChanged(EventArgs e)
@@ -792,9 +823,25 @@ namespace System.Windows.Forms
 			{
 				if (anchor != value)
 				{
-					anchor = value;
-					Notify("Anchor");
-					parent?.PerformLayout(this, "Anchor");
+					SuspendLayout();
+					try
+					{
+						if (dock != DockStyle.None)
+						{
+							ApplyDock(DockStyle.None);
+						}
+						anchor = value;
+						if (parent != null)
+						{
+							DefaultLayout.InitLayout(this, BoundsSpecified.All);
+						}
+						Notify("Anchor");
+						parent?.PerformLayout(this, "Anchor");
+					}
+					finally
+					{
+						ResumeLayout();
+					}
 				}
 			}
 		}
@@ -804,14 +851,58 @@ namespace System.Windows.Forms
 			get => dock;
 			set
 			{
+				if (value < DockStyle.None || value > DockStyle.Fill)
+				{
+					throw new InvalidEnumArgumentException(nameof(value), (int)value, typeof(DockStyle));
+				}
 				if (dock != value)
 				{
-					dock = value;
-					Notify("Dock");
-					parent?.PerformLayout(this, "Dock");
-					OnDockChanged(EventArgs.Empty);
+					SuspendLayout();
+					try
+					{
+						ApplyDock(value);
+						Notify("Dock");
+						parent?.PerformLayout(this, "Dock");
+						OnDockChanged(EventArgs.Empty);
+					}
+					finally
+					{
+						ResumeLayout();
+					}
 				}
 			}
+		}
+
+		/// <summary>Docking replaces the anchors (they read as the default); undocking brings back the bounds the script specified.</summary>
+		private void ApplyDock(DockStyle value)
+		{
+			dock = value;
+			anchorInfo = null;
+			if (value != DockStyle.None)
+			{
+				anchor = DefaultLayout.DefaultAnchor;
+				return;
+			}
+			Rectangle s;
+			lock (sync)
+			{
+				s = specifiedBounds;
+			}
+			SetBoundsCore(s.X, s.Y, s.Width, s.Height, BoundsSpecified.None);
+		}
+
+		internal AnchorStyles AnchorValue => anchor;
+
+		internal DockStyle DockValue => dock;
+
+		internal bool AutoSizeValue => autoSize;
+
+		internal AutoSizeMode AutoSizeModeValue => autoSizeMode;
+
+		internal AnchorInfo AnchorInfoValue
+		{
+			get => anchorInfo;
+			set => anchorInfo = value;
 		}
 
 		public virtual bool AutoSize
@@ -886,7 +977,10 @@ namespace System.Windows.Forms
 
 		public void SuspendLayout()
 		{
-			Interlocked.Increment(ref layoutSuspended);
+			lock (sync)
+			{
+				layoutSuspended++;
+			}
 		}
 
 		public void ResumeLayout() => ResumeLayout(true);
@@ -922,6 +1016,10 @@ namespace System.Windows.Forms
 
 		public void PerformLayout(Control affectedControl, string affectedProperty)
 		{
+			if (isDisposed)
+			{
+				return;
+			}
 			lock (sync)
 			{
 				if (layoutSuspended > 0)
@@ -932,26 +1030,48 @@ namespace System.Windows.Forms
 				}
 				layoutPending = false;
 				layoutPendingArgs = null;
+				// While the layout runs it counts as suspended: a child that changes its size in the engine (or in a Layout handler) does not start a second layout.
+				layoutSuspended = 1;
 			}
-			OnLayout(new LayoutEventArgs(affectedControl, affectedProperty));
+			try
+			{
+				OnLayout(new LayoutEventArgs(affectedControl, affectedProperty));
+			}
+			finally
+			{
+				lock (sync)
+				{
+					layoutSuspended = 0;
+					layoutPending = false;
+					layoutPendingArgs = null;
+				}
+			}
 		}
 
 		protected virtual void OnLayout(LayoutEventArgs levent)
 		{
 			Layout?.Invoke(this, levent);
-			LayoutChildren(levent);
+			LayoutEngine.Layout(this, levent);
 		}
 
-		/// <summary>Where the layout engine arranges the children (P4.9b). Nothing moves before it exists.</summary>
-		internal virtual void LayoutChildren(LayoutEventArgs e)
-		{
-		}
+		/// <summary>The engine that arranges the children: Dock and Anchor for a plain container (FlowLayoutPanel and TableLayoutPanel override it, P4.9c).</summary>
+		public virtual LayoutEngine LayoutEngine => DefaultLayoutEngine.Instance;
 
 		/// <summary>True while SuspendLayout was called more often than ResumeLayout.</summary>
-		internal bool IsLayoutSuspended => Volatile.Read(ref layoutSuspended) > 0;
+		internal bool IsLayoutSuspended
+		{
+			get
+			{
+				lock (sync)
+				{
+					return layoutSuspended > 0;
+				}
+			}
+		}
 
 		protected virtual void InitLayout()
 		{
+			(parent ?? this).LayoutEngine.InitLayout(this, BoundsSpecified.All);
 		}
 
 		// ---------------------------------------------------------------- hierarchy
@@ -1522,6 +1642,7 @@ namespace System.Windows.Forms
 		protected virtual void SetVisibleCore(bool value)
 		{
 			bool before = GetVisibleCore();
+			bool flagChanged = visibleFlag != value;
 			visibleFlag = value;
 			if (before != value)
 			{
@@ -1531,6 +1652,10 @@ namespace System.Windows.Forms
 					ReleaseFocusWhenHidden();
 				}
 				OnVisibleChanged(EventArgs.Empty);
+			}
+			if (flagChanged)
+			{
+				parent?.PerformLayout(this, "Visible");
 			}
 		}
 

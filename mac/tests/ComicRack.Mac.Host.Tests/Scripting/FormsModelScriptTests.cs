@@ -178,6 +178,46 @@ def Model(books):
 		}
 
 		[Fact]
+		public void A_script_lays_out_a_dialog_with_Dock_and_Anchor()
+		{
+			string text = Run(@"
+#@Name Model
+#@Hook Books
+def Model(books):
+	form = Form()
+	form.ClientSize = Size(400, 300)
+	body = Panel()
+	body.Size = Size(400, 260)
+	body.Dock = DockStyle.Fill
+	bar = Panel()
+	bar.Size = Size(400, 40)
+	bar.Dock = DockStyle.Bottom
+	ok = Button()
+	ok.Size = Size(75, 23)
+	ok.Location = Point(310, 8)
+	ok.Anchor = AnchorStyles.Top | AnchorStyles.Right
+	name = TextBox()
+	name.Location = Point(10, 10)
+	name.Size = Size(300, 20)
+	name.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+	form.SuspendLayout()
+	body.Controls.Add(name)
+	bar.Controls.Add(ok)
+	form.Controls.Add(body)
+	form.Controls.Add(bar)
+	form.ResumeLayout(True)
+	print 'first', body.Bounds, bar.Bounds, name.Bounds, ok.Bounds
+	form.ClientSize = Size(500, 400)
+	print 'grown', body.Bounds, bar.Bounds, name.Bounds, ok.Bounds
+	bar.Dock = DockStyle.None
+	print 'undocked', bar.Bounds
+");
+			Assert.True(text.Contains("first {X=0,Y=0,Width=400,Height=260} {X=0,Y=260,Width=400,Height=40} {X=10,Y=10,Width=300,Height=20} {X=310,Y=8,Width=75,Height=23}"), text);
+			Assert.Contains("grown {X=0,Y=0,Width=500,Height=360} {X=0,Y=360,Width=500,Height=40} {X=10,Y=10,Width=400,Height=20} {X=410,Y=8,Width=75,Height=23}", text);
+			Assert.Contains("undocked {X=0,Y=0,Width=400,Height=40}", text);
+		}
+
+		[Fact]
 		public void Members_that_are_not_implemented_yet_report_themselves_while_the_rest_of_a_control_keeps_working()
 		{
 			string text = Run(@"

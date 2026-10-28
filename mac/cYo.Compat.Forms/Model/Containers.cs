@@ -16,6 +16,90 @@ namespace System.Windows.Forms
 		{
 		}
 
+		private DockPaddingEdges dockPadding;
+
+		/// <summary>The client area minus the padding; with AutoScroll at least as large as AutoScrollMinSize (the area that docked and anchored children are arranged in).</summary>
+		public override Rectangle DisplayRectangle
+		{
+			get
+			{
+				Rectangle rect = ClientRectangle;
+				if (autoScroll)
+				{
+					rect.Width = Math.Max(rect.Width, autoScrollMinSize.Width);
+					rect.Height = Math.Max(rect.Height, autoScrollMinSize.Height);
+				}
+				Padding p = Padding;
+				if (p != Padding.Empty)
+				{
+					rect.X += p.Left;
+					rect.Y += p.Top;
+					rect.Width -= p.Horizontal;
+					rect.Height -= p.Vertical;
+				}
+				return rect;
+			}
+		}
+
+		/// <summary>The padding of the container as the edges that docked children keep away from.</summary>
+		public DockPaddingEdges DockPadding => dockPadding ?? (dockPadding = new DockPaddingEdges(this));
+
+		public partial class DockPaddingEdges
+		{
+			private readonly ScrollableControl owner;
+
+			internal DockPaddingEdges(ScrollableControl owner)
+			{
+				this.owner = owner;
+			}
+
+			public int All
+			{
+				get => owner.Padding.All;
+				set => owner.Padding = new Padding(value);
+			}
+
+			public int Left
+			{
+				get => owner.Padding.Left;
+				set
+				{
+					Padding p = owner.Padding;
+					owner.Padding = new Padding(value, p.Top, p.Right, p.Bottom);
+				}
+			}
+
+			public int Top
+			{
+				get => owner.Padding.Top;
+				set
+				{
+					Padding p = owner.Padding;
+					owner.Padding = new Padding(p.Left, value, p.Right, p.Bottom);
+				}
+			}
+
+			public int Right
+			{
+				get => owner.Padding.Right;
+				set
+				{
+					Padding p = owner.Padding;
+					owner.Padding = new Padding(p.Left, p.Top, value, p.Bottom);
+				}
+			}
+
+			public int Bottom
+			{
+				get => owner.Padding.Bottom;
+				set
+				{
+					Padding p = owner.Padding;
+					owner.Padding = new Padding(p.Left, p.Top, p.Right, value);
+				}
+			}
+		}
+
 		public virtual bool AutoScroll
 		{
 			get => autoScroll;

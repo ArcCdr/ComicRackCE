@@ -55,7 +55,7 @@ namespace System.Windows.Forms
 		}
 		public global::System.Windows.Forms.ScrollableControl.DockPaddingEdges DockPadding
 		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.UpDownBase.DockPadding");
+			get => base.DockPadding;
 		}
 		public override bool Focused
 		{

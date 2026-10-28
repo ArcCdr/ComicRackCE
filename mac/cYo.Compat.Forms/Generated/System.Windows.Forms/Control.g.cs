@@ -34,10 +34,6 @@ namespace System.Windows.Forms
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokeRequired");
 		}
-		public virtual global::System.Windows.Forms.Layout.LayoutEngine LayoutEngine
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Control.LayoutEngine");
-		}
 		protected static global::System.Windows.Forms.ImeMode PropagatingImeMode
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Control.PropagatingImeMode");

@@ -25,7 +25,7 @@ namespace System.Windows.Forms
 		}
 		public override global::System.Windows.Forms.Layout.LayoutEngine LayoutEngine
 		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripDropDownMenu.LayoutEngine");
+			get => base.LayoutEngine;
 		}
 		public global::System.Windows.Forms.ToolStripLayoutStyle LayoutStyle
 		{
