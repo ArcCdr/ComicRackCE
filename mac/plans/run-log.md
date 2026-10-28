@@ -75,3 +75,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-28 21:39 | P4.17.4 | done | 3185c85 |  | Microsoft.VisualBasic FileSystem with UIOption and RecycleOption (app-local assembly 10.0.1.0 wins by a stamped deps version; Trash through ITrash, errors th... |
 | 2026-10-28 22:26 | P4.17.5 | done | 4808693 |  | Windows path separators in file names (links with the backslash spelling next to the files of a plugin, made on install, update and start; files a plugin cre... |
 | 2026-10-28 22:55 | P4.9b | done | 93c8742 |  | Layout: Anchor and Dock (port of the default layout engine of WinForms behind Control.LayoutEngine: docking in z-order, anchors as distances to the display r... |
+| 2026-10-28 23:36 | P4.9c | done | 2da55e7 |  | Layout: FlowLayoutPanel and TableLayoutPanel (flow engine with wrap, flow breaks and the four directions; table engine with Absolute, AutoSize and Percent st... |
