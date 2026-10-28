@@ -26,8 +26,9 @@ namespace System.Windows.Forms
 				Rectangle rect = ClientRectangle;
 				if (autoScroll)
 				{
-					rect.Width = Math.Max(rect.Width, autoScrollMinSize.Width);
-					rect.Height = Math.Max(rect.Height, autoScrollMinSize.Height);
+					Size minimum = AutoScrollMinSize;
+					rect.Width = Math.Max(rect.Width, minimum.Width);
+					rect.Height = Math.Max(rect.Height, minimum.Height);
 				}
 				Padding p = Padding;
 				if (p != Padding.Empty)
@@ -116,26 +117,49 @@ namespace System.Windows.Forms
 
 		public Size AutoScrollMargin
 		{
-			get => autoScrollMargin;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return autoScrollMargin;
+				}
+			}
 			set
 			{
 				if (value.Width < 0 || value.Height < 0)
 				{
 					throw new ArgumentOutOfRangeException(nameof(value), value, "The value of 'AutoScrollMargin' cannot be negative.");
 				}
-				autoScrollMargin = value;
+				lock (SyncRoot)
+				{
+					autoScrollMargin = value;
+				}
 				PerformLayout(this, "AutoScrollMargin");
 			}
 		}
 
 		public Size AutoScrollMinSize
 		{
-			get => autoScrollMinSize;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return autoScrollMinSize;
+				}
+			}
 			set
 			{
-				if (autoScrollMinSize != value)
+				bool changed;
+				lock (SyncRoot)
 				{
-					autoScrollMinSize = value;
+					changed = autoScrollMinSize != value;
+					if (changed)
+					{
+						autoScrollMinSize = value;
+					}
+				}
+				if (changed)
+				{
 					AutoScroll = true;
 					PerformLayout(this, "AutoScrollMinSize");
 				}
@@ -144,10 +168,19 @@ namespace System.Windows.Forms
 
 		public Point AutoScrollPosition
 		{
-			get => new Point(-autoScrollPosition.X, -autoScrollPosition.Y);
+			get
+			{
+				lock (SyncRoot)
+				{
+					return new Point(-autoScrollPosition.X, -autoScrollPosition.Y);
+				}
+			}
 			set
 			{
-				autoScrollPosition = new Point(Math.Abs(value.X), Math.Abs(value.Y));
+				lock (SyncRoot)
+				{
+					autoScrollPosition = new Point(Math.Abs(value.X), Math.Abs(value.Y));
+				}
 				Notify("AutoScrollPosition");
 			}
 		}
@@ -242,14 +275,23 @@ namespace System.Windows.Forms
 
 		public SizeF AutoScaleDimensions
 		{
-			get => autoScaleDimensions;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return autoScaleDimensions;
+				}
+			}
 			set
 			{
 				if (value.Width < 0 || value.Height < 0)
 				{
 					throw new ArgumentOutOfRangeException(nameof(value), value, "The value of 'AutoScaleDimensions' cannot be negative.");
 				}
-				autoScaleDimensions = value;
+				lock (SyncRoot)
+				{
+					autoScaleDimensions = value;
+				}
 				if (!value.IsEmpty)
 				{
 					autoScaleMode = AutoScaleMode.Dpi;
@@ -270,7 +312,10 @@ namespace System.Windows.Forms
 				{
 					if (autoScaleMode != AutoScaleMode.Inherit)
 					{
-						autoScaleDimensions = SizeF.Empty;
+						lock (SyncRoot)
+						{
+							autoScaleDimensions = SizeF.Empty;
+						}
 					}
 					autoScaleMode = value;
 				}

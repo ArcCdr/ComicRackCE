@@ -20,10 +20,6 @@ owner System.Windows.Forms.Control::Left P4.9b
 owner System.Windows.Forms.Control::Top P4.9b
 owner System.Windows.Forms.Control::AutoSize P4.9d
 owner System.Windows.Forms.Control::Font P4.9d
-owner System.Windows.Forms.Control::Invoke P4.9e
-owner System.Windows.Forms.Control::BeginInvoke P4.9e
-owner System.Windows.Forms.Control::EndInvoke P4.9e
-owner System.Windows.Forms.Control::InvokeRequired P4.9e
 owner System.Windows.Forms.Control::CreateGraphics P4.10e
 owner System.Windows.Forms.Control::Paint P4.10e
 owner System.Windows.Forms.Control::OnPaint P4.10e
@@ -39,9 +35,7 @@ owner System.Windows.Forms.Form::Owner P4.9f
 owner System.Windows.Forms.Form P4.9a
 owner System.Windows.Forms.ContainerControl P4.9a
 owner System.Windows.Forms.ScrollableControl P4.10d
-owner System.Windows.Forms.Application::DoEvents P4.9e
-owner System.Windows.Forms.Application P4.9e
-owner System.Windows.Forms.Timer P4.9e
+owner System.Windows.Forms.Application P4.9f
 owner System.Windows.Forms.MessageBox P4.9f
 owner System.Windows.Forms.IWin32Window P4.9f
 owner System.Windows.Forms.Layout* P4.9c

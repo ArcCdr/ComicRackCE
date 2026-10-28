@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using cYo.Compat.Forms;
 
 namespace System.Windows.Forms
 {
@@ -68,6 +69,15 @@ namespace System.Windows.Forms
 		/// <summary>Text rendering is not selectable here: scripts call this at the top and it has nothing to do.</summary>
 		public static void SetCompatibleTextRenderingDefault(bool defaultValue)
 		{
+		}
+
+		/// <summary>
+		/// Runs what is queued for the UI thread (posted property changes, Invoke and BeginInvoke calls, timer ticks that are due, a form's Shown), then returns. Called on another thread it
+		/// does nothing, as the Framework has no messages to process for a thread without windows.
+		/// </summary>
+		public static void DoEvents()
+		{
+			FormsRuntime.Backend.DoEvents();
 		}
 
 		public static void RaiseIdle(EventArgs e)

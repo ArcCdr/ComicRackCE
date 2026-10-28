@@ -270,6 +270,81 @@ def Model(books):
 		}
 
 		[Fact]
+		public void A_script_updates_controls_from_a_worker_thread_with_and_without_Invoke_and_uses_a_Timer_and_DoEvents()
+		{
+			// The script thread is the UI thread of a backend with thread affinity (as the window of the app will be); a .NET thread runs the worker function.
+			string text = Run(@"
+from System import Func, EventHandler
+from System.Threading import Thread, ThreadStart
+from cYo.Compat.Forms import FormsRuntime, NullFormsBackend
+
+#@Name Model
+#@Hook Books
+def Model(books):
+	backend = NullFormsBackend()
+	backend.ThreadAffinity = True
+	FormsRuntime.Backend = backend
+	form = Form()
+	label = Label()
+	form.Controls.Add(label)
+	print 'before show', label.InvokeRequired
+	form.Show()
+	Application.DoEvents()
+	done = []
+	def work():
+		try:
+			trace.append('required %s' % label.InvokeRequired)
+			label.Text = 'from the worker'
+			label.Invoke(MethodInvoker(lambda: trace.append('invoke: required %s' % label.InvokeRequired)))
+			result = label.Invoke(Func[int](lambda: 41 + 1))
+			trace.append('result %d' % result)
+			call = label.BeginInvoke(MethodInvoker(lambda: trace.append('begin')))
+			label.EndInvoke(call)
+			try:
+				label.Invoke(EventHandler(lambda s, e: 1 / 0))
+			except Exception, e:
+				trace.append('raised in the handler: %s' % type(e).__name__)
+		except Exception, e:
+			trace.append('worker failed: %s' % e)
+		finally:
+			done.append(1)
+	t = Thread(ThreadStart(work))
+	t.Start()
+	for i in range(100000):
+		if done:
+			break
+		Application.DoEvents()
+		Thread.Sleep(1)
+	t.Join()
+	Application.DoEvents()
+	print 'text', label.Text, 'required now', label.InvokeRequired
+	print 'trace', ' | '.join(trace)
+	peer = backend.Peers[1]
+	print 'peer told', len([l for l in peer.Log if l == 'PropertyChanged Text'])
+
+	ticks = []
+	timer = Timer()
+	timer.Interval = 250
+	def tick(sender, args):
+		ticks.append(sender.Interval)
+		if len(ticks) == 2:
+			sender.Stop()
+	timer.Tick += tick
+	timer.Start()
+	for i in range(4):
+		backend.AdvanceTime(250)
+		Application.DoEvents()
+	print 'ticks', ticks, timer.Enabled, timer.Interval, backend.RunningTimers
+	form.Close()
+");
+			Assert.True(text.Contains("before show False"), text);
+			Assert.True(text.Contains("text from the worker required now False"), text);
+			Assert.True(text.Contains("trace required True | invoke: required False | result 42 | begin | raised in the handler: ZeroDivisionError"), text);
+			Assert.True(text.Contains("peer told 1"), text);
+			Assert.True(text.Contains("ticks [250, 250] False 250 0"), text);
+		}
+
+		[Fact]
 		public void Members_that_are_not_implemented_yet_report_themselves_while_the_rest_of_a_control_keeps_working()
 		{
 			string text = Run(@"

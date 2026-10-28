@@ -30,10 +30,6 @@ namespace System.Windows.Forms
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Control.DataBindings");
 		}
-		public bool InvokeRequired
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokeRequired");
-		}
 		protected static global::System.Windows.Forms.ImeMode PropagatingImeMode
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Control.PropagatingImeMode");
@@ -46,9 +42,6 @@ namespace System.Windows.Forms
 
 		protected internal void AccessibilityNotifyClients(global::System.Windows.Forms.AccessibleEvents accEvent, int childID) => throw global::FacadeStub.Member("System.Windows.Forms.Control.AccessibilityNotifyClients");
 		protected void AccessibilityNotifyClients(global::System.Windows.Forms.AccessibleEvents accEvent, int objectID, int childID) => throw global::FacadeStub.Member("System.Windows.Forms.Control.AccessibilityNotifyClients");
-		public global::System.IAsyncResult BeginInvoke(global::System.Action method) => throw global::FacadeStub.Member("System.Windows.Forms.Control.BeginInvoke");
-		public global::System.IAsyncResult BeginInvoke(global::System.Delegate method) => throw global::FacadeStub.Member("System.Windows.Forms.Control.BeginInvoke");
-		public global::System.IAsyncResult BeginInvoke(global::System.Delegate method, params object[] args) => throw global::FacadeStub.Member("System.Windows.Forms.Control.BeginInvoke");
 		protected virtual global::System.Windows.Forms.AccessibleObject CreateAccessibilityInstance() => throw global::FacadeStub.Member("System.Windows.Forms.Control.CreateAccessibilityInstance");
 		public global::System.Drawing.Graphics CreateGraphics() => throw global::FacadeStub.Member("System.Windows.Forms.Control.CreateGraphics");
 		protected virtual void DefWndProc(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.Control.DefWndProc");
@@ -57,14 +50,10 @@ namespace System.Windows.Forms
 		public global::System.Windows.Forms.DragDropEffects DoDragDropAsJson<T>(T data, global::System.Windows.Forms.DragDropEffects allowedEffects) => throw global::FacadeStub.Member("System.Windows.Forms.Control.DoDragDropAsJson");
 		public global::System.Windows.Forms.DragDropEffects DoDragDropAsJson<T>(T data, global::System.Windows.Forms.DragDropEffects allowedEffects, global::System.Drawing.Bitmap dragImage, global::System.Drawing.Point cursorOffset, bool useDefaultDragImage) => throw global::FacadeStub.Member("System.Windows.Forms.Control.DoDragDropAsJson");
 		public void DrawToBitmap(global::System.Drawing.Bitmap bitmap, global::System.Drawing.Rectangle targetBounds) => throw global::FacadeStub.Member("System.Windows.Forms.Control.DrawToBitmap");
-		public object EndInvoke(global::System.IAsyncResult asyncResult) => throw global::FacadeStub.Member("System.Windows.Forms.Control.EndInvoke");
 		public static global::System.Windows.Forms.Control FromChildHandle(global::System.IntPtr handle) => throw global::FacadeStub.Member("System.Windows.Forms.Control.FromChildHandle");
 		public static global::System.Windows.Forms.Control FromHandle(global::System.IntPtr handle) => throw global::FacadeStub.Member("System.Windows.Forms.Control.FromHandle");
 		protected virtual global::System.Windows.Forms.AccessibleObject GetAccessibilityObjectById(int objectId) => throw global::FacadeStub.Member("System.Windows.Forms.Control.GetAccessibilityObjectById");
 		protected virtual global::System.Drawing.Rectangle GetScaledBounds(global::System.Drawing.Rectangle bounds, global::System.Drawing.SizeF factor, global::System.Windows.Forms.BoundsSpecified specified) => throw global::FacadeStub.Member("System.Windows.Forms.Control.GetScaledBounds");
-		public void Invoke(global::System.Action method) => throw global::FacadeStub.Member("System.Windows.Forms.Control.Invoke");
-		public object Invoke(global::System.Delegate method) => throw global::FacadeStub.Member("System.Windows.Forms.Control.Invoke");
-		public object Invoke(global::System.Delegate method, params object[] args) => throw global::FacadeStub.Member("System.Windows.Forms.Control.Invoke");
 		public global::System.Threading.Tasks.Task InvokeAsync(global::System.Action callback, global::System.Threading.CancellationToken cancellationToken = default) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokeAsync");
 		public global::System.Threading.Tasks.Task InvokeAsync(global::System.Func<global::System.Threading.CancellationToken, global::System.Threading.Tasks.ValueTask> callback, global::System.Threading.CancellationToken cancellationToken = default) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokeAsync");
 		public global::System.Threading.Tasks.Task<T> InvokeAsync<T>(global::System.Func<global::System.Threading.CancellationToken, global::System.Threading.Tasks.ValueTask<T>> callback, global::System.Threading.CancellationToken cancellationToken = default) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokeAsync");
@@ -74,7 +63,6 @@ namespace System.Windows.Forms
 		protected void InvokeOnClick(global::System.Windows.Forms.Control toInvoke, global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokeOnClick");
 		protected void InvokePaint(global::System.Windows.Forms.Control c, global::System.Windows.Forms.PaintEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokePaint");
 		protected void InvokePaintBackground(global::System.Windows.Forms.Control c, global::System.Windows.Forms.PaintEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokePaintBackground");
-		public T Invoke<T>(global::System.Func<T> method) => throw global::FacadeStub.Member("System.Windows.Forms.Control.Invoke");
 		protected virtual bool IsInputChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsInputChar");
 		protected virtual bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsInputKey");
 		public static bool IsKeyLocked(global::System.Windows.Forms.Keys keyVal) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsKeyLocked");

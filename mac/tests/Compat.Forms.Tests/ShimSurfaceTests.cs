@@ -80,7 +80,7 @@ namespace Compat.Forms.Tests
 		public void The_seam_namespace_holds_exactly_the_backend_contract()
 		{
 			var names = typeof(System.Windows.Forms.Application).Assembly.GetExportedTypes().Where(t => t.Namespace == SeamNamespace).Select(t => t.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
-			Assert.Equal(new[] { "FormsRuntime", "IControlPeer", "IFormPeer", "IFormsBackend", "ModalLoop", "NullFormsBackend", "NullPeer" }, names);
+			Assert.Equal(new[] { "FormsRuntime", "IControlPeer", "IFormPeer", "IFormsBackend", "ITimerPeer", "ModalLoop", "NullFormsBackend", "NullPeer" }, names);
 		}
 
 		[Fact]

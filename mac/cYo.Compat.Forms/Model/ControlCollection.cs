@@ -387,23 +387,7 @@ namespace System.Windows.Forms
 				ChildrenChanged();
 			}
 
-			private void ChildrenChanged()
-			{
-				IControlPeer p = owner.peer;
-				if (p == null)
-				{
-					return;
-				}
-				IFormsBackend backend = FormsRuntime.Backend;
-				if (backend.CheckAccess())
-				{
-					FormsRuntime.Guard(p.ChildrenChanged);
-				}
-				else
-				{
-					backend.Post(() => FormsRuntime.Guard(p.ChildrenChanged));
-				}
-			}
+			private void ChildrenChanged() => owner.NotifyPeerChildren();
 
 			object ICloneable.Clone()
 			{

@@ -234,10 +234,19 @@ namespace System.Windows.Forms
 
 		public Color TransparencyKey
 		{
-			get => transparencyKey;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return transparencyKey;
+				}
+			}
 			set
 			{
-				transparencyKey = value;
+				lock (SyncRoot)
+				{
+					transparencyKey = value;
+				}
 				Notify("TransparencyKey");
 			}
 		}
@@ -289,7 +298,11 @@ namespace System.Windows.Forms
 				{
 					if (windowState == FormWindowState.Normal)
 					{
-						restoreBounds = Bounds;
+						Rectangle now = Bounds;
+						lock (SyncRoot)
+						{
+							restoreBounds = now;
+						}
 					}
 					windowState = value;
 					Notify("WindowState");
@@ -298,7 +311,20 @@ namespace System.Windows.Forms
 			}
 		}
 
-		public Rectangle RestoreBounds => windowState == FormWindowState.Normal ? Bounds : restoreBounds;
+		public Rectangle RestoreBounds
+		{
+			get
+			{
+				if (windowState == FormWindowState.Normal)
+				{
+					return Bounds;
+				}
+				lock (SyncRoot)
+				{
+					return restoreBounds;
+				}
+			}
+		}
 
 		public AutoSizeMode AutoSizeMode
 		{
@@ -329,14 +355,24 @@ namespace System.Windows.Forms
 
 		protected Rectangle MaximizedBounds
 		{
-			get => maximizedBounds;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return maximizedBounds;
+				}
+			}
 			set
 			{
-				if (maximizedBounds != value)
+				lock (SyncRoot)
 				{
+					if (maximizedBounds == value)
+					{
+						return;
+					}
 					maximizedBounds = value;
-					OnMaximizedBoundsChanged(EventArgs.Empty);
 				}
+				OnMaximizedBoundsChanged(EventArgs.Empty);
 			}
 		}
 

@@ -74,7 +74,7 @@ namespace Compat.Forms.Tests
 			{
 				Assert.Throws<NotSupportedException>(() => new OpenFileDialog());
 				Assert.Throws<NotSupportedException>(() => new ToolStripMenuItem());
-				Assert.Throws<NotSupportedException>(() => new Timer());
+				Assert.Throws<NotSupportedException>(() => new NotifyIcon());
 			}
 			GC.Collect();
 			GC.WaitForPendingFinalizers();

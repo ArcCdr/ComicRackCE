@@ -129,25 +129,6 @@ namespace System.Windows.Forms
 			Form.ResetActiveForm();
 		}
 
-		/// <summary>Tells the peer, on the UI thread, that a facade property changed.</summary>
-		internal void Notify(string property)
-		{
-			IControlPeer p = peer;
-			if (p == null)
-			{
-				return;
-			}
-			IFormsBackend backend = FormsRuntime.Backend;
-			if (backend.CheckAccess())
-			{
-				FormsRuntime.Guard(() => p.PropertyChanged(property));
-			}
-			else
-			{
-				backend.Post(() => FormsRuntime.Guard(() => p.PropertyChanged(property)));
-			}
-		}
-
 		public bool IsHandleCreated => handleCreated;
 
 		public bool Created => created;
@@ -247,6 +228,10 @@ namespace System.Windows.Forms
 			peer = null;
 			handleCreated = false;
 			created = false;
+			if (!recreatingHandle)
+			{
+				CancelPendingCalls();
+			}
 			if (p != null)
 			{
 				IFormsBackend backend = FormsRuntime.Backend;
@@ -2157,8 +2142,20 @@ namespace System.Windows.Forms
 
 		public virtual Point AutoScrollOffset
 		{
-			get => autoScrollOffset;
-			set => autoScrollOffset = value;
+			get
+			{
+				lock (sync)
+				{
+					return autoScrollOffset;
+				}
+			}
+			set
+			{
+				lock (sync)
+				{
+					autoScrollOffset = value;
+				}
+			}
 		}
 
 		public ImeMode ImeMode
@@ -2235,19 +2232,7 @@ namespace System.Windows.Forms
 				return;
 			}
 			OnInvalidated(new InvalidateEventArgs(area));
-			IControlPeer p = peer;
-			if (p != null)
-			{
-				IFormsBackend backend = FormsRuntime.Backend;
-				if (backend.CheckAccess())
-				{
-					FormsRuntime.Guard(() => p.Invalidate(area));
-				}
-				else
-				{
-					backend.Post(() => FormsRuntime.Guard(() => p.Invalidate(area)));
-				}
-			}
+			NotifyPeerInvalidate(area);
 			if (invalidateChildren)
 			{
 				foreach (Control child in Children())

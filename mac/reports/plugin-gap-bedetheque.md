@@ -15,8 +15,8 @@ name (plugin data or a dynamic attribute). Every row has exactly one status. Row
 
 | Plugin | Scripts | Assemblies | Native files | Tier | Rows | real | stub | partial | missing | differs | plugin | python | dynamic |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 280 | 29 | 7 | 0 | 1 | 7 | 73 | 131 |
-| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 361 | 97 | 31 | 0 | 0 | 113 | 34 | 4 |
+| Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 288 | 22 | 6 | 0 | 1 | 7 | 73 | 131 |
+| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 363 | 96 | 30 | 0 | 0 | 113 | 34 | 4 |
 
 ## Bedetheque Scraper 2 6.08
 
@@ -72,7 +72,7 @@ What the macOS build does today (measured in the plugin host with this report's 
 
 ### A. WinForms and GDI+ members (typed)
 
-Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 154 rows: 123 real, 28 stub, 3 partial.
+Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 154 rows: 130 real, 21 stub, 3 partial.
 
 | Member | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -119,7 +119,6 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `MessageBoxButtons.OK` | 6 | 1 | real | facade |  |  |
 | `MessageBoxIcon.Warning` | 6 | 1 | real | facade |  |  |
 | `TextBox.TextAlign` | 6 | 1 | real | facade |  |  |
-| `Application.DoEvents` | 5 | 1 | stub | facade | P4.9e |  |
 | `Bitmap..ctor` | 3 | 1 | partial | facade | P4.17.2 |  |
 | `CheckedListBox.Items` | 3 | 1 | stub | facade | P4.10b |  |
 | `Icon..ctor` | 3 | 1 | partial | facade | P4.17.2 |  |
@@ -141,18 +140,12 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ProgressBar.Increment` | 1 | 1 | stub | facade | P4.10c |  |
 | `TabControl..ctor` | 1 | 1 | stub | facade | P4.10d |  |
 | `TabControl.SelectedIndex` | 1 | 1 | stub | facade | P4.10d |  |
-| `Timer..ctor` | 1 | 1 | stub | facade | P4.9e |  |
-| `Timer.Enabled` | 1 | 1 | stub | facade | P4.9e |  |
-| `Timer.Interval` | 1 | 1 | stub | facade | P4.9e |  |
-| `Timer.Start` | 1 | 1 | stub | facade | P4.9e |  |
-| `Timer.Stop` | 1 | 1 | stub | facade | P4.9e |  |
-| `Timer.Tick` | 1 | 1 | stub | facade | P4.9e |  |
 
-83 more rows with a status that needs no work are in the JSON (`A`).
+90 more rows with a status that needs no work are in the JSON (`A`).
 
 ### B. Member accesses on values of unknown type (by name)
 
-Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 313 rows: 97 real, 1 stub, 4 partial, 7 plugin, 73 python, 131 dynamic.
+Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 313 rows: 98 real, 1 stub, 3 partial, 7 plugin, 73 python, 131 dynamic.
 
 | Name | Uses | Files | Status | Source | Task | Candidates | Note |
 |---|---|---|---|---|---|---|---|
@@ -172,12 +165,11 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `items` | 24 | 10 | python | builtin |  |  |  |
 | `read` | 23 | 6 | python | builtin |  |  |  |
 | `Name` | 6 | 1 | partial | .NET 10 | P3.4 | used types: System.IO.FileInfo, System.Threading.Thread, System.Xml.XmlDocument, ... (6 types) |  |
-| `Start` | 5 | 1 | partial | .NET 10 | P4.9e | used types: System.Diagnostics.Process, System.Threading.Thread, Timer |  |
 | `DpiX` | 1 | 1 | stub | facade | P3.5a | used types: Graphics |  |
 | `DrawImage` | 1 | 1 | partial | facade | P3.5a | used types: Graphics, Label |  |
 | `Height` | 1 | 1 | partial | facade | P3.4 | used types: Image, Font, Icon, ... (6 types) |  |
 
-293 more rows with a status that needs no work are in the JSON (`B`).
+294 more rows with a status that needs no work are in the JSON (`B`).
 
 ### C. .NET 10 types and members
 
@@ -324,7 +316,7 @@ Read from the scripts of the package (`libraryorganizer.py`, `loworkerform.py`, 
 - WPF is only *used* for the duplicate dialog: `DuplicateForm(mode)` loads `DuplicateForm.xaml` with `XamlReader.Load(XmlReader.Create(stream))` (Window, Grid, StackPanel, Label, TextBlock, Button, CheckBox, Image, Border, a Style with a ControlTemplate and triggers, gradient brushes), sets `BitmapImage` sources, finds elements with `FindName`, subscribes to `Click` and `Closing`, and sets `WindowInteropHelper(win).Owner = <WorkerForm>.Handle`. It is created lazily, the first time a move finds a book at the target path, so an organize run without duplicates never needs it (P4.17.6 provides a XAML loader for that subset and the window handle mapping).
 - **Backslash file names.** `Bitmap.FromFile(SCRIPTDIRECTORY + "\\home_32.png")` and the other toolbar images of the configuration dialog (12 files) use a backslash as separator: on macOS the file was not found and the dialog failed to open. Solved by P4.17.5 (`mac/reports/path-separators.md`): a link `<folder name>\home_32.png` next to the plugin's folder (the plugin joins `FileInfo(__file__).DirectoryName` without a trailing separator) points at each file. The folder templates the plugin builds are split on `\` by the plugin itself and joined with `Path.Combine`, which works.
 - **Recycle Bin.** Deleting the book that a move replaces uses `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin)`; on macOS .NET throws "UI not available for copy or move" (measured), so the plugin reports the delete as failed and does not move the file (P4.17.4). Provided by P4.17.4: `Microsoft.VisualBasic` by name is the program's assembly (version 10.0.1.0) whose `FileSystem` sends the file to the Trash and shows an error through the script UI (`mac/reports/vb-filesystem.md`).
-- **Threads.** The worker form runs a `BackgroundWorker`; it calls back into the UI thread with `form.Invoke(Func[...](self.ShowDuplicateForm), Array[object]([...]))` (P4.9e).
+- **Threads.** The worker form runs a `BackgroundWorker`; it calls back into the UI thread with `form.Invoke(Func[...](self.ShowDuplicateForm), Array[object]([...]))`. Provided by P4.9e: `Invoke`, `BeginInvoke`, `EndInvoke` and `InvokeRequired` marshal to the UI thread of the backend as the Framework does, and a property set from a worker thread reaches the peer there. The events of the `BackgroundWorker` (`ProgressChanged`, `RunWorkerCompleted`) are raised through `SynchronizationContext.Current`, which the facade does not install yet, so they run on pool threads (one of the follow-ups of P4.9e in `mac/plans/full-port.md` section 9).
 - Commands: the configuration dialog opens from the Library hook and the ConfigScript hook; `Library Organizer - Startup` is disabled by default (`#@Enabled false`).
 
 ### A. WinForms and GDI+ members (typed)
@@ -470,7 +462,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 
 ### B. Member accesses on values of unknown type (by name)
 
-Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 265 rows: 79 real, 7 stub, 28 partial, 113 plugin, 34 python, 4 dynamic.
+Python is dynamic: an access such as `x.Name` has no type. Each name is classified by the first group that has a member of that name: Python built-ins, the plugin's own definitions, the types the plugin uses, the Core, the imported .NET namespaces, the WinForms/GDI+ surface. 265 rows: 81 real, 6 stub, 27 partial, 113 plugin, 34 python, 4 dynamic.
 
 | Name | Uses | Files | Status | Source | Task | Candidates | Note |
 |---|---|---|---|---|---|---|---|
@@ -495,7 +487,6 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `ToString` | 13 | 2 | partial | .NET 10 | P4.17.6 | used types: System.Object, System.DateTime, System.String, ... (38 types) |  |
 | `Text` | 12 | 3 | partial | facade | P4.10g | used types: ButtonBase, ComboBox, Panel, ... (19 types) |  |
 | `ShowDialog` | 10 | 5 | partial | facade | P4.10f | used types: CommonDialog, Form |  |
-| `Invoke` | 8 | 1 | partial | .NET 10 | P4.9e | used types: System.Action, System.Func`1, Control |  |
 | `TabPage` | 7 | 1 | stub | facade | P4.19 | WinForms and GDI+ surface: TabControlCancelEventArgs, TabControlEventArgs |  |
 | `BeginInit` | 5 | 2 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage, System.ComponentModel.ISupportInitialize, NumericUpDown |  |
 | `EndInit` | 5 | 2 | partial | facade | P4.17.6 | used types: System.Windows.Media.Imaging.BitmapImage, System.ComponentModel.ISupportInitialize, NumericUpDown |  |
@@ -506,7 +497,6 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `Contains` | 2 | 1 | partial | .NET 10 | P4.17.1 | used types: System.Collections.IList, System.Collections.Generic.ICollection`1, System.String, ... (5 types) |  |
 | `Create` | 2 | 1 | partial | .NET 10 | P4.17.6 | used types: System.String, System.IO.File, System.Xml.XmlWriter, ... (8 types) |  |
 | `DropDownWidth` | 2 | 1 | partial | facade | P4.17.1 | used types: ComboBox, ToolStripComboBox |  |
-| `InvokeRequired` | 2 | 1 | stub | facade | P4.9e | used types: Control |  |
 | `Load` | 2 | 1 | partial | .NET 10 | P4.17.6 | used types: System.Xml.XmlDocument, System.Windows.Markup.XamlReader, Form |  |
 | `Position` | 2 | 1 | partial | .NET 10 | P4.17.1 | used types: System.IO.FileStream, System.IO.MemoryStream, BindingSource |  |
 | `SelectionLength` | 2 | 1 | partial | facade | P4.17.1 | used types: ComboBox, TextBoxBase, ToolStripComboBox, ... (4 types) |  |
@@ -525,7 +515,7 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 | `Owner` | 1 | 1 | partial | facade | P4.17.6 | used types: System.Windows.Interop.WindowInteropHelper, Form, ToolStripItem |  |
 | `Parent` | 1 | 1 | partial | .NET 10 | P4.10g | used types: System.IO.DirectoryInfo, Control, ToolStripItem |  |
 
-215 more rows with a status that needs no work are in the JSON (`B`).
+217 more rows with a status that needs no work are in the JSON (`B`).
 
 ### C. .NET 10 types and members
 

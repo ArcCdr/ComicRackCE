@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -32,6 +33,13 @@ namespace cYo.Compat.Forms
 
 		/// <summary>Application.DoEvents: runs what is queued, then returns. Does nothing off the UI thread.</summary>
 		void DoEvents();
+
+		/// <summary>
+		/// Creates the toolkit timer behind a <see cref="System.Windows.Forms.Timer"/> (a dispatcher timer on the UI thread). Called on the UI thread; <paramref name="tick"/> is called on the UI thread, never
+		/// while a tick is still running, and a timer that is late ticks once and not once per missed interval (the WM_TIMER rule). The timer ticks only between <see cref="ITimerPeer.Start"/>
+		/// and <see cref="ITimerPeer.Stop"/> or <see cref="IDisposable.Dispose"/>.
+		/// </summary>
+		ITimerPeer CreateTimer(Action tick);
 
 		/// <summary>
 		/// Creates the peer of a control (a <see cref="Form"/> gets an <see cref="IFormPeer"/>). Called on the UI thread when the control's handle is created, parent before children;
@@ -88,6 +96,16 @@ namespace cYo.Compat.Forms
 
 		/// <summary>Makes the window the active one.</summary>
 		void Activate();
+	}
+
+	/// <summary>The toolkit timer of a <see cref="System.Windows.Forms.Timer"/>. Every member is called on the UI thread, in the order the script made the changes.</summary>
+	public interface ITimerPeer : IDisposable
+	{
+		/// <summary>Starts ticking every <paramref name="interval"/> milliseconds; the first tick comes one interval from now. Starting a running timer restarts it.</summary>
+		void Start(int interval);
+
+		/// <summary>Stops ticking. A tick that was already queued is not delivered.</summary>
+		void Stop();
 	}
 
 	/// <summary>
@@ -245,8 +263,10 @@ namespace cYo.Compat.Forms
 	{
 		private readonly object sync = new object();
 		private readonly Queue<Action> queue = new Queue<Action>();
+		private readonly List<NullTimer> timers = new List<NullTimer>();
 		private int uiThread = Environment.CurrentManagedThreadId;
 		private int modalDepth;
+		private long clock;
 
 		/// <summary>The peers created, in creation order (the oldest are dropped beyond 1000).</summary>
 		public List<NullPeer> Peers { get; } = new List<NullPeer>();
@@ -270,6 +290,168 @@ namespace cYo.Compat.Forms
 
 		/// <summary>The number of modal loops that run now.</summary>
 		public int ModalDepth => Volatile.Read(ref modalDepth);
+
+		/// <summary>The number of posted actions that have not run yet (with thread affinity; always 0 without).</summary>
+		public int PendingCount
+		{
+			get
+			{
+				lock (sync)
+				{
+					return queue.Count;
+				}
+			}
+		}
+
+		/// <summary>The manual clock in milliseconds: it moves only through <see cref="AdvanceTime"/>, so a test never waits for a timer.</summary>
+		public long Clock
+		{
+			get
+			{
+				lock (sync)
+				{
+					return clock;
+				}
+			}
+		}
+
+		/// <summary>The number of timers that have been started and not stopped.</summary>
+		public int RunningTimers
+		{
+			get
+			{
+				lock (sync)
+				{
+					return timers.Count(t => t.Running);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Moves the manual clock forward and ticks every running timer whose time came, oldest due time first (timers with the same time in the order they were created). A tick goes through
+		/// <see cref="Post"/>, so with thread affinity it waits for <see cref="Pump"/>; a timer whose tick is still queued does not queue a second one (the WM_TIMER rule). A timer stopped
+		/// before its queued tick runs does not tick. There is no real clock: a headless process has no message loop and nothing ticks unless a test advances time. Returns the number of ticks queued or run.
+		/// </summary>
+		public int AdvanceTime(int milliseconds)
+		{
+			if (milliseconds < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(milliseconds));
+			}
+			int ticks = 0;
+			long target;
+			lock (sync)
+			{
+				target = clock + milliseconds;
+			}
+			while (true)
+			{
+				NullTimer due = null;
+				lock (sync)
+				{
+					foreach (NullTimer t in timers)
+					{
+						if (t.Running && t.Due <= target && (due == null || t.Due < due.Due))
+						{
+							due = t;
+						}
+					}
+					if (due == null)
+					{
+						clock = target;
+						return ticks;
+					}
+					clock = Math.Max(clock, due.Due);
+					due.Due += due.Interval;
+				}
+				if (due.Queue())
+				{
+					ticks++;
+				}
+			}
+		}
+
+		public ITimerPeer CreateTimer(Action tick)
+		{
+			if (tick == null)
+			{
+				throw new ArgumentNullException(nameof(tick));
+			}
+			var timer = new NullTimer(this, tick);
+			lock (sync)
+			{
+				timers.Add(timer);
+			}
+			return timer;
+		}
+
+		private sealed class NullTimer : ITimerPeer
+		{
+			private readonly NullFormsBackend owner;
+			private readonly Action tick;
+			private int queued;
+
+			public NullTimer(NullFormsBackend owner, Action tick)
+			{
+				this.owner = owner;
+				this.tick = tick;
+			}
+
+			// These three are guarded by the backend's lock.
+			public bool Running;
+			public long Due;
+			public int Interval;
+
+			public void Start(int interval)
+			{
+				lock (owner.sync)
+				{
+					Interval = Math.Max(1, interval);
+					Due = owner.clock + Interval;
+					Running = true;
+				}
+			}
+
+			public void Stop()
+			{
+				lock (owner.sync)
+				{
+					Running = false;
+				}
+			}
+
+			public void Dispose()
+			{
+				lock (owner.sync)
+				{
+					Running = false;
+					owner.timers.Remove(this);
+				}
+			}
+
+			/// <summary>Queues one tick unless one is queued already. True when a tick was queued or run.</summary>
+			public bool Queue()
+			{
+				if (Interlocked.Exchange(ref queued, 1) == 1)
+				{
+					return false;
+				}
+				owner.Post(() =>
+				{
+					Volatile.Write(ref queued, 0);
+					bool running;
+					lock (owner.sync)
+					{
+						running = Running;
+					}
+					if (running)
+					{
+						tick();
+					}
+				});
+				return true;
+			}
+		}
 
 		/// <summary>Makes the calling thread the UI thread.</summary>
 		public void AdoptCurrentThread() => Volatile.Write(ref uiThread, Environment.CurrentManagedThreadId);
@@ -487,6 +669,9 @@ namespace cYo.Compat.Forms
 			}
 		}
 
+		/// <summary>The area of the last <see cref="IControlPeer.Invalidate"/>.</summary>
+		public Rectangle LastInvalidated { get; private set; }
+
 		/// <summary>What <see cref="IControlPeer.Focus"/> answers.</summary>
 		public bool AcceptsFocus { get; set; } = true;
 
@@ -500,7 +685,11 @@ namespace cYo.Compat.Forms
 
 		public void PropertyChanged(string property) => Add("PropertyChanged " + property);
 
-		public void Invalidate(Rectangle area) => Add("Invalidate");
+		public void Invalidate(Rectangle area)
+		{
+			LastInvalidated = area;
+			Add("Invalidate");
+		}
 
 		public void ChildrenChanged() => Add("ChildrenChanged");
 

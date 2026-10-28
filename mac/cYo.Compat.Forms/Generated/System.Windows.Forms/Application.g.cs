@@ -113,7 +113,6 @@ namespace System.Windows.Forms
 		}
 
 		public static void AddMessageFilter(global::System.Windows.Forms.IMessageFilter value) => throw global::FacadeStub.Member("System.Windows.Forms.Application.AddMessageFilter");
-		public static void DoEvents() => throw global::FacadeStub.Member("System.Windows.Forms.Application.DoEvents");
 		public static void Exit() => throw global::FacadeStub.Member("System.Windows.Forms.Application.Exit");
 		public static void Exit(global::System.ComponentModel.CancelEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Exit");
 		public static void ExitThread() => throw global::FacadeStub.Member("System.Windows.Forms.Application.ExitThread");

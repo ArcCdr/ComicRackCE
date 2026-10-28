@@ -1897,23 +1897,51 @@ namespace System.Windows.Forms
 		/// <summary>The text of the edit field. A script that sets it makes it a user edit that the next ValidateEditText parses.</summary>
 		public override string Text
 		{
-			get => editText;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return editText;
+				}
+			}
 			set
 			{
 				value = value ?? string.Empty;
-				if (value == editText)
+				lock (SyncRoot)
 				{
-					return;
+					if (value == editText)
+					{
+						return;
+					}
+					editText = value;
+					if (changingText)
+					{
+						changingText = false;
+					}
+					else
+					{
+						userEdit = true;
+					}
 				}
+				Notify("Text");
+				OnTextChanged(EventArgs.Empty);
+			}
+		}
+
+		/// <summary>The program's own change of the edit field (a value is shown): it is not a user edit, so nothing is left to parse afterwards.</summary>
+		internal void SetFormattedText(string value)
+		{
+			value = value ?? string.Empty;
+			bool changed;
+			lock (SyncRoot)
+			{
+				changed = value != editText;
 				editText = value;
-				if (changingText)
-				{
-					changingText = false;
-				}
-				else
-				{
-					userEdit = true;
-				}
+				changingText = false;
+				userEdit = false;
+			}
+			if (changed)
+			{
 				Notify("Text");
 				OnTextChanged(EventArgs.Empty);
 			}
@@ -1941,8 +1969,11 @@ namespace System.Windows.Forms
 		/// <summary>The peer reports an edit of the field by the user.</summary>
 		internal void UserChangedText(string text)
 		{
-			editText = text ?? string.Empty;
-			userEdit = true;
+			lock (SyncRoot)
+			{
+				editText = text ?? string.Empty;
+				userEdit = true;
+			}
 			OnTextChanged(EventArgs.Empty);
 		}
 
@@ -1980,64 +2011,102 @@ namespace System.Windows.Forms
 				{
 					ValidateEditText();
 				}
-				return currentValue;
+				lock (SyncRoot)
+				{
+					return currentValue;
+				}
 			}
 			set
 			{
-				if (value != currentValue)
+				lock (SyncRoot)
 				{
+					if (value == currentValue)
+					{
+						return;
+					}
 					if (!initializing && (value < minimum || value > maximum))
 					{
 						throw new ArgumentOutOfRangeException(nameof(Value), value, "Value of '" + value + "' is not valid for 'Value'. 'Value' should be between 'Minimum' and 'Maximum'.");
 					}
 					currentValue = value;
-					Notify("Value");
-					OnValueChanged(EventArgs.Empty);
-					UpdateEditText();
 				}
+				Notify("Value");
+				OnValueChanged(EventArgs.Empty);
+				UpdateEditText();
 			}
 		}
 
 		public decimal Minimum
 		{
-			get => minimum;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return minimum;
+				}
+			}
 			set
 			{
-				minimum = value;
-				if (minimum > maximum)
+				decimal constrained;
+				lock (SyncRoot)
 				{
-					maximum = minimum;
+					minimum = value;
+					if (minimum > maximum)
+					{
+						maximum = minimum;
+					}
+					constrained = Constrain(currentValue);
 				}
-				Value = Constrain(currentValue);
+				Value = constrained;
 				Notify("Range");
 			}
 		}
 
 		public decimal Maximum
 		{
-			get => maximum;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return maximum;
+				}
+			}
 			set
 			{
-				maximum = value;
-				if (minimum > maximum)
+				decimal constrained;
+				lock (SyncRoot)
 				{
-					minimum = maximum;
+					maximum = value;
+					if (minimum > maximum)
+					{
+						minimum = maximum;
+					}
+					constrained = Constrain(currentValue);
 				}
-				Value = Constrain(currentValue);
+				Value = constrained;
 				Notify("Range");
 			}
 		}
 
 		public decimal Increment
 		{
-			get => increment;
+			get
+			{
+				lock (SyncRoot)
+				{
+					return increment;
+				}
+			}
 			set
 			{
 				if (value < 0m)
 				{
 					throw new ArgumentOutOfRangeException(nameof(value), value, "Value of '" + value + "' is not valid for 'Increment'. 'Increment' must be greater than or equal to 0.");
 				}
-				increment = value;
+				lock (SyncRoot)
+				{
+					increment = value;
+				}
 			}
 		}
 
@@ -2077,15 +2146,18 @@ namespace System.Windows.Forms
 
 		private decimal Constrain(decimal value)
 		{
-			if (value < minimum)
+			lock (SyncRoot)
 			{
-				value = minimum;
+				if (value < minimum)
+				{
+					value = minimum;
+				}
+				if (value > maximum)
+				{
+					value = maximum;
+				}
+				return value;
 			}
-			if (value > maximum)
-			{
-				value = maximum;
-			}
-			return value;
 		}
 
 		public override void UpButton()
@@ -2094,13 +2166,22 @@ namespace System.Windows.Forms
 			{
 				ParseEditText();
 			}
+			decimal step;
+			decimal upper;
+			decimal now;
+			lock (SyncRoot)
+			{
+				step = increment;
+				upper = maximum;
+				now = currentValue;
+			}
 			try
 			{
-				Value = Math.Min(maximum, checked(currentValue + increment));
+				Value = Math.Min(upper, checked(now + step));
 			}
 			catch (OverflowException)
 			{
-				Value = maximum;
+				Value = upper;
 			}
 		}
 
@@ -2110,13 +2191,22 @@ namespace System.Windows.Forms
 			{
 				ParseEditText();
 			}
+			decimal step;
+			decimal lower;
+			decimal now;
+			lock (SyncRoot)
+			{
+				step = increment;
+				lower = minimum;
+				now = currentValue;
+			}
 			try
 			{
-				Value = Math.Max(minimum, checked(currentValue - increment));
+				Value = Math.Max(lower, checked(now - step));
 			}
 			catch (OverflowException)
 			{
-				Value = minimum;
+				Value = lower;
 			}
 		}
 
@@ -2163,14 +2253,27 @@ namespace System.Windows.Forms
 			{
 				ParseEditText();
 			}
-			ChangingText = true;
-			string formatted = hexadecimal ? ((long)currentValue).ToString("X", CultureInfo.InvariantCulture) : currentValue.ToString((thousandsSeparator ? "N" : "F") + decimalPlaces, CultureInfo.CurrentCulture);
-			if (formatted == Text)
+			// The edit field shows the value that is current when the text is set. A thread that changes the value meanwhile shows its own, and the loop makes the last text
+			// the one of the last value.
+			decimal shown;
+			do
 			{
-				ChangingText = false;
+				lock (SyncRoot)
+				{
+					shown = currentValue;
+				}
+				string formatted = hexadecimal ? ((long)shown).ToString("X", CultureInfo.InvariantCulture) : shown.ToString((thousandsSeparator ? "N" : "F") + decimalPlaces, CultureInfo.CurrentCulture);
+				SetFormattedText(formatted);
 			}
-			Text = formatted;
-			UserEdit = false;
+			while (CurrentValueIsNot(shown));
+		}
+
+		private bool CurrentValueIsNot(decimal value)
+		{
+			lock (SyncRoot)
+			{
+				return currentValue != value;
+			}
 		}
 
 		public void BeginInit()
@@ -2181,7 +2284,12 @@ namespace System.Windows.Forms
 		public void EndInit()
 		{
 			initializing = false;
-			Value = Constrain(currentValue);
+			decimal now;
+			lock (SyncRoot)
+			{
+				now = currentValue;
+			}
+			Value = Constrain(now);
 			UpdateEditText();
 		}
 
