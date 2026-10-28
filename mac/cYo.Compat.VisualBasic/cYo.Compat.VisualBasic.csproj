@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The assembly "Microsoft.VisualBasic" for scripts and compiled plug-ins on macOS (P4.17.4). The framework's own Microsoft.VisualBasic.dll forwards every type to Microsoft.VisualBasic.Core,
+       whose FileSystem refuses a UIOption ("UI not available for copy or move") and has no Recycle Bin. This assembly has the same name and forwards the same types, except
+       Microsoft.VisualBasic.FileIO.FileSystem, which it declares with the behaviour of the Windows program: SendToRecycleBin moves to the Trash, errors are shown through the script UI.
+       mac/reports/vb-filesystem.md records how it wins over the shared framework's file. net10/macOS only. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Microsoft.VisualBasic</RootNamespace>
+    <AssemblyName>Microsoft.VisualBasic</AssemblyName>
+    <AssemblyVersion>10.0.1.0</AssemblyVersion>
+    <FileVersion>10.0.1.0</FileVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <!-- The framework's type stays reachable as vbcore::Microsoft.VisualBasic.FileIO.FileSystem, next to the one declared here. -->
+  <Target Name="AliasVisualBasicCore" BeforeTargets="FindReferenceAssembliesForReferences;ResolveAssemblyReferences" AfterTargets="ResolveTargetingPackAssets">
+    <ItemGroup>
+      <Reference Condition="'%(Filename)' == 'Microsoft.VisualBasic.Core'" Aliases="vbcore" />
+    </ItemGroup>
+  </Target>
+</Project>

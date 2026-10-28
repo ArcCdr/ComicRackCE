@@ -141,7 +141,8 @@ namespace ComicRack.Mac.Host.Tests.Acceptance
 			PluginGap lo = Gap("Library.Organizer");
 			Assert.Equal("C", lo.Tier);
 			Assert.Contains(lo.References, r => r.Name == "PresentationFramework" && r.Status == "real");
-			Assert.Contains(lo.Framework, r => r.Name == "Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile" && r.Status == "differs");
+			// P4.17.4: the Recycle Bin overloads work, the row is real
+			Assert.Contains(lo.Framework, r => r.Name == "Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile" && r.Status == "real");
 			Assert.Contains(lo.Framework, r => r.Name == "System.ComponentModel.BackgroundWorker");
 			Assert.Contains(lo.Findings, f => f.Kind == "windows-path" && f.Symbol.Contains("\\home_32.png"));
 			Assert.Contains(lo.Findings, f => f.Kind == "windows-member" && f.Symbol == "Control.Handle");

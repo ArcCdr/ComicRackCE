@@ -46,6 +46,15 @@ namespace ComicRack.Mac.Scripting
 			return answer.Option ? 2 : 1;
 		}
 
+		public void ShowError(string message)
+		{
+			UiCall.Run(async () =>
+			{
+				await dialogs.ShowMessageAsync("ComicRack", message ?? string.Empty);
+				return true;
+			});
+		}
+
 		public void ShowComicInfo(IReadOnlyList<ComicBook> books)
 		{
 			if (books == null || books.Count == 0)

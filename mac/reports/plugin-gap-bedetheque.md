@@ -16,7 +16,7 @@ name (plugin data or a dynamic attribute). Every row has exactly one status. Row
 | Plugin | Scripts | Assemblies | Native files | Tier | Rows | real | stub | partial | missing | differs | plugin | python | dynamic |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 280 | 29 | 7 | 0 | 1 | 7 | 73 | 131 |
-| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 356 | 101 | 31 | 0 | 1 | 113 | 34 | 4 |
+| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 357 | 101 | 31 | 0 | 0 | 113 | 34 | 4 |
 
 ## Bedetheque Scraper 2 6.08
 
@@ -323,7 +323,7 @@ Read from the scripts of the package (`libraryorganizer.py`, `loworkerform.py`, 
 - **Windows Presentation Foundation is imported at the top level.** `loduplicate.py` (imported by `loworkerform.py`, imported by `libraryorganizer.py`) runs `clr.AddReference("PresentationFramework")`, `clr.AddReference("PresentationCore")` and imports `XamlReader`, `BitmapImage`, `Visibility`; `loworkerform.py` imports `WindowInteropHelper`. Without the WPF assemblies the whole plugin failed to load ("Could not add reference to assembly PresentationFramework"). P4.17.3 provides `System.Xaml`, `PresentationCore` (with the types of `WindowsBase`) and `PresentationFramework` as throwing facades, and the engine starts with `System.dll` loaded (`from System import Uri` at the top of the same script), so the load table above says `runs`.
 - WPF is only *used* for the duplicate dialog: `DuplicateForm(mode)` loads `DuplicateForm.xaml` with `XamlReader.Load(XmlReader.Create(stream))` (Window, Grid, StackPanel, Label, TextBlock, Button, CheckBox, Image, Border, a Style with a ControlTemplate and triggers, gradient brushes), sets `BitmapImage` sources, finds elements with `FindName`, subscribes to `Click` and `Closing`, and sets `WindowInteropHelper(win).Owner = <WorkerForm>.Handle`. It is created lazily, the first time a move finds a book at the target path, so an organize run without duplicates never needs it (P4.17.6 provides a XAML loader for that subset and the window handle mapping).
 - **Backslash file names.** `Bitmap.FromFile(SCRIPTDIRECTORY + "\\home_32.png")` and the other toolbar images of the configuration dialog (12 files) use a backslash as separator: on macOS the file is not found and the dialog fails to open (P4.17.5). The folder templates the plugin builds are split on `\` by the plugin itself and joined with `Path.Combine`, which works.
-- **Recycle Bin.** Deleting the book that a move replaces uses `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin)`; on macOS .NET throws "UI not available for copy or move" (measured), so the plugin reports the delete as failed and does not move the file (P4.17.4).
+- **Recycle Bin.** Deleting the book that a move replaces uses `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin)`; on macOS .NET throws "UI not available for copy or move" (measured), so the plugin reports the delete as failed and does not move the file (P4.17.4). Provided by P4.17.4: `Microsoft.VisualBasic` by name is the program's assembly (version 10.0.1.0) whose `FileSystem` sends the file to the Trash and shows an error through the script UI (`mac/reports/vb-filesystem.md`).
 - **Threads.** The worker form runs a `BackgroundWorker`; it calls back into the UI thread with `form.Invoke(Func[...](self.ShowDuplicateForm), Array[object]([...]))` (P4.9e).
 - Commands: the configuration dialog opens from the Library hook and the ConfigScript hook; `Library Organizer - Startup` is disabled by default (`#@Enabled false`).
 
@@ -533,7 +533,7 @@ Python is dynamic: an access such as `x.Name` has no type. Each name is classifi
 
 ### C. .NET 10 types and members
 
-System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows). 65 rows: 63 real, 1 stub, 1 differs.
+System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows). 65 rows: 64 real, 1 stub.
 
 | API | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -545,7 +545,7 @@ System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows
 | `System.IO.File.Move` | 4 | 1 | real | .NET 10 |  |  |
 | `System.IO.FileInfo` | 4 | 4 | real | .NET 10 |  |  |
 | `Microsoft.VisualBasic.FileIO.FileSystem` | 3 | 1 | real | .NET 10 |  |  |
-| `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile` | 3 | 1 | differs | .NET 10 | P4.17.4 | UIOption and RecycleOption are not supported on macOS: DeleteFile(path, OnlyErrorDialogs, SendToRecycleBin) throws "UI not available for copy or move" (measured in the plugin host); there is no Recycle Bin call, the Trash is not used |
+| `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile` | 3 | 1 | real | .NET 10 |  |  |
 | `Microsoft.VisualBasic.FileIO.RecycleOption` | 3 | 1 | real | .NET 10 |  |  |
 | `Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin` | 3 | 1 | real | .NET 10 |  |  |
 | `Microsoft.VisualBasic.FileIO.UIOption` | 3 | 1 | real | .NET 10 |  |  |
@@ -577,10 +577,9 @@ System.*, Microsoft.* names the plugin imports or calls (namespaces are not rows
 | `System.IO.Directory.CreateDirectory` | 1 | 1 | real | .NET 10 |  |  |
 | `System.IO.Directory.Exists` | 1 | 1 | real | .NET 10 |  |  |
 | `System.IO.DirectoryInfo` | 1 | 1 | real | .NET 10 |  |  |
-| `System.IO.DirectoryNotFoundException` | 1 | 1 | real | .NET 10 |  |  |
 | `System.Windows.Markup.XamlReader.Load` | 1 | 1 | stub | facade | P4.17.6 |  |
 
-23 more rows with a status that needs no work are in the JSON (`C`).
+24 more rows with a status that needs no work are in the JSON (`C`).
 
 ### D. Core types and members
 

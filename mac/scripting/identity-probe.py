@@ -127,3 +127,31 @@ def default_references():
 	from System import Uri, UriKind
 	u = Uri("http://example.com/a/b?c=1", UriKind.Absolute)
 	ok("identity: System.Uri is importable at the top of a script", u.Host == "example.com", u.Host)
+
+#@Name  P4.17.4 Microsoft.VisualBasic FileSystem with UIOption and RecycleOption
+#@Hook  Startup
+def visual_basic_file_system():
+	# the top-level lines of a plug-in that deletes through the Recycle Bin of Windows; nothing here touches the Trash
+	clr.AddReference("Microsoft.VisualBasic")
+	import System
+	from System.IO import Path, File
+	from Microsoft.VisualBasic.FileIO import FileSystem, UIOption, RecycleOption, UICancelOption
+	is_asm("FileSystem", FileSystem, "Microsoft.VisualBasic 10.0.1.0")
+	is_asm("UIOption", UIOption, "Microsoft.VisualBasic.Core")
+	ok("identity: the Framework's strong name binds to the same assembly", System.Reflection.Assembly.Load("Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a").GetName().Version.ToString() == "10.0.1.0")
+	folder = Path.Combine(Path.GetTempPath(), "crmac-vb-" + System.Guid.NewGuid().ToString("N"))
+	System.IO.Directory.CreateDirectory(folder)
+	try:
+		source = Path.Combine(folder, "a.cbz")
+		File.WriteAllText(source, "x")
+		FileSystem.CopyFile(source, Path.Combine(folder, "b.cbz"), UIOption.OnlyErrorDialogs)
+		ok("identity: CopyFile with a UIOption copies", File.Exists(Path.Combine(folder, "b.cbz")))
+		FileSystem.DeleteFile(source, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently)
+		ok("identity: DeleteFile with a UIOption deletes", not File.Exists(source))
+		try:
+			FileSystem.DeleteFile(Path.Combine(folder, "missing.cbz"), UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin)
+			ok("identity: DeleteFile of a missing file throws", False)
+		except System.IO.FileNotFoundException:
+			ok("identity: DeleteFile of a missing file throws FileNotFoundException", True)
+	finally:
+		System.IO.Directory.Delete(folder, True)

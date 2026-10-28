@@ -19,10 +19,12 @@
     <Project Path="cYo.Compat.Xaml/cYo.Compat.Xaml.csproj" />
     <Project Path="cYo.Compat.PresentationCore/cYo.Compat.PresentationCore.csproj" />
     <Project Path="cYo.Compat.PresentationFramework/cYo.Compat.PresentationFramework.csproj" />
+    <Project Path="cYo.Compat.VisualBasic/cYo.Compat.VisualBasic.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Compat.Drawing.Tests/Compat.Drawing.Tests.csproj" />
     <Project Path="tests/Compat.Forms.Tests/Compat.Forms.Tests.csproj" />
+    <Project Path="tests/Compat.VisualBasic.Tests/Compat.VisualBasic.Tests.csproj" />
     <Project Path="tests/ComicRack.Mac.Host.Tests/ComicRack.Mac.Host.Tests.csproj" />
     <Project Path="tests/ComicRack.Characterization/ComicRack.Characterization.csproj" />
     <Project Path="tests/ComicRack.Cli.Tests/ComicRack.Cli.Tests.csproj" />

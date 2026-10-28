@@ -188,6 +188,8 @@ namespace ComicRack.Mac.Tests.Scripting
 				Assert.Contains("PASS exact_names: identity: Bitmap (AddReference) is System.Drawing.Common 10.0.0.0", text);
 				Assert.Contains("PASS core_names: identity: ComicBook is ComicRack.Engine", text);
 				Assert.Contains("PASS core_names: identity: FormUtility is cYo.Common.Windows", text);
+				Assert.Contains("PASS visual_basic_file_system: identity: FileSystem is Microsoft.VisualBasic 10.0.1.0", text);
+				Assert.Contains("PASS visual_basic_file_system: identity: DeleteFile with a UIOption deletes", text);
 			}
 			finally
 			{

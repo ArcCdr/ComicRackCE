@@ -27,5 +27,7 @@
     <ProjectReference Include="..\cYo.Compat.Xaml\cYo.Compat.Xaml.csproj" />
     <ProjectReference Include="..\cYo.Compat.PresentationCore\cYo.Compat.PresentationCore.csproj" />
     <ProjectReference Include="..\cYo.Compat.PresentationFramework\cYo.Compat.PresentationFramework.csproj" />
+    <!-- The assembly "Microsoft.VisualBasic" with a FileSystem that accepts UIOption and RecycleOption (Trash), P4.17.4. -->
+    <ProjectReference Include="..\cYo.Compat.VisualBasic\cYo.Compat.VisualBasic.csproj" />
   </ItemGroup>
 </Project>

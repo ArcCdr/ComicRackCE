@@ -122,11 +122,6 @@ owner System.Xaml P4.17.6
 owner System.Windows.* P4.17.6
 
 # ---- .NET 10 members that exist and behave differently on macOS
-owner Microsoft.VisualBasic.FileIO.FileSystem P4.17.4
-note Microsoft.VisualBasic.FileIO.FileSystem::DeleteFile differs UIOption and RecycleOption are not supported on macOS: DeleteFile(path, OnlyErrorDialogs, SendToRecycleBin) throws "UI not available for copy or move" (measured in the plugin host); there is no Recycle Bin call, the Trash is not used
-note Microsoft.VisualBasic.FileIO.FileSystem::DeleteDirectory differs same limits as DeleteFile (UIOption, RecycleOption)
-note Microsoft.VisualBasic.FileIO.FileSystem::CopyFile differs same limits as DeleteFile (UIOption)
-note Microsoft.VisualBasic.FileIO.FileSystem::MoveFile differs same limits as DeleteFile (UIOption)
 owner System.Diagnostics.Process P4.20
 note System.Diagnostics.Process::Start differs starting a Windows executable fails with "Exec format error" (WindowsError 22 in Python; measured in the plugin host); native macOS programs and scripts with a shebang start normally
 

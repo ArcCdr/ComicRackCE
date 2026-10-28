@@ -174,9 +174,34 @@ def Wpf(books):
 			Assert.Contains("Parse System.Windows.Markup.XamlReader.Parse is not yet supported on macOS", text);
 		}
 
+		private const string VisualBasicProbe = @"
+import clr
+clr.AddReference('Microsoft.VisualBasic')
+from Microsoft.VisualBasic.FileIO import FileSystem, UIOption, RecycleOption
+
+def asm(t):
+	a = clr.GetClrType(t).Assembly.GetName()
+	return a.Name + ' ' + str(a.Version)
+
+#@Name VisualBasic
+#@Hook Books
+def VisualBasic(books):
+	print 'FileSystem', asm(FileSystem)
+	print 'UIOption', asm(UIOption)
+";
+
+		[Fact]
+		public void Microsoft_VisualBasic_by_name_is_the_assembly_of_this_program_and_the_enums_stay_in_the_framework()
+		{
+			string text = RunProbe(VisualBasicProbe);
+			Assert.Contains("FileSystem Microsoft.VisualBasic 10.0.1.0", text);
+			Assert.Contains("UIOption Microsoft.VisualBasic.Core", text);
+		}
+
 		[Fact]
 		public void The_WPF_facades_are_in_the_output_folder_and_not_visible_to_the_compiler_of_this_project()
 		{
+			Assert.Equal(new Version(10, 0, 1, 0), System.Reflection.AssemblyName.GetAssemblyName(Path.Combine(AppContext.BaseDirectory, "Microsoft.VisualBasic.dll")).Version);
 			foreach (string name in new[] { "System.Xaml", "PresentationCore", "PresentationFramework" })
 			{
 				string file = Path.Combine(AppContext.BaseDirectory, name + ".dll");

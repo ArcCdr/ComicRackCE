@@ -22,4 +22,36 @@
       <ReferencePathWithRefAssemblies Remove="@(_WpfFacadeReference)" />
     </ItemGroup>
   </Target>
+  <!-- P4.17.4: the app-local Microsoft.VisualBasic (cYo.Compat.VisualBasic, assembly version 10.0.1.0) must win over the shared framework's file of that name (10.0.0.0). The host picks by
+       assembly version, and the deps entry of a project reference carries none (fileVersion 0.0.0.0, the entry that the host reads first), so the framework's file would win. The versions
+       are written into that entry after the dependency file is made (idempotent). mac/reports/vb-filesystem.md has the measurement. -->
+  <UsingTask TaskName="StampDepsVersion" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <DepsFile ParameterType="System.String" Required="true" />
+      <Dll ParameterType="System.String" Required="true" />
+      <Version ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        if (File.Exists(DepsFile))
+        {
+            string text = File.ReadAllText(DepsFile);
+            string pattern = "(\"" + Regex.Escape(Dll) + "\": \\{)(\\s*)\"fileVersion\": \"0\\.0\\.0\\.0\"";
+            string changed = Regex.Replace(text, pattern, m => m.Groups[1].Value + m.Groups[2].Value + "\"assemblyVersion\": \"" + Version + "\"," + m.Groups[2].Value + "\"fileVersion\": \"" + Version + "\"");
+            if (changed != text)
+            {
+                File.WriteAllText(DepsFile, changed);
+            }
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="StampVisualBasicVersionBuild" AfterTargets="GenerateBuildDependencyFile" Condition="'$(GenerateDependencyFile)' == 'true' And Exists('$(ProjectDepsFilePath)')">
+    <StampDepsVersion DepsFile="$(ProjectDepsFilePath)" Dll="Microsoft.VisualBasic.dll" Version="10.0.1.0" />
+  </Target>
+  <Target Name="StampVisualBasicVersionPublish" AfterTargets="GeneratePublishDependencyFile" Condition="'$(PublishDepsFilePath)' != '' And Exists('$(PublishDepsFilePath)')">
+    <StampDepsVersion DepsFile="$(PublishDepsFilePath)" Dll="Microsoft.VisualBasic.dll" Version="10.0.1.0" />
+  </Target>
 </Project>

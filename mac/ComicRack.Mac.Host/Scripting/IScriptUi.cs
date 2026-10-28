@@ -22,6 +22,12 @@ namespace ComicRack.Mac.Host.Scripting
 		/// <summary><c>IApplication.AskQuestion</c> (<c>MainForm.AskQuestion</c>): 0 = cancelled, 1 = OK, 2 = OK with the option checked.</summary>
 		int AskQuestion(string question, string buttonText, string optionText);
 
+		/// <summary>
+		/// An error that a script call shows to the user (the error dialogs of <c>FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, ...)</c>, P4.17.4): a message box with the OK button
+		/// and the title "ComicRack". Returns when the user has dismissed it.
+		/// </summary>
+		void ShowError(string message);
+
 		/// <summary><c>IApplication.ShowComicInfo</c>: the Info dialog for one book, or the multiple books dialog.</summary>
 		void ShowComicInfo(IReadOnlyList<ComicBook> books);
 
@@ -99,6 +105,8 @@ namespace ComicRack.Mac.Host.Scripting
 			Note("AskQuestion: " + question);
 			return QuestionAnswer;
 		}
+
+		public void ShowError(string message) => Note("ShowError: " + message);
 
 		public void ShowComicInfo(IReadOnlyList<ComicBook> books) => Note("ShowComicInfo: " + (books?.Count ?? 0) + " books");
 

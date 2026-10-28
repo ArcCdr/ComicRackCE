@@ -33,12 +33,22 @@ namespace ComicRack.Mac.Host.Scripting
 		private readonly List<ScriptSearch> searchEngines = new List<ScriptSearch>();
 		private IScriptUi ui;
 		private Func<Type, object> activeServices;
+		private readonly IDisposable fileSystemLink;
 		private bool started;
 		private bool disposed;
 
 		internal ScriptHost(MacHost host, ScriptFolders folders, IScriptUi ui, bool enabled)
 		{
 			this.host = host;
+			// Microsoft.VisualBasic by name is the assembly of this program (FileSystem with UIOption and the Trash, P4.17.4); the Trash and the dialog are the program's.
+			if (VisualBasicRuntime.IsProgramAssembly)
+			{
+				fileSystemLink = VisualBasicRuntime.Connect(() => Ui);
+			}
+			else
+			{
+				host.Log?.Error("Microsoft.VisualBasic resolves to the shared framework's file in this process: FileSystem keeps the framework's behaviour (UIOption is refused, no Trash).");
+			}
 			Folders = folders ?? ScriptFolders.None;
 			this.ui = ui ?? new HeadlessScriptUi();
 			Enabled = enabled;
@@ -262,6 +272,7 @@ namespace ComicRack.Mac.Host.Scripting
 			}
 			PythonCommand.Output = null;
 			PythonCommand.EnableLog = false;
+			fileSystemLink?.Dispose();
 		}
 	}
 
