@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9b)
+Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9c)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -13,12 +13,12 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9b)
 | P1 Core runtime gaps | 3 | 3 | - | zero-edit fixes through pass B replacements |
 | P2 Platform pieces | 9 | 4 | P2.2 | shell, codecs, ComicInfo write, payload, TR |
 | P3 Fidelity, performance, CI | 12 | 1 | P3.9 | includes M1.5c, M1.7, M1.8 and the HiDPI harness P3.H |
-| P4 Scripting and Script UI layer | 46 | 14 | P4.9b | S4 and S6 spikes first, go/no-go recorded |
+| P4 Scripting and Script UI layer | 46 | 15 | P4.9c | S4 and S6 spikes first, go/no-go recorded |
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
 | RV Review fixes and upstream sync | 13 | 13 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **182** | **69** | | estimate in §10 |
+| **Total** | **182** | **70** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
