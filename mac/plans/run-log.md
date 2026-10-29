@@ -77,3 +77,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-28 22:55 | P4.9b | done | 93c8742 |  | Layout: Anchor and Dock (port of the default layout engine of WinForms behind Control.LayoutEngine: docking in z-order, anchors as distances to the display r... |
 | 2026-10-28 23:36 | P4.9c | done | 2da55e7 |  | Layout: FlowLayoutPanel and TableLayoutPanel (flow engine with wrap, flow breaks and the four directions; table engine with Absolute, AutoSize and Percent st... |
 | 2026-10-29 00:03 | P4.9e | done | a42bc38 |  | Threading: auto-marshalling, Invoke, DoEvents, Timer (coalesced peer posts from worker threads, Invoke/BeginInvoke/EndInvoke/InvokeRequired as MarshaledInvok... |
+| 2026-10-29 18:23 | RV12 | done | 00456c3 |  | Native menu exception when a book opens (File > Open Books and Automation keep one NativeMenu and change only its items; e2e pdf-cb7 passes) |

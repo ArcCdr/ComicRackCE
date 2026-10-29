@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; next task: RV12)
+Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: RV12)
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 15 | 13 | RV12 | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **184** | **72** | | estimate in §10 |
+| RV Review fixes and upstream sync | 15 | 14 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **184** | **73** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -952,8 +952,8 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: `mac/tools/e2e.sh pdf-cb7` PASS (it checks that no ERROR line is logged); a unit or headless test that fails without the fix if one can be written; `mac/tools/verify.sh`.
 
 #### RV13 Flaky fast gate, round 3 (three different one-off failures in one run)
-- Depends: none · Effort: medium · Unattended: yes · Status: todo
-- Goal: during the 2026-10-28/29 run `verify.sh` failed once each on `ScriptCommandsTests.A_script_changes_the_reader_through_ComicDisplay` (P4.17.5), on 488 `ComicRack.Mac.Tests` with "Unable to locate 'Avalonia.Platform.IAssetLoader'" (P4.9c) and on an unnamed test of `verify.sh --full` (gate); each passed on the rerun. Run `mac/tools/flaky-scan.sh` as RV11 describes, classify, and fix the shared state (static Avalonia setup order, shared dispatcher).
+- Depends: none · Effort: medium · Unattended: yes · Status: doing (started 2026-10-29)
+- Goal: during the 2026-10-28/29 run `verify.sh` failed once each on `ScriptCommandsTests.A_script_changes_the_reader_through_ComicDisplay` (P4.17.5), on 488 `ComicRack.Mac.Tests` with "Unable to locate 'Avalonia.Platform.IAssetLoader'" (P4.9c) and on an unnamed test of `verify.sh --full` (gate); each passed on the rerun. The same test, `ScriptCommandsTests.A_script_changes_the_reader_through_ComicDisplay`, failed again in 2 of 3 full runs after P4.17.5 (output has `Calling 'Opened'...` and the compilation line but not `layout Double`; line 477 of ScriptCommandsTests.cs), so treat it as a possible regression from P4.9e (threading) or P4.17.5 first, not only as a flake. Run `mac/tools/flaky-scan.sh` as RV11 describes, classify, and fix the shared state (static Avalonia setup order, shared dispatcher).
 - Accept: 6 consecutive `verify.sh` runs PASS without retries; `mac/tools/flaky-scan.sh 2` works.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
