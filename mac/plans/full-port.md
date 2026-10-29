@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
+Run state: RUNNING (2026-10-28, orchestrator; next task: RV12)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 13 | 13 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **182** | **72** | | estimate in §10 |
+| RV Review fixes and upstream sync | 15 | 13 | RV12 | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **184** | **72** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -942,6 +942,16 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Goal: P5.6b needed 5 `verify.sh` runs because runs 1-4 hit flaky failures (`SmallPreviewWiringTests`, `ReaderWindowTests` process-wide pixel live-count assertion; earlier `LibraryFlowTests`). The fast gate must be reliable again; as the suite grows (1619 tests, 253 s) flakiness gets worse.
 - Do: (1) collect failures from 6 consecutive `verify.sh` runs (keep the logs under `mac/artifacts/verify/`), classify; (2) replace process-wide counters (`PixelBlock.LiveCount`, `Image.LiveStorageCount`) in assertions with per-test scoped tracking (a tracking scope / allocation list owned by the test) or serialize all tests that assert on them in one non-parallel collection; (3) find other shared static state (single MacHost, dispatcher, theme, preferences) and make test isolation explicit with a base fixture; (4) look at the 253 s duration: report the slowest 15 tests/classes and cut or mark Slow where a faster equivalent exists, keeping the fast gate under 4 minutes; (5) add a script `mac/tools/flaky-scan.sh N` that runs the fast gate N times and summarises failures for future use.
 - Accept: 6 consecutive `verify.sh` runs PASS with no retries (record durations); `flaky-scan.sh 2` works.
+
+#### RV12 Native menu exception when a book opens (e2e pdf-cb7 fails at the gate after P4.9e)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: at the gate on 2026-10-29 (HEAD after P4.9e) `mac/tools/e2e.sh pdf-cb7` fails twice in a row: opening a book with `--read-book` logs `[ERROR] Unhandled exception on the UI thread. System.ArgumentException: The menu being updated does not match. (Parameter 'menu')` from `Avalonia.Native.AvaloniaNativeMenuExporter.SetMenu` / `DoLayoutReset`, and an unobserved task exception follows. Reproduce: `mac/tools/ui-drive/ui-drive.sh launch --dev --data-dir <tmp> -- --read-book $PWD/mac/fixtures/pdf/test.pdf`, wait 12 s, `quit`, read `<tmp>/Logs/ComicRack.log`. Find the cause (menu model changed while the exporter updates, a menu item object reused in two menus, or an update off the intended order), first decide whether it is older than the P4.x tasks (compare with the last commit whose e2e passed, using a temporary worktree outside the repo or reading the diff of `mac/ComicRack.Mac` and `mac/ComicRack.Mac.Host`), then fix it in the menu code of the app. The app must not log an ERROR when a reader opens.
+- Accept: `mac/tools/e2e.sh pdf-cb7` PASS (it checks that no ERROR line is logged); a unit or headless test that fails without the fix if one can be written; `mac/tools/verify.sh`.
+
+#### RV13 Flaky fast gate, round 3 (three different one-off failures in one run)
+- Depends: none · Effort: medium · Unattended: yes · Status: todo
+- Goal: during the 2026-10-28/29 run `verify.sh` failed once each on `ScriptCommandsTests.A_script_changes_the_reader_through_ComicDisplay` (P4.17.5), on 488 `ComicRack.Mac.Tests` with "Unable to locate 'Avalonia.Platform.IAssetLoader'" (P4.9c) and on an unnamed test of `verify.sh --full` (gate); each passed on the rerun. Run `mac/tools/flaky-scan.sh` as RV11 describes, classify, and fix the shared state (static Avalonia setup order, shared dispatcher).
+- Accept: 6 consecutive `verify.sh` runs PASS without retries; `mac/tools/flaky-scan.sh 2` works.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
