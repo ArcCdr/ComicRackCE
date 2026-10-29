@@ -205,15 +205,17 @@ namespace ComicRack.Mac
 		// File > Automation (miFileAutomation, MF.12): one item per Library command, visible only when there is one (ScriptUtility.CreateToolItems; the items run the command on all books).
 		private static NativeMenuItem AutomationItem(MainViewModel vm)
 		{
-			var item = new NativeMenuItem(Text("miFileAutomation", "A&utomation")) { IsVisible = false };
+			// The submenu object stays the same for the life of the item and only its entries change: Avalonia.Native binds the native submenu to the first
+			// NativeMenu it exports and throws "The menu being updated does not match" when Menu is replaced afterwards (RV12).
+			var menu = new NativeMenu();
+			var item = new NativeMenuItem(Text("miFileAutomation", "A&utomation")) { Menu = menu, IsVisible = false };
 			void Fill()
 			{
-				var menu = new NativeMenu();
+				menu.Items.Clear();
 				foreach (ScriptCommandItem command in vm.Scripts.Library)
 				{
 					menu.Items.Add(ScriptMenuItem(vm, command, PluginEngine.ScriptTypeLibrary));
 				}
-				item.Menu = menu.Items.Count == 0 ? null : menu;
 				item.IsVisible = menu.Items.Count != 0;
 			}
 			Fill();
@@ -381,10 +383,12 @@ namespace ComicRack.Mac
 		// File > Open Books (miOpenNow, MF.15): one item per open book with its tab's caption, the current one marked; Ctrl+Alt+F1 to F12 of the original on the first twelve.
 		private static NativeMenuItem OpenBooksItem(MainViewModel vm)
 		{
-			var item = new NativeMenuItem(Text("miOpenNow", "Open Books")) { Menu = new NativeMenu() };
+			// one NativeMenu for the life of the item, only its entries change (see AutomationItem, RV12)
+			var menu = new NativeMenu();
+			var item = new NativeMenuItem(Text("miOpenNow", "Open Books")) { Menu = menu };
 			void Fill()
 			{
-				var menu = new NativeMenu();
+				menu.Items.Clear();
 				int current = vm.Tabs?.CurrentSlot ?? -1;
 				foreach ((int index, string caption) in vm.OpenBookSlots)
 				{
@@ -401,7 +405,6 @@ namespace ComicRack.Mac
 					}
 					menu.Items.Add(entry);
 				}
-				item.Menu = menu;
 				item.IsEnabled = menu.Items.Count > 0;
 			}
 			Fill();

@@ -907,6 +907,9 @@ namespace ComicRack.Mac.Tests.Reader
 					Sub(zoom, "100%").Command.Execute(null);
 					Assert.Equal(1.0, a.Model.Zoom, 9);
 
+					// RV12: the submenu object of Open Books never changes (Avalonia.Native throws "The menu being updated does not match" for a new one once exported)
+					NativeMenu booksMenu = Sub(file, "Open Books").Menu;
+
 					// a second tab with its own state: the marks follow the current tab
 					ReaderSlot b = await h.AddBook("Menu B", open: OpenBookOptions.InNewTab);
 					Assert.True(Sub(read, "Next Tab").Command.CanExecute(null));
@@ -923,6 +926,7 @@ namespace ComicRack.Mac.Tests.Reader
 					// File > Open Books lists the tabs with the original's shortcuts (Ctrl+Cmd+F1 to F12 here), the current one marked
 					NativeMenuItem books = Sub(file, "Open Books");
 					Assert.True(books.IsEnabled);
+					Assert.Same(booksMenu, books.Menu);
 					NativeMenuItem[] entries = books.Menu.Items.OfType<NativeMenuItem>().ToArray();
 					Assert.Equal(new[] { "Menu B", "Menu A" }, entries.Select(e => e.Header).ToArray());
 					Assert.Equal(new KeyGesture(Key.F1, KeyModifiers.Meta | KeyModifiers.Control), entries[0].Gesture);
