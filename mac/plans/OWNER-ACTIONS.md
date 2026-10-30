@@ -34,21 +34,6 @@
   >
 - **Resume:** in the VS Code terminal, in /Users/vince/dev/ComicRackCE, paste the "Normal run" prompt of mac/plans/RUNBOOK.md section 1 (or simply tell this session "resume").
 
-### OA-1: Real CBR and 7-Zip samples (optional, C1)
-- **Status:** OPEN
-- **Checkpoint / tasks:** C1 / P0.7b, P2.4b · **Asked:** 2026-10-17 · **Blocks:** nothing; sessions use the default
-- **Why now:** no `.cbr` file was ever opened by the Mac app, and every `.cb7` so far was written by SharpCompress, not by real 7-Zip (solid archives, BCJ filters). Tests for both are written early and skip until samples exist.
-- **What to do:**
-  1. `mkdir -p /Users/vince/dev/ComicRackCE/mac/fixtures/owner` (the folder is git-ignored; nothing in it is committed).
-  2. Copy one or two `.cbr` books (ideally one RAR4 and one RAR5) and, if you have one, a `.cb7` made with 7-Zip into that folder. Small books are best (under 100 MB together).
-- **What you should see:** the files in `mac/fixtures/owner/`. Nothing else changes.
-- **Time needed:** about 5 minutes
-- **If you skip it:** the CBR and real-7z tests stay skipped and are listed as unverified; you check one CBR yourself at C2.
-- **What happens next:** P0.7b records page counts and hashes of these books as goldens; P2.4b checks what a ComicInfo write does with a CBR.
-- **Your answer** (write below this line, then change Status to ANSWERED):
-  >
-- **Resume:** paste the resume prompt above.
-
 ### OA-2: The plugins you use (optional, C1)
 - **Status:** OPEN
 - **Checkpoint / tasks:** C1 / P4.6b, P4.15 · **Asked:** 2026-10-17 · **Blocks:** nothing; sessions use the default
@@ -60,20 +45,6 @@
 - **Time needed:** about 5 to 10 minutes
 - **If you skip it:** the corpus is the bundled sample scripts plus public plugins that can be downloaded (FrederikBaerentsen/ComicRack_Scripts, Comic Vine Scraper CE, Data Manager, CVIssueCount, maforget's AmazonScrapper).
 - **What happens next:** P4.6b ranks the WinForms usage of the corpus; P4.15 builds your plugin checklist for C4.
-- **Your answer** (write below this line, then change Status to ANSWERED):
-  >
-- **Resume:** paste the resume prompt above.
-
-### OA-3: A copy of your Windows `Config.xml` (optional, C1)
-- **Status:** OPEN
-- **Checkpoint / tasks:** C1 / P5.28b · **Asked:** 2026-10-17 · **Blocks:** nothing; sessions use the default
-- **Why now:** P5.28b imports the portable settings of the Windows app (reader and library defaults, external programs). A real file catches what a synthetic one misses.
-- **What to do:**
-  1. Copy `%APPDATA%\cYo\ComicRack Community Edition\Config.xml` from Windows to `/Users/vince/dev/ComicRackCE/mac/fixtures/owner/Config.xml` (git-ignored).
-- **What you should see:** the file in that folder.
-- **Time needed:** about 3 minutes
-- **If you skip it:** P5.28b is tested on a synthetic `Config.xml` written from the Windows `Settings` class's defaults.
-- **What happens next:** P5.28b uses it as a test input; the file is never modified.
 - **Your answer** (write below this line, then change Status to ANSWERED):
   >
 - **Resume:** paste the resume prompt above.
@@ -122,3 +93,32 @@ _(Owner-only checks gathered from finished tasks; they become one block when the
 ## Done
 
 _(Answered blocks move here, newest last.)_
+
+### OA-1: Real CBR and 7-Zip samples (optional, C1)
+- **Status:** DONE
+- **Checkpoint / tasks:** C1 / P0.7b, P2.4b · **Asked:** 2026-10-17 · **Blocks:** nothing; sessions use the default
+- **Why now:** no `.cbr` file was ever opened by the Mac app, and every `.cb7` so far was written by SharpCompress, not by real 7-Zip (solid archives, BCJ filters). Tests for both are written early and skip until samples exist.
+- **What to do:**
+  1. `mkdir -p /Users/vince/dev/ComicRackCE/mac/fixtures/owner` (the folder is git-ignored; nothing in it is committed).
+  2. Copy one or two `.cbr` books (ideally one RAR4 and one RAR5) and, if you have one, a `.cb7` made with 7-Zip into that folder. Small books are best (under 100 MB together).
+- **What you should see:** the files in `mac/fixtures/owner/`. Nothing else changes.
+- **Time needed:** about 5 minutes
+- **If you skip it:** the CBR and real-7z tests stay skipped and are listed as unverified; you check one CBR yourself at C2.
+- **What happens next:** P0.7b records page counts and hashes of these books as goldens; P2.4b checks what a ComicInfo write does with a CBR.
+- **Your answer** (write below this line, then change Status to ANSWERED):
+  > Files placed in mac/fixtures/owner/ (3 .cbr, 1 .cb7, git-ignored); applied 2026-10-30.
+- **Resume:** paste the resume prompt above.
+
+### OA-3: A copy of your Windows `Config.xml` (optional, C1)
+- **Status:** DONE
+- **Checkpoint / tasks:** C1 / P5.28b · **Asked:** 2026-10-17 · **Blocks:** nothing; sessions use the default
+- **Why now:** P5.28b imports the portable settings of the Windows app (reader and library defaults, external programs). A real file catches what a synthetic one misses.
+- **What to do:**
+  1. Copy `%APPDATA%\cYo\ComicRack Community Edition\Config.xml` from Windows to `/Users/vince/dev/ComicRackCE/mac/fixtures/owner/Config.xml` (git-ignored).
+- **What you should see:** the file in that folder.
+- **Time needed:** about 3 minutes
+- **If you skip it:** P5.28b is tested on a synthetic `Config.xml` written from the Windows `Settings` class's defaults.
+- **What happens next:** P5.28b uses it as a test input; the file is never modified.
+- **Your answer** (write below this line, then change Status to ANSWERED):
+  > Config.xml placed in mac/fixtures/owner/ (git-ignored); applied 2026-10-30.
+- **Resume:** paste the resume prompt above.

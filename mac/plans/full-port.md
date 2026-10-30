@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 17 | 16 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **186** | **75** | | estimate in §10 |
+| RV Review fixes and upstream sync | 17 | 17 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **186** | **76** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -2332,6 +2332,7 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 - [review 2026-10-30] low: RadioButton.UncheckOthers ignores AutoCheck (Controls.cs 579-590); JavaScriptSerializer converts a plain "/Date(n)/" string to a date (JsonReader.cs 67, 201-215; only the escaped form "\/Date(n)\/" is a date); PluginNamesRuleTests.cs 92 writes a probe file into mac/tools (use a temp root).
 - [RV15] The managed heap of the test process grows through a full run (258 MB after 170 tests to 2388 MB after 1254, measured after a full GC after each test; see "Facts from RV15"): windows, libraries or view models of finished tests stay reachable (`SidebarTests` 54 MB per test, `MultiEditDialogTests` 13 MB, `ChromeNativeTests` 4.5 MB). Find the root (a static, an event subscription on a long-lived object, the headless session) and decide whether the application leaks a closed window or library the same way; if it does, that is a product leak, if only the tests do, dispose in the test base.
 - [RV15] `FixtureGridTests` still has the older assertion that the footprint after the scroll and a GC is at most one cache bound (256 MB) above the full-cache point; it measured +32 to +208 MB (the 208 and 196 in two runs). It is malloc retention, not growth of the cache, but the margin is small: if it ever fails, compare it with the checkpoints printed by the test before changing anything.
+- [OA-1, OA-3] Owner samples are in mac/fixtures/owner/ since 2026-10-30 (3 .cbr, 1 .cb7, Config.xml; git-ignored). `ArchiveGoldenTests.Owner_samples_open_and_match_their_golden_when_there_is_one` now runs and passes without goldens; recording goldens for the samples (P0.7b caveat) and checking a ComicInfo write on a CBR (P2.4b) are still to do, and P5.28b can use the real Config.xml.
 
 ## 10. Estimates (low confidence)
 
