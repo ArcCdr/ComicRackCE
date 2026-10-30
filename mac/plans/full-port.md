@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; next task: RV14)
+Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: RV14)
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 17 | 15 | RV14 | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **186** | **74** | | estimate in §10 |
+| RV Review fixes and upstream sync | 17 | 16 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **186** | **75** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -974,7 +974,7 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Accept: a test where a script creates a file under the backslash name, a restart (`Sync` again) and an update leave the file readable under both spellings; `PathSeparatorAcceptanceTests` still pass; `mac/tools/verify.sh`.
 
 #### RV15 Cache-bound footprint test fails in the full run (gate of 2026-10-30)
-- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Depends: none · Effort: high · Unattended: yes · Status: doing (started 2026-10-30)
 - Goal: `FixtureGridTests.A_full_scroll_over_the_fixture_library_stays_under_the_cache_bound` failed in the full `upstream-sync-check.sh` run ("between the cache being full and the end the footprint peaked 1575 MB above the full-cache point; allowed 512 MB", 1 m 41 s) and passes alone (2 of 2 runs). Decide whether it is a real leak or the process footprint of other tests in the same process: run the test project 3 times in full and note the footprint; if tests share the process, measure the cache's own byte count or the live pixel blocks (per-test scope, as RV11 did) instead of the process footprint, or move the test into its own non-parallel collection that runs first. Do not widen the 512 MB bound.
 - Accept: 3 consecutive full `ComicRack.Mac.Tests` runs without this failure; a real leak, if found, is fixed; `mac/tools/verify.sh`.
 
