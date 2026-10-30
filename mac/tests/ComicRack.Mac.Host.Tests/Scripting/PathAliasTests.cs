@@ -123,7 +123,7 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 		}
 
 		[Fact]
-		public void A_link_that_no_script_asks_for_any_more_goes_and_files_that_are_not_links_stay()
+		public void A_link_stays_while_its_file_exists_and_goes_with_it_and_files_that_are_not_links_stay()
 		{
 			using (var temp = new TempFolder())
 			{
@@ -138,10 +138,12 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 				// a link of the user with a plain name, and a link with a backslash that points out of the folder
 				File.CreateSymbolicLink(Path.Combine(dir, "mine"), "pic.png");
 				File.CreateSymbolicLink(Path.Combine(dir, "\\theirs"), "/etc/hosts");
+				// no script names the file any more: a plugin may build the name itself, so the links stay while the file exists
 				PathAliasReport report = PathAliases.Sync(root);
-				Assert.Equal(2, report.Removed);
-				Assert.Equal(new[] { "\\theirs", "mine", "pic.png", "x.py" }, Names(dir));
-				Assert.Equal(new[] { "Plug" }, Names(root));
+				Assert.Equal(0, report.Removed);
+				Assert.Equal(new[] { "\\pic.png", "\\theirs", "mine", "pic.png", "x.py" }, Names(dir));
+				Assert.Equal(new[] { "Plug", "Plug\\pic.png" }, Names(root));
+				Assert.Equal("pic.png", Link(Path.Combine(dir, "\\pic.png")));
 
 				// the file goes: the link goes too (a link to nothing would make File.Exists true)
 				File.WriteAllText(Path.Combine(dir, "x.py"), "p = d + '\\pic.png'\n");
@@ -169,11 +171,20 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 				File.WriteAllText(Path.Combine(root, "Plug\\other.txt"), "other");
 				PathAliasReport report = PathAliases.Sync(root);
 				Assert.Equal(2, report.Adopted);
+				Assert.Empty(report.Errors);
 				Assert.Equal("created", File.ReadAllText(Path.Combine(dir, "App.Config")));
 				Assert.Equal("other", File.ReadAllText(Path.Combine(dir, "other.txt")));
 				Assert.Equal("App.Config", Link(Path.Combine(dir, "\\App.Config")));
 				Assert.Equal("Plug/App.Config", Link(Path.Combine(root, "Plug\\App.Config")));
-				Assert.DoesNotContain("Plug\\other.txt", Names(root));
+				Assert.Equal("Plug/other.txt", Link(Path.Combine(root, "Plug\\other.txt")));
+				Assert.Equal("other.txt", Link(Path.Combine(dir, "\\other.txt")));
+				Assert.Equal("other", File.ReadAllText(Path.Combine(dir, "\\other.txt")));
+				Assert.Equal("other", File.ReadAllText(Path.Combine(root, "Plug\\other.txt")));
+
+				// a restart (Sync again) leaves the links: no script names \other.txt, the file exists
+				Assert.False(PathAliases.Sync(root).Changed);
+				Assert.Equal("Plug/other.txt", Link(Path.Combine(root, "Plug\\other.txt")));
+				Assert.Equal("other.txt", Link(Path.Combine(dir, "\\other.txt")));
 
 				// the plugin writes the settings by the other spelling: the same file
 				File.WriteAllText(Path.Combine(dir, "App.Config"), "saved");
@@ -203,6 +214,96 @@ namespace ComicRack.Mac.Host.Tests.Scripting
 				File.SetLastWriteTimeUtc(Path.Combine(dir, "App.Config"), DateTime.UtcNow.AddHours(-1));
 				PathAliases.Sync(root);
 				Assert.Equal("newer", File.ReadAllText(Path.Combine(dir, "App.Config")));
+			}
+		}
+
+		[Fact]
+		public void A_script_that_builds_the_name_itself_finds_its_file_by_both_spellings_after_restarts_and_an_update()
+		{
+			using (var temp = new TempFolder())
+			{
+				string dir = Path.Combine(temp.Path, "hand-made");
+				string plug = Path.Combine(dir, "Plug");
+				Directory.CreateDirectory(plug);
+				// the name is built at run time: no string constant of the script is "\\settings.dat"
+				File.WriteAllText(Path.Combine(plug, "Probe.py"),
+					"#@Name Probe\n#@Key Probe\n#@Hook Startup\nimport clr\nclr.AddReference('System')\nfrom System.IO import File\n" +
+					"def Probe():\n" +
+					"\tpath = __file__[:-len('Probe.py')]\n" +
+					"\tname = 'settings' + '.dat'\n" +
+					"\tif not File.Exists(path + '\\\\' + name):\n" +
+					"\t\tFile.WriteAllText(path + '\\\\' + name, 'created')\n" +
+					"\tprint 'config', File.ReadAllText(path + '\\\\' + name), File.Exists(path + name)\n");
+				for (int start = 0; start < 3; start++)
+				{
+					using (MacHost host = ScriptTestSupport.Open(temp, scriptFolders: dir))
+					{
+						var console = new StringWriter();
+						host.Scripts.AttachConsole(console);
+						host.Scripts.RunStartup();
+						// the first run creates it; every later start finds it under both spellings
+						Assert.Contains("config created " + (start == 0 ? "False" : "True"), console.ToString());
+						Assert.Equal("created", File.ReadAllText(Path.Combine(plug, start == 0 ? "\\settings.dat" : "settings.dat")));
+					}
+				}
+				Assert.Equal("settings.dat", Link(Path.Combine(plug, "\\settings.dat")));
+				Assert.Equal("Plug/settings.dat", Link(Path.Combine(dir, "Plug\\settings.dat")));
+				Assert.Equal("created", File.ReadAllText(Path.Combine(plug, "\\settings.dat")));
+				Assert.Equal("created", File.ReadAllText(Path.Combine(dir, "Plug\\settings.dat")));
+			}
+		}
+
+		[Fact]
+		public void A_file_made_under_a_name_that_no_script_names_survives_an_update_and_stays_readable_by_both_spellings()
+		{
+			using (var temp = new TempFolder())
+			{
+				var folders = new ScriptFolders(null, Path.Combine(temp.Path, "user-scripts"));
+				var packages = new PluginPackages(folders);
+				string target = Path.Combine(folders.User, "Pack Plugin");
+				const string script = "#@Name Pack Command\n#@Key PackCommand\n#@Hook Books\ndef PackCommand(books):\n\tpass\n";
+
+				Assert.True(packages.InstallNow(Package(temp, "a.crplugin", "Pack Plugin", "KeepFiles=cache.dat\n", ("Pack.py", script))));
+				// the plugin creates its cache by the Windows spelling and the user's folder is synchronised at the next start
+				File.WriteAllText(Path.Combine(target, "\\cache.dat"), "cache v1");
+				PathAliases.Sync(folders.User);
+				Assert.Equal("cache.dat", Link(Path.Combine(target, "\\cache.dat")));
+				Assert.Equal("Pack Plugin/cache.dat", Link(Path.Combine(folders.User, "Pack Plugin\\cache.dat")));
+
+				// a package update (new version ships another file) keeps the file and both odd names
+				Assert.True(packages.InstallNow(Package(temp, "b.crplugin", "Pack Plugin", "KeepFiles=cache.dat\n", ("Pack.py", script + "\n"), ("New.png", "new"))));
+				Assert.Equal("cache v1", File.ReadAllText(Path.Combine(target, "cache.dat")));
+				Assert.Equal("cache v1", File.ReadAllText(Path.Combine(target, "\\cache.dat")));
+				Assert.Equal("cache v1", File.ReadAllText(Path.Combine(folders.User, "Pack Plugin\\cache.dat")));
+				Assert.Equal(new[] { "Pack Plugin", "Pack Plugin\\cache.dat" }, Names(folders.User).Where(n => n != ".Pending").OrderBy(n => n, StringComparer.Ordinal));
+
+				// and a restart after the update
+				Assert.False(PathAliases.Sync(folders.User).Changed);
+				Assert.Equal("cache v1", File.ReadAllText(Path.Combine(target, "\\cache.dat")));
+
+				// a file the plugin made and the update does not keep goes with its links; a name the script engine loads by itself gets no link
+				File.WriteAllText(Path.Combine(target, "\\scratch.tmp"), "scratch");
+				File.WriteAllText(Path.Combine(target, "\\extra.xml"), "<x/>");
+				PathAliases.Sync(folders.User);
+				Assert.Equal("scratch.tmp", Link(Path.Combine(target, "\\scratch.tmp")));
+				Assert.False(File.Exists(Path.Combine(target, "\\extra.xml")));
+				Assert.True(packages.InstallNow(Package(temp, "c.crplugin", "Pack Plugin", "KeepFiles=cache.dat\n", ("Pack.py", script))));
+				Assert.False(File.Exists(Path.Combine(target, "scratch.tmp")));
+				Assert.False(File.Exists(Path.Combine(target, "\\scratch.tmp")));
+				Assert.False(File.Exists(Path.Combine(folders.User, "Pack Plugin\\scratch.tmp")));
+				Assert.Equal("cache v1", File.ReadAllText(Path.Combine(folders.User, "Pack Plugin\\cache.dat")));
+
+				// a file removed under its real name takes its odd names with it at the next start (a link to a missing file would make File.Exists true)
+				File.Delete(Path.Combine(target, "cache.dat"));
+				PathAliases.Sync(folders.User);
+				Assert.False(File.Exists(Path.Combine(target, "\\cache.dat")));
+				Assert.False(File.Exists(Path.Combine(folders.User, "Pack Plugin\\cache.dat")));
+				Assert.Null(Link(Path.Combine(target, "\\cache.dat")));
+				Assert.Equal(new[] { "Pack Plugin" }, Names(folders.User).Where(n => n != ".Pending"));
+
+				Assert.True(packages.Uninstall("Pack Plugin"));
+				packages.Commit();
+				Assert.Equal(new string[0], Names(folders.User).Where(n => n != ".Pending"));
 			}
 		}
 

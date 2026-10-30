@@ -38,7 +38,8 @@ namespace ComicRack.Mac.Host.Scripting
 	/// </list>
 	/// Links are made only for names that scripts use and only for files that exist (a link to a missing file would make <c>File.Exists</c> true, and the plugin would not create it).
 	/// Links to <c>.py</c> and <c>.xml</c> files are never made (the script engine would load them twice). Only links with a relative target and a backslash in their name are removed
-	/// again, and only when no script of the folder asks for them any more. Nothing here changes a script.
+	/// again: when their file is gone, or when scripts name them with another target. A link that no script names (the plugin builds the name at run time) stays as long as its file
+	/// exists, through restarts and package updates. Nothing here changes a script.
 	/// </summary>
 	public static class PathAliases
 	{
@@ -147,7 +148,7 @@ namespace ComicRack.Mac.Host.Scripting
 					foreach (string entry in Entries(dir).Where(e => Path.GetFileName(e).Contains('\\')))
 					{
 						string target = LinkTarget(entry);
-						if (target != null && IsOurTarget(target) && (!wanted.TryGetValue(entry, out string want) || want != target))
+						if (target != null && IsOurTarget(target) && !Keeps(entry, target, wanted))
 						{
 							Run(report, () =>
 							{
@@ -204,6 +205,8 @@ namespace ComicRack.Mac.Host.Scripting
 					{
 						Merge(file, real);
 						report.Adopted++;
+						bool sub = name[0] != '\\';
+						LinkAll(sub ? Path.Combine(folder, name.Substring(0, name.IndexOf('\\'))) : folder, real, withSiblings || sub, file);
 					});
 				}
 			}
@@ -228,6 +231,7 @@ namespace ComicRack.Mac.Host.Scripting
 					{
 						Merge(file, real);
 						report.Adopted++;
+						LinkAll(folder, real, withSiblings, file);
 					});
 				}
 			}
@@ -291,6 +295,111 @@ namespace ComicRack.Mac.Host.Scripting
 					wanted[Path.GetDirectoryName(dir) + "/" + self + literal] = self + "/" + relative;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Whether the removal pass keeps a link of ours. A link that scripts name (a string constant) stays when its target is the one they ask for. A link that no
+		/// script names is the odd name of a file that a plugin created at run time under a name it builds itself (<c>folder + "\\" + name</c>): it stays as long as the file
+		/// exists, otherwise the plugin would start from defaults at every start. It goes with its file (a link to a missing file would make <c>File.Exists</c> true).
+		/// </summary>
+		private static bool Keeps(string entry, string target, Dictionary<string, string> wanted)
+		{
+			if (wanted.TryGetValue(entry, out string want))
+			{
+				return want == target;
+			}
+			string extension = Path.GetExtension(target);
+			if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) || extension.Equals(".xml", StringComparison.OrdinalIgnoreCase))
+			{
+				return false;
+			}
+			FileInfo file = new FileInfo(Path.Combine(Path.GetDirectoryName(entry), target.Replace('/', Path.DirectorySeparatorChar)));
+			return file.Exists && file.LinkTarget == null;
+		}
+
+		/// <summary>
+		/// After a file was adopted: every spelling a plugin may use for it links to the real file: the name it was found under, <c>owner/\F</c> and, beside the owner folder,
+		/// <c>parent/Name\F</c>. The owner is the folder whose name the plugin joined with a backslash.
+		/// </summary>
+		private static void LinkAll(string owner, string real, bool withSiblings, string found)
+		{
+			Link(found, real);
+			string relative = Path.GetRelativePath(owner, real).Replace(Path.DirectorySeparatorChar, '\\');
+			Link(Path.Combine(owner, "\\" + relative), real);
+			string parent = Path.GetDirectoryName(owner);
+			if (withSiblings && parent != null && Path.GetFileName(owner).Length > 0)
+			{
+				Link(Path.Combine(parent, Path.GetFileName(owner) + "\\" + relative), real);
+			}
+		}
+
+		/// <summary>Makes <paramref name="odd"/> a relative link to the file <paramref name="real"/> that took its content (not for names the script engine loads by itself).</summary>
+		private static void Link(string odd, string real)
+		{
+			string extension = Path.GetExtension(real);
+			if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) || extension.Equals(".xml", StringComparison.OrdinalIgnoreCase))
+			{
+				return;
+			}
+			if (!File.Exists(real) || new FileInfo(real).LinkTarget != null || new FileInfo(odd).Exists || Directory.Exists(odd) || LinkTarget(odd) != null)
+			{
+				return;
+			}
+			File.CreateSymbolicLink(odd, Path.GetRelativePath(Path.GetDirectoryName(odd), real).Replace(Path.DirectorySeparatorChar, '/'));
+		}
+
+		/// <summary>The odd names that link to files of <paramref name="folder"/> (inside it and beside it). Take it before an update replaces the folder's files and give it to <see cref="Restore"/> afterwards.</summary>
+		public static IReadOnlyList<string> Remember(string folder)
+		{
+			var names = new List<string>();
+			folder = Path.GetFullPath(folder);
+			string parent = Path.GetDirectoryName(folder);
+			string self = Path.GetFileName(folder);
+			if (Directory.Exists(folder))
+			{
+				foreach (string entry in Entries(folder).Where(e => Path.GetFileName(e).Contains('\\') && IsOurLink(e)))
+				{
+					names.Add("in:" + Path.GetFileName(entry));
+				}
+			}
+			if (parent != null && self.Length > 0 && Directory.Exists(parent))
+			{
+				foreach (string entry in Entries(parent).Where(e => Path.GetFileName(e).StartsWith(self + "\\", StringComparison.Ordinal) && IsOurLink(e)))
+				{
+					names.Add("beside:" + Path.GetFileName(entry).Substring(self.Length));
+				}
+			}
+			return names;
+		}
+
+		/// <summary>Makes the odd names that <see cref="Remember"/> returned again, for the files that exist (the new version of a package keeps the files that its <c>KeepFiles</c> names). Never throws.</summary>
+		public static void Restore(string folder, IReadOnlyList<string> names)
+		{
+			folder = Path.GetFullPath(folder);
+			string parent = Path.GetDirectoryName(folder);
+			string self = Path.GetFileName(folder);
+			foreach (string entry in names)
+			{
+				try
+				{
+					bool inside = entry.StartsWith("in:", StringComparison.Ordinal);
+					string name = entry.Substring(inside ? 3 : 7);
+					string real = RealPath(folder, name);
+					if (real != null)
+					{
+						Link(inside ? Path.Combine(folder, name) : Path.Combine(parent, self + name), real);
+					}
+				}
+				catch (Exception)
+				{
+				}
+			}
+		}
+
+		private static bool IsOurLink(string path)
+		{
+			string target = LinkTarget(path);
+			return target != null && IsOurTarget(target);
 		}
 
 		private static string RealPath(string folder, string name)

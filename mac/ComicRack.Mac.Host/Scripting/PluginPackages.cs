@@ -201,6 +201,8 @@ namespace ComicRack.Mac.Host.Scripting
 				Directory.CreateDirectory(target);
 				// a settings file that the plugin created as "\\App.Config" is the kept "App.Config" (P4.17.5)
 				PathAliases.Adopt(target);
+				// the odd names of files that the plugin made itself (settings, caches) come back for the files that the update keeps
+				IReadOnlyList<string> oddNames = PathAliases.Remember(target);
 				PathAliases.RemoveSiblingLinks(target);
 				if (package.KeepFiles != null && package.KeepFiles.Length > 0)
 				{
@@ -220,6 +222,7 @@ namespace ComicRack.Mac.Host.Scripting
 				{
 					File.Copy(file, System.IO.Path.Combine(target, System.IO.Path.GetFileName(file)), overwrite: true);
 				}
+				PathAliases.Restore(target, oddNames);
 			}
 			catch (Exception)
 			{
