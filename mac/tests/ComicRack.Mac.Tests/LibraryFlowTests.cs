@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using ComicRack.Mac.Host.Library;
@@ -170,6 +171,8 @@ namespace ComicRack.Mac.Tests
 						Assert.All(books, b => Assert.True(File.Exists(b.FilePath), b.FilePath));
 						Assert.True(launch.Service.LastSave.Ok, launch.Service.LastSave.ToString());
 						Assert.Equal(books.Length, launch.Service.LastSave.BooksInFile);
+						// the scanner reports "done" from the last lines of its thread: the thread is gone a moment later (the deadline only bounds a hang)
+						SpinWait.SpinUntil(() => !ThreadUtility.ActiveThreads.Any(t => t.Name == "Book Scanner"), 10000);
 						Assert.DoesNotContain(ThreadUtility.ActiveThreads, t => t.Name == "Book Scanner");
 						Assert.False(vm.CancelOperationCommand.CanExecute(null));
 

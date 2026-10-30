@@ -395,8 +395,8 @@ namespace ComicRack.Mac.Tests.Editor
 					model.SetSelection(new[] { 2 });
 					model.RefreshSelected();
 					Assert.Null(model.Picture(2, 128));
-					rig.Ui.PumpUntil(() => arrived >= 3);
-					Assert.True(rig.Thumbnails.GetStats().DecodesStarted > started);
+					// RefreshSelected raises PicturesChanged itself (arrived is 3 at once); the new decode starts later on a worker, so wait for what is asserted
+					rig.Ui.PumpUntil(() => arrived >= 3 && rig.Thumbnails.GetStats().DecodesStarted > started);
 				}
 			}
 		}

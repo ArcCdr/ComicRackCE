@@ -35,7 +35,8 @@ namespace ComicRack.Mac.Themes
 		private const string MapUri = "avares://ComicRack.Mac/Assets/icon-map.json";
 		private const string FilesUri = "avares://ComicRack.Mac/Assets/Original/";
 
-		private static readonly Lazy<IconMap> map = new Lazy<IconMap>(LoadMap);
+		// PublicationOnly: a load that fails (no Avalonia services yet) is not remembered; the next use tries again. The default mode would raise the same exception for ever.
+		private static readonly Lazy<IconMap> map = new Lazy<IconMap>(LoadMap, System.Threading.LazyThreadSafetyMode.PublicationOnly);
 		private static readonly ConcurrentDictionary<string, Bitmap> cache = new ConcurrentDictionary<string, Bitmap>();
 		private static readonly ConcurrentDictionary<string, Bitmap> pictures = new ConcurrentDictionary<string, Bitmap>(StringComparer.Ordinal);
 

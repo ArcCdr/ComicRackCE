@@ -470,11 +470,14 @@ def Bye(user_closing):
 					MainViewModel vm = launch.ViewModel;
 					ComicBook[] books = await Fill(launch, 1);
 					(ReaderViewModel model, _) = await AdoptBook(launch, "Layout Series");
+					// Opening the book runs the BookOpened hook on a worker thread. Two scripts that print at the same time write their pieces ("layout", " ", "Double") into one
+					// console between each other, so this one starts when the hook has ended.
+					await vm.Scripts.WhenHooksDoneAsync();
 					Assert.Equal(PageLayoutMode.Single, model.LayoutMode);
 					ScriptRunResult result = await vm.RunScriptAsync(Item(vm.Scripts.Books, "TwoPages"), books);
 					Assert.True(result.Outcome == ScriptRunOutcome.Completed, "outcome " + result.Outcome + ": " + result.Error);
 					Assert.Equal(PageLayoutMode.Double, model.LayoutMode);
-					Assert.Contains("layout Double", vm.Scripts.Console.Text);
+					Assert.True(vm.Scripts.Console.Text.Contains("layout Double"), "the script output was: " + vm.Scripts.Console.Text);
 				}
 			});
 		}

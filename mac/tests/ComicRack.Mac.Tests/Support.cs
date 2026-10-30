@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Headless;
 using ComicRack.Mac.Services;
+using ComicRack.Mac.Themes;
 using ComicRack.Mac.Tests.Thumbnails;
 using ComicRack.Mac.Thumbnails;
 using Xunit;
@@ -35,6 +36,7 @@ namespace ComicRack.Mac.Tests
 					Func<Task<T>> job = () =>
 					{
 						started = true;
+						insideJob.Value = true;
 						return work();
 					};
 					return await session.Value.Dispatch(job, CancellationToken.None);
@@ -44,6 +46,35 @@ namespace ComicRack.Mac.Tests
 					await Task.Delay(25);
 				}
 			}
+		}
+
+		private static readonly AsyncLocal<bool> insideJob = new AsyncLocal<bool>();
+		private static int iconsLoaded;
+
+		/// <summary>
+		/// Loads the image map of <see cref="Icons"/> inside a job of the session when no test has done it yet. The map reads an Avalonia resource, which needs the services of the headless
+		/// platform, and those exist only while a job runs. Code that creates the menu items of script commands (a launch of the app) can run outside a job, and when it is the first use in
+		/// the process the load failed, and the map, which is loaded once, kept the failure for every later test of the run (which test is first changes from run to run).
+		/// </summary>
+		public static async Task EnsureIcons()
+		{
+			if (Volatile.Read(ref iconsLoaded) == 1)
+			{
+				return;
+			}
+			if (insideJob.Value)
+			{
+				Icons.HasDark(string.Empty);
+			}
+			else
+			{
+				await Run(() =>
+				{
+					Icons.HasDark(string.Empty);
+					return Task.CompletedTask;
+				});
+			}
+			Volatile.Write(ref iconsLoaded, 1);
 		}
 
 		public static Task Run(Func<Task> work)

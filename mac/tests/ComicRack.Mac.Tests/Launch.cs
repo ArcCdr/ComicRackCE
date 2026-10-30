@@ -25,6 +25,7 @@ namespace ComicRack.Mac.Tests
 		/// <summary>Starts the host on <paramref name="dataDirectory"/> (the same folder again = a relaunch) and waits for it to open.</summary>
 		public static async Task<Launch> Start(string dataDirectory, Func<HostService, IReaderLauncher> readers = null)
 		{
+			await Ui.EnsureIcons();
 			var launch = new Launch { DataDirectory = dataDirectory };
 			AppOptions options = AppOptions.Parse(new[] { "--data-dir", dataDirectory });
 			if (options.DataDirectory == null)

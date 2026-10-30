@@ -106,6 +106,8 @@ namespace ComicRack.Mac.Tests.Host
 						Assert.Equal(ScanOutcome.Cancelled, r.Outcome);
 						Assert.InRange(r.BooksAdded, 10, 59);
 						Assert.Equal(r.BooksAdded, host.DatabaseManager.Database.Books.Count);
+						// the scanner reports "done" from the last lines of its thread: the thread is gone a moment later (the deadline only bounds a hang)
+						SpinWait.SpinUntil(() => !ThreadUtility.ActiveThreads.Any(t => t.Name == "Book Scanner"), 10000);
 						Assert.DoesNotContain(ThreadUtility.ActiveThreads, t => t.Name == "Book Scanner");
 						Assert.False(scanner.IsRunning);
 					}

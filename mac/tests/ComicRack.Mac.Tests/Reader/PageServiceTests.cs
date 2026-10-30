@@ -445,7 +445,10 @@ namespace ComicRack.Mac.Tests.Reader
 		[Fact]
 		public async Task Many_cancelled_requests_leave_no_work_and_no_memory_behind()
 		{
-			var decoder = new FakePageDecoder { Delay = TimeSpan.FromMilliseconds(5) };
+			// The decodes are slower than the user: they wait at a gate that the test opens after the last step (a delay in the decoder and a pause between the steps
+			// make the same picture only while the machine is idle: under load every decode finished before the next step and nothing was left to cancel).
+			var decoder = new FakePageDecoder();
+			decoder.Hold();
 			PageService service = Make(decoder, concurrency: 2);
 			// A user who holds the arrow key: every step asks for a page and moves the window, the previous request is cancelled.
 			CancellationTokenSource previous = null;
@@ -456,8 +459,9 @@ namespace ComicRack.Mac.Tests.Reader
 				previous = new CancellationTokenSource();
 				service.SetWindow(new[] { page, page + 1, page + 2, page - 1 });
 				tasks.Add(service.RequestAsync(page, previous.Token));
-				await Task.Delay(1);
+				await Task.Yield();
 			}
+			decoder.Open();
 			PageResult last = await tasks[tasks.Count - 1];
 			last.Dispose();
 			foreach (Task<PageResult> t in tasks.Take(tasks.Count - 1))
