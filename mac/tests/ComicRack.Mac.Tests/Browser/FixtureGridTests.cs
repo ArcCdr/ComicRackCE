@@ -188,6 +188,9 @@ namespace ComicRack.Mac.Tests.Browser
 						long footBase = FootprintBytes();
 						long peakFoot = footBase;
 						long footWarm = -1, peakAfterWarm = 0; // taken once the cache is full (30% of the rows)
+						string peakInfo = string.Empty;
+						long managedWarm = 0, peakCheckFoot = 0, peakCheckManaged = 0; // after a full GC, every 300 positions once the cache is full
+						var checks = new List<string>();
 						long managedBase = GC.GetTotalMemory(true);
 						long liveBase = PixelBlock.LiveBytes;
 						long peakRss = rssBase, peakLive = liveBase, peakCached = 0;
@@ -211,6 +214,9 @@ namespace ComicRack.Mac.Tests.Browser
 								Gc.Flush();
 								footWarm = FootprintBytes();
 								peakAfterWarm = footWarm;
+								managedWarm = GC.GetTotalMemory(false);
+								peakCheckFoot = footWarm;
+								peakCheckManaged = managedWarm;
 							}
 							var sw = Stopwatch.StartNew();
 							grid.Scroller.Offset = new Avalonia.Vector(0, grid.OffsetOfRow(row));
@@ -223,7 +229,20 @@ namespace ComicRack.Mac.Tests.Browser
 								peakRss = Math.Max(peakRss, ResidentBytes());
 								long foot = FootprintBytes();
 								peakFoot = Math.Max(peakFoot, foot);
+								if (footWarm >= 0 && foot > peakAfterWarm)
+								{
+									peakInfo = $"at position {positions}: footprint {Mb(foot):0} MB, managed {Mb(GC.GetTotalMemory(false)):0} MB, pixels {Mb(PixelBlock.LiveBytes):0} MB, cached {Mb(service.GetStats().CachedBytes):0} MB, gen2 collections {GC.CollectionCount(2)}";
+								}
 								peakAfterWarm = Math.Max(peakAfterWarm, foot);
+							}
+							if (footWarm >= 0 && positions % 300 == 0)
+							{
+								Gc.Flush();
+								long checkFoot = FootprintBytes();
+								long checkManaged = GC.GetTotalMemory(false);
+								peakCheckFoot = Math.Max(peakCheckFoot, checkFoot);
+								peakCheckManaged = Math.Max(peakCheckManaged, checkManaged);
+								checks.Add($"position {positions}: footprint {Mb(checkFoot):0} MB, managed {Mb(checkManaged):0} MB, pixels {Mb(PixelBlock.LiveBytes):0} MB");
 							}
 							ThumbnailServiceStats s = service.GetStats();
 							peakCached = Math.Max(peakCached, s.CachedBytes);
@@ -246,6 +265,12 @@ namespace ComicRack.Mac.Tests.Browser
 						output.WriteLine($"time per position (move, layout, render, covers on screen): median {stepMs[stepMs.Count / 2]:0.0} ms, p95 {stepMs[(int)(stepMs.Count * 0.95)]:0.0} ms, max {stepMs.Last():0.0} ms");
 						output.WriteLine($"pixels alive (PixelBlock.LiveBytes): base {Mb(liveBase):0.0} MB, peak {Mb(peakLive):0.0} MB, end {Mb(liveEnd):0.0} MB");
 						output.WriteLine($"footprint: base {Mb(footBase):0} MB, cache full (30%) {Mb(footWarm):0} MB, peak {Mb(peakFoot):0} MB (+{Mb(peakFoot - footBase):0}), peak after 30% +{Mb(peakAfterWarm - footWarm):0} MB, end after GC {Mb(footEnd):0} MB (+{Mb(footEnd - footWarm):0} from 30%)");
+						output.WriteLine("peak after 30%, no GC: " + peakInfo);
+						output.WriteLine($"after a full GC every 300 positions (full cache: footprint {Mb(footWarm):0} MB, managed {Mb(managedWarm):0} MB):");
+						foreach (string c in checks)
+						{
+							output.WriteLine("  " + c);
+						}
 						foreach (string d in deciles)
 						{
 							output.WriteLine("  at " + d);
@@ -263,12 +288,20 @@ namespace ComicRack.Mac.Tests.Browser
 						// is full instead of growing with the library, and that is measured between two points that were both taken after a full
 						// GC: a leak of one cover in twenty adds more than 500 MB in the last 70% of the scroll, and the same code measured between
 						// -100 and +90 MB, so one cache bound (256 MB) leaves the noise out and keeps every real leak in.
-						Assert.True(footEnd - footWarm <= bound, $"after the scroll and a GC the footprint is {Mb(footEnd - footWarm):0} MB above the one with the cache full; allowed {Mb(bound):0} MB");
-						// The peak between the two points is sampled every 25 positions without a GC, so it also holds garbage that is not collected yet
-						// (the unflushed peak above ranged from +190 to +520 MB over the baseline). A leak that is later hidden by a lucky GC at the end
-						// still shows up here; two cache bounds (512 MB) leave the garbage out.
+						Assert.True(footEnd - footWarm <= bound, $"after the scroll and a GC the footprint is {Mb(footEnd - footWarm):0} MB above the one with the cache full; allowed {Mb(bound):0} MB (base {Mb(footBase):0}, full {Mb(footWarm):0}, end {Mb(footEnd):0})");
+						// The peak between the two points is not a leak measure: sampled every 25 positions without a GC it holds the garbage the GC has
+						// not collected yet (decode buffers wait for a generation 2 collection) and what malloc keeps, and that depends on the heap the
+						// earlier tests of the process left behind (the same scroll peaked +208 MB above the full-cache point in a fresh process, +324
+						// and +342 MB in the full test run, which starts the test with 1.3 GB footprint and 650 MB managed heap instead of 270 and
+						// 210, and +1575 MB once in a full gate run). So the peak is printed, not asserted. A leak that a lucky GC at the end would
+						// hide shows up in the checkpoints instead: every 300 positions after the cache is full the test collects everything and
+						// reads the footprint and the managed heap, and both must stay within two cache bounds (512 MB) of the full-cache point (the
+						// checkpoints measured +65 MB at most in a fresh process; the pixel blocks and the cache bytes are asserted above).
 						Assert.True(footWarm >= 0, "the cache never filled up (the warm point was not taken)");
-						Assert.True(peakAfterWarm - footWarm <= 2 * bound, $"between the cache being full and the end the footprint peaked {Mb(peakAfterWarm - footWarm):0} MB above the full-cache point; allowed {Mb(2 * bound):0} MB");
+						Assert.True(checks.Count >= 5, "too few checkpoints after the cache was full: " + checks.Count);
+						string numbers = $"base {Mb(footBase):0}, full {Mb(footWarm):0}, end {Mb(footEnd):0}, no-GC peak {Mb(peakAfterWarm):0}; " + string.Join("; ", checks);
+						Assert.True(peakCheckFoot - footWarm <= 2 * bound, $"after a full GC the footprint reached {Mb(peakCheckFoot - footWarm):0} MB above the full-cache point; allowed {Mb(2 * bound):0} MB ({numbers})");
+						Assert.True(peakCheckManaged - managedWarm <= 2 * bound, $"after a full GC the managed heap reached {Mb(peakCheckManaged - managedWarm):0} MB above the full-cache point; allowed {Mb(2 * bound):0} MB ({numbers})");
 						Assert.True(end.DecodesCompleted > 10000, "the scroll must have decoded most covers: " + end.DecodesCompleted);
 						Assert.True(maxRealized < 100);
 						Assert.True(end.PeakInFlight <= 4);
