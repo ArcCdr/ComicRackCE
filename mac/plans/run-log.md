@@ -81,3 +81,4 @@ One line per task run by the orchestrator (`mac/plans/RUNBOOK.md` §2 step 6), a
 | 2026-10-30 10:29 | RV13 | done | 0fa352c |  | Flaky fast gate, round 3 (ScriptCommands test waits for the BookOpened hook before it prints, Icons map retried and loaded inside a UI job, four more timing... |
 | 2026-10-30 11:05 | RV14 | done | d846438 |  | Plugin files under a Windows-built name keep a link at the old name (adopted files get all their spellings as links, the removal pass keeps links whose file... |
 | 2026-10-30 12:18 | RV15 | done | 651433d |  | Cache-bound footprint test fails in the full run (not a leak: process polluted by earlier tests; post-GC checkpoints replace the unflushed peak, the class ru... |
+| 2026-10-30 13:02 | P4.9f | done | 89e7c62 |  | Modal semantics (ShowDialog, DialogResult closing, FormClosing cancel, nested dialogs, every MessageBox.Show overload, Enter/Esc, Application.Run/Exit/OpenFo... |
