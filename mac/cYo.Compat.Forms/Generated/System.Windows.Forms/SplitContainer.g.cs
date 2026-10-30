@@ -221,7 +221,7 @@ namespace System.Windows.Forms
 		protected override void OnRightToLeftChanged(global::System.EventArgs e) => base.OnRightToLeftChanged(e);
 		public void OnSplitterMoved(global::System.Windows.Forms.SplitterEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.SplitContainer.OnSplitterMoved");
 		public void OnSplitterMoving(global::System.Windows.Forms.SplitterCancelEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.SplitContainer.OnSplitterMoving");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.SplitContainer.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected override bool ProcessTabKey(bool forward) => throw global::FacadeStub.Member("System.Windows.Forms.SplitContainer.ProcessTabKey");
 		protected override void ScaleControl(global::System.Drawing.SizeF factor, global::System.Windows.Forms.BoundsSpecified specified) => throw global::FacadeStub.Member("System.Windows.Forms.SplitContainer.ScaleControl");
 		protected override void Select(bool directed, bool forward) => base.Select(directed, forward);

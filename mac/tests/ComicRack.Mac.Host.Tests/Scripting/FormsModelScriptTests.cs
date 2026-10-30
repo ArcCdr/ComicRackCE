@@ -345,6 +345,85 @@ def Model(books):
 		}
 
 		[Fact]
+		public void A_script_shows_dialogs_and_message_boxes_nested_and_gets_the_answers_and_runs_an_application_loop()
+		{
+			// The script thread is the UI thread of a backend with thread affinity; the dialogs are answered from handlers and from actions posted to the backend.
+			string text = Run(@"
+from System import Action
+from cYo.Compat.Forms import FormsRuntime, NullFormsBackend
+
+def make(name):
+	form = Form()
+	form.Name = name
+	ok = Button()
+	ok.Text = 'OK'
+	ok.DialogResult = DialogResult.OK
+	cancel = Button()
+	cancel.Text = 'Cancel'
+	cancel.DialogResult = DialogResult.Cancel
+	form.Controls.Add(ok)
+	form.Controls.Add(cancel)
+	form.AcceptButton = ok
+	form.CancelButton = cancel
+	form.FormClosing += lambda s, e: trace.append('%s closing %s' % (name, e.CloseReason))
+	return form, ok, cancel
+
+#@Name Model
+#@Hook Books
+def Model(books):
+	backend = NullFormsBackend()
+	backend.ThreadAffinity = True
+	FormsRuntime.Backend = backend
+
+	outer, outer_ok, outer_cancel = make('outer')
+	inner, inner_ok, inner_cancel = make('inner')
+	def outer_shown(sender, args):
+		trace.append('outer shown')
+		def answer_box():
+			box = Form.ActiveForm
+			trace.append('box %s' % box.Text)
+			box.AcceptButton.PerformClick()
+		backend.Post(Action(answer_box))
+		r = MessageBox.Show('Really?', 'Question', MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+		trace.append('box answered %s' % r)
+		trace.append('inner returned %s' % inner.ShowDialog(outer))
+		outer.DialogResult = DialogResult.Retry
+		trace.append('outer handler ends')
+	outer.Shown += outer_shown
+	inner.Shown += lambda s, e: inner_cancel.PerformClick()
+	print 'outer', outer.ShowDialog(), outer.Visible, outer.IsDisposed
+
+	main, a, b = make('main')
+	main.Shown += lambda s, e: main.Close()
+	Application.Run(main)
+	print 'run', main.IsDisposed, Application.MessageLoop, Application.OpenForms.Count
+	print 'trace', ' | '.join(trace)
+");
+			Assert.Contains("outer Retry False False", text);
+			Assert.Contains("run True False 0", text);
+			Assert.Contains("trace outer shown | box Question | box answered Yes | inner closing None | inner returned Cancel | outer handler ends | outer closing None | main closing UserClosing", text);
+		}
+
+		[Fact]
+		public void On_a_host_without_a_window_a_dialog_nobody_can_answer_returns_at_once_with_the_safe_answer()
+		{
+			string text = Run(@"
+#@Name Model
+#@Hook Books
+def Model(books):
+	form = Form()
+	print 'dialog', form.ShowDialog(), form.Visible
+	print 'ok', MessageBox.Show('done')
+	print 'yesno', MessageBox.Show('delete?', 'Library', MessageBoxButtons.YesNo)
+	print 'retry', MessageBox.Show('again?', 'Library', MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning)
+");
+			Assert.Contains("dialog Cancel False", text);
+			Assert.Contains("ok OK", text);
+			Assert.Contains("yesno No", text);
+			Assert.Contains("retry Cancel", text);
+		}
+
+		[Fact]
 		public void Members_that_are_not_implemented_yet_report_themselves_while_the_rest_of_a_control_keeps_working()
 		{
 			string text = Run(@"

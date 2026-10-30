@@ -15,8 +15,8 @@ name (plugin data or a dynamic attribute). Every row has exactly one status. Row
 
 | Plugin | Scripts | Assemblies | Native files | Tier | Rows | real | stub | partial | missing | differs | plugin | python | dynamic |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 288 | 22 | 6 | 0 | 1 | 7 | 73 | 131 |
-| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 363 | 96 | 30 | 0 | 0 | 113 | 34 | 4 |
+| Bedetheque Scraper 2 6.08 | 32 | 0 | 1 | A | 528 | 290 | 20 | 6 | 0 | 1 | 7 | 73 | 131 |
+| Library Organizer 2.1.13 | 11 | 0 | 0 | C | 640 | 364 | 95 | 30 | 0 | 0 | 113 | 34 | 4 |
 
 ## Bedetheque Scraper 2 6.08
 
@@ -72,7 +72,7 @@ What the macOS build does today (measured in the plugin host with this report's 
 
 ### A. WinForms and GDI+ members (typed)
 
-Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 154 rows: 130 real, 21 stub, 3 partial.
+Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 154 rows: 132 real, 19 stub, 3 partial.
 
 | Member | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -96,7 +96,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `TextBox.Text` | 28 | 1 | real | facade |  |  |
 | `CheckBox..ctor` | 17 | 1 | real | facade |  |  |
 | `Label.Text` | 13 | 1 | real | facade |  |  |
-| `MessageBox.Show` | 13 | 1 | stub | facade | P4.9f |  |
+| `MessageBox.Show` | 13 | 1 | real | facade |  |  |
 | `MessageBoxDefaultButton.Button1` | 13 | 1 | real | facade |  |  |
 | `Label..ctor` | 12 | 1 | real | facade |  |  |
 | `RadioButton.Checked` | 12 | 1 | real | facade |  |  |
@@ -114,11 +114,9 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `Color.FromArgb` | 6 | 1 | real | .NET 10 |  |  |
 | `Control.ResumeLayout` | 6 | 1 | real | facade |  |  |
 | `DialogResult.Yes` | 6 | 1 | real | facade |  |  |
-| `Form.ShowDialog` | 6 | 1 | stub | facade | P4.9f |  |
+| `Form.ShowDialog` | 6 | 1 | real | facade |  |  |
 | `HorizontalAlignment.Center` | 6 | 1 | real | facade |  |  |
 | `MessageBoxButtons.OK` | 6 | 1 | real | facade |  |  |
-| `MessageBoxIcon.Warning` | 6 | 1 | real | facade |  |  |
-| `TextBox.TextAlign` | 6 | 1 | real | facade |  |  |
 | `Bitmap..ctor` | 3 | 1 | partial | facade | P4.17.2 |  |
 | `CheckedListBox.Items` | 3 | 1 | stub | facade | P4.10b |  |
 | `Icon..ctor` | 3 | 1 | partial | facade | P4.17.2 |  |
@@ -141,7 +139,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `TabControl..ctor` | 1 | 1 | stub | facade | P4.10d |  |
 | `TabControl.SelectedIndex` | 1 | 1 | stub | facade | P4.10d |  |
 
-90 more rows with a status that needs no work are in the JSON (`A`).
+92 more rows with a status that needs no work are in the JSON (`A`).
 
 ### B. Member accesses on values of unknown type (by name)
 
@@ -321,7 +319,7 @@ Read from the scripts of the package (`libraryorganizer.py`, `loworkerform.py`, 
 
 ### A. WinForms and GDI+ members (typed)
 
-Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 285 rows: 193 real, 89 stub, 3 partial.
+Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute to a type, by the type that declares them. 285 rows: 194 real, 88 stub, 3 partial.
 
 | Member | Uses | Files | Status | Source | Task | Note |
 |---|---|---|---|---|---|---|
@@ -351,7 +349,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `Layout.ArrangedElementCollection.Count` | 28 | 1 | real | facade |  |  |
 | `Control.Click` | 27 | 4 | real | facade |  |  |
 | `ComboBox.Items` | 24 | 3 | real | facade |  |  |
-| `MessageBox.Show` | 21 | 6 | stub | facade | P4.9f |  |
+| `MessageBox.Show` | 21 | 6 | real | facade |  |  |
 | `ListBox.Items` | 20 | 2 | real | facade |  |  |
 | `ButtonBase.AutoSize` | 19 | 3 | real | facade |  |  |
 | `Control.Visible` | 19 | 3 | real | facade |  |  |
@@ -367,7 +365,6 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ComboBox..ctor` | 15 | 3 | real | facade |  |  |
 | `ComboBox.DropDownStyle` | 15 | 3 | real | facade |  |  |
 | `ListBox.SelectedIndex` | 15 | 1 | real | facade |  |  |
-| `Point.X` | 15 | 1 | real | .NET 10 |  |  |
 | `ToolStripItem.Text` | 15 | 1 | stub | facade | P4.10g |  |
 | `Image.FromFile` | 12 | 1 | partial | facade | P4.17.2 |  |
 | `ToolStripItem.Click` | 12 | 1 | stub | facade | P4.10g |  |
@@ -458,7 +455,7 @@ Members of `System.Windows.Forms` and `System.Drawing` the scan could attribute 
 | `ToolStripSeparator..ctor` | 1 | 1 | stub | facade | P4.10g |  |
 | `VScrollBar..ctor` | 1 | 1 | stub | facade | P4.13c |  |
 
-153 more rows with a status that needs no work are in the JSON (`A`).
+154 more rows with a status that needs no work are in the JSON (`A`).
 
 ### B. Member accesses on values of unknown type (by name)
 

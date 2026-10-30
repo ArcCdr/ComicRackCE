@@ -320,7 +320,7 @@ namespace System.Windows.Forms
 		protected virtual void OnSelectionChanged(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.OnSelectionChanged");
 		protected virtual void OnVScroll(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.OnVScroll");
 		public void Paste(global::System.Windows.Forms.DataFormats.Format clipFormat) => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.Paste");
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref m, keyData);
 		public void Redo() => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.Redo");
 		public void SaveFile(global::System.IO.Stream data, global::System.Windows.Forms.RichTextBoxStreamType fileType) => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.SaveFile");
 		public void SaveFile(string path) => throw global::FacadeStub.Member("System.Windows.Forms.RichTextBox.SaveFile");

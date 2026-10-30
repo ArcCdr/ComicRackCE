@@ -203,7 +203,7 @@ namespace System.Windows.Forms
 		protected override global::System.Windows.Forms.AccessibleObject CreateAccessibilityInstance() => throw global::FacadeStub.Member("System.Windows.Forms.TrackBar.CreateAccessibilityInstance");
 		protected override void CreateHandle() => base.CreateHandle();
 		public void EndInit() => throw global::FacadeStub.Member("System.Windows.Forms.TrackBar.EndInit");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TrackBar.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected override void OnBackColorChanged(global::System.EventArgs e) => base.OnBackColorChanged(e);
 		protected override void OnHandleCreated(global::System.EventArgs e) => base.OnHandleCreated(e);
 		protected override void OnMouseWheel(global::System.Windows.Forms.MouseEventArgs e) => base.OnMouseWheel(e);

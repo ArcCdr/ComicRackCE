@@ -127,6 +127,7 @@ namespace System.Windows.Forms
 			focused = null;
 			checkForIllegalCrossThreadCalls = false;
 			Form.ResetActiveForm();
+			Application.ResetLoopState();
 		}
 
 		public bool IsHandleCreated => handleCreated;
@@ -1396,6 +1397,7 @@ namespace System.Windows.Forms
 				FormsRuntime.Backend.Invoke(() => p.Focus());
 			}
 			Volatile.Write(ref focused, this);
+			RefreshDefaultButtons(this, previous);
 			// Enter runs from the outermost container that did not have the focus down to this control.
 			var enters = new List<Control>();
 			for (Control c = this; c != null; c = c.parent)
@@ -1429,6 +1431,7 @@ namespace System.Windows.Forms
 				{
 					// the old control keeps the focus
 					Volatile.Write(ref focused, previous);
+					RefreshDefaultButtons(previous, this);
 					OnLostFocus(EventArgs.Empty);
 					for (Control c = this; c != null && !(c == previous || c.Contains(previous)); c = c.parent)
 					{
@@ -1466,6 +1469,7 @@ namespace System.Windows.Forms
 				return;
 			}
 			Volatile.Write(ref focused, null);
+			RefreshDefaultButtons(this, null);
 			OnLostFocus(EventArgs.Empty);
 			for (Control c = this; c != null; c = c.parent)
 			{
@@ -1473,10 +1477,61 @@ namespace System.Windows.Forms
 			}
 		}
 
+		/// <summary>The default button of a form follows the focus (a focused button is the default button, otherwise the AcceptButton is): the forms of the two controls look again.</summary>
+		private static void RefreshDefaultButtons(Control a, Control b)
+		{
+			Form fa = a?.FindForm();
+			fa?.RefreshDefaultButton();
+			Form fb = b?.FindForm();
+			if (fb != null && fb != fa)
+			{
+				fb.RefreshDefaultButton();
+			}
+		}
+
 		internal static Control FocusedControl => Volatile.Read(ref focused);
 
 		/// <summary>The user clicked the control (called by the peer on the UI thread): Click is raised through OnClick, as for a click with the mouse.</summary>
 		internal void PeerClick() => FormsRuntime.Guard(() => OnClick(EventArgs.Empty));
+
+		// ---------------------------------------------------------------- the keys of a dialog (P4.9f)
+
+		/// <summary>
+		/// A key that a control passes up for the commands of the window (shortcuts of a menu). Control: the parent decides; Form: nothing, until the menus (P4.10g) add their shortcuts.
+		/// Returns true when the key was used.
+		/// </summary>
+		protected virtual bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			Control p = parent;
+			return p != null && p.ProcessCmdKey(ref msg, keyData);
+		}
+
+		/// <summary>
+		/// A key that the dialog manager handles: passes up to the parents; the form uses Enter and Escape for its default and cancel button. Returns true when the key was used.
+		/// </summary>
+		protected virtual bool ProcessDialogKey(Keys keyData)
+		{
+			Control p = parent;
+			return p != null && p.ProcessDialogKey(keyData);
+		}
+
+		/// <summary>True when the control takes the key itself (a multi-line text box takes Enter when AcceptsReturn is set) so that it is no dialog key.</summary>
+		protected virtual bool IsInputKey(Keys keyData) => false;
+
+		/// <summary>
+		/// What the Framework does with a key press before the control sees it (PreProcessMessage for WM_KEYDOWN), called by the peer of the focused control on the UI thread:
+		/// ProcessCmdKey up the parents, then ProcessDialogKey unless the control takes the key itself. True when the key was used and KeyDown must not be raised.
+		/// </summary>
+		internal bool PeerPreProcessKey(Keys keyData)
+		{
+			bool used = false;
+			FormsRuntime.Guard(() =>
+			{
+				Message msg = default(Message);
+				used = ProcessCmdKey(ref msg, keyData) || (!IsInputKey(keyData) && ProcessDialogKey(keyData));
+			});
+			return used;
+		}
 
 		internal void RaiseValidating(CancelEventArgs e) => OnValidating(e);
 

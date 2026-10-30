@@ -92,10 +92,6 @@ namespace System.Windows.Forms
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Form.MergedMenu");
 		}
-		public bool Modal
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Form.Modal");
-		}
 		public global::System.Drawing.Size Size
 		{
 			get => base.Size;
@@ -168,9 +164,8 @@ namespace System.Windows.Forms
 		protected override void OnStyleChanged(global::System.EventArgs e) => base.OnStyleChanged(e);
 		protected override void OnTextChanged(global::System.EventArgs e) => base.OnTextChanged(e);
 		protected override void OnVisibleChanged(global::System.EventArgs e) => base.OnVisibleChanged(e);
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref msg, keyData);
 		protected override bool ProcessDialogChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ProcessDialogChar");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ProcessDialogKey");
 		protected override bool ProcessKeyPreview(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ProcessKeyPreview");
 		protected internal override bool ProcessMnemonic(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ProcessMnemonic");
 		protected override bool ProcessTabKey(bool forward) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ProcessTabKey");
@@ -181,11 +176,8 @@ namespace System.Windows.Forms
 		protected override void SetBoundsCore(int x, int y, int width, int height, global::System.Windows.Forms.BoundsSpecified specified) => base.SetBoundsCore(x, y, width, height, specified);
 		protected override void SetClientSizeCore(int x, int y) => base.SetClientSizeCore(x, y);
 		public global::System.Threading.Tasks.Task ShowAsync(global::System.Windows.Forms.IWin32Window owner = null) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ShowAsync");
-		public global::System.Windows.Forms.DialogResult ShowDialog() => throw global::FacadeStub.Member("System.Windows.Forms.Form.ShowDialog");
-		public global::System.Windows.Forms.DialogResult ShowDialog(global::System.Windows.Forms.IWin32Window owner) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ShowDialog");
 		public global::System.Threading.Tasks.Task<global::System.Windows.Forms.DialogResult> ShowDialogAsync() => throw global::FacadeStub.Member("System.Windows.Forms.Form.ShowDialogAsync");
 		public global::System.Threading.Tasks.Task<global::System.Windows.Forms.DialogResult> ShowDialogAsync(global::System.Windows.Forms.IWin32Window owner) => throw global::FacadeStub.Member("System.Windows.Forms.Form.ShowDialogAsync");
-		protected override void UpdateDefaultButton() => base.UpdateDefaultButton();
 		public override bool ValidateChildren() => base.ValidateChildren();
 		public override bool ValidateChildren(global::System.Windows.Forms.ValidationConstraints validationConstraints) => base.ValidateChildren(validationConstraints);
 		protected override void WndProc(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.Form.WndProc");

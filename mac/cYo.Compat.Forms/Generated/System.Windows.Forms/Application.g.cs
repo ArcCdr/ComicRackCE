@@ -47,14 +47,6 @@ namespace System.Windows.Forms
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Application.LocalUserAppDataPath");
 		}
-		public static bool MessageLoop
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Application.MessageLoop");
-		}
-		public static global::System.Windows.Forms.FormCollection OpenForms
-		{
-			get => throw global::FacadeStub.Member("System.Windows.Forms.Application.OpenForms");
-		}
 		public static bool RenderWithVisualStyles
 		{
 			get => throw global::FacadeStub.Member("System.Windows.Forms.Application.RenderWithVisualStyles");
@@ -91,40 +83,13 @@ namespace System.Windows.Forms
 			set => throw global::FacadeStub.Member("System.Windows.Forms.Application.VisualStyleState");
 		}
 
-		public static event global::System.EventHandler ApplicationExit
-		{
-			add => throw global::FacadeStub.Member("System.Windows.Forms.Application.ApplicationExit");
-			remove => throw global::FacadeStub.Member("System.Windows.Forms.Application.ApplicationExit");
-		}
-		public static event global::System.EventHandler EnterThreadModal
-		{
-			add => throw global::FacadeStub.Member("System.Windows.Forms.Application.EnterThreadModal");
-			remove => throw global::FacadeStub.Member("System.Windows.Forms.Application.EnterThreadModal");
-		}
-		public static event global::System.EventHandler LeaveThreadModal
-		{
-			add => throw global::FacadeStub.Member("System.Windows.Forms.Application.LeaveThreadModal");
-			remove => throw global::FacadeStub.Member("System.Windows.Forms.Application.LeaveThreadModal");
-		}
-		public static event global::System.EventHandler ThreadExit
-		{
-			add => throw global::FacadeStub.Member("System.Windows.Forms.Application.ThreadExit");
-			remove => throw global::FacadeStub.Member("System.Windows.Forms.Application.ThreadExit");
-		}
-
 		public static void AddMessageFilter(global::System.Windows.Forms.IMessageFilter value) => throw global::FacadeStub.Member("System.Windows.Forms.Application.AddMessageFilter");
-		public static void Exit() => throw global::FacadeStub.Member("System.Windows.Forms.Application.Exit");
-		public static void Exit(global::System.ComponentModel.CancelEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Exit");
-		public static void ExitThread() => throw global::FacadeStub.Member("System.Windows.Forms.Application.ExitThread");
 		public static bool FilterMessage(ref global::System.Windows.Forms.Message message) => throw global::FacadeStub.Member("System.Windows.Forms.Application.FilterMessage");
 		public static global::System.Threading.ApartmentState OleRequired() => throw global::FacadeStub.Member("System.Windows.Forms.Application.OleRequired");
 		public static void OnThreadException(global::System.Exception t) => throw global::FacadeStub.Member("System.Windows.Forms.Application.OnThreadException");
 		public static void RegisterMessageLoop(global::System.Windows.Forms.Application.MessageLoopCallback callback) => throw global::FacadeStub.Member("System.Windows.Forms.Application.RegisterMessageLoop");
 		public static void RemoveMessageFilter(global::System.Windows.Forms.IMessageFilter value) => throw global::FacadeStub.Member("System.Windows.Forms.Application.RemoveMessageFilter");
 		public static void Restart() => throw global::FacadeStub.Member("System.Windows.Forms.Application.Restart");
-		public static void Run() => throw global::FacadeStub.Member("System.Windows.Forms.Application.Run");
-		public static void Run(global::System.Windows.Forms.ApplicationContext context) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Run");
-		public static void Run(global::System.Windows.Forms.Form mainForm) => throw global::FacadeStub.Member("System.Windows.Forms.Application.Run");
 		public static void SetColorMode(global::System.Windows.Forms.SystemColorMode systemColorMode) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetColorMode");
 		public static void SetDefaultFont(global::System.Drawing.Font font) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetDefaultFont");
 		public static bool SetHighDpiMode(global::System.Windows.Forms.HighDpiMode highDpiMode) => throw global::FacadeStub.Member("System.Windows.Forms.Application.SetHighDpiMode");

@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Threading;
 using cYo.Compat.Forms;
 
-// The object model of System.Windows.Forms.Form for modeless forms (P4.9a): state, Show, Hide, Activate and Close with the events in the order of dotnet/winforms.
-// ShowDialog, DialogResult semantics, AcceptButton/CancelButton keys and MessageBox are P4.9f; the properties exist and keep their values.
+// The object model of System.Windows.Forms.Form (P4.9a): state, Show, Hide, Activate and Close with the events in the order of dotnet/winforms. The modal half (ShowDialog,
+// DialogResult closing a dialog, AcceptButton and CancelButton keys, closing during a nested loop; P4.9f) is in Form.Modal.cs.
 namespace System.Windows.Forms
 {
 	public partial class Form : ContainerControl
@@ -109,18 +109,38 @@ namespace System.Windows.Forms
 
 		// ---------------------------------------------------------------- plain state
 
+		/// <summary>The button that Enter presses when the focus is on a control that does not take the key itself; it is drawn as the default button.</summary>
 		public IButtonControl AcceptButton
 		{
 			get => acceptButton;
-			set => acceptButton = value;
+			set
+			{
+				if (!ReferenceEquals(acceptButton, value))
+				{
+					acceptButton = value;
+					UpdateDefaultButton();
+				}
+			}
 		}
 
+		/// <summary>The button that Escape presses. A button without a DialogResult gets Cancel, as the Framework does.</summary>
 		public IButtonControl CancelButton
 		{
 			get => cancelButton;
-			set => cancelButton = value;
+			set
+			{
+				cancelButton = value;
+				if (value != null && value.DialogResult == DialogResult.None)
+				{
+					value.DialogResult = DialogResult.Cancel;
+				}
+			}
 		}
 
+		/// <summary>
+		/// The result of the dialog. On a form that <see cref="ShowDialog()"/> shows, a value other than None closes it as soon as the code that set it has returned to the loop
+		/// (FormClosing can cancel and resets the value to None); on a modeless form the value is only stored.
+		/// </summary>
 		public DialogResult DialogResult
 		{
 			get => dialogResult;
@@ -131,6 +151,10 @@ namespace System.Windows.Forms
 					throw new InvalidEnumArgumentException(nameof(value), (int)value, typeof(DialogResult));
 				}
 				dialogResult = value;
+				if (value != DialogResult.None && modal)
+				{
+					PostModalContinue();
+				}
 			}
 		}
 
@@ -568,6 +592,12 @@ namespace System.Windows.Forms
 			{
 				return;
 			}
+			IFormsBackend backend = FormsRuntime.Backend;
+			if (!backend.CheckAccess())
+			{
+				backend.Invoke(Activate);
+				return;
+			}
 			ActivateCore();
 		}
 
@@ -676,20 +706,49 @@ namespace System.Windows.Forms
 		/// </summary>
 		protected override void SetVisibleCore(bool value)
 		{
+			IFormsBackend backend = FormsRuntime.Backend;
+			if (!backend.CheckAccess())
+			{
+				// A form belongs to the UI thread: Show and Hide from a script thread wait for it, as SendMessage does for a window of another thread.
+				backend.Invoke(() => SetVisibleCore(value));
+				return;
+			}
 			if (value)
 			{
 				if (IsDisposed)
 				{
 					throw new ObjectDisposedException(GetType().Name);
 				}
-				if (!calledMakeVisible)
-				{
-					calledMakeVisible = true;
-				}
+				calledMakeVisible = true;
 				if (!Created)
 				{
 					CreateControl(ignoreVisible: true);
 				}
+				else if (!calledOnLoad)
+				{
+					// a dialog that is shown again: ShowDialog reset the flag, so Load comes again
+					calledOnLoad = true;
+					PositionForFirstShow();
+					OnLoad(EventArgs.Empty);
+					if (modal && dialogResult != DialogResult.None)
+					{
+						// the answer was given in Load: the dialog is not shown
+						value = false;
+					}
+				}
+				if (ListedInOpenForms)
+				{
+					Application.OpenFormsAdd(this);
+				}
+			}
+			else if (modal && GetVisibleCore())
+			{
+				// Hiding a dialog ends it: ShowDialog returns the answer, or Cancel when there is none.
+				if (dialogResult == DialogResult.None)
+				{
+					dialogResult = DefaultCloseResult;
+				}
+				modalLoop?.Exit();
 			}
 			bool before = GetVisibleCore();
 			VisibleFlag = value;
@@ -702,8 +761,16 @@ namespace System.Windows.Forms
 			{
 				if (value)
 				{
-					IFormPeer ownerPeer = owner?.Peer as IFormPeer;
-					OnUi(() => fp.Show(ownerPeer));
+					bool asDialog = modal;
+					IFormPeer ownerPeer = (asDialog ? modalPeerOwner : owner)?.Peer as IFormPeer;
+					if (asDialog)
+					{
+						OnUi(() => fp.ShowModal(ownerPeer));
+					}
+					else
+					{
+						OnUi(() => fp.Show(ownerPeer));
+					}
 				}
 				else
 				{
@@ -783,7 +850,7 @@ namespace System.Windows.Forms
 
 		protected void CenterToParent()
 		{
-			Form centerOn = owner;
+			Form centerOn = modal ? (modalPeerOwner ?? owner) : owner;
 			if (centerOn == null || !centerOn.Visible)
 			{
 				CenterToScreen();
@@ -795,8 +862,10 @@ namespace System.Windows.Forms
 		}
 
 		/// <summary>
-		/// Close(): FormClosing (Closing first, then FormClosing; both can cancel), then Closed and FormClosed, then Deactivate; a form that was shown is disposed. A form that was
-		/// never shown is only disposed, without events. Close reports CloseReason.UserClosing, as the Framework does.
+		/// Close(), as WM_CLOSE does it. A modeless form: the controls are validated, the owned forms get FormClosing (FormOwnerClosing, last owned first), then Closing and
+		/// FormClosing of this form (all can cancel); then the owned forms get FormClosed, this form Closed and FormClosed, and it is disposed (with its owned forms). A dialog: its
+		/// answer becomes Cancel when it has none, FormClosing can cancel, and ShowDialog returns after the loop went on. A form that was never shown is only disposed, without events.
+		/// Close reports CloseReason.UserClosing, as the Framework does, and from another thread it waits for the UI thread.
 		/// </summary>
 		public void Close()
 		{
@@ -809,10 +878,16 @@ namespace System.Windows.Forms
 				Dispose();
 				return;
 			}
+			IFormsBackend backend = FormsRuntime.Backend;
+			if (!backend.CheckAccess())
+			{
+				backend.Invoke(() => CloseCore(CloseReason.UserClosing));
+				return;
+			}
 			CloseCore(CloseReason.UserClosing);
 		}
 
-		/// <summary>The entry point of a peer whose window is closed by the user (the close box).</summary>
+		/// <summary>The entry point of a peer whose window is closed by the user (the close box): true when the window may go.</summary>
 		internal bool CloseByUser() => CloseCore(CloseReason.UserClosing);
 
 		private bool CloseCore(CloseReason reason)
@@ -824,20 +899,44 @@ namespace System.Windows.Forms
 			closeInProgress = true;
 			try
 			{
-				foreach (Form owned in OwnedForms)
+				closeReason = reason;
+				if (modal)
 				{
-					if (!owned.IsDisposed && owned.IsHandleCreated)
+					return CloseDialog();
+				}
+				bool cancel = !ValidateChildren(ValidationConstraints.Enabled);
+				Form[] owned = OwnedForms;
+				for (int i = owned.Length - 1; i >= 0; i--)
+				{
+					Form o = owned[i];
+					if (o.IsDisposed || !o.IsHandleCreated)
 					{
-						owned.CloseCore(CloseReason.FormOwnerClosing);
+						continue;
+					}
+					var ownedClosing = new FormClosingEventArgs(CloseReason.FormOwnerClosing, cancel);
+					o.OnFormClosing(ownedClosing);
+					if (ownedClosing.Cancel)
+					{
+						cancel = true;
+						break;
 					}
 				}
-				var closing = new FormClosingEventArgs(reason, false);
+				var closing = new FormClosingEventArgs(reason, cancel);
 				OnClosing(closing);
 				OnFormClosing(closing);
 				if (closing.Cancel)
 				{
 					dialogResult = DialogResult.None;
+					closeReason = CloseReason.None;
 					return false;
+				}
+				for (int i = owned.Length - 1; i >= 0; i--)
+				{
+					Form o = owned[i];
+					if (!o.IsDisposed && o.IsHandleCreated)
+					{
+						o.OnFormClosed(new FormClosedEventArgs(CloseReason.FormOwnerClosing));
+					}
 				}
 				var closed = new FormClosedEventArgs(reason);
 				OnClosed(closed);
@@ -860,6 +959,8 @@ namespace System.Windows.Forms
 				{
 					return;
 				}
+				// a dialog that is disposed from inside its own loop ends it; ShowDialog returns the answer that was given (None when there is none)
+				modalLoop?.Exit();
 				IFormPeer fp = Peer as IFormPeer;
 				if (fp != null && GetVisibleCore())
 				{
@@ -870,10 +971,16 @@ namespace System.Windows.Forms
 				{
 					Volatile.Write(ref activeForm, null);
 				}
+				acceptButton = null;
+				cancelButton = null;
+				defaultButton = null;
+				Application.OpenFormsRemove(this);
 				Owner = null;
-				foreach (Form owned in OwnedForms)
+				// the owned forms go with their owner, the last one first (Form.Dispose of the Framework)
+				Form[] owned = OwnedForms;
+				for (int i = owned.Length - 1; i >= 0; i--)
 				{
-					owned.Owner = null;
+					owned[i].Dispose();
 				}
 			}
 			base.Dispose(disposing);
@@ -918,6 +1025,8 @@ namespace System.Windows.Forms
 
 		protected virtual void OnFormClosed(FormClosedEventArgs e)
 		{
+			// a form that has closed is no longer an open form (nothing happens when it is not listed)
+			Application.OpenFormsRemove(this);
 			FormClosed?.Invoke(this, e);
 		}
 

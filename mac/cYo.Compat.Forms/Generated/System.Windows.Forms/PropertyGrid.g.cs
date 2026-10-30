@@ -374,7 +374,7 @@ namespace System.Windows.Forms
 		protected virtual void OnSelectedObjectsChanged(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.PropertyGrid.OnSelectedObjectsChanged");
 		protected override void OnSystemColorsChanged(global::System.EventArgs e) => base.OnSystemColorsChanged(e);
 		protected override void OnVisibleChanged(global::System.EventArgs e) => base.OnVisibleChanged(e);
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.PropertyGrid.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		public override void Refresh() => base.Refresh();
 		public void RefreshTabs(global::System.ComponentModel.PropertyTabScope tabScope) => throw global::FacadeStub.Member("System.Windows.Forms.PropertyGrid.RefreshTabs");
 		public void ResetSelectedProperty() => throw global::FacadeStub.Member("System.Windows.Forms.PropertyGrid.ResetSelectedProperty");

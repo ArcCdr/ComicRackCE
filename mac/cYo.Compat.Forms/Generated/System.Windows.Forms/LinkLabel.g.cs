@@ -116,7 +116,7 @@ namespace System.Windows.Forms
 		protected override void OnTextAlignChanged(global::System.EventArgs e) => base.OnTextAlignChanged(e);
 		protected override void OnTextChanged(global::System.EventArgs e) => base.OnTextChanged(e);
 		protected global::System.Windows.Forms.LinkLabel.Link PointInLink(int x, int y) => throw global::FacadeStub.Member("System.Windows.Forms.LinkLabel.PointInLink");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.LinkLabel.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected override void Select(bool directed, bool forward) => base.Select(directed, forward);
 		protected override void SetBoundsCore(int x, int y, int width, int height, global::System.Windows.Forms.BoundsSpecified specified) => base.SetBoundsCore(x, y, width, height, specified);
 		protected override void WndProc(ref global::System.Windows.Forms.Message msg) => throw global::FacadeStub.Member("System.Windows.Forms.LinkLabel.WndProc");

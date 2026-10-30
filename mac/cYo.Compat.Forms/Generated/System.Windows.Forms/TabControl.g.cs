@@ -213,7 +213,7 @@ namespace System.Windows.Forms
 		protected virtual object[] GetItems(global::System.Type baseType) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.GetItems");
 		public global::System.Drawing.Rectangle GetTabRect(int index) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.GetTabRect");
 		protected string GetToolTipText(object item) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.GetToolTipText");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected virtual void OnDeselected(global::System.Windows.Forms.TabControlEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.OnDeselected");
 		protected virtual void OnDeselecting(global::System.Windows.Forms.TabControlCancelEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.OnDeselecting");
 		protected virtual void OnDrawItem(global::System.Windows.Forms.DrawItemEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TabControl.OnDrawItem");

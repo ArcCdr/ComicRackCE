@@ -104,7 +104,6 @@ namespace System.Windows.Forms
 		public int GetFirstCharIndexOfCurrentLine() => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.GetFirstCharIndexOfCurrentLine");
 		public virtual int GetLineFromCharIndex(int index) => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.GetLineFromCharIndex");
 		public virtual global::System.Drawing.Point GetPositionFromCharIndex(int index) => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.GetPositionFromCharIndex");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.IsInputKey");
 		protected override void OnFontChanged(global::System.EventArgs e) => base.OnFontChanged(e);
 		protected override void OnHandleCreated(global::System.EventArgs e) => base.OnHandleCreated(e);
 		protected override void OnHandleDestroyed(global::System.EventArgs e) => base.OnHandleDestroyed(e);
@@ -112,8 +111,8 @@ namespace System.Windows.Forms
 		protected override void OnPaddingChanged(global::System.EventArgs e) => base.OnPaddingChanged(e);
 		protected override void OnTextChanged(global::System.EventArgs e) => base.OnTextChanged(e);
 		public void Paste() => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.Paste");
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.ProcessCmdKey");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.ProcessDialogKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref msg, keyData);
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected override void SetBoundsCore(int x, int y, int width, int height, global::System.Windows.Forms.BoundsSpecified specified) => base.SetBoundsCore(x, y, width, height, specified);
 		public void Undo() => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.Undo");
 		protected override void WndProc(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.TextBoxBase.WndProc");

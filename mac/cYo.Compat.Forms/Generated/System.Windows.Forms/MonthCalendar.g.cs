@@ -259,7 +259,7 @@ namespace System.Windows.Forms
 		public global::System.Windows.Forms.SelectionRange GetDisplayRange(bool visible) => throw global::FacadeStub.Member("System.Windows.Forms.MonthCalendar.GetDisplayRange");
 		public global::System.Windows.Forms.MonthCalendar.HitTestInfo HitTest(int x, int y) => throw global::FacadeStub.Member("System.Windows.Forms.MonthCalendar.HitTest");
 		public global::System.Windows.Forms.MonthCalendar.HitTestInfo HitTest(global::System.Drawing.Point point) => throw global::FacadeStub.Member("System.Windows.Forms.MonthCalendar.HitTest");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.MonthCalendar.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected override void OnBackColorChanged(global::System.EventArgs e) => base.OnBackColorChanged(e);
 		protected virtual void OnDateChanged(global::System.Windows.Forms.DateRangeEventArgs drevent) => throw global::FacadeStub.Member("System.Windows.Forms.MonthCalendar.OnDateChanged");
 		protected virtual void OnDateSelected(global::System.Windows.Forms.DateRangeEventArgs drevent) => throw global::FacadeStub.Member("System.Windows.Forms.MonthCalendar.OnDateSelected");

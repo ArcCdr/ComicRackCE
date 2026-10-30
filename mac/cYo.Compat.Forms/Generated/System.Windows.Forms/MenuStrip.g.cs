@@ -72,7 +72,7 @@ namespace System.Windows.Forms
 		protected internal override global::System.Windows.Forms.ToolStripItem CreateDefaultItem(string text, global::System.Drawing.Image image, global::System.EventHandler onClick) => throw global::FacadeStub.Member("System.Windows.Forms.MenuStrip.CreateDefaultItem");
 		protected virtual void OnMenuActivate(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.MenuStrip.OnMenuActivate");
 		protected virtual void OnMenuDeactivate(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.MenuStrip.OnMenuDeactivate");
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.MenuStrip.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref m, keyData);
 		protected override void WndProc(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.MenuStrip.WndProc");
 	}
 }

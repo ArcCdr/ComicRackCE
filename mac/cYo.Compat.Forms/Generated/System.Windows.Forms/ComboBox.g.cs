@@ -87,7 +87,7 @@ namespace System.Windows.Forms
 		protected override global::System.Windows.Forms.AccessibleObject CreateAccessibilityInstance() => throw global::FacadeStub.Member("System.Windows.Forms.ComboBox.CreateAccessibilityInstance");
 		protected override void CreateHandle() => base.CreateHandle();
 		protected override void Dispose(bool disposing) => base.Dispose(disposing);
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ComboBox.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected override void OnBackColorChanged(global::System.EventArgs e) => base.OnBackColorChanged(e);
 		protected override void OnDataSourceChanged(global::System.EventArgs e) => base.OnDataSourceChanged(e);
 		protected override void OnDisplayMemberChanged(global::System.EventArgs e) => base.OnDisplayMemberChanged(e);
@@ -108,7 +108,7 @@ namespace System.Windows.Forms
 		protected override void OnSelectedValueChanged(global::System.EventArgs e) => base.OnSelectedValueChanged(e);
 		protected override void OnTextChanged(global::System.EventArgs e) => base.OnTextChanged(e);
 		protected override void OnValidating(global::System.ComponentModel.CancelEventArgs e) => base.OnValidating(e);
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ComboBox.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref msg, keyData);
 		protected override bool ProcessKeyEventArgs(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.ComboBox.ProcessKeyEventArgs");
 		protected override void RefreshItems() => base.RefreshItems();
 		public override void ResetText() => base.ResetText();

@@ -15,7 +15,7 @@ namespace System.Windows.Forms
 			get => throw global::FacadeStub.Member("System.Windows.Forms.ListControl.DataManager");
 		}
 
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ListControl.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected override void OnBindingContextChanged(global::System.EventArgs e) => base.OnBindingContextChanged(e);
 	}
 }

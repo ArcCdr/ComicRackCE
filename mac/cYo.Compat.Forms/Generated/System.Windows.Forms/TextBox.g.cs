@@ -32,7 +32,6 @@ namespace System.Windows.Forms
 
 		protected override global::System.Windows.Forms.AccessibleObject CreateAccessibilityInstance() => throw global::FacadeStub.Member("System.Windows.Forms.TextBox.CreateAccessibilityInstance");
 		protected override void Dispose(bool disposing) => base.Dispose(disposing);
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TextBox.IsInputKey");
 		protected override void OnBackColorChanged(global::System.EventArgs e) => base.OnBackColorChanged(e);
 		protected override void OnFontChanged(global::System.EventArgs e) => base.OnFontChanged(e);
 		protected override void OnGotFocus(global::System.EventArgs e) => base.OnGotFocus(e);
@@ -41,7 +40,7 @@ namespace System.Windows.Forms
 		protected override void OnKeyUp(global::System.Windows.Forms.KeyEventArgs e) => base.OnKeyUp(e);
 		protected override void OnMouseDown(global::System.Windows.Forms.MouseEventArgs e) => base.OnMouseDown(e);
 		public void Paste(string text) => throw global::FacadeStub.Member("System.Windows.Forms.TextBox.Paste");
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TextBox.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref m, keyData);
 		protected override void WndProc(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.TextBox.WndProc");
 	}
 }

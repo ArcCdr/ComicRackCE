@@ -51,7 +51,7 @@ def Surface(books):
 	except Exception, e:
 		print 'stub', e.message
 	try:
-		MessageBox.Show('hello')
+		Application.Restart()
 	except Exception, e:
 		print 'static', e.message
 	c.Dispose()
@@ -79,7 +79,7 @@ def Surface(books):
 					Assert.Contains("subclass Control True", text);
 					Assert.Contains("property ''", text);
 					Assert.Contains("stub System.Windows.Forms.Control.AccessibilityObject" + suffix, text);
-					Assert.Contains("static System.Windows.Forms.MessageBox.Show" + suffix, text);
+					Assert.Contains("static System.Windows.Forms.Application.Restart" + suffix, text);
 					Assert.Contains("disposed True", text);
 				}
 			}

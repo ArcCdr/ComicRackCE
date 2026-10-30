@@ -430,7 +430,7 @@ namespace System.Windows.Forms
 
 		protected override void CreateHandle() => base.CreateHandle();
 		protected override void OnClosing(global::System.ComponentModel.CancelEventArgs e) => base.OnClosing(e);
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.PrintPreviewDialog.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected override bool ProcessTabKey(bool forward) => throw global::FacadeStub.Member("System.Windows.Forms.PrintPreviewDialog.ProcessTabKey");
 	}
 }

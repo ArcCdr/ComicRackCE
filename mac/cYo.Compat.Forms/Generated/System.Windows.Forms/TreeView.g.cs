@@ -320,7 +320,7 @@ namespace System.Windows.Forms
 		public int GetNodeCount(bool includeSubTrees) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.GetNodeCount");
 		public global::System.Windows.Forms.TreeViewHitTestInfo HitTest(int x, int y) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.HitTest");
 		public global::System.Windows.Forms.TreeViewHitTestInfo HitTest(global::System.Drawing.Point pt) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.HitTest");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected virtual void OnAfterCheck(global::System.Windows.Forms.TreeViewEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.OnAfterCheck");
 		protected internal virtual void OnAfterCollapse(global::System.Windows.Forms.TreeViewEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.OnAfterCollapse");
 		protected virtual void OnAfterExpand(global::System.Windows.Forms.TreeViewEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.TreeView.OnAfterExpand");

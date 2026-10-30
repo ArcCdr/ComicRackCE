@@ -37,8 +37,8 @@ namespace Compat.Forms.Tests
 		[Fact]
 		public void A_static_member_and_a_nested_type_name_their_declaring_type()
 		{
-			var ex = Assert.Throws<NotSupportedException>(() => MessageBox.Show("x"));
-			Assert.Equal("System.Windows.Forms.MessageBox.Show" + Suffix, ex.Message);
+			var ex = Assert.Throws<NotSupportedException>(() => Application.Restart());
+			Assert.Equal("System.Windows.Forms.Application.Restart" + Suffix, ex.Message);
 			ex = Assert.Throws<NotSupportedException>(() => _ = Control.IsKeyLocked(Keys.CapsLock));
 			Assert.Equal("System.Windows.Forms.Control.IsKeyLocked" + Suffix, ex.Message);
 		}

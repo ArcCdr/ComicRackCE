@@ -306,7 +306,7 @@ namespace System.Windows.Forms
 		protected override void OnRightToLeftChanged(global::System.EventArgs e) => base.OnRightToLeftChanged(e);
 		protected override void OnVisibleChanged(global::System.EventArgs e) => base.OnVisibleChanged(e);
 		public override bool PreProcessMessage(ref global::System.Windows.Forms.Message msg) => throw global::FacadeStub.Member("System.Windows.Forms.WebBrowserBase.PreProcessMessage");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.WebBrowserBase.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected internal override bool ProcessMnemonic(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.WebBrowserBase.ProcessMnemonic");
 		protected override void WndProc(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.WebBrowserBase.WndProc");
 	}

@@ -323,7 +323,7 @@ namespace System.Windows.Forms
 		protected virtual void OnInPlaceActive() => throw global::FacadeStub.Member("System.Windows.Forms.AxHost.OnInPlaceActive");
 		protected override void OnLostFocus(global::System.EventArgs e) => base.OnLostFocus(e);
 		public override bool PreProcessMessage(ref global::System.Windows.Forms.Message msg) => throw global::FacadeStub.Member("System.Windows.Forms.AxHost.PreProcessMessage");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.AxHost.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected internal override bool ProcessMnemonic(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.AxHost.ProcessMnemonic");
 		protected bool PropsValid() => throw global::FacadeStub.Member("System.Windows.Forms.AxHost.PropsValid");
 		protected void RaiseOnMouseDown(short button, short shift, int x, int y) => throw global::FacadeStub.Member("System.Windows.Forms.AxHost.RaiseOnMouseDown");

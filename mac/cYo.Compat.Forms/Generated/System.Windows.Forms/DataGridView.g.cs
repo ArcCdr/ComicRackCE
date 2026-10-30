@@ -1104,7 +1104,7 @@ namespace System.Windows.Forms
 		public void InvalidateColumn(int columnIndex) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.InvalidateColumn");
 		public void InvalidateRow(int rowIndex) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.InvalidateRow");
 		protected override bool IsInputChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.IsInputChar");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		public virtual void NotifyCurrentCellDirty(bool dirty) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.NotifyCurrentCellDirty");
 		protected virtual void OnAllowUserToAddRowsChanged(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.OnAllowUserToAddRowsChanged");
 		protected virtual void OnAllowUserToDeleteRowsChanged(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.OnAllowUserToDeleteRowsChanged");
@@ -1258,7 +1258,7 @@ namespace System.Windows.Forms
 		protected bool ProcessControlShiftF10Keys(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessControlShiftF10Keys");
 		protected virtual bool ProcessDataGridViewKey(global::System.Windows.Forms.KeyEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessDataGridViewKey");
 		protected bool ProcessDeleteKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessDeleteKey");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected bool ProcessDownKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessDownKey");
 		protected bool ProcessEndKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessEndKey");
 		protected bool ProcessEnterKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DataGridView.ProcessEnterKey");

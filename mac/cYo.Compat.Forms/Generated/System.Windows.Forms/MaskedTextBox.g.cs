@@ -232,7 +232,7 @@ namespace System.Windows.Forms
 		public int GetFirstCharIndexOfCurrentLine() => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.GetFirstCharIndexOfCurrentLine");
 		public override int GetLineFromCharIndex(int index) => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.GetLineFromCharIndex");
 		public override global::System.Drawing.Point GetPositionFromCharIndex(int index) => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.GetPositionFromCharIndex");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected override void OnBackColorChanged(global::System.EventArgs e) => base.OnBackColorChanged(e);
 		protected override void OnGotFocus(global::System.EventArgs e) => base.OnGotFocus(e);
 		protected override void OnHandleCreated(global::System.EventArgs e) => base.OnHandleCreated(e);
@@ -246,7 +246,7 @@ namespace System.Windows.Forms
 		protected virtual void OnTextAlignChanged(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.OnTextAlignChanged");
 		protected override void OnTextChanged(global::System.EventArgs e) => base.OnTextChanged(e);
 		protected override void OnValidating(global::System.ComponentModel.CancelEventArgs e) => base.OnValidating(e);
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref msg, keyData);
 		protected internal override bool ProcessKeyMessage(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.MaskedTextBox.ProcessKeyMessage");
 		public void ScrollToCaret() => base.ScrollToCaret();
 		public override string ToString() => base.ToString();

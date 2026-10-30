@@ -346,7 +346,7 @@ namespace System.Windows.Forms
 		public global::System.Windows.Forms.ToolStripItem GetItemAt(global::System.Drawing.Point point) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.GetItemAt");
 		public virtual global::System.Windows.Forms.ToolStripItem GetNextItem(global::System.Windows.Forms.ToolStripItem start, global::System.Windows.Forms.ArrowDirection direction) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.GetNextItem");
 		protected override bool IsInputChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.IsInputChar");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected virtual void OnBeginDrag(global::System.EventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.OnBeginDrag");
 		protected override void OnDockChanged(global::System.EventArgs e) => base.OnDockChanged(e);
 		protected override void OnEnabledChanged(global::System.EventArgs e) => base.OnEnabledChanged(e);
@@ -375,8 +375,8 @@ namespace System.Windows.Forms
 		protected override void OnScroll(global::System.Windows.Forms.ScrollEventArgs se) => base.OnScroll(se);
 		protected override void OnTabStopChanged(global::System.EventArgs e) => base.OnTabStopChanged(e);
 		protected override void OnVisibleChanged(global::System.EventArgs e) => base.OnVisibleChanged(e);
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.ProcessCmdKey");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.ProcessDialogKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message m, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref m, keyData);
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected internal override bool ProcessMnemonic(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.ProcessMnemonic");
 		protected override void RescaleConstantsForDpi(int deviceDpiOld, int deviceDpiNew) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.RescaleConstantsForDpi");
 		public void ResetMinimumSize() => throw global::FacadeStub.Member("System.Windows.Forms.ToolStrip.ResetMinimumSize");

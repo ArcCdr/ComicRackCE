@@ -41,9 +41,9 @@ namespace System.Windows.Forms
 		protected override void OnParentChanged(global::System.EventArgs e) => base.OnParentChanged(e);
 		protected override void OnResize(global::System.EventArgs e) => base.OnResize(e);
 		public void PerformAutoScale() => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.PerformAutoScale");
-		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.ProcessCmdKey");
+		protected override bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => base.ProcessCmdKey(ref msg, keyData);
 		protected override bool ProcessDialogChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.ProcessDialogChar");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected internal override bool ProcessMnemonic(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.ProcessMnemonic");
 		protected virtual bool ProcessTabKey(bool forward) => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.ProcessTabKey");
 		protected override void RescaleConstantsForDpi(int deviceDpiOld, int deviceDpiNew) => throw global::FacadeStub.Member("System.Windows.Forms.ContainerControl.RescaleConstantsForDpi");

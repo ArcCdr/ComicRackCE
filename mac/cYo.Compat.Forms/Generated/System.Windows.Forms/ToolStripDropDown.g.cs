@@ -329,7 +329,7 @@ namespace System.Windows.Forms
 		protected override void OnParentChanged(global::System.EventArgs e) => base.OnParentChanged(e);
 		protected override void OnVisibleChanged(global::System.EventArgs e) => base.OnVisibleChanged(e);
 		protected override bool ProcessDialogChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripDropDown.ProcessDialogChar");
-		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripDropDown.ProcessDialogKey");
+		protected override bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => base.ProcessDialogKey(keyData);
 		protected internal override bool ProcessMnemonic(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripDropDown.ProcessMnemonic");
 		protected override void ScaleControl(global::System.Drawing.SizeF factor, global::System.Windows.Forms.BoundsSpecified specified) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripDropDown.ScaleControl");
 		protected override void ScaleCore(float dx, float dy) => throw global::FacadeStub.Member("System.Windows.Forms.ToolStripDropDown.ScaleCore");

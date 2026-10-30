@@ -684,6 +684,38 @@ namespace System.Windows.Forms
 			set => base.ForeColor = value;
 		}
 
+		/// <summary>The keys the text box takes itself, so that they are no dialog keys (TextBoxBase.IsInputKey): Tab with AcceptsTab, Backspace, Page and Home/End keys.</summary>
+		protected override bool IsInputKey(Keys keyData)
+		{
+			if ((keyData & Keys.Alt) == Keys.Alt)
+			{
+				return false;
+			}
+			switch (keyData & Keys.KeyCode)
+			{
+			case Keys.Tab:
+				return multiline && acceptsTab && (keyData & Keys.Control) == Keys.None;
+			case Keys.Escape:
+				if (multiline)
+				{
+					return false;
+				}
+				break;
+			case Keys.Back:
+				if (!readOnly)
+				{
+					return true;
+				}
+				break;
+			case Keys.PageUp:
+			case Keys.PageDown:
+			case Keys.Home:
+			case Keys.End:
+				return true;
+			}
+			return base.IsInputKey(keyData);
+		}
+
 		public virtual bool Multiline
 		{
 			get => multiline;
@@ -998,6 +1030,16 @@ namespace System.Windows.Forms
 		{
 			get => acceptsReturn;
 			set => acceptsReturn = value;
+		}
+
+		/// <summary>A multi-line text box with AcceptsReturn takes Enter itself, so the form's default button does not get it.</summary>
+		protected override bool IsInputKey(Keys keyData)
+		{
+			if (Multiline && (keyData & Keys.Alt) == Keys.None && (keyData & Keys.KeyCode) == Keys.Return)
+			{
+				return acceptsReturn;
+			}
+			return base.IsInputKey(keyData);
 		}
 
 		public char PasswordChar

@@ -35,6 +35,12 @@ namespace cYo.Compat.Forms
 		void DoEvents();
 
 		/// <summary>
+		/// <c>Application.MessageLoop</c>: true while the toolkit's loop runs the UI thread. A host with a main window answers true all the time; a backend without a loop of its own
+		/// (<see cref="NullFormsBackend"/>) is "running" only inside <see cref="RunModal"/>.
+		/// </summary>
+		bool IsMessageLoopRunning { get; }
+
+		/// <summary>
 		/// Creates the toolkit timer behind a <see cref="System.Windows.Forms.Timer"/> (a dispatcher timer on the UI thread). Called on the UI thread; <paramref name="tick"/> is called on the UI thread, never
 		/// while a tick is still running, and a timer that is late ticks once and not once per missed interval (the WM_TIMER rule). The timer ticks only between <see cref="ITimerPeer.Start"/>
 		/// and <see cref="ITimerPeer.Stop"/> or <see cref="IDisposable.Dispose"/>.
@@ -109,7 +115,9 @@ namespace cYo.Compat.Forms
 	}
 
 	/// <summary>
-	/// A nested loop (the modal loop of <c>ShowDialog</c>). The facade calls <see cref="Exit"/> from its close path, on any thread; the backend pumps until it was called.
+	/// A nested loop (the modal loop of <c>ShowDialog</c>, <c>MessageBox.Show</c> and <c>Application.Run</c>). The facade calls <see cref="Exit"/> from its close path, on any thread;
+	/// the backend pumps until it was called. A backend may also return without it (the null backend when nothing is queued, a toolkit that is shutting down); the facade then
+	/// treats a dialog as closed without an answer.
 	/// </summary>
 	public sealed class ModalLoop
 	{
@@ -541,6 +549,9 @@ namespace cYo.Compat.Forms
 			}
 		}
 
+		/// <summary>True while a <see cref="RunModal"/> loop runs: the null backend has no main loop of its own.</summary>
+		public bool IsMessageLoopRunning => ModalDepth > 0;
+
 		public void RunModal(ModalLoop loop)
 		{
 			if (loop == null)
@@ -669,6 +680,9 @@ namespace cYo.Compat.Forms
 			}
 		}
 
+		/// <summary>The owner peer of the last <see cref="IFormPeer.Show"/> or <see cref="IFormPeer.ShowModal"/> (null when the window had none).</summary>
+		public IFormPeer LastOwner { get; private set; }
+
 		/// <summary>The area of the last <see cref="IControlPeer.Invalidate"/>.</summary>
 		public Rectangle LastInvalidated { get; private set; }
 
@@ -702,12 +716,14 @@ namespace cYo.Compat.Forms
 		public void Show(IFormPeer owner)
 		{
 			Shown = true;
+			LastOwner = owner;
 			Add("Show");
 		}
 
 		public void ShowModal(IFormPeer owner)
 		{
 			Shown = true;
+			LastOwner = owner;
 			Add("ShowModal");
 		}
 

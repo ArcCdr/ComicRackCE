@@ -242,7 +242,7 @@ namespace System.Windows.Forms
 		protected override global::System.Windows.Forms.AccessibleObject CreateAccessibilityInstance() => throw global::FacadeStub.Member("System.Windows.Forms.DateTimePicker.CreateAccessibilityInstance");
 		protected override void CreateHandle() => base.CreateHandle();
 		protected override void DestroyHandle() => base.DestroyHandle();
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.DateTimePicker.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected virtual void OnCloseUp(global::System.EventArgs eventargs) => throw global::FacadeStub.Member("System.Windows.Forms.DateTimePicker.OnCloseUp");
 		protected virtual void OnDropDown(global::System.EventArgs eventargs) => throw global::FacadeStub.Member("System.Windows.Forms.DateTimePicker.OnDropDown");
 		protected override void OnEnabledChanged(global::System.EventArgs e) => base.OnEnabledChanged(e);

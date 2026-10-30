@@ -413,7 +413,7 @@ namespace System.Windows.Forms
 		public global::System.Drawing.Rectangle GetItemRect(int index, global::System.Windows.Forms.ItemBoundsPortion portion) => throw global::FacadeStub.Member("System.Windows.Forms.ListView.GetItemRect");
 		public global::System.Windows.Forms.ListViewHitTestInfo HitTest(int x, int y) => throw global::FacadeStub.Member("System.Windows.Forms.ListView.HitTest");
 		public global::System.Windows.Forms.ListViewHitTestInfo HitTest(global::System.Drawing.Point point) => throw global::FacadeStub.Member("System.Windows.Forms.ListView.HitTest");
-		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.ListView.IsInputKey");
+		protected override bool IsInputKey(global::System.Windows.Forms.Keys keyData) => base.IsInputKey(keyData);
 		protected virtual void OnAfterLabelEdit(global::System.Windows.Forms.LabelEditEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.ListView.OnAfterLabelEdit");
 		protected override void OnBackgroundImageChanged(global::System.EventArgs e) => base.OnBackgroundImageChanged(e);
 		protected virtual void OnBeforeLabelEdit(global::System.Windows.Forms.LabelEditEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.ListView.OnBeforeLabelEdit");

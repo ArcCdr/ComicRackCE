@@ -64,14 +64,11 @@ namespace System.Windows.Forms
 		protected void InvokePaint(global::System.Windows.Forms.Control c, global::System.Windows.Forms.PaintEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokePaint");
 		protected void InvokePaintBackground(global::System.Windows.Forms.Control c, global::System.Windows.Forms.PaintEventArgs e) => throw global::FacadeStub.Member("System.Windows.Forms.Control.InvokePaintBackground");
 		protected virtual bool IsInputChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsInputChar");
-		protected virtual bool IsInputKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsInputKey");
 		public static bool IsKeyLocked(global::System.Windows.Forms.Keys keyVal) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsKeyLocked");
 		public static bool IsMnemonic(char charCode, string text) => throw global::FacadeStub.Member("System.Windows.Forms.Control.IsMnemonic");
 		public global::System.Windows.Forms.PreProcessControlState PreProcessControlMessage(ref global::System.Windows.Forms.Message msg) => throw global::FacadeStub.Member("System.Windows.Forms.Control.PreProcessControlMessage");
 		public virtual bool PreProcessMessage(ref global::System.Windows.Forms.Message msg) => throw global::FacadeStub.Member("System.Windows.Forms.Control.PreProcessMessage");
-		protected virtual bool ProcessCmdKey(ref global::System.Windows.Forms.Message msg, global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.Control.ProcessCmdKey");
 		protected virtual bool ProcessDialogChar(char charCode) => throw global::FacadeStub.Member("System.Windows.Forms.Control.ProcessDialogChar");
-		protected virtual bool ProcessDialogKey(global::System.Windows.Forms.Keys keyData) => throw global::FacadeStub.Member("System.Windows.Forms.Control.ProcessDialogKey");
 		protected virtual bool ProcessKeyEventArgs(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.Control.ProcessKeyEventArgs");
 		protected internal virtual bool ProcessKeyMessage(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.Control.ProcessKeyMessage");
 		protected virtual bool ProcessKeyPreview(ref global::System.Windows.Forms.Message m) => throw global::FacadeStub.Member("System.Windows.Forms.Control.ProcessKeyPreview");
