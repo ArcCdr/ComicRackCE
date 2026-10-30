@@ -5,7 +5,7 @@
 > **Relation to other files:** `MACOS_NATIVE_PATH.md` keeps the binding decisions (§0 D1 to D9), the architecture (§5), the v1 scope (§6) and the guardrails (§9.2). `mac/plans/mvp-track.md` stays the record of M0 to M2.6 and of the facts found there (§3); its §4 (rules) and §10 (how to run) are **superseded** by §2 of this file. `mac/plans/RUNBOOK.md` says how an orchestrating session runs this plan unattended. `mac/plans/OWNER-ACTIONS.md` is the only place where the owner is asked for something. `mac/UPSTREAM-SYNC.md` is the owner's merge procedure.
 > **Task status:** every task block in §7 has a `Status:` line; it is the source of truth. The table below is a summary that the orchestrator updates after each task.
 
-Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
+Run state: RUNNING (2026-10-28, orchestrator; next task: RV14)
 
 | Phase | Tasks | Done | Next todo | Notes |
 |---|---|---|---|---|
@@ -17,8 +17,8 @@ Run state: RUNNING (2026-10-28, orchestrator; next task: P4.9f)
 | P5 Screens (main window parity) | 68 | 22 | P5.29 | waves B, C, D; theme and chrome foundation (P5.T*) and restyle (P5.R*) open wave B; P5.T5 optional |
 | P6 Packaging and release | 7 | 0 | P6.1 | real signing needs checkpoint C5 |
 | P7 Hardening, parity audits, v1 acceptance | 12 | 0 | P7.1 | parity audits P7.A1 to P7.A4; ends with checkpoint C6 |
-| RV Review fixes and upstream sync | 15 | 15 | - | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
-| **Total** | **184** | **74** | | estimate in §10 |
+| RV Review fixes and upstream sync | 17 | 15 | RV14 | `RV<n>` tasks from reviews and `U<date>.<n>` tasks from upstream merges; they run first |
+| **Total** | **186** | **74** | | estimate in §10 |
 
 ## RESUME (every session starts here)
 
@@ -961,6 +961,16 @@ Template (from `MACOS_NATIVE_PATH.md` §9.5, adapted): **Depends** · **Effort**
 - Depends: none · Effort: medium · Unattended: yes · Status: done 2026-10-30
 - Goal: during the 2026-10-28/29 run `verify.sh` failed once each on `ScriptCommandsTests.A_script_changes_the_reader_through_ComicDisplay` (P4.17.5), on 488 `ComicRack.Mac.Tests` with "Unable to locate 'Avalonia.Platform.IAssetLoader'" (P4.9c) and on an unnamed test of `verify.sh --full` (gate); each passed on the rerun. The same test, `ScriptCommandsTests.A_script_changes_the_reader_through_ComicDisplay`, failed again in 2 of 3 full runs after P4.17.5 (output has `Calling 'Opened'...` and the compilation line but not `layout Double`; line 477 of ScriptCommandsTests.cs), so treat it as a possible regression from P4.9e (threading) or P4.17.5 first, not only as a flake. Run `mac/tools/flaky-scan.sh` as RV11 describes, classify, and fix the shared state (static Avalonia setup order, shared dispatcher).
 - Accept: 6 consecutive `verify.sh` runs PASS without retries; `mac/tools/flaky-scan.sh 2` works.
+
+#### RV14 Plugin files created under a Windows-built name are moved at every start and not found again (review of 2026-10-30, High 1)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: `mac/ComicRack.Mac.Host/Scripting/PathAliases.cs` (lines about 147-157, 200-207, 224-232): a plugin that saves with `SCRIPTDIR + "\\" + name` creates `Scripts/Plug\settings.dat`; at the next start `Sync` -> `Adopt` moves it to `Plug/settings.dat` and makes no link at the old name (links are made only for string constants found in the scripts), so the plugin no longer finds its own settings or cache and starts from defaults at every restart; the same happens on a package update (`PluginPackages.CommitInstall`). The class comment says the odd name becomes a link to the moved file; the code does not do it, and `PathAliasTests.cs` (about line 175) asserts the broken behaviour (`DoesNotContain("Plug\\other.txt")`). Fix: after the merge make a relative link at the old name, and let the removal pass keep links whose target exists (or adopt only names that appear in the wanted set). Correct the test to assert the link.
+- Accept: a test where a script creates a file under the backslash name, a restart (`Sync` again) and an update leave the file readable under both spellings; `PathSeparatorAcceptanceTests` still pass; `mac/tools/verify.sh`.
+
+#### RV15 Cache-bound footprint test fails in the full run (gate of 2026-10-30)
+- Depends: none · Effort: high · Unattended: yes · Status: todo
+- Goal: `FixtureGridTests.A_full_scroll_over_the_fixture_library_stays_under_the_cache_bound` failed in the full `upstream-sync-check.sh` run ("between the cache being full and the end the footprint peaked 1575 MB above the full-cache point; allowed 512 MB", 1 m 41 s) and passes alone (2 of 2 runs). Decide whether it is a real leak or the process footprint of other tests in the same process: run the test project 3 times in full and note the footprint; if tests share the process, measure the cache's own byte count or the live pixel blocks (per-test scope, as RV11 did) instead of the process footprint, or move the test into its own non-parallel collection that runs first. Do not widen the 512 MB bound.
+- Accept: 3 consecutive full `ComicRack.Mac.Tests` runs without this failure; a real leak, if found, is fixed; `mac/tools/verify.sh`.
 
 #### P0.1 Fast gate `mac/tools/verify.sh`
 - Depends: none · Effort: medium · Unattended: yes · **Status: done 2026-10-17** (planning session)
@@ -2303,6 +2313,11 @@ _(Sessions append items here instead of doing them. Format: `- [<TASK-ID>] descr
 - [P4.9e] `Control.InvokeAsync` (four overloads, .NET 9) stays a generated stub: scripts and plug-ins built for the Framework cannot call it. Implement with a `TaskCompletionSource` over `MarshaledCall` if a plug-in for .NET 8+ ever needs it.
 - [P4.9e] P4.9g: the recorder cannot compare the order of cross-thread work with Windows (it is not deterministic there); it can record that `Invoke` from the UI thread runs after the queued `BeginInvoke` calls and that `GetBaseException()` is what `Invoke` throws, to settle the two points taken from the dotnet/winforms source that no Windows run confirmed here: the base exception, and the exception of an unobserved `BeginInvoke` going to `Application.ThreadException`.
 - [RV13] The output of two scripts that run at the same time (a command and a hook, `ScriptCommandsViewModel.Enqueue` runs hooks on a pool thread) interleaves in the script output window at the piece level of a `print`; the WinForms program ran every script on the UI thread, so this cannot happen there. If it matters, give `TextWriterStream` a per-thread line buffer (complete lines written atomically) or run hooks and commands one at a time; not done because a partial line (`sys.stdout.write("x")`) would then wait for its newline.
+- [review 2026-10-30] Form.cs 827-832: closing an owner must follow WmClose (owned forms get FormClosing(FormOwnerClosing) in reverse order, a cancel cancels the owner; their Closed events follow the owner's FormClosing). Test ModelTests 623 only checks event order. For P4.9f/P4.9g.
+- [review 2026-10-30] Form.cs 874-877: disposing a form must dispose its owned forms in reverse order (now only sets Owner = null). For P4.9f.
+- [review 2026-10-30] Lists.cs 596-599: ListBox.SelectedIndex in MultiSimple/MultiExtended must add to the selection and raise the event only if the item was new. For P4.9d or later.
+- [review 2026-10-30] Lists.cs 716: ListBox must not drop SelectedIndexChanged between BeginUpdate and EndUpdate (ComboBox in the same file does not). For P4.9d or later.
+- [review 2026-10-30] low: RadioButton.UncheckOthers ignores AutoCheck (Controls.cs 579-590); JavaScriptSerializer converts a plain "/Date(n)/" string to a date (JsonReader.cs 67, 201-215; only the escaped form "\/Date(n)\/" is a date); PluginNamesRuleTests.cs 92 writes a probe file into mac/tools (use a temp root).
 
 ## 10. Estimates (low confidence)
 
